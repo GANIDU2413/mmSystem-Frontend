@@ -1,10 +1,10 @@
-import { Feedback } from "./Components/Feddback";
+import { Lecture } from "./Components/Lecture";
 
 
 export const HomePage = () => {
     return (
       <>
-       <Feedback/>
+       <Lecture/>
       </>
     );
   };

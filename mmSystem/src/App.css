@@ -31,3 +31,15 @@ background-color: #0e76a8 ;
     pointer-events: none;
     cursor: default;
  }
+
+ .container-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh; /* Adjust as per your requirement */
+}
+
+.card {
+  width: 1500px; /* Adjust width as per your requirement */
+  
+}
