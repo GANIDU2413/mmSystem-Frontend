@@ -2,7 +2,7 @@
 
 export const Navebar = () => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-light main-color">
       <div className="container-fluid">
         <a className="navbar-brand" href="#">
           Navbar

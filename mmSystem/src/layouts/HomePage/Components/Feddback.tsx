@@ -2,7 +2,7 @@ export const Feedback = () => {
 
     return(
          <div>
-           <h1>Hi, I am feedback.</h1> 
+           <h1>Hi, I am Lecture.</h1> 
          </div>
     );
 };
