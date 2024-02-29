@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const Navebar = () => {
   return (
     <nav className="navbar main-color fixed-top">
@@ -11,6 +13,13 @@ export const Navebar = () => {
         >
           Faculty Of Technology, Marking Management System 
         </a>
+        <ul className="navbar-nav ms-auto">
+        <li className="nav-item m-1">
+               <Link type="button" className="btn btn-outline-light" to='/login'>
+                 Sign in
+               </Link>
+             </li>
+        </ul>
         <div
           className="offcanvas offcanvas-start"
           id="offcanvasNavbar"
@@ -18,7 +27,7 @@ export const Navebar = () => {
         >
           <div className="offcanvas-header">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              Offcanvas
+              Hi, Mr.Nuwan Laksisri
             </h5>
             <button
               type="button"
@@ -31,12 +40,12 @@ export const Navebar = () => {
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="#">
-                  Home
+                 Dashboard
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
-                  Link
+                  Marks Feeding
                 </a>
               </li>
               <li className="nav-item dropdown">
@@ -69,17 +78,8 @@ export const Navebar = () => {
                 </ul>
               </li>
             </ul>
-            <form className="d-flex mt-3" role="search">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              ></input>
-              <button className="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
+            
+            <hr></hr>
           </div>
         </div>
       </div>
