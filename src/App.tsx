@@ -1,22 +1,51 @@
-import reactLogo from './assets/react.svg'
-import './App.css'
+// import viteLogo from '/vite.svg'
+import "./App.css";
+import { Footer } from "./layouts/NavbarAndFooter/Footer";
+import { Navebar } from "./layouts/NavbarAndFooter/Navebar";
+import { AddScore } from "./layouts/AddScore/AddScore";
+import { Redirect, Route, Switch, useHistory } from "react-router-dom";
+import { HomePage } from "./layouts/HomePage/HomePage";
+import { oktaConfig } from "./lib/oktaConfig";
+import { OktaAuth, toRelativeUrl} from '@okta/okta-auth-js';
+import { Security, LoginCallback } from "@okta/okta-react";
+import LoginWidget from "./Auth/LoginWidget";
 
-function App() {
+const oktaAuth = new OktaAuth(oktaConfig);
 
+export const App = () => {
+  const customAuthHandler = () => {
+    history.push("/login");
+  };
+
+  const history = useHistory();
+
+  const restoreOriginalUri = async (__oktaAuth: any, orginalUri: any) => {
+    history.replace(toRelativeUrl(orginalUri || "/", window.location.origin));
+  };
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="d-flex flex-column min-vh-100">
+       <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri} onAuthRequired={customAuthHandler}>
+      <Navebar />
+      <div className="flex-grow-1">
+        <Switch>
+          <Route path="/" exact>
+            <Redirect to="/home" />
+            <HomePage />
+          </Route>
+          <Route path="/home">
+            <HomePage />
+          </Route>
+          <Route path="/addscore">
+            <AddScore />
+          </Route>
+          <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
+          <Route path='/login/callback' component={LoginCallback}/>
+        </Switch>
       </div>
-      <h1>mmsystem-frontend</h1>
-      
-      
-    </>
-  )
-}
+      <Footer />
+      </Security>
+    </div>
+  );
+};
 
-export default App
+export default App;
