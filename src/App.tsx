@@ -9,6 +9,7 @@ import { oktaConfig } from "./lib/oktaConfig";
 import { OktaAuth, toRelativeUrl} from '@okta/okta-auth-js';
 import { Security, LoginCallback } from "@okta/okta-react";
 import LoginWidget from "./Auth/LoginWidget";
+import ViewMarks from "./layouts/AR/ViewMarks/ViewMarks";
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -37,6 +38,9 @@ export const App = () => {
           </Route>
           <Route path="/addscore">
             <AddScore />
+          </Route>
+          <Route path="/arhome">
+            <ViewMarks />
           </Route>
           <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
           <Route path='/login/callback' component={LoginCallback}/>
