@@ -1,9 +1,10 @@
 .right-aligned-div {
     text-align: right;
     margin-bottom: 10px;
+    position: sticky;
   }
-thead {
-    background-color: #f2f2f2;
+thead{
+    background-color: #ffffff;
     position: sticky;
     top: 65px;
     z-index: 1;
