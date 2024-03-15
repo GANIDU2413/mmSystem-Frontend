@@ -1,6 +1,7 @@
 import { Checkbox } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function MarksTable() {
   const [mrks, setMrks] = useState([]);
@@ -54,6 +55,7 @@ export default function MarksTable() {
               <th scope="col">Assignment Score</th>
               <th scope="col">Level</th>
               <th scope="col">Semester</th>
+              <th scope="col">Edit</th>
             </tr>
           </thead>
           <tbody>
@@ -74,6 +76,9 @@ export default function MarksTable() {
                 <td>{mrk.assignmentScore}</td>
                 <td>{mrk.level}</td>
                 <td>{mrk.semester}</td>
+                <td>
+                  <Link className='btn btn-outline-primary mx-2 btn-sm' to={`/markseditform/${mrk.id}`}>Edit</Link>
+                </td>
               </tr>
             ))}
           </tbody>
