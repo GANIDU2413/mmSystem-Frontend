@@ -42,6 +42,9 @@ export const App = () => {
           <Route path="/arhome">
             <ViewMarks />
           </Route>
+          <Route path="/markstable">
+            <ViewMarks />
+          </Route>
           <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
           <Route path='/login/callback' component={LoginCallback}/>
         </Switch>
