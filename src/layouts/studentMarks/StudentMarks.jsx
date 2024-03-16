@@ -49,13 +49,17 @@ export default function StudentMarks() {
             <tr>
               <th scope="col">Checking</th>
               <th scope="col">Student ID</th>
-              <th scope="col">Course ID</th>
-              <th scope="col">Year</th>
-              <th scope="col">Assignment Type</th>
-              <th scope="col">Assignment Score</th>
-              <th scope="col">Level</th>
-              <th scope="col">Semester</th>
+              <th scope="col">ICT1211</th>
+              <th scope="col">ICT2211</th>
+              <th scope="col">ICT3211</th>
+              <th scope="col">ICT4211</th>
+              <th scope="col">ICT5211</th>
+              <th scope="col">ICT6211</th>
+              <th scope="col">ICT7211</th>
+              <th scope="col">ICT8211</th>
               <th scope="col">Edit</th>
+
+              
             </tr>
           </thead>
           <tbody>
@@ -77,7 +81,7 @@ export default function StudentMarks() {
                 <td>{mrk.level}</td>
                 <td>{mrk.semester}</td>
                 <td>
-                  <Link className='btn btn-outline-primary mx-2 btn-sm' to={`/markseditform/${mrk.id}`}>Edit</Link>
+                  <Link className='btn btn-outline-primary mx-2 btn-sm' to={`/studentmarks/${mrk.id}`}>Edit</Link>
                 </td>
               </tr>
             ))}
