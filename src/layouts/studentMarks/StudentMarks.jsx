@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 export default function StudentMarks() {
   const [mrks, setMrks] = useState([]);
   const [allChecked, setAllChecked] = useState(false);
+  const [courseCodearr,setCourseCodeArr]=useState([]);
+  const [students,setStudents]=useState([]);
 
   useEffect(() => {
     //calling loadMarks() function
@@ -19,15 +21,51 @@ export default function StudentMarks() {
 
   //get data using api
   const loadMarks = async () => {
-    const result = await axios.get(
-      "http://localhost:9090/api/studentMarks/GetMarksByLS/{level},{semester}"
-    );
 
-    const marksWithChecked = result.data.map((mark) => ({
-      ...mark,
-      checked: false,
-    }));
-    setMrks(marksWithChecked);
+    try{
+        const result = await axios.get(
+          "http://localhost:9090/api/studentMarks/GetMarksByLS/3,1"
+        );
+
+        const marksWithChecked = result.data.map((mark) => ({
+          ...mark,
+          checked: false,
+        }));
+
+        setMrks(marksWithChecked);
+        // for course ID
+        const uniqueIds = new Set();
+        marksWithChecked.forEach(({ course_id }) => {
+              uniqueIds.add(course_id);
+            });
+            setCourseCodeArr(Array.from(uniqueIds));
+
+            const studentData = {};
+
+      marksWithChecked.forEach((mark) => {
+        const { student_id, course_id, overall_score } = mark;
+        if (!studentData[student_id]) {
+          studentData[student_id] = {
+            student_id: student_id,
+            courses: [{ course_id: course_id, overall_score: overall_score }],
+          };
+        } else {
+          studentData[student_id].courses.push({
+            course_id: course_id,
+            overall_score: overall_score,
+          });
+        }
+      });
+
+      console.log("studentdata: ",studentData);
+
+      const studentArray = Object.values(studentData);
+      console.log("studentArray: ",studentArray);
+      setStudents(studentArray);
+    }
+    catch (error) {
+        console.log("error fetching data : ",error);
+    }
   };
 
   const handleCheckboxChange = (index) => {
@@ -40,14 +78,6 @@ export default function StudentMarks() {
     e.preventDefault();
     console.log("Done");
   };
-
-  const courseCodeArr=[];
-
-  {mrks.map((crs, index) => (
-    courseCodeArr.push(crs.courseID)))}
-
-
-    console.log(courseCodeArr);
 
   return (
     <div className="container">
@@ -72,13 +102,17 @@ export default function StudentMarks() {
 
               <th scope="col">Checked</th>
               <th scope="col">Student ID</th>
-              <th scope="col"></th>
+              {courseCodearr.map((id, index) => (
+                <th key={index} scope="col">
+                  {id}
+                </th>
+              ))}
               <th scope="col">Edit</th>
             </tr>
         
           </thead>
           <tbody>
-            {mrks.map((mrk, index) => (
+            {students.map((mrk, index) => (
               <tr key={index}>
                 <th>
                   <Checkbox
@@ -88,9 +122,16 @@ export default function StudentMarks() {
                     onChange={() => handleCheckboxChange(index)}
                   />
                 </th>
-                <td>{mrk.studentID}</td>
-                <td>{mrk.courseID}</td>
-                <td>{mrk.grade}</td>
+                <td>{mrk.student_id}</td>
+                {courseCodearr.map((id,index)=>{
+                  const courseData = mrk.courses.find(
+                    (c)=> c.course_id === id
+                  );
+                  return(
+                  <td key={index}>
+                    {courseData ? courseData.overall_score : "-"}
+                  </td>);
+                })}
               
                 <td>
                   <Link className='btn btn-outline-primary mx-4 btn-sm rounded-pill' to={`/studentmarkseditform/${mrk.id}`}>Edit</Link>
