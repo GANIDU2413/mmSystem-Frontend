@@ -3,7 +3,9 @@ import "./App.css";
 import { Footer } from "./layouts/NavbarAndFooter/Footer";
 import { Navebar } from "./layouts/NavbarAndFooter/Navebar";
 import { AddScore } from "./layouts/AddScore/AddScore";
+
 import { Redirect, Route, Switch, useHistory } from "react-router-dom";
+
 import { HomePage } from "./layouts/HomePage/HomePage";
 import { oktaConfig } from "./lib/oktaConfig";
 import { OktaAuth, toRelativeUrl} from '@okta/okta-auth-js';
@@ -11,6 +13,9 @@ import { Security, LoginCallback } from "@okta/okta-react";
 import LoginWidget from "./Auth/LoginWidget";
 import ViewMarks from "./layouts/AR/ViewMarks/ViewMarks";
 import MarksTable from "./layouts/MarksTable/MarksTable";
+import MarksEditForm from "./layouts/MarksTable/MarksEditForm";
+import StudentMarks from "./layouts/studentMarks/StudentMarks";
+import StudentMarksEditForm from "./layouts/studentMarks/StudentMarksEditForm";
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -30,10 +35,7 @@ export const App = () => {
       <Navebar />
       <div className="flex-grow-1">
         <Switch>
-          <Route path="/" exact>
-            <Redirect to="/home" />
-            <HomePage />
-          </Route>
+        
           <Route path="/home">
             <HomePage />
           </Route>
@@ -46,8 +48,23 @@ export const App = () => {
           <Route path="/markstable">
             <MarksTable/>
           </Route>
+          <Route path="/markseditform/:id">
+            <MarksEditForm/>
+          </Route>
+          <Route path="/studentmarks">
+            <StudentMarks/>
+          </Route>
+
+          <Route path="/studentmarkseditform/:id">
+            <StudentMarksEditForm/>
+          </Route>
+          
           <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
           <Route path='/login/callback' component={LoginCallback}/>
+
+          {/* <Route>
+            <Redirect to="/home" />
+          </Route> */}
         </Switch>
       </div>
       <Footer />
