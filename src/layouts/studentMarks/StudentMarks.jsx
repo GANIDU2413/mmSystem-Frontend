@@ -8,6 +8,12 @@ export default function StudentMarks() {
   const [allChecked, setAllChecked] = useState(false);
   const [courseCodearr,setCourseCodeArr]=useState([]);
   const [students,setStudents]=useState([]);
+  let level;
+  let sem;
+
+  const [stLevel,setStLevel]=useState();
+  const [stSem,setStSem]=useState();
+ 
 
   useEffect(() => {
     //calling loadMarks() function
@@ -19,13 +25,28 @@ export default function StudentMarks() {
     setAllChecked(checked);
   }, [mrks]);
 
+  const handleButtonClick = (btnlevel,btnsem) =>{
+
+    level = btnlevel;
+    sem = btnsem;
+    loadMarks();
+
+  };
+ 
+
+
   //get data using api
   const loadMarks = async () => {
 
+    
     try{
         const result = await axios.get(
-          "http://localhost:9090/api/studentMarks/GetMarksByLS/3,1"
+          
+          `http://localhost:9090/api/studentMarks/GetMarksByLS/${level},${sem}`
+          
         );
+
+        
 
         const marksWithChecked = result.data.map((mark) => ({
           ...mark,
@@ -57,11 +78,12 @@ export default function StudentMarks() {
         }
       });
 
-      console.log("studentdata: ",studentData);
+      //console.log("studentdata: ",studentData);
 
       const studentArray = Object.values(studentData);
-      console.log("studentArray: ",studentArray);
+      //console.log("studentArray: ",studentArray);
       setStudents(studentArray);
+
     }
     catch (error) {
         console.log("error fetching data : ",error);
@@ -79,19 +101,25 @@ export default function StudentMarks() {
     console.log("Done");
   };
 
+
+ 
+
+
   return (
     <div className="container">
       <div className="py-4" style={{marginTop:"70px"}}>
 
         <div>
-            <button type="button" class="btn btn-primary btn-sm" name="L1S1" value={"L1S1"}>Level 01 Sem 01</button>
-            <button type="button" class="btn btn-primary btn-sm mx-2" name="L1S2" value={"L1S2"}>Level 01 Sem 02</button>
-            <button type="button" class="btn btn-primary btn-sm" name="L2S1" value={"L2S1"}>Level 02 Sem 01</button>
-            <button type="button" class="btn btn-primary btn-sm mx-2" name="L2S2" value={"L2S2"}>Level 02 Sem 02</button>
-            <button type="button" class="btn btn-primary btn-sm" name="L3S1" value={"L3S1"}>Level 03 Sem 01</button>
-            <button type="button" class="btn btn-primary btn-sm mx-2" name="L3S2" value={"L3S2"}>Level 03 Sem 02</button>
-            <button type="button" class="btn btn-primary btn-sm" name="L4S1" value={"L4S1"}>Level 04 Sem 01</button>
-            <button type="button" class="btn btn-primary btn-sm mx-2" name="L4S2" value={"L4S2"}>Level 04 Sem 02</button>
+            <button type="button" class="btn btn-primary btn-sm" name="L1S1" value={"L1S1"} onClick={()=>handleButtonClick(1,1)}>Level 01 Sem 01</button>
+            <button type="button" class="btn btn-primary btn-sm mx-2" name="L1S2" value={"L1S2"} onClick={()=>handleButtonClick(1,2)}>Level 01 Sem 02</button>
+            <button type="button" class="btn btn-primary btn-sm" name="L2S1" value={"L2S1"} onClick={()=>handleButtonClick(2,1)}>Level 02 Sem 01</button>
+            <button type="button" class="btn btn-primary btn-sm mx-2" name="L2S2" value={"L2S2"} onClick={()=>handleButtonClick(2,2)}>Level 02 Sem 02</button>
+            <button type="button" class="btn btn-primary btn-sm" name="L3S1" value={"L3S1"} onClick={()=>handleButtonClick(3,1)}>Level 03 Sem 01</button>
+            <button type="button" class="btn btn-primary btn-sm mx-2" name="L3S2" value={"L3S2"} onClick={()=>handleButtonClick(3,2)}>Level 03 Sem 02</button>
+            <button type="button" class="btn btn-primary btn-sm" name="L4S1" value={"L4S1"} onClick={()=>handleButtonClick(4,1)}>Level 04 Sem 01</button>
+            <button type="button" class="btn btn-primary btn-sm mx-2" name="L4S2" value={"L4S2"} onClick={()=>handleButtonClick(4,2)}>Level 04 Sem 02</button>
+
+
             
         </div>
 
