@@ -20,7 +20,7 @@ export default function StudentMarks() {
   //get data using api
   const loadMarks = async () => {
     const result = await axios.get(
-      'http://localhost:9090/api/studentMarks/GetMarksByLS/3,1'
+      "http://localhost:9090/api/studentMarks/GetMarksByLS/{level},{semester}"
     );
 
     const marksWithChecked = result.data.map((mark) => ({
@@ -90,11 +90,8 @@ export default function StudentMarks() {
                 </th>
                 <td>{mrk.studentID}</td>
                 <td>{mrk.courseID}</td>
-                <td>{mrk.year}</td>
-                <td>{mrk.assignmentType}</td>
-                <td>{mrk.assignmentScore}</td>
-                <td>{mrk.level}</td>
-                <td>{mrk.semester}</td>
+                <td>{mrk.grade}</td>
+              
                 <td>
                   <Link className='btn btn-outline-primary mx-4 btn-sm rounded-pill' to={`/studentmarkseditform/${mrk.id}`}>Edit</Link>
                 </td>
