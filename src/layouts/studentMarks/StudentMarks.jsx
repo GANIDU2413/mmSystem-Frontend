@@ -58,8 +58,6 @@ export default function StudentMarks() {
               <th scope="col">ICT7211</th>
               <th scope="col">ICT8211</th>
               <th scope="col">Edit</th>
-
-              
             </tr>
           </thead>
           <tbody>
