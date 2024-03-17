@@ -43,8 +43,8 @@ export default function StudentMarks() {
 
   return (
     <div className="container">
-      <div className="py-4">
-        <table className="table border shadow" style={{ marginTop: "60px" }}>
+      <div className="py-4 w-25">
+        <table className="  overflow-x-scroll table border shadow" style={{ marginTop: "60px"}} scroll={{y:true}}>
           <thead>
             <tr>
               <th scope="col">Checking</th>
@@ -81,7 +81,7 @@ export default function StudentMarks() {
                 <td>{mrk.level}</td>
                 <td>{mrk.semester}</td>
                 <td>
-                  <Link className='btn btn-outline-primary mx-2 btn-sm' to={`/studentmarks/${mrk.id}`}>Edit</Link>
+                  <Link className='btn btn-outline-primary mx-4 btn-sm rounded-pill' to={`/studentmarkseditform/${mrk.id}`}>Edit</Link>
                 </td>
               </tr>
             ))}
@@ -91,16 +91,16 @@ export default function StudentMarks() {
       <div className="py-4">
         <button
           type="submit"
-          className="btn btn-outline-success btn-sm"
+          className="btn btn-outline-success btn-sm rounded-pill"
           id="submitbtn"
           onClick={handleSubmit}
           disabled={!allChecked}
         >
-          Submit
+          Request Certify
         </button>
         <button
           type="button"
-          className="btn btn-outline-danger mx-2 btn-sm"
+          className="btn btn-outline-danger mx-2 btn-sm rounded-pill"
           id="clearbtn"
         >
           Clean

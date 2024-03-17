@@ -53,9 +53,9 @@ export default function StudentMarksEditForm() {
     }
   return (
     <div className='container'>
-        <div className='row'>
+        <div className='row'style={{ marginTop: "70px" }}>
             <div className='col-md-6 offset-md-3 boder p-4 mt-2 shadow'>
-                <h1 className='text-center m-4'>Marks edit</h1>
+                <h3 className='text-center m-4'>Marks edit</h3>
                 <form onSubmit={(e)=>onSubmit(e)}>
 
                     <label className='form-label' htmlFor='studentID'>Student ID</label>
@@ -80,8 +80,8 @@ export default function StudentMarksEditForm() {
                     <input type='text' className='form-control' placeholder='Enter score' name='semester' value={semester} onChange={(e)=>OnInputChange(e)}></input>
 
 
-                    <input type="submit" name="Submit"  className='btn btn-outline-primary'></input>
-                    <Link type="Clear" name="Clear" className='btn btn-outline-danger mx-2' to="/studentmarks">Cancel</Link>
+                    <input type="submit" name="Submit"  className='btn btn-outline-primary rounded-pill btn-sm'></input>
+                    <Link type="Clear" name="Clear" className='btn btn-outline-danger mx-2 rounded-pill btn-sm' to="/studentmarks">Cancel</Link>
 
                 </form>
             </div>
