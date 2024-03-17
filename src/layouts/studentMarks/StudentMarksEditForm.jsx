@@ -26,7 +26,7 @@ export default function StudentMarksEditForm() {
     
     const loadMarksByID=async()=>
     {
-        const marksByID=await axios.get(`http://localhost:9090/api/lecture/get/scorebyID/${id}`);
+        const marksByID=await axios.get(`http://localhost:9090/api/studentMarks/EditMarksForm/${id}`);
         setMarksByID(marksByID.data);
     }
     
