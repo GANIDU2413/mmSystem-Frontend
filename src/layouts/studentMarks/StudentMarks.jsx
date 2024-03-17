@@ -20,7 +20,7 @@ export default function StudentMarks() {
   //get data using api
   const loadMarks = async () => {
     const result = await axios.get(
-      "http://localhost:9090/api/lecture/get/score"
+      'http://localhost:9090/api/studentMarks/GetMarksByLS/3,1'
     );
 
     const marksWithChecked = result.data.map((mark) => ({
@@ -41,24 +41,41 @@ export default function StudentMarks() {
     console.log("Done");
   };
 
+  const courseCodeArr=[];
+
+  {mrks.map((crs, index) => (
+    courseCodeArr.push(crs.courseID)))}
+
+
+    console.log(courseCodeArr);
+
   return (
     <div className="container">
-      <div className="py-4 w-25">
+      <div className="py-4" style={{marginTop:"70px"}}>
+
+        <div>
+            <button type="button" class="btn btn-primary btn-sm" name="L1S1" value={"L1S1"}>Level 01 Sem 01</button>
+            <button type="button" class="btn btn-primary btn-sm mx-2" name="L1S2" value={"L1S2"}>Level 01 Sem 02</button>
+            <button type="button" class="btn btn-primary btn-sm" name="L2S1" value={"L2S1"}>Level 02 Sem 01</button>
+            <button type="button" class="btn btn-primary btn-sm mx-2" name="L2S2" value={"L2S2"}>Level 02 Sem 02</button>
+            <button type="button" class="btn btn-primary btn-sm" name="L3S1" value={"L3S1"}>Level 03 Sem 01</button>
+            <button type="button" class="btn btn-primary btn-sm mx-2" name="L3S2" value={"L3S2"}>Level 03 Sem 02</button>
+            <button type="button" class="btn btn-primary btn-sm" name="L4S1" value={"L4S1"}>Level 04 Sem 01</button>
+            <button type="button" class="btn btn-primary btn-sm mx-2" name="L4S2" value={"L4S2"}>Level 04 Sem 02</button>
+            
+        </div>
+
         <table className="  overflow-x-scroll table border shadow" style={{ marginTop: "60px"}} scroll={{y:true}}>
           <thead>
+          
             <tr>
-              <th scope="col">Checking</th>
+
+              <th scope="col">Checked</th>
               <th scope="col">Student ID</th>
-              <th scope="col">ICT1211</th>
-              <th scope="col">ICT2211</th>
-              <th scope="col">ICT3211</th>
-              <th scope="col">ICT4211</th>
-              <th scope="col">ICT5211</th>
-              <th scope="col">ICT6211</th>
-              <th scope="col">ICT7211</th>
-              <th scope="col">ICT8211</th>
+              <th scope="col"></th>
               <th scope="col">Edit</th>
             </tr>
+        
           </thead>
           <tbody>
             {mrks.map((mrk, index) => (
