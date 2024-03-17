@@ -14,6 +14,8 @@ import LoginWidget from "./Auth/LoginWidget";
 import ViewMarks from "./layouts/AR/ViewMarks/ViewMarks";
 import MarksTable from "./layouts/MarksTable/MarksTable";
 import MarksEditForm from "./layouts/MarksTable/MarksEditForm";
+import StudentMarks from "./layouts/studentMarks/StudentMarks";
+import StudentMarksEditForm from "./layouts/studentMarks/StudentMarksEditForm";
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -49,6 +51,14 @@ export const App = () => {
           <Route path="/markseditform/:id">
             <MarksEditForm/>
           </Route>
+          <Route path="/studentmarks">
+            <StudentMarks/>
+          </Route>
+
+          <Route path="/studentmarkseditform/:id">
+            <StudentMarksEditForm/>
+          </Route>
+          
           <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
           <Route path='/login/callback' component={LoginCallback}/>
 
