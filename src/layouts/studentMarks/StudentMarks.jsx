@@ -76,6 +76,8 @@ export default function StudentMarks() {
             overall_score: overall_score,
           });
         }
+
+        console.log(mark);
       });
 
       //console.log("studentdata: ",studentData);
@@ -157,6 +159,7 @@ export default function StudentMarks() {
                   );
                   return(
                   <td key={index}>
+                    
                     {courseData ? courseData.overall_score : "-"}
                   </td>);
                 })}
