@@ -87,13 +87,13 @@ export const Navebar = () => {
                     </a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <a className="dropdown-item" href="/arviewetmarks">
                       Department of ET
                     </a>
                   </li>
                   <li></li>
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <a className="dropdown-item" href="/arviewbstmarks">
                       Department of BST
                     </a>
                   </li>

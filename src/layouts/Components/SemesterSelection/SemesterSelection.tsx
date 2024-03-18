@@ -3,6 +3,7 @@ import CourseSelection from '../CourseSelection/CourseSelection'
 
 export default function SemesterSelection(props :any) {
   var level=props.level;
+  var department_id=props.department_id;
   
   const [selectedSemester, setSelectedSemester] = useState(1);
 
@@ -32,11 +33,11 @@ export default function SemesterSelection(props :any) {
         <div className="tab-content" id="pills-tabContent">
           <div className={`tab-pane fade ${selectedSemester === 1 ? "show active" : ""}`} id="sem1" role="tabpanel" aria-labelledby="semester1">
             
-            {selectedSemester === 1 && <CourseSelection level={level} semester={1} />}
+            {selectedSemester === 1 && <CourseSelection level={level} semester={1} department_id={department_id}/>}
           </div>
           <div className={`tab-pane fade ${selectedSemester === 2 ? "show active" : ""}`} id="sem2" role="tabpanel" aria-labelledby="semester2">     
             
-            {selectedSemester === 2 && <CourseSelection level={level} semester={2} />} 
+            {selectedSemester === 2 && <CourseSelection level={level} semester={2} department_id={department_id}/>} 
           </div>
         </div>
     </div>

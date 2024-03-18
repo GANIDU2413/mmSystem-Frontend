@@ -16,7 +16,7 @@ import MarksEditForm from "./layouts/MarksTable/MarksEditForm";
 import StudentMarks from "./layouts/studentMarks/StudentMarks";
 import StudentMarksEditForm from "./layouts/studentMarks/StudentMarksEditForm";
 import HomePageAR from "./layouts/AR/HomePage/HomePageAR";
-import ViewMarksICT from "./layouts/AR/ViewMarksICT/ViewMarksICT";
+import ViewMarks from "./layouts/AR/ViewMarks/ViewMarks";
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -43,12 +43,20 @@ export const App = () => {
           <Route path="/addscore">
             <AddScore />
           </Route>
+
           <Route path="/arhome">
             <HomePageAR/>
           </Route>
           <Route path="/arviewictmarks">
-            <ViewMarksICT />
+            <ViewMarks department_id={"ICT"}/>
           </Route>
+          <Route path="/arviewetmarks">
+            <ViewMarks department_id={"ET"}/>
+          </Route>
+          <Route path="/arviewbstmarks">
+            <ViewMarks department_id={"BST"}/>
+          </Route>
+
           <Route path="/markstable">
             <MarksTable/>
           </Route>

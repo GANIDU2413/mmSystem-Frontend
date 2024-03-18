@@ -3,7 +3,9 @@ import SemesterSelection from '../SemesterSelection/SemesterSelection'
 
 import "./levelSelection.css";
 
-export default function LevelSelection() {
+export default function LevelSelection(props:any) {
+
+  var department_id = props.department_id;
 
   const [selectedLevel, setSelectedLevel] = useState(1);
 
@@ -27,18 +29,18 @@ export default function LevelSelection() {
         </nav>
       <div className="tab-content" id="level-selection-tabContent" >
         <div className={`tab-pane fade ${selectedLevel === 1 ? "show active" : ""}`} id="nav-level1" role="tabpanel" aria-labelledby="nav-level1-tab">
-          {selectedLevel === 1 && <SemesterSelection level={1} />}
+          {selectedLevel === 1 && <SemesterSelection level={1} department_id={department_id} />}
           
         </div>
         <div className={`tab-pane fade ${selectedLevel === 2 ? "show active" : ""}`} id="nav-level2" role="tabpanel" aria-labelledby="nav-level2-tab">
-          {selectedLevel === 2 && <SemesterSelection level={2} />}
+          {selectedLevel === 2 && <SemesterSelection level={2} department_id={department_id}/>}
         
         </div>
         <div className={`tab-pane fade ${selectedLevel === 3 ? "show active" : ""}`} id="nav-level3" role="tabpanel" aria-labelledby="nav-level3-tab">
-          {selectedLevel === 3 && <SemesterSelection level={3} />}
+          {selectedLevel === 3 && <SemesterSelection level={3} department_id={department_id}/>}
         </div>
         <div className={`tab-pane fade ${selectedLevel === 4 ? "show active" : ""}`} id="nav-level4" role="tabpanel" aria-labelledby="nav-level4-tab">
-          {selectedLevel === 4 && <SemesterSelection level={4} />}
+          {selectedLevel === 4 && <SemesterSelection level={4} department_id={department_id}/>}
           
         </div>
       </div>
