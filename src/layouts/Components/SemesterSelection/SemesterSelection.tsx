@@ -31,11 +31,11 @@ export default function SemesterSelection(props :any) {
         </ul>
         <div className="tab-content" id="pills-tabContent">
           <div className={`tab-pane fade ${selectedSemester === 1 ? "show active" : ""}`} id="sem1" role="tabpanel" aria-labelledby="semester1">
-            SEM 1
+            
             {selectedSemester === 1 && <CourseSelection level={level} semester={1} />}
           </div>
           <div className={`tab-pane fade ${selectedSemester === 2 ? "show active" : ""}`} id="sem2" role="tabpanel" aria-labelledby="semester2">     
-            SEM 2
+            
             {selectedSemester === 2 && <CourseSelection level={level} semester={2} />} 
           </div>
         </div>
