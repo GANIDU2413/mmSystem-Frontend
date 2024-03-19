@@ -1,0 +1,5 @@
+.clickable-row:hover {
+    cursor: pointer;
+    background-color: rgb(226, 223, 223); /*Change background color on hover */
+  }
+
