@@ -2,8 +2,8 @@ import { useState } from "react";
 
 export const AddScore = () => {
   // new marks
-  const [studentID, setStudentID] = useState("Category");
-  const [courseID, setCourseID] = useState("");
+  const [studentID, setStudentID] = useState("Select a Student");
+  const [course, setCourseID] = useState("Select a Course");
   const [year, setYear] = useState("");
   const [assignmentType, setassignmentType] = useState("");
   const [assignmentScore, setassignmentScore] = useState(0);
@@ -14,9 +14,57 @@ export const AddScore = () => {
   const [displayWarning, setDisplayWaring] = useState(false);
   const [displaySuccess, setDisplaySuccess] = useState(false);
 
-  function yearField(value: string) {
-    setYear(value);
+  interface DropdownMenuProps {
+    options: string[];
+    selectedOption: string;
+    onSelect: (option: string) => void;
   }
+
+  const DropdownMenu: React.FC<DropdownMenuProps> = ({
+    options,
+    selectedOption,
+    onSelect,
+  }) => {
+    return (
+      <div className="dropdown">
+        <button
+          className="form-control btn btn-secondary dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton1"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {selectedOption}
+        </button>
+        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          {options.map((option, index) => (
+            <li key={index}>
+              <a
+                className="dropdown-item"
+                onClick={() => onSelect(option)}
+                href="#"
+              >
+                {option}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+  
+  const courses: string[] = ["ICT1112", "ICT1122", "ICT1132", "ICT1142"];
+  const students: string[] = ["TG/2020/671", "TG/2020/672", "TG/2020/673", "TG/2020/674"];
+
+  const handleCourseSelect = (setCourse: string): void => {
+    setCourseID(setCourse);
+  };
+
+  const handleStudentSelect = (setCourse: string): void => {
+    setStudentID(setCourse);
+  };
+
+
 
   return (
     
@@ -36,77 +84,32 @@ export const AddScore = () => {
         <div className="card-body">
           <form method="POST">
             <div className="row">
-              <div className="col-md-6 mb-3">
-                <label className="form-label">Student ID</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="title"
-                  required
-                  onChange={(e) => setStudentID(e.target.value)}
-                  value={studentID}
+            <div className="col-md-3 mb-3">
+                <label className="form-label">Course ID</label>
+                <DropdownMenu
+                  options={courses}
+                  selectedOption={course}
+                  onSelect={handleCourseSelect}
                 />
               </div>
               <div className="col-md-3 mb-3">
-                <label className="form-label"> Author </label>
+                <label className="form-label"> StudentID </label>
+                <DropdownMenu
+                  options={students}
+                  selectedOption={studentID}
+                  onSelect={handleStudentSelect}
+                />
+              </div>
+              <div className="col-md-3 mb-3">
+                <label className="form-label">Acadamic Year</label>
                 <input
                   type="text"
                   className="form-control"
                   name="author"
                   required
-                  onChange={(e) => setCourseID(e.target.value)}
-                  value={courseID}
+                 
+                 
                 />
-              </div>
-              <div className="col-md-3 mb-3">
-                <label className="form-label">Acadamic Year</label>
-                <button
-                  className="form-control btn btn-secondary dropdown-toggle"
-                  type="button"
-                  id="dropdownMenuButton1"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  {year}
-                </button>
-                <ul
-                  id="addNewBookId"
-                  className="dropdown-menu"
-                  aria-labelledby="dropdownMenuButton1"
-                >
-                  <li>
-                    <a
-                      onClick={() => yearField("2020")}
-                      className="dropdown-item"
-                    >
-                      2020
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      onClick={() => yearField("2021")}
-                      className="dropdown-item"
-                    >
-                      2021
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      onClick={() => yearField("2022")}
-                      className="dropdown-item"
-                    >
-                      2022
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      onClick={() => yearField("2023")}
-                      className="dropdown-item"
-                    >
-                      2023
-                    </a>
-                  </li>
-                </ul>
               </div>
             </div>
             <div className="col-md-12 mb-3">
