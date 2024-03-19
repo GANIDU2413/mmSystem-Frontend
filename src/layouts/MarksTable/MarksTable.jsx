@@ -3,16 +3,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function StudentMarks() {
+export default function MarksTable() {
   const [mrks, setMrks] = useState([]);
-  const [cid,setCid]=useState([]);
-
   const [allChecked, setAllChecked] = useState(false);
-  const [courseCodearr,setCourseCodeArr]=useState([]);
-  const [students,setStudents]=useState([]);
-  let level;
-  let sem;
- 
+  const [studentIDarr,setStudentIDarr]=useState([]);
+
 
   useEffect(() => {
     //calling loadMarks() function
@@ -24,71 +19,28 @@ export default function StudentMarks() {
     setAllChecked(checked);
   }, [mrks]);
 
-  const handleButtonClick = (btnlevel,btnsem) =>{
-
-    level = btnlevel;
-    sem = btnsem;
-    loadMarks();
-
-  };
- 
-
-
   //get data using api
   const loadMarks = async () => {
+    const result = await axios.get(
+      "http://localhost:9090/api/lecture/get/score"
+    );
 
-    
-    try{
-        const result = await axios.get(
-          
-          `http://localhost:9090/api/studentMarks/GetMarksByLS/${level},${sem}`
-          
-        );
+    const marksWithChecked = result.data.map((mark) => ({
+      ...mark,
+      checked: false,
+    }));
+    setMrks(marksWithChecked);
 
-        const marksWithChecked = result.data.map((mark) => ({
-          ...mark,
-          checked: false,
-        }));
+    const uniqids = new Set();
 
-
-        
-        setCid(marksWithChecked);
-        setMrks(marksWithChecked);
-        // for course ID
-            const uniqueIds = new Set();
-            marksWithChecked.forEach(({ course_id }) => {
-                  uniqueIds.add(course_id);
-            });
-        setCourseCodeArr(Array.from(uniqueIds));
-
-            const studentData = {};
-
-      marksWithChecked.forEach((mark) => {
-        const { student_id, course_id, overall_score } = mark;
-        if (!studentData[student_id]) {
-          studentData[student_id] = {
-            student_id: student_id,
-            courses: [{ course_id: course_id, overall_score: overall_score }],
-          };
-        } else {
-          studentData[student_id].courses.push({
-            course_id: course_id,
-            overall_score: overall_score,
-          });
-        }
-      });
-
-      //console.log("studentdata: ",studentData);
-
-      const studentArray = Object.values(studentData);
-      //console.log("studentArray: ",studentArray);
-      setStudents(studentArray);
-
-    }
-    catch (error) {
-        console.log("error fetching data : ",error);
-    }
+    marksWithChecked.forEach(({student_id}) => {
+      uniqids.add(student_id);
+    });
+    setStudentIDarr(Array.from(uniqids));
   };
+
+
+
 
   const handleCheckboxChange = (index) => {
     const updatedMarks = [...mrks];
@@ -103,25 +55,34 @@ export default function StudentMarks() {
 
   return (
     <div className="container">
-      <div className="py-4" style={{marginTop:"70px"}}>
-        <table className="  overflow-x-scroll table border shadow" style={{ marginTop: "60px"}} >
+      <div className="py-4">
+        <div className=" h2 mt-lg-5 ">
+            Student Marks Finalization 
+        </div>
+        <div>
+          <select className="form-select w-25 mx-lg-2" aria-label="Default select example">
+            <option selected>Open this select a Student</option>
+            <option value="1">TG694</option>
+            <option value="2">TG706</option>
+            <option value="3">TG707</option>
+        </select>
+        </div>
+        <table className="table border shadow" style={{ marginTop: "30px" }}>
           <thead>
-          
             <tr>
-
               <th scope="col">Checked</th>
               <th scope="col">Student ID</th>
-              {courseCodearr.map((id, index) => (
-                <th key={index} scope="col">
-                  {id}
-                </th>
-              ))}
+              <th scope="col">Course ID</th>
+              <th scope="col">Year</th>
+              <th scope="col">Assignment Type</th>
+              <th scope="col">Assignment Score</th>
+              <th scope="col">Level</th>
+              <th scope="col">Semester</th>
               <th scope="col">Edit</th>
             </tr>
-        
           </thead>
           <tbody>
-            {students.map((mrk, index) => (
+            {mrks.map((mrk, index) => (
               <tr key={index}>
                 <th>
                   <Checkbox
@@ -131,19 +92,15 @@ export default function StudentMarks() {
                     onChange={() => handleCheckboxChange(index)}
                   />
                 </th>
-                <td>{mrk.student_id}</td>
-                {courseCodearr.map((id,index)=>{
-                  const courseData = mrk.courses.find(
-                    (c)=> c.course_id === id
-                  );
-                  return(
-                  <td key={index}>
-                    {courseData ? courseData.overall_score : "-"}
-                  </td>);
-                })}
-              
+                <td>{mrk.studentID}</td>
+                <td>{mrk.courseID}</td>
+                <td>{mrk.year}</td>
+                <td>{mrk.assignmentType}</td>
+                <td>{mrk.assignmentScore}</td>
+                <td>{mrk.level}</td>
+                <td>{mrk.semester}</td>
                 <td>
-                  <Link className='btn btn-outline-primary mx-4 btn-sm rounded-pill' to={`/studentmarkseditform/${mrk.id}`}>Edit</Link>
+                  <Link className='btn btn-outline-primary mx-2 btn-sm' to={`/markseditform/${mrk.id}`}>Edit</Link>
                 </td>
               </tr>
             ))}
@@ -153,16 +110,16 @@ export default function StudentMarks() {
       <div className="py-4">
         <button
           type="submit"
-          className="btn btn-outline-success btn-sm rounded-pill"
+          className="btn btn-outline-success btn-sm"
           id="submitbtn"
           onClick={handleSubmit}
           disabled={!allChecked}
         >
-          Request Certify
+          Submit
         </button>
         <button
           type="button"
-          className="btn btn-outline-danger mx-2 btn-sm rounded-pill"
+          className="btn btn-outline-danger mx-2 btn-sm"
           id="clearbtn"
         >
           Clean
