@@ -162,7 +162,7 @@ export default function StudentMarks() {
                 })}
               
                 <td>
-                  <Link className='btn btn-outline-primary mx-4 btn-sm rounded-pill' to={`/studentmarkseditform/${mrk.id}`}>Edit</Link>
+                  <Link className='btn btn-outline-primary mx-4 btn-sm rounded-pill' to={`/studentmarkseditform/${mrk.student_id}`}>Edit</Link>
                 </td>
               </tr>
             ))}
