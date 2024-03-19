@@ -14,7 +14,7 @@ export const Navebar = () => {
 
   console.log(authState);
   return (
-    <nav className="navbar main-color fixed-top">
+    <nav className="navbar bg-primary fixed-top">
       <div className="container-fluid">
         <a
           className="navbar-brand text-white"
@@ -78,23 +78,47 @@ export const Navebar = () => {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Dropdown
+                  Final Marks
                 </a>
                 <ul className="dropdown-menu">
                   <li>
                     <a className="dropdown-item" href="#">
-                      Action
+                      Level I Sem I
                     </a>
                   </li>
                   <li>
                     <a className="dropdown-item" href="#">
-                      Another action
+                    Level I Sem II
                     </a>
                   </li>
-                  <li></li>
                   <li>
                     <a className="dropdown-item" href="#">
-                      Something else here
+                    Level II Sem I
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                    Level II Sem II
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                    Level III Sem I
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                    Level III Sem II
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                    Level IV Sem I
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                    Level IV Sem II
                     </a>
                   </li>
                 </ul>
