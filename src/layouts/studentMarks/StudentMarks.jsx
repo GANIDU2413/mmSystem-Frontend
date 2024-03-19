@@ -10,9 +10,6 @@ export default function StudentMarks() {
   const [students,setStudents]=useState([]);
   let level;
   let sem;
-
-  const [stLevel,setStLevel]=useState();
-  const [stSem,setStSem]=useState();
  
 
   useEffect(() => {
@@ -123,7 +120,7 @@ export default function StudentMarks() {
             
         </div>
 
-        <table className="  overflow-x-scroll table border shadow" style={{ marginTop: "60px"}} scroll={{y:true}}>
+        <table className="  overflow-x-scroll table border shadow" style={{ marginTop: "60px"}} >
           <thead>
           
             <tr>
