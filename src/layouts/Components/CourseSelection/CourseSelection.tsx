@@ -56,10 +56,10 @@ export default function CourseSelection(props :any) {
                 
             </tbody>
             </table>
-            {<br/>}{<br/>}{<br/>}{<br/>}
-                Level {level}{<br/>}
-                Semester {semester}{<br/>}
-                department - {department_id}
+            {<br/>}{<br/>}{<br/>}
+            &nbsp; Level {level}{<br/>}
+            &nbsp; Semester {semester}{<br/>}
+            &nbsp; department - {department_id}
             
 
     </div>
