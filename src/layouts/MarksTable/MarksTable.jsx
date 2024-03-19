@@ -37,10 +37,10 @@ export default function MarksTable() {
       uniqids.add(student_id);
     });
     setStudentIDarr(Array.from(uniqids));
+
+
+
   };
-
-
-
 
   const handleCheckboxChange = (index) => {
     const updatedMarks = [...mrks];
@@ -62,27 +62,28 @@ export default function MarksTable() {
         <div>
           <select className="form-select w-25 mx-lg-2" aria-label="Default select example">
             <option selected>Open this select a Student</option>
-            <option value="1">TG694</option>
-            <option value="2">TG706</option>
-            <option value="3">TG707</option>
+            {studentIDarr.map((id, index) => (
+                <option key={index} value={id} scope="col">
+                  {id}
+                </option>
+              ))}
+            
+            
         </select>
         </div>
         <table className="table border shadow" style={{ marginTop: "30px" }}>
           <thead>
             <tr>
               <th scope="col">Checked</th>
-              <th scope="col">Student ID</th>
-              <th scope="col">Course ID</th>
-              <th scope="col">Year</th>
-              <th scope="col">Assignment Type</th>
-              <th scope="col">Assignment Score</th>
-              <th scope="col">Level</th>
-              <th scope="col">Semester</th>
+              <th scope="col">Assesment Type</th>
+              <th scope="col">Assesment Score</th>
               <th scope="col">Edit</th>
             </tr>
           </thead>
           <tbody>
             {mrks.map((mrk, index) => (
+
+
               <tr key={index}>
                 <th>
                   <Checkbox
@@ -92,13 +93,10 @@ export default function MarksTable() {
                     onChange={() => handleCheckboxChange(index)}
                   />
                 </th>
-                <td>{mrk.studentID}</td>
-                <td>{mrk.courseID}</td>
-                <td>{mrk.year}</td>
+                
                 <td>{mrk.assignmentType}</td>
                 <td>{mrk.assignmentScore}</td>
-                <td>{mrk.level}</td>
-                <td>{mrk.semester}</td>
+                
                 <td>
                   <Link className='btn btn-outline-primary mx-2 btn-sm' to={`/markseditform/${mrk.id}`}>Edit</Link>
                 </td>
