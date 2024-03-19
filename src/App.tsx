@@ -11,13 +11,16 @@ import { oktaConfig } from "./lib/oktaConfig";
 import { OktaAuth, toRelativeUrl} from '@okta/okta-auth-js';
 import { Security, LoginCallback } from "@okta/okta-react";
 import LoginWidget from "./Auth/LoginWidget";
-import ViewMarks from "./layouts/AR/ViewMarks/ViewMarks";
 import MarksTable from "./layouts/MarksTable/MarksTable";
 import MarksEditForm from "./layouts/MarksTable/MarksEditForm";
 import StudentMarks from "./layouts/studentMarks/StudentMarks";
 import StudentMarksEditForm from "./layouts/studentMarks/StudentMarksEditForm";
+
 import StudentCourseEditLayout from "./layouts/studentMarks/StudentCourseEditLayout";
 import ThirdYearEligibility from "./layouts/Dean/ThirdYearEligibility/ThirdYearEligibility";
+import HomePageAR from "./layouts/AR/HomePage/HomePageAR";
+import ViewMarks from "./layouts/AR/ViewMarks/ViewMarks";
+
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -34,7 +37,7 @@ export const App = () => {
   return (
     <div className="d-flex flex-column min-vh-100">
        <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri} onAuthRequired={customAuthHandler}>
-      <Navebar />
+      
       <div className="flex-grow-1">
         <Switch>
         
@@ -44,9 +47,20 @@ export const App = () => {
           <Route path="/addscore">
             <AddScore />
           </Route>
+
           <Route path="/arhome">
-            <ViewMarks />
+            <HomePageAR/>
           </Route>
+          <Route path="/arviewictmarks">
+            <ViewMarks department_id={"ICT"}/>
+          </Route>
+          <Route path="/arviewetmarks">
+            <ViewMarks department_id={"ET"}/>
+          </Route>
+          <Route path="/arviewbstmarks">
+            <ViewMarks department_id={"BST"}/>
+          </Route>
+
           <Route path="/markstable">
             <MarksTable/>
           </Route>
