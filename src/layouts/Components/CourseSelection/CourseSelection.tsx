@@ -18,7 +18,7 @@ export default function CourseSelection(props :any) {
 
     //Load course data from api and store in result variable
     const loadCourseData = async()=>{
-        const result=await axios.get(`http://localhost:9090/api/course/findCoursesByDepartmentLevelSemester/${department_id}/${level}/${semester}/AR`);
+        const result=await axios.get(`http://localhost:9090/api/course/findCoursesByDepartmentLevelSemester/${department_id}/${level}/${semester}/HOD`);
         setCourseData(result.data);
     }
 

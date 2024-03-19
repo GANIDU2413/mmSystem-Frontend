@@ -56,6 +56,9 @@ export const App = () => {
           <Route path="/arviewbstmarks">
             <ViewMarks department_id={"BST"}/>
           </Route>
+          <Route path="/arviewmtdmarks">
+            <ViewMarks department_id={"Multi_Disciplinary"}/>
+          </Route>
 
           <Route path="/markstable">
             <MarksTable/>
