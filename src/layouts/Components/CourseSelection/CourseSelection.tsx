@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect } from 'react'
+import "./courseSelection.css";
 
 export default function CourseSelection(props :any) {
     var level=props.level;
@@ -17,10 +18,13 @@ export default function CourseSelection(props :any) {
 
     //Load course data from api and store in result variable
     const loadCourseData = async()=>{
-        const result=await axios.get(`http://localhost:9090/api/course/findCoursesByDepartmentLevelSemester/${department_id}/${level}/${semester}`);
+        const result=await axios.get(`http://localhost:9090/api/course/findCoursesByDepartmentLevelSemester/${department_id}/${level}/${semester}/AR`);
         setCourseData(result.data);
     }
 
+    function handleCourseSelection(course_id: any){
+      console.log(course_id);
+    }
 
 
   return (
@@ -28,19 +32,25 @@ export default function CourseSelection(props :any) {
         <table className="table">
             <thead>
                 <tr>
+
                 <th scope="col"></th>
                 <th scope="col">Course Code</th>
                 <th scope="col">Course Name</th>
+                <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
               {
                 courseData.map((course: any, index: number) => (
-                <tr>
-                  <th scope="row" key={index}>{index+1}</th>
-                  <td>{course.course_id}</td>
-                  <td>{course.course_name}</td>
+                  
+                  <tr className="clickable-row" onClick={() => handleCourseSelection({index})}>
+                    
+                    <th scope="row" key={index}>{index+1}</th>
+                    <td>{course.course_id}</td>
+                    <td>{course.course_name}</td>
+                    <td><button type="button" className="btn btn-primary btn-sm">View Marks</button> </td>
                 </tr>
+                  
                 ))
               }
                 
@@ -49,7 +59,7 @@ export default function CourseSelection(props :any) {
             {<br/>}{<br/>}{<br/>}{<br/>}
                 Level {level}{<br/>}
                 Semester {semester}{<br/>}
-                department_id {department_id}
+                department - {department_id}
             
 
     </div>
