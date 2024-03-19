@@ -83,7 +83,6 @@ export default function MarksTable() {
           <tbody>
             {mrks.map((mrk, index) => (
 
-
               <tr key={index}>
                 <th>
                   <Checkbox
