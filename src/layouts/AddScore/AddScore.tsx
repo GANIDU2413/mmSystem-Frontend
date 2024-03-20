@@ -3,16 +3,21 @@ import { useState } from "react";
 export const AddScore = () => {
   // new marks
   const [studentID, setStudentID] = useState("Select a Student");
-  const [course, setCourseID] = useState("Select a Course");
+  const [courseID, setCourseID] = useState("Select a Course");
   const [year, setYear] = useState("");
-  const [assignmentType, setassignmentType] = useState("");
+  const [assignmentType, setassignmentType] = useState(
+    "Select an Assignment Tyep"
+  );
   const [assignmentScore, setassignmentScore] = useState(0);
+  const [assignmentScoreFeedingType, setassignmentScoreFeedingScore] = useState(
+    "Select Score Feeding Type"
+  );
   const [level, setlevel] = useState("");
   const [semester, setSemester] = useState("");
 
   // Display
   const [displayWarning, setDisplayWaring] = useState(false);
-  const [displaySuccess, setDisplaySuccess] = useState(false);
+  const [displaySuccess, setDisplaySuccess] = useState(true);
 
   interface DropdownMenuProps {
     options: string[];
@@ -52,9 +57,22 @@ export const AddScore = () => {
       </div>
     );
   };
-  
+
   const courses: string[] = ["ICT1112", "ICT1122", "ICT1132", "ICT1142"];
-  const students: string[] = ["TG/2020/671", "TG/2020/672", "TG/2020/673", "TG/2020/674"];
+  const students: string[] = [
+    "TG/2020/671",
+    "TG/2020/672",
+    "TG/2020/673",
+    "TG/2020/674",
+  ];
+  const assignmentTypes: string[] = [
+    "QUIZE01",
+    "QUIZE02",
+    "QUIZE03",
+    "ASSISTMENT01",
+    "MID",
+  ];
+  const scoreFeedingType: string[] = ["HOLD", "FEED SCORE"];
 
   const handleCourseSelect = (setCourse: string): void => {
     setCourseID(setCourse);
@@ -64,36 +82,71 @@ export const AddScore = () => {
     setStudentID(setCourse);
   };
 
+  const handleAssignmentType = (setAssignmentType: string): void => {
+    setassignmentType(setAssignmentType);
+  };
 
+  const handleScoreFeedingType = (
+    setAssignmentScoreFeedingType: string
+  ): void => {
+    setassignmentScoreFeedingScore(setAssignmentScoreFeedingType);
+  };
 
   return (
-    
     <div className="container mt-5 mb-5">
-      {displaySuccess && (
-        <div className="alert alert-success" role="alert">
-          Mark Add successfully
-        </div>
-      )}
-      {displayWarning && (
-        <div className="alert alert-danger" role="alert">
-          All fields must be filled out
-        </div>
-      )}
-      <div className="card">
-        <div className="card-header">Add a new Score</div>
+      <div className="card shadow-lg">
+        <div className="card-header">Add new Score</div>
+       
         <div className="card-body">
+        <div className="mt-1 mb-1">
+              {displaySuccess && (
+                <div className="alert alert-success" role="alert">
+                  Mark Add successfully
+                </div>
+              )}
+              {displayWarning && (
+                <div className="alert alert-danger" role="alert">
+                  All fields must be filled out
+                </div>
+              )}
+            </div>
           <form method="POST">
             <div className="row">
-            <div className="col-md-3 mb-3">
+              <div className="col-md-3 mb-3">
                 <label className="form-label">Course ID</label>
                 <DropdownMenu
                   options={courses}
-                  selectedOption={course}
+                  selectedOption={courseID}
                   onSelect={handleCourseSelect}
                 />
               </div>
               <div className="col-md-3 mb-3">
-                <label className="form-label"> StudentID </label>
+                <label className="form-label"> Assignment Type </label>
+                <DropdownMenu
+                  options={assignmentTypes}
+                  selectedOption={assignmentType}
+                  onSelect={handleAssignmentType}
+                />
+              </div>
+              <div className="col-md-6 mb-3">
+                <label className="form-label">Course Name </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="author"
+                  required
+                />
+              </div>
+            </div>
+            <div>
+              <button type="button" className="btn btn-primary mt-3">
+                Enable Score Feeding
+              </button>
+            </div>
+            <hr />
+            <div className="row">
+              <div className="col-md-3 mb-3">
+                <label className="form-label">Student ID</label>
                 <DropdownMenu
                   options={students}
                   selectedOption={studentID}
@@ -101,48 +154,57 @@ export const AddScore = () => {
                 />
               </div>
               <div className="col-md-3 mb-3">
-                <label className="form-label">Acadamic Year</label>
+                <label className="form-label">Student Type</label>
                 <input
                   type="text"
                   className="form-control"
                   name="author"
                   required
-                 
-                 
+                />
+              </div>
+              <div className="col-md-3 mb-3">
+                <label className="form-label">Score Type</label>
+                <DropdownMenu
+                  options={scoreFeedingType}
+                  selectedOption={assignmentScoreFeedingType}
+                  onSelect={handleScoreFeedingType}
                 />
               </div>
             </div>
-            <div className="col-md-12 mb-3">
-              <label className="form-label">Description</label>
-              <textarea
-                className="form-control"
-                id="exampleFormControlTextarea1"
-                rows={3}
-                onChange={(e) => setassignmentType(e.target.value)}
-                value={assignmentType}
-              ></textarea>
+            <div className="row">
+              <div className="col-md-3 mb-3">
+                <label className="form-label">Enter Score</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="author"
+                  required
+                  onChange={(e) => setassignmentScore(Number(e.target.value))}
+                  value={assignmentScore}
+                />
+              </div>
+              <div className="col-md-3 mb-3">
+                <label className="form-label">Re-Enter Score</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="author"
+                  required
+                />
+              </div>
             </div>
-            <div className="col-md-3 mb-3">
-              <label className="form-label">Copies</label>
-              <input
-                type="number"
-                className="form-control"
-                name="Copies"
-                required
-                onChange={(e) => setassignmentScore(Number(e.target.value))}
-                value={assignmentScore}
-              />
-            </div>
-            <input type="file" />
             <div>
               <button type="button" className="btn btn-primary mt-3">
-                Add Score
+                Submit State
               </button>
             </div>
+           
           </form>
         </div>
       </div>
+      <button type="button" className="btn btn-primary mt-3">
+        Complete Selected Course
+      </button>
     </div>
-   
   );
 };
