@@ -1,23 +1,17 @@
+
 import { Checkbox } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { NavebarMT } from "./NavebarMT";
 
-export default function MarksTable({c_id='ICT1112'}) {
+export default function ThirdYearEligibility() {
   const [mrks, setMrks] = useState([]);
   const [allChecked, setAllChecked] = useState(false);
-  const [studentIDarr,setStudentIDarr]=useState([]);
-  const [fildedMarks,setFildedMarks] = useState([]);
-
-console.log(c_id)
 
   useEffect(() => {
     //calling loadMarks() function
     loadMarks();
   }, []);
-
- 
 
   useEffect(() => {
     const checked = mrks.every((mrk) => mrk.checked);
@@ -27,33 +21,14 @@ console.log(c_id)
   //get data using api
   const loadMarks = async () => {
     const result = await axios.get(
-      "http://localhost:9090/api/StudentAssessment/get/score"
+      "http://localhost:9090/api/lecture/get/score"
     );
 
     const marksWithChecked = result.data.map((mark) => ({
       ...mark,
       checked: false,
     }));
-
-    const marksFilterByID = marksWithChecked.filter((markCid)=>markCid.course_id === c_id);
-    console.log(marksFilterByID)
-    setMrks(marksFilterByID);
-
-      setFildedMarks(marksFilterByID);
-
-    console.log(marksWithChecked);
-    const uniqids = new Set();
-
-    marksWithChecked.forEach(({student_id}) => {
-      uniqids.add(student_id);
-    });
-    console.log(Array.from(uniqids));
-
-    setStudentIDarr(Array.from(uniqids));
-
-
-
-
+    setMrks(marksWithChecked);
   };
 
   const handleCheckboxChange = (index) => {
@@ -66,48 +41,26 @@ console.log(c_id)
     e.preventDefault();
     console.log("Done");
   };
-  // console.log(studentIDarr);
-
-
-  const filterDataBySTID = (event) =>{
-    const stid = event.target.value;
-    const marksFilterBystID = mrks.filter((markCid)=>markCid.student_id === stid);
-    setFildedMarks(marksFilterBystID);
-
-  };
 
   return (
-
     <div className="container">
-      <NavebarMT/>
       <div className="py-4">
-        <div className=" h2 mt-lg-5 ">
-            Student Marks Finalization 
-        </div>
-        <div>
-          <select className="form-select w-25 mx-lg-2" aria-label="Default select example" onChange={(event)=>filterDataBySTID(event)}>
-            <option selected>Open this select a Student</option>
-            {studentIDarr.map((id, index) => (
-                <option key={index} value={id} scope="col" >
-                  {id}
-                </option>
-              ))}
-            
-            
-        </select>
-        </div>
-        <table className="table border shadow" style={{ marginTop: "30px" }}>
+        <table className="table border shadow" style={{ marginTop: "60px" }}>
           <thead>
             <tr>
-              <th scope="col">Checked</th>
-              <th scope="col">Assesment Type</th>
-              <th scope="col">Assesment Score</th>
+              <th scope="col">Checking</th>
+              <th scope="col">Student ID</th>
+              <th scope="col">Course ID</th>
+              <th scope="col">Year</th>
+              <th scope="col">Assignment Type</th>
+              <th scope="col">Assignment Score</th>
+              <th scope="col">Level</th>
+              <th scope="col">Semester</th>
               <th scope="col">Edit</th>
             </tr>
           </thead>
           <tbody>
-            {fildedMarks.map((mrk, index) => (
-
+            {mrks.map((mrk, index) => (
               <tr key={index}>
                 <th>
                   <Checkbox
@@ -117,10 +70,13 @@ console.log(c_id)
                     onChange={() => handleCheckboxChange(index)}
                   />
                 </th>
-                
-                <td>{mrk.assignment_type}</td>
-                <td>{mrk.assignment_score}</td>
-                
+                <td>{mrk.studentID}</td>
+                <td>{mrk.courseID}</td>
+                <td>{mrk.year}</td>
+                <td>{mrk.assignmentType}</td>
+                <td>{mrk.assignmentScore}</td>
+                <td>{mrk.level}</td>
+                <td>{mrk.semester}</td>
                 <td>
                   <Link className='btn btn-outline-primary mx-2 btn-sm' to={`/markseditform/${mrk.id}`}>Edit</Link>
                 </td>

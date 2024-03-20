@@ -15,9 +15,13 @@ import MarksTable from "./layouts/MarksTable/MarksTable";
 import MarksEditForm from "./layouts/MarksTable/MarksEditForm";
 import StudentMarks from "./layouts/studentMarks/StudentMarks";
 import StudentMarksEditForm from "./layouts/studentMarks/StudentMarksEditForm";
+
+import StudentCourseEditLayout from "./layouts/studentMarks/StudentCourseEditLayout";
+import ThirdYearEligibility from "./layouts/Dean/ThirdYearEligibility/ThirdYearEligibility";
 import HomePageAR from "./layouts/AR/HomePage/HomePageAR";
 import ViewMarks from "./layouts/AR/ViewMarks/ViewMarks";
 import DataTable from "./layouts/Components/DataTable/DataTable";
+
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -74,8 +78,16 @@ export const App = () => {
             <StudentMarks/>
           </Route>
 
-          <Route path="/studentmarkseditform/:id">
+          <Route path="/studentmarkseditform/:student_id">
             <StudentMarksEditForm/>
+          </Route>
+
+          <Route path="/studentlayout">
+            <StudentCourseEditLayout/>
+          </Route>
+
+          <Route path="/thirdyeareligibility">
+            <ThirdYearEligibility/>
           </Route>
           
           <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
