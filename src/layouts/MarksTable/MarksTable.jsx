@@ -82,7 +82,8 @@ console.log(c_id)
       <NavebarMT/>
       <div className="py-4">
         <div className=" h2 mt-lg-5 ">
-            Student Marks Finalization 
+            Student Marks Finalization
+            <p className=" p-sm-0 mt-2 ">Course ID : {c_id}</p> 
         </div>
         <div>
           <select className="form-select w-25 mx-lg-2" aria-label="Default select example" onChange={(event)=>filterDataBySTID(event)}>
