@@ -22,6 +22,7 @@ import HomePageAR from "./layouts/AR/HomePage/HomePageAR";
 import ViewMarks from "./layouts/AR/ViewMarks/ViewMarks";
 import FinalStudentMarks from "./layouts/Dean/FinalMarks/FinalStudentMarks";
 import FinalStudentMarksEditFrom from "./layouts/Dean/FinalMarks/FinalStudentMarksEditFrom";
+import DataTable from "./layouts/Components/DataTable/DataTable";
 
 
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -64,6 +65,9 @@ export const App = () => {
           </Route>
           <Route path="/arviewmtdmarks">
             <ViewMarks department_id={"Multi_Disciplinary"}/>
+          </Route>
+          <Route path="/viewMarksRemainingToApprove/:course_id/:course_name">
+            <DataTable/>
           </Route>
 
           <Route path="/markstable">

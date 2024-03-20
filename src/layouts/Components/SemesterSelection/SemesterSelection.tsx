@@ -18,7 +18,6 @@ export default function SemesterSelection(props :any) {
 
   return (
     
-    <form>
     <div style={{marginTop:5,marginLeft:0,marginRight:0}}>
         <ul className="nav nav-pills mb-3" id="semesterSelectionTab" role="tablist">
       
@@ -42,7 +41,6 @@ export default function SemesterSelection(props :any) {
         </div>
     </div>
 
-    </form>
     
   )
 }
