@@ -2,6 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useParams, Redirect } from "react-router-dom";
+import { NavebarSM } from "./NavebarSM";
 
 export default function MarksEditForm() {
   const [redirect, setRedirect] = useState(false);
@@ -43,7 +44,8 @@ export default function MarksEditForm() {
 
   return (
     <div className="container">
-      <div className="row">
+      <NavebarSM/>
+      <div className="row" style={{marginTop:"100px"}}>
         <div className="col-md-6 offset-md-3 boder p-4 mt-2 shadow">
           <h1 className="text-center m-4">Marks edit</h1>
           <form onSubmit={(e) => onSubmit(e)}>

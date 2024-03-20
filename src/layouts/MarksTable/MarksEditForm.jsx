@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams,Redirect } from 'react-router-dom';
+import { NavebarMT } from './NavebarMT';
 
 
 
@@ -53,6 +54,7 @@ export default function MarksEditForm() {
     }
   return (
     <div className='container'>
+        <NavebarMT/>
         <div className='row'>
             <div className='col-md-6 offset-md-3 boder p-4 mt-2 shadow'>
                 <h1 className='text-center m-4'>Marks edit</h1>
