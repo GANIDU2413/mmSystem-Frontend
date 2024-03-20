@@ -11,11 +11,11 @@ export default function MarksEditForm() {
 
     const[marksByID,setMarksByID]=useState(
         {
-            studentID: "",
-            courseID: "",
-            year: "",
-            assignmentType: "",
-            assignmentScore: "",
+            student_id: "",
+            course_id: "",
+            academic_year: "",
+            assignment_type: "",
+            assignment_score: "",
             level: "",
             semester: ""
        
@@ -27,7 +27,7 @@ export default function MarksEditForm() {
     
     const loadMarksByID=async()=>
     {
-        const marksByID=await axios.get(`http://localhost:9090/api/lecture/get/scorebyID/${id}`);
+        const marksByID=await axios.get(`http://localhost:9090/api/StudentAssessment/get/scorebyID/${id}`);
         setMarksByID(marksByID.data);
     }
     
@@ -36,7 +36,7 @@ export default function MarksEditForm() {
         loadMarksByID();
     },[]);
     
-    const {studentID,courseID,year,assignmentType,assignmentScore,level,semester}=marksByID;
+    const {student_id,course_id,academic_year ,assignment_type,assignment_score,level,semester}=marksByID;
     
     const OnInputChange=(e)=>
     {
@@ -45,7 +45,7 @@ export default function MarksEditForm() {
     
     const onSubmit =async (e)=>{
         e.preventDefault();
-        await axios.put(`http://localhost:9090/api/lecture/edit/score/${id}`,marksByID);
+        await axios.put(`http://localhost:9090/api/StudentAssessment/edit/score/${id}`,marksByID);
         setRedirect(true);
     }
 
@@ -60,20 +60,20 @@ export default function MarksEditForm() {
                 <h1 className='text-center m-4'>Marks edit</h1>
                 <form onSubmit={(e)=>onSubmit(e)}>
 
-                    <label className='form-label' htmlFor='studentID'>Student ID</label>
-                    <input type='text'  className='form-control' placeholder='Enter student ID' name="studentID" value={studentID} onChange={(e)=>OnInputChange(e)}></input>
+                    <label className='form-label' htmlFor='student_id'>Student ID</label>
+                    <input type='text'  className='form-control' placeholder='Enter student ID' name="student_id" value={student_id} onChange={(e)=>OnInputChange(e)}></input>
 
-                    <label className='form-label' htmlFor='CourseID'>Course ID</label>
-                    <input type='text' className='form-control' placeholder='Enter your course ID' name="courseID" value={courseID} onChange={(e)=>OnInputChange(e)}></input>
+                    <label className='form-label' htmlFor='course_id'>Course ID</label>
+                    <input type='text' className='form-control' placeholder='Enter your course ID' name="course_id" value={course_id} onChange={(e)=>OnInputChange(e)}></input>
 
-                    <label className='form-label' htmlFor='year'>Year</label>
-                    <input type='text' className='form-control' placeholder="Enter year " name="year" value={year} onChange={(e)=>OnInputChange(e)}></input>
+                    <label className='form-label' htmlFor='academic_year '>Year</label>
+                    <input type='text' className='form-control' placeholder="Enter year " name="academic_year" value={academic_year} onChange={(e)=>OnInputChange(e)}></input>
 
-                    <label className='form-label' htmlFor='assignmentType'>Assignment type</label>
-                    <input type='text' className='form-control'placeholder='Enter assignment type' name="assignmentType" value={assignmentType} onChange={(e)=>OnInputChange(e)}></input>
+                    <label className='form-label' htmlFor='assignment_type'>Assignment type</label>
+                    <input type='text' className='form-control'placeholder='Enter assignment type' name="assignment_type" value={assignment_type} onChange={(e)=>OnInputChange(e)}></input>
 
-                    <label className='form-label' htmlFor='assignmentScore'>Assignment score</label>
-                    <input type='text' className='form-control' placeholder='Enter Assignment score' name="assignmentScore" value={assignmentScore} onChange={(e)=>OnInputChange(e)}></input>
+                    <label className='form-label' htmlFor='assignment_score'>Assignment score</label>
+                    <input type='text' className='form-control' placeholder='Enter Assignment score' name="assignment_score" value={assignment_score} onChange={(e)=>OnInputChange(e)}></input>
 
                     <label className='form-label' htmlFor='level'>Level</label>
                     <input type='text' className='form-control' placeholder='Enter score' name="level" value={level} onChange={(e)=>OnInputChange(e)}></input>

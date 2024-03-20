@@ -27,7 +27,7 @@ console.log(c_id)
   //get data using api
   const loadMarks = async () => {
     const result = await axios.get(
-      "http://localhost:9090/api/lecture/get/score"
+      "http://localhost:9090/api/StudentAssessment/get/score"
     );
 
     const marksWithChecked = result.data.map((mark) => ({
@@ -35,7 +35,7 @@ console.log(c_id)
       checked: false,
     }));
 
-    const marksFilterByID = marksWithChecked.filter((markCid)=>markCid.courseID === c_id);
+    const marksFilterByID = marksWithChecked.filter((markCid)=>markCid.course_id === c_id);
     console.log(marksFilterByID)
     setMrks(marksFilterByID);
 
@@ -44,8 +44,8 @@ console.log(c_id)
     console.log(marksWithChecked);
     const uniqids = new Set();
 
-    marksWithChecked.forEach(({studentID}) => {
-      uniqids.add(studentID);
+    marksWithChecked.forEach(({student_id}) => {
+      uniqids.add(student_id);
     });
     console.log(Array.from(uniqids));
 
@@ -71,7 +71,7 @@ console.log(c_id)
 
   const filterDataBySTID = (event) =>{
     const stid = event.target.value;
-    const marksFilterBystID = mrks.filter((markCid)=>markCid.studentID === stid);
+    const marksFilterBystID = mrks.filter((markCid)=>markCid.student_id === stid);
     setFildedMarks(marksFilterBystID);
 
   };
@@ -118,8 +118,8 @@ console.log(c_id)
                   />
                 </th>
                 
-                <td>{mrk.assignmentType}</td>
-                <td>{mrk.assignmentScore}</td>
+                <td>{mrk.assignment_type}</td>
+                <td>{mrk.assignment_score}</td>
                 
                 <td>
                   <Link className='btn btn-outline-primary mx-2 btn-sm' to={`/markseditform/${mrk.id}`}>Edit</Link>
