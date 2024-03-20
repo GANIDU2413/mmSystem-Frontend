@@ -32,8 +32,7 @@ export default function MarksEditForm() {
   const onSubmit = async (e) => {
     e.preventDefault();
     await axios.put(
-      `http://localhost:9090/api/studentMarks/EditMarksForm/`,cidandfinalmarks
-    );
+      `http://localhost:9090/api/studentMarks/EditMarksForm/`,cidandfinalmarks);
     console.log(cidandfinalmarks);
     setRedirect(true);
   };

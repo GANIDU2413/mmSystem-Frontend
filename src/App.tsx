@@ -71,7 +71,7 @@ export const App = () => {
             <StudentMarks/>
           </Route>
 
-          <Route path="/studentmarkseditform/:id">
+          <Route path="/studentmarkseditform/:student_id">
             <StudentMarksEditForm/>
           </Route>
 
