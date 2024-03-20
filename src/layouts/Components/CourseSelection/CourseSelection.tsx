@@ -56,8 +56,8 @@ export default function CourseSelection(props :any) {
                     <th scope="row" key={index}>{index+1}</th>
                     <td>{course.course_id}</td>
                     <td>{course.course_name}</td>
-                    {/* <td><a href={`/viewMarksRemainingToApprove/${course.course_id}`} className="btn btn-primary "  role="button" aria-disabled="true">View Marks</a> </td> */}
-                    <td>
+                    <td><a href={`/viewMarksRemainingToApprove/${course.course_id}/${course.course_name}`} className="btn btn-primary "  role="button" aria-disabled="true">View Marks</a> </td>
+                    {/* <td>
                       <button type="button" className="btn btn-primary btn-sm">
                         <Link to ={{
                           pathname: `/viewMarksRemainingToApprove/${course.course_id}`,
@@ -69,7 +69,7 @@ export default function CourseSelection(props :any) {
                         
                         
                       </button>
-                    </td>
+                    </td> */}
                 </tr>
                
                 ))
