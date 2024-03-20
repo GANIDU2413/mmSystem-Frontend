@@ -2,7 +2,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
 import { SpinerLoading } from "../Utils/SpinerLoading";
 
-export const Navebar = () => {
+export const NavebarMT = () => {
 
   const {oktaAuth , authState} = useOktaAuth();
 
@@ -49,7 +49,7 @@ export const Navebar = () => {
         >
           <div className="offcanvas-header">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              Hi, Mr.Nuwan Laksisri
+              Hi, Mr.Nuwan Laksiri
             </h5>
             <button
               type="button"
@@ -67,10 +67,10 @@ export const Navebar = () => {
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
-                  Marks Feeding
+                  
                 </a>
               </li>
-              <li className="nav-item dropdown">
+              {/* <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
                   href="#"
@@ -78,7 +78,7 @@ export const Navebar = () => {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Final Marks
+                  Student Marks Finalization
                 </a>
                 <ul className="dropdown-menu">
                   <li>
@@ -122,7 +122,7 @@ export const Navebar = () => {
                     </a>
                   </li>
                 </ul>
-              </li>
+              </li> */}
             </ul>
             
             <hr></hr>
