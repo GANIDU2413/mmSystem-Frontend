@@ -51,16 +51,17 @@ export default function StudentMarks() {
       const studentData = {};
 
       marksWithChecked.forEach((mark) => {
-        const { student_id, course_id, overall_score } = mark;
+        const { student_id, course_id, overall_score,grade } = mark;
         if (!studentData[student_id]) {
           studentData[student_id] = {
             student_id: student_id,
-            courses: [{ course_id: course_id, overall_score: overall_score }],
+            courses: [{ course_id: course_id, overall_score: overall_score ,grade: grade}],
           };
         } else {
           studentData[student_id].courses.push({
             course_id: course_id,
             overall_score: overall_score,
+            grade: grade
           });
         }
 
@@ -101,9 +102,9 @@ export default function StudentMarks() {
               <th scope="col">Checked</th>
               <th scope="col">Student ID</th>
               {courseCodearr.map((id, index) => (
-                <th key={index} scope="col">
+                <><th key={index} scope="col">
                   {id}
-                </th>
+                </th><th>Grade</th></>
               ))}
               <th scope="col">Edit</th>
             </tr>
@@ -123,11 +124,17 @@ export default function StudentMarks() {
                 {courseCodearr.map((id, index) => {
                   const courseData = mrk.courses.find(
                     (c) => c.course_id === id
+                  
                   );
                   return (
+                    <>
                     <td key={index}>
                       {courseData ? courseData.overall_score : "-"}
                     </td>
+                    <td key={index}>
+                      {courseData ? courseData.grade : "-"}
+                    </td>
+                    </>
                   );
                 })}
                 <td>
