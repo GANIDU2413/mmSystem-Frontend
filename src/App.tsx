@@ -37,7 +37,7 @@ export const App = () => {
   return (
     <div className="d-flex flex-column min-vh-100">
        <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri} onAuthRequired={customAuthHandler}>
-      <Navebar/>
+      
       <div className="flex-grow-1">
         <Switch>
         
