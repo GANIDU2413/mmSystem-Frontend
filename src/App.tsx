@@ -20,6 +20,8 @@ import StudentCourseEditLayout from "./layouts/studentMarks/StudentCourseEditLay
 import ThirdYearEligibility from "./layouts/Dean/ThirdYearEligibility/ThirdYearEligibility";
 import HomePageAR from "./layouts/AR/HomePage/HomePageAR";
 import ViewMarks from "./layouts/AR/ViewMarks/ViewMarks";
+import FinalStudentMarks from "./layouts/Dean/FinalMarks/FinalStudentMarks";
+import FinalStudentMarksEditFrom from "./layouts/Dean/FinalMarks/FinalStudentMarksEditFrom";
 
 
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -85,6 +87,16 @@ export const App = () => {
           <Route path="/thirdyeareligibility">
             <ThirdYearEligibility/>
           </Route>
+
+          <Route path="/finalstudentmarks">
+            <FinalStudentMarks/>
+          </Route>
+
+          
+          <Route path="/finalstudentmarkseditfrom/:student_id">
+            <FinalStudentMarksEditFrom/>
+          </Route>
+
           
           <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
           <Route path='/login/callback' component={LoginCallback}/>
