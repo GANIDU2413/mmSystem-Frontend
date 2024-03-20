@@ -36,7 +36,7 @@ export default function DataTable(props:any) {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th colSpan={100} style={{textAlign:"center",backgroundColor:'#ebe8e8'}}>Student Results &nbsp;&nbsp;  {course_variables.course_id} - {course_variables.course_name}</th>
+              <th colSpan={100} style={{textAlign:"center",backgroundColor:'#ebe8e8'}}>Approve Student Results Before The Results Board <br/> {course_variables.course_id} - {course_variables.course_name}</th>
             </tr>
             <tr>
               <th scope="col">Student ID</th>
