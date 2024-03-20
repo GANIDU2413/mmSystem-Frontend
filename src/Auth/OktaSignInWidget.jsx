@@ -24,7 +24,7 @@ const OktaSignInWidget = ({onSuccess, onError}) => {
         }, [onSuccess, onError]
     );
     return(
-       <div className='container mt-5 mb-5'>
+        <div className='container mt-5 mb-5 d-flex justify-content-center align-items-center'>
           <div ref={widgetRef}></div>
           
        </div>
