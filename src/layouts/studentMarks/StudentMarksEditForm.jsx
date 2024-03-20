@@ -66,6 +66,7 @@ export default function MarksEditForm() {
               type="submit"
               className="btn btn-outline-primary mx-2"
               value="Submit"
+              to="/studentmarks"
             />
             <Link
               className="btn btn-outline-danger mx-2"
