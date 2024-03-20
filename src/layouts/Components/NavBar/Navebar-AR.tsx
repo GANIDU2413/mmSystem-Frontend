@@ -97,6 +97,11 @@ export const Navebar = () => {
                       Department of BST
                     </a>
                   </li>
+                  <li>
+                    <a className="dropdown-item" href="/arviewmtdmarks">
+                      Department of Multi Disciplinary
+                    </a>
+                  </li>
                 </ul>
               </li>
             </ul>
