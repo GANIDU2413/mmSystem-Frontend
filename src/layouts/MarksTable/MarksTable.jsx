@@ -3,16 +3,20 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function MarksTable() {
+export default function MarksTable({c_id='ICT1112'}) {
   const [mrks, setMrks] = useState([]);
   const [allChecked, setAllChecked] = useState(false);
   const [studentIDarr,setStudentIDarr]=useState([]);
+  const [fildedMarks,setFildedMarks] = useState([]);
 
+console.log(c_id)
 
   useEffect(() => {
     //calling loadMarks() function
     loadMarks();
   }, []);
+
+ 
 
   useEffect(() => {
     const checked = mrks.every((mrk) => mrk.checked);
@@ -29,14 +33,23 @@ export default function MarksTable() {
       ...mark,
       checked: false,
     }));
-    setMrks(marksWithChecked);
 
+    const marksFilterByID = marksWithChecked.filter((markCid)=>markCid.courseID === c_id);
+    console.log(marksFilterByID)
+    setMrks(marksFilterByID);
+
+      setFildedMarks(marksFilterByID);
+
+    console.log(marksWithChecked);
     const uniqids = new Set();
 
-    marksWithChecked.forEach(({student_id}) => {
-      uniqids.add(student_id);
+    marksWithChecked.forEach(({studentID}) => {
+      uniqids.add(studentID);
     });
+    console.log(Array.from(uniqids));
+
     setStudentIDarr(Array.from(uniqids));
+
 
 
 
@@ -52,18 +65,30 @@ export default function MarksTable() {
     e.preventDefault();
     console.log("Done");
   };
+  // console.log(studentIDarr);
+
+
+  const filterDataBySTID = (event) =>{
+    const stid = event.target.value;
+    const marksFilterBystID = mrks.filter((markCid)=>markCid.studentID === stid);
+    setFildedMarks(marksFilterBystID);
+
+
+  };
 
   return (
+
     <div className="container">
+      
       <div className="py-4">
         <div className=" h2 mt-lg-5 ">
             Student Marks Finalization 
         </div>
         <div>
-          <select className="form-select w-25 mx-lg-2" aria-label="Default select example">
+          <select className="form-select w-25 mx-lg-2" aria-label="Default select example" onChange={(event)=>filterDataBySTID(event)}>
             <option selected>Open this select a Student</option>
             {studentIDarr.map((id, index) => (
-                <option key={index} value={id} scope="col">
+                <option key={index} value={id} scope="col" >
                   {id}
                 </option>
               ))}
@@ -81,7 +106,7 @@ export default function MarksTable() {
             </tr>
           </thead>
           <tbody>
-            {mrks.map((mrk, index) => (
+            {fildedMarks.map((mrk, index) => (
 
               <tr key={index}>
                 <th>
