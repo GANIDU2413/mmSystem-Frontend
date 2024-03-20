@@ -2,6 +2,7 @@ import { Checkbox } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { NavebarMT } from "./NavebarMT";
 
 export default function MarksTable({c_id='ICT1112'}) {
   const [mrks, setMrks] = useState([]);
@@ -73,13 +74,12 @@ console.log(c_id)
     const marksFilterBystID = mrks.filter((markCid)=>markCid.studentID === stid);
     setFildedMarks(marksFilterBystID);
 
-
   };
 
   return (
 
     <div className="container">
-      
+      <NavebarMT/>
       <div className="py-4">
         <div className=" h2 mt-lg-5 ">
             Student Marks Finalization 
