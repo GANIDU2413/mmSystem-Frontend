@@ -16,7 +16,7 @@ export default function DataTable(props: any) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:9090/api/studentMarks/findAllStudentMarksRemainingToApprove/HOD/'+course_id.course_id);
+        const response = await axios.get('http://localhost:9090/api/AssistantRegistrar/findAllStudentMarksRemainingToApprove/HOD/'+course_id.course_id);
         setStudentMarks(response.data);
         console.log(response.data);
       } catch (error) {
