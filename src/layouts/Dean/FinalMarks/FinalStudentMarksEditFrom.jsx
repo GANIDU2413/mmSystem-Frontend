@@ -2,9 +2,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useParams, Redirect } from "react-router-dom";
-import { NavebarSM } from "./NavebarSM";
+import { NavebarDean } from "../NavebarDean";
 
-export default function MarksEditForm() {
+export default function FinalStudentMarksEditFrom() {
   const [redirect, setRedirect] = useState(false);
   const [cidandfinalmarks, setCidandfinalmarks] = useState([]);
   const { student_id } = useParams();
@@ -42,12 +42,12 @@ export default function MarksEditForm() {
   };
 
   if (redirect) {
-    return <Redirect to="/studentmarks" />;
+    return <Redirect to="/FinalStudentMarksEditFrom" />;
   }
 
   return (
     <div className="container">
-      <NavebarSM/>
+      <NavebarDean/>
       <div className="row" style={{marginTop:"100px"}}>
         <div className="col-md-6 offset-md-3 boder p-4 mt-2 shadow">
           <h1 className="text-center m-4">Marks edit</h1>
@@ -71,11 +71,11 @@ export default function MarksEditForm() {
               type="submit"
               className="btn btn-outline-primary mx-2"
               value="Submit"
-              to="/studentmarks"
+              to="/FinalStudentMarks"
             />
             <Link
               className="btn btn-outline-danger mx-2"
-              to="/studentmarks"
+              to="/FinalStudentMarks"
             >
               Cancel
             </Link>
