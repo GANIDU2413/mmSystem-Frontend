@@ -37,7 +37,7 @@ export const App = () => {
   return (
     <div className="d-flex flex-column min-vh-100">
        <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri} onAuthRequired={customAuthHandler}>
-      <Navebar/>
+      
       <div className="flex-grow-1">
         <Switch>
         
@@ -60,6 +60,9 @@ export const App = () => {
           <Route path="/arviewbstmarks">
             <ViewMarks department_id={"BST"}/>
           </Route>
+          <Route path="/arviewmtdmarks">
+            <ViewMarks department_id={"Multi_Disciplinary"}/>
+          </Route>
 
           <Route path="/markstable">
             <MarksTable/>
@@ -71,7 +74,7 @@ export const App = () => {
             <StudentMarks/>
           </Route>
 
-          <Route path="/studentmarkseditform/:id">
+          <Route path="/studentmarkseditform/:student_id">
             <StudentMarksEditForm/>
           </Route>
 

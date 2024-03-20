@@ -1,8 +1,8 @@
 import { Link, NavLink } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
-import { SpinerLoading } from "../../Utils/SpinerLoading";
+import { SpinerLoading } from "../Utils/SpinerLoading";
 
-export const Navebar = () => {
+export const NavebarSM = ({handleButtonClick}) => {
 
   const {oktaAuth , authState} = useOktaAuth();
 
@@ -49,7 +49,7 @@ export const Navebar = () => {
         >
           <div className="offcanvas-header">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              Hi, Assistant Registrar
+              Hi, Mr.Nuwan Laksisri
             </h5>
             <button
               type="button"
@@ -61,13 +61,13 @@ export const Navebar = () => {
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/arhome">
+                <a className="nav-link active" aria-current="page" href="#">
                  Dashboard
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
-                  Create Results Board
+                  Marks Feeding
                 </a>
               </li>
               <li className="nav-item dropdown">
@@ -78,29 +78,48 @@ export const Navebar = () => {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  View and certify marks
+                  Final Marks
                 </a>
                 <ul className="dropdown-menu">
                   <li>
-                    <a className="dropdown-item" href="/arviewictmarks">
-                      Department of ICT
-                    </a>
+                    <p className="dropdown-item" onClick={()=>handleButtonClick(1,1)}>
+                      Level I Sem I
+                    </p>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="/arviewetmarks">
-                      Department of ET
-                    </a>
-                  </li>
-                  <li></li>
-                  <li>
-                    <a className="dropdown-item" href="/arviewbstmarks">
-                      Department of BST
-                    </a>
+                    <p className="dropdown-item" onClick={()=>handleButtonClick(1,2)}>
+                    Level I Sem II
+                    </p>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="/arviewmtdmarks">
-                      Department of Multi Disciplinary
-                    </a>
+                    <p className="dropdown-item" onClick={()=>handleButtonClick(2,1)}>
+                    Level II Sem I
+                    </p>
+                  </li>
+                  <li>
+                    <p className="dropdown-item" onClick={()=>handleButtonClick(2,2)}>
+                    Level II Sem II
+                    </p>
+                  </li>
+                  <li>
+                    <p className="dropdown-item" onClick={()=>handleButtonClick(3,1)}>
+                    Level III Sem I
+                    </p>
+                  </li>
+                  <li>
+                    <p className="dropdown-item" onClick={()=>handleButtonClick(3,2)}>
+                    Level III Sem II
+                    </p>
+                  </li>
+                  <li>
+                    <p className="dropdown-item" onClick={()=>handleButtonClick(4,1)}>
+                    Level IV Sem I
+                    </p>
+                  </li>
+                  <li>
+                    <p className="dropdown-item" onClick={()=>handleButtonClick(4,2)}>
+                    Level IV Sem II
+                    </p>
                   </li>
                 </ul>
               </li>
