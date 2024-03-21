@@ -87,6 +87,7 @@ export default function HODMarksTable({ c_id = "ICT1112" }) {
       <NavebarHOD />
       <div className="py-4">
         <div className=" h2 mt-lg-5 ">Student Marks Finalization</div>
+        <div className=" h4 mt-7 ">Course ID : {c_id}</div>
         <div>
           <select
             className="form-select w-25 mx-lg-2"
