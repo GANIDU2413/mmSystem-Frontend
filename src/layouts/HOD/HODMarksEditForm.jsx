@@ -53,7 +53,7 @@ export default function HODMarksEditForm() {
   };
 
   if (redirect) {
-    return <Redirect to="/markstable" />;
+    return <Redirect to="/HODmarkstable" />;
   }
   return (
     <div className="container">
