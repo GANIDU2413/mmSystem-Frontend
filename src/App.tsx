@@ -50,8 +50,6 @@ export const App = () => {
           <Route path="/home">
             <HomePage />
           </Route>
-          
-
           <Route path="/arhome">
             <HomePageAR/>
           </Route>
@@ -116,7 +114,7 @@ export const App = () => {
 
           <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
           <Route path='/login/callback' component={LoginCallback}/>
-          
+
           <SecureRoute path='/addscore'>
             <AddScore />
           </SecureRoute>
