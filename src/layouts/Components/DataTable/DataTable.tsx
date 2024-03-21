@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Navebar } from '../NavBar/Navebar-AR';
+import BackButton from '../BackButton/BackButton';
 
 // Define the type for your student mark data
 type StudentMark = {
@@ -96,19 +97,22 @@ export default function DataTable(props:any) {
       
       <div style={{width:"94%",marginLeft:"3%",marginRight:"3%",marginTop:"65px"}}>
 
-        <select className="form-select w-25 mx-lg-2" aria-label="Default select example" onChange={(e) => handleSelectedValue(e.target.value)}>
-          <option>Open this select a Student</option>
-          {uniqueStudentIds.map((id) => (
-            <option key={id} value={id}>
-              {id}
-            </option>
-          ))}
-        </select>
+        
         
         <table className="table table-striped">
           <thead>
             <tr>
-              <th colSpan={100} style={{textAlign:"center",backgroundColor:'#ebe8e8'}}>Approve Student Results Before The Results Board <br/> {course_variables.course_id} - {course_variables.course_name}</th>
+              <th style={{textAlign:"center",backgroundColor:'#ebe8e8',width:"250px"}} >
+                <select className="form-select w-100 mx-lg-2" aria-label="Default select example" onChange={(e) => handleSelectedValue(e.target.value)}>
+                  <option>Open this select a Student</option>
+                  {uniqueStudentIds.map((id) => (
+                    <option key={id} value={id}>
+                      {id}
+                    </option>
+                  ))}
+                </select>
+            </th>
+              <th colSpan={100} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>Approve Student Results Before The Results Board <br/> {course_variables.course_id} - {course_variables.course_name}</th>
             </tr>
             <tr>
               <th scope="col">Student ID</th>
@@ -135,7 +139,8 @@ export default function DataTable(props:any) {
 
         <div className='right-aligned-div'>
           <button type="button" className="btn btn-outline-primary">Update Medical</button>&nbsp;&nbsp;
-          <button type="button" className="btn btn-outline-primary">Approve</button>
+          <button type="button" className="btn btn-outline-primary">Approve</button>&nbsp;&nbsp;
+          <BackButton /><br/>&nbsp;
         </div>
       </div>
       
