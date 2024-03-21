@@ -1,13 +1,13 @@
 import { Link, NavLink } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
 import { SpinerLoading } from "../Utils/SpinerLoading";
+import { IoMenuSharp } from "react-icons/io5";
 
-export const Navebar = () => {
+export const NavebarMT = () => {
+  const { oktaAuth, authState } = useOktaAuth();
 
-  const {oktaAuth , authState} = useOktaAuth();
-
-  if(!authState){
-    return <SpinerLoading/>
+  if (!authState) {
+    return <SpinerLoading />;
   }
 
   const handleLogout = async () => oktaAuth.signOut();
@@ -22,26 +22,31 @@ export const Navebar = () => {
           data-bs-target="#offcanvasNavbar"
           aria-controls="offcanvasNavbar"
           href="#"
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+          }}
         >
-          Faculty Of Technology, Marking Management System 
+          <IoMenuSharp size={35} /> Faculty Of Technology, Marking Management
+          System
         </a>
         <ul className="navbar-nav ms-auto">
-           {!authState.isAuthenticated?
-               <li className="nav-item m-1">
-               <Link type="button" className="btn btn-outline-light" to='/login'>
-                 Sign in
-               </Link>
-             </li>
-
-             :
-             <li>
-              <button className='btn btn-outline-light' onClick={handleLogout}>Logout</button>
-             </li>
-          
-          }
-           
-
-          </ul>
+          {!authState.isAuthenticated ? (
+            <li className="nav-item m-1">
+              <Link type="button" className="btn btn-outline-light" to="/login">
+                Sign in
+              </Link>
+            </li>
+          ) : (
+            <li>
+              <button className="btn btn-outline-light" onClick={handleLogout}>
+                Logout
+              </button>
+            </li>
+          )}
+        </ul>
         <div
           className="offcanvas offcanvas-start"
           id="offcanvasNavbar"
@@ -49,7 +54,7 @@ export const Navebar = () => {
         >
           <div className="offcanvas-header">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              Hi, Mr.Nuwan Laksisri
+              Hi, Mr.Nuwan Laksiri
             </h5>
             <button
               type="button"
@@ -62,15 +67,13 @@ export const Navebar = () => {
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="#">
-                 Dashboard
+                  Dashboard
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Marks Feeding
-                </a>
+                <a className="nav-link" href="#"></a>
               </li>
-              <li className="nav-item dropdown">
+              {/* <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
                   href="#"
@@ -78,7 +81,7 @@ export const Navebar = () => {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Final Marks
+                  Student Marks Finalization
                 </a>
                 <ul className="dropdown-menu">
                   <li>
@@ -122,9 +125,9 @@ export const Navebar = () => {
                     </a>
                   </li>
                 </ul>
-              </li>
+              </li> */}
             </ul>
-            
+
             <hr></hr>
           </div>
         </div>

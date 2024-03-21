@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
-import { SpinerLoading } from "../Utils/SpinerLoading";
+import { SpinerLoading } from "../../Utils/SpinerLoading";
 
 export const Navebar = () => {
 
@@ -49,7 +49,7 @@ export const Navebar = () => {
         >
           <div className="offcanvas-header">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              Hi, Mr.Nuwan Laksisri
+              Hi, Assistant Registrar
             </h5>
             <button
               type="button"
@@ -61,13 +61,13 @@ export const Navebar = () => {
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">
+                <a className="nav-link active" aria-current="page" href="/arhome">
                  Dashboard
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
-                  Marks Feeding
+                  Create Results Board
                 </a>
               </li>
               <li className="nav-item dropdown">
@@ -78,47 +78,28 @@ export const Navebar = () => {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Final Marks
+                  View and certify marks
                 </a>
                 <ul className="dropdown-menu">
                   <li>
-                    <a className="dropdown-item" href="#">
-                      Level I Sem I
+                    <a className="dropdown-item" href="/arviewictmarks">
+                      Department of ICT
                     </a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
-                    Level I Sem II
+                    <a className="dropdown-item" href="/arviewetmarks">
+                      Department of ET
+                    </a>
+                  </li>
+                  <li></li>
+                  <li>
+                    <a className="dropdown-item" href="/arviewbstmarks">
+                      Department of BST
                     </a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
-                    Level II Sem I
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                    Level II Sem II
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                    Level III Sem I
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                    Level III Sem II
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                    Level IV Sem I
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                    Level IV Sem II
+                    <a className="dropdown-item" href="/arviewmtdmarks">
+                      Department of Multi Disciplinary
                     </a>
                   </li>
                 </ul>
