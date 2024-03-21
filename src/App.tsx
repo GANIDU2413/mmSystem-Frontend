@@ -21,7 +21,6 @@ import ThirdYearEligibility from "./layouts/Dean/ThirdYearEligibility/ThirdYearE
 import HomePageAR from "./layouts/AR/HomePage/HomePageAR";
 import ViewMarks from "./layouts/AR/ViewMarks/ViewMarks";
 import DataTable from "./layouts/Components/DataTable/DataTable";
-import DataTableAR from "./layouts/Components/DataTable/DataTableAR";
 
 
 const oktaAuth = new OktaAuth(oktaConfig);
