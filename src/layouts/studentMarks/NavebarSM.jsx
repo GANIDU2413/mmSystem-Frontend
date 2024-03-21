@@ -1,13 +1,13 @@
 import { Link, NavLink } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
 import { SpinerLoading } from "../Utils/SpinerLoading";
+import { IoMenuSharp } from "react-icons/io5";
 
-export const NavebarSM = ({handleButtonClick}) => {
+export const NavebarSM = ({ handleButtonClick }) => {
+  const { oktaAuth, authState } = useOktaAuth();
 
-  const {oktaAuth , authState} = useOktaAuth();
-
-  if(!authState){
-    return <SpinerLoading/>
+  if (!authState) {
+    return <SpinerLoading />;
   }
 
   const handleLogout = async () => oktaAuth.signOut();
@@ -22,26 +22,31 @@ export const NavebarSM = ({handleButtonClick}) => {
           data-bs-target="#offcanvasNavbar"
           aria-controls="offcanvasNavbar"
           href="#"
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+          }}
         >
-          Faculty Of Technology, Marking Management System 
+          <IoMenuSharp size={35} /> Faculty Of Technology, Marking Management
+          System
         </a>
         <ul className="navbar-nav ms-auto">
-           {!authState.isAuthenticated?
-               <li className="nav-item m-1">
-               <Link type="button" className="btn btn-outline-light" to='/login'>
-                 Sign in
-               </Link>
-             </li>
-
-             :
-             <li>
-              <button className='btn btn-outline-light' onClick={handleLogout}>Logout</button>
-             </li>
-          
-          }
-           
-
-          </ul>
+          {!authState.isAuthenticated ? (
+            <li className="nav-item m-1">
+              <Link type="button" className="btn btn-outline-light" to="/login">
+                Sign in
+              </Link>
+            </li>
+          ) : (
+            <li>
+              <button className="btn btn-outline-light" onClick={handleLogout}>
+                Logout
+              </button>
+            </li>
+          )}
+        </ul>
         <div
           className="offcanvas offcanvas-start"
           id="offcanvasNavbar"
@@ -62,7 +67,7 @@ export const NavebarSM = ({handleButtonClick}) => {
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="#">
-                 Dashboard
+                  Dashboard
                 </a>
               </li>
               <li className="nav-item">
@@ -82,49 +87,73 @@ export const NavebarSM = ({handleButtonClick}) => {
                 </a>
                 <ul className="dropdown-menu">
                   <li>
-                    <p className="dropdown-item" onClick={()=>handleButtonClick(1,1)}>
+                    <p
+                      className="dropdown-item"
+                      onClick={() => handleButtonClick(1, 1)}
+                    >
                       Level I Sem I
                     </p>
                   </li>
                   <li>
-                    <p className="dropdown-item" onClick={()=>handleButtonClick(1,2)}>
-                    Level I Sem II
+                    <p
+                      className="dropdown-item"
+                      onClick={() => handleButtonClick(1, 2)}
+                    >
+                      Level I Sem II
                     </p>
                   </li>
                   <li>
-                    <p className="dropdown-item" onClick={()=>handleButtonClick(2,1)}>
-                    Level II Sem I
+                    <p
+                      className="dropdown-item"
+                      onClick={() => handleButtonClick(2, 1)}
+                    >
+                      Level II Sem I
                     </p>
                   </li>
                   <li>
-                    <p className="dropdown-item" onClick={()=>handleButtonClick(2,2)}>
-                    Level II Sem II
+                    <p
+                      className="dropdown-item"
+                      onClick={() => handleButtonClick(2, 2)}
+                    >
+                      Level II Sem II
                     </p>
                   </li>
                   <li>
-                    <p className="dropdown-item" onClick={()=>handleButtonClick(3,1)}>
-                    Level III Sem I
+                    <p
+                      className="dropdown-item"
+                      onClick={() => handleButtonClick(3, 1)}
+                    >
+                      Level III Sem I
                     </p>
                   </li>
                   <li>
-                    <p className="dropdown-item" onClick={()=>handleButtonClick(3,2)}>
-                    Level III Sem II
+                    <p
+                      className="dropdown-item"
+                      onClick={() => handleButtonClick(3, 2)}
+                    >
+                      Level III Sem II
                     </p>
                   </li>
                   <li>
-                    <p className="dropdown-item" onClick={()=>handleButtonClick(4,1)}>
-                    Level IV Sem I
+                    <p
+                      className="dropdown-item"
+                      onClick={() => handleButtonClick(4, 1)}
+                    >
+                      Level IV Sem I
                     </p>
                   </li>
                   <li>
-                    <p className="dropdown-item" onClick={()=>handleButtonClick(4,2)}>
-                    Level IV Sem II
+                    <p
+                      className="dropdown-item"
+                      onClick={() => handleButtonClick(4, 2)}
+                    >
+                      Level IV Sem II
                     </p>
                   </li>
                 </ul>
               </li>
             </ul>
-            
+
             <hr></hr>
           </div>
         </div>
