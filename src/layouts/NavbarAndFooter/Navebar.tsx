@@ -49,7 +49,7 @@ export const Navebar = () => {
         >
           <div className="offcanvas-header">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              Hi, Mr.Nuwan Laksisri
+             Mr. { authState?.idToken?.claims.name}
             </h5>
             <button
               type="button"

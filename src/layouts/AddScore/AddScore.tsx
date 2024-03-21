@@ -4,7 +4,6 @@ import { useOktaAuth } from "@okta/okta-react";
 import { Redirect } from "react-router-dom";
 
 export const AddScore = () => {
-
   const { authState } = useOktaAuth();
   // new marks
   const [studentID, setStudentID] = useState("Select a Student");
@@ -18,7 +17,7 @@ export const AddScore = () => {
     "Select Score Feeding Type"
   );
   const [level, setlevel] = useState("");
-  const [semester, setSemester] = useState("");
+  const [semester, setSemester] = useState(" ");
 
   // Display
   const [displayWarning, setDisplayWaring] = useState(false);
@@ -35,6 +34,7 @@ export const AddScore = () => {
     selectedOption,
     onSelect,
   }) => {
+    setLevelSemesterAndYear();
     return (
       <div className="dropdown">
         <button
@@ -63,12 +63,7 @@ export const AddScore = () => {
     );
   };
 
-  const courses: string[] = [
-  "ICT1112", 
-  "ICT1122", 
-  "ICT1132", 
-  "ICT2242"
-];
+  const courses: string[] = ["ICT1112", "ICT1122", "ICT1132", "ICT2242"];
   const students: string[] = [
     "TG-2020-671",
     "TG-2021-672",
@@ -76,22 +71,22 @@ export const AddScore = () => {
     "TG-2020-674",
   ];
   const assignmentTypes: string[] = [
-    "QUIZE01",
-    "QUIZE02",
-    "QUIZE03",
-    "ASSISTMENT01",
+    "QUIZ1",
+    "QUIZ2",
+    "QUIZ3",
+    "ASSIGNMENT1",
+    "ASSIGNMENT1",
     "MID",
+    "FINAL",
   ];
   const scoreFeedingType: string[] = ["HOLD", "FEED SCORE"];
 
   const handleCourseSelect = (setCourse: string): void => {
     setCourseID(setCourse);
-    
   };
 
   const handleStudentSelect = (setStudent: string): void => {
     setStudentID(setStudent);
-   
   };
 
   const handleAssignmentType = (setAssignmentType: string): void => {
@@ -104,96 +99,111 @@ export const AddScore = () => {
     setassignmentScoreFeedingScore(setAssignmentScoreFeedingType);
   };
 
-  const extractYear = (academicYear: string) : string => {
-       const parts = academicYear.split('-');
-       return parts[1];
+  const extractYear = (academicYear: string): string => {
+    const parts = academicYear.split("-");
+    return parts[1];
   };
 
-  const extractSemesterAndLevel = (semesterAndLevel: string) : string[] =>{
-    const characters = semesterAndLevel.split('');
-    const academicLevel = characters[3];
-    const academicSemester = characters[4];
+  const extractSemesterAndLevel = (semesterAndLevel: string): string[] => {
+    if (semesterAndLevel !== "Select a Course") {
+      const characters = semesterAndLevel.split("");
+      const academicLevel = characters[3];
+      const academicSemester = characters[4];
+      return [academicLevel, academicSemester];
+    } else {
+      return ["", ""];
+    }
+  };
 
-    return [academicLevel,academicSemester];
-  }
-
-  const setLevelSemesterAndYear = (): void =>{
-    const [academicLevel,academicSemester] = extractSemesterAndLevel(courseID);
+  const setLevelSemesterAndYear = (): void => {
+    const [academicLevel, academicSemester] = extractSemesterAndLevel(courseID);
 
     setlevel(academicLevel);
     setSemester(academicSemester);
 
     setYear(extractYear(studentID));
-
-   
-  }
+  };
 
   async function submitScore() {
+    console.log(studentID);
+    console.log(courseID);
+    console.log(assignmentScore);
+    console.log(year);
+    console.log(level);
+    console.log(semester);
 
-  
-    
-   console.log(studentID)
-   console.log(courseID)
-   console.log(assignmentScore)
-   console.log(year)
-   console.log(level)
-   console.log(semester)
-     
     const url = `http://localhost:9090/api/lecture/add/score`;
-    if(studentID !== '' && courseID !== '' && assignmentType !== '' 
-    && assignmentScore !== null && year !== '' && level !== '' && semester !== ''){
-          const score: AddScoreRequest = new AddScoreRequest(studentID,courseID,year,
-                                                             assignmentType,assignmentScore,level,semester);
-          const requestOptions = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(score)
-          };
+    if (
+      studentID !== "" &&
+      courseID !== "" &&
+      assignmentType !== "" &&
+      assignmentScore !== null &&
+      year !== "" &&
+      level !== "" &&
+      semester !== ""
+    ) {
+      const score: AddScoreRequest = new AddScoreRequest(
+        studentID,
+        courseID,
+        year,
+        assignmentType,
+        assignmentScore,
+        level,
+        semester
+      );
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(score),
+      };
 
-          const submitScoreResponse = await fetch(url, requestOptions);
-          if(!submitScoreResponse.ok){
-            throw new Error("Somthing went wrong!");
-          }
-          setStudentID('')
-          setCourseID('')
-          setassignmentType('')
-          setassignmentScore(0)
-          setYear('')
-          setlevel('')
-          setSemester('')
-          setDisplayWaring(false)
-          setDisplaySuccess(true)
-    }else{
-      setDisplayWaring(true)
-      setDisplaySuccess(false)
+      const submitScoreResponse = await fetch(url, requestOptions);
+      if (!submitScoreResponse.ok) {
+        throw new Error("Somthing went wrong!");
+      }
+      
+      setassignmentScore(0);
+      setStudentID("Select a Student");
+      setYear("");
+      setDisplayWaring(false);
+      setDisplaySuccess(true);
+    } else {
+      setDisplayWaring(true);
+      setDisplaySuccess(false);
     }
- 
   }
 
-  if (authState?.accessToken?.claims.userType === undefined){
-    return <Redirect to='/home'/>
+  const CompleteCourse = (): void => {
+    setCourseID("Select a Course");
+    setassignmentType("Select an Assignment Tyep");
+    setlevel("");
+    setSemester("");
+  }
+
+  if (authState?.accessToken?.claims.userType === undefined) {
+    return <Redirect to="/home" />;
   }
 
   return (
     <div className="container mt-5 mb-5">
       <div className="card shadow-lg">
         <div className="card-header">Add new Score</div>
-       
+
         <div className="card-body">
-        <div className="mt-1 mb-1">
-              {displaySuccess && (
-                <div className="alert alert-success" role="alert">
-                  Mark Add successfully
-                </div>
-              )}
-              {displayWarning && (
-                <div className="alert alert-danger" role="alert">
-                  All fields must be filled out
-                </div>
-              )}
-            </div>
+          <div className="mt-1 mb-1">
+            {displaySuccess && (
+              <div className="alert alert-success" role="alert">
+                Mark Add successfully
+              </div>
+            )}
+            {displayWarning && (
+              <div className="alert alert-danger" role="alert">
+                All fields must be filled out
+              </div>
+            )}
+          </div>
           <form method="POST">
             <div className="row">
               <div className="col-md-3 mb-3">
@@ -211,7 +221,6 @@ export const AddScore = () => {
                   selectedOption={assignmentType}
                   onSelect={handleAssignmentType}
                 />
-                
               </div>
               <div className="col-md-3 mb-3">
                 <label className="form-label">Course Name </label>
@@ -224,19 +233,6 @@ export const AddScore = () => {
                 />
               </div>
               <div className="col-md-3 mb-3">
-                <label className="form-label">Academic Year </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="author"
-                  required
-                  value={year}
-                  disabled={true}
-                />
-              </div>
-            </div>
-            <div className="row">
-            <div className="col-md-3 mb-3">
                 <label className="form-label">Level</label>
                 <input
                   type="text"
@@ -247,6 +243,8 @@ export const AddScore = () => {
                   disabled={true}
                 />
               </div>
+            </div>
+            <div className="row">
               <div className="col-md-3 mb-3">
                 <label className="form-label">Semester</label>
                 <input
@@ -260,7 +258,11 @@ export const AddScore = () => {
               </div>
             </div>
             <div>
-              <button type="button" className="btn btn-primary mt-3" onClick={ setLevelSemesterAndYear}>
+              <button
+                type="button"
+                className="btn btn-primary mt-3"
+                onClick={setLevelSemesterAndYear}
+              >
                 Enable Score Feeding
               </button>
             </div>
@@ -273,7 +275,6 @@ export const AddScore = () => {
                   selectedOption={studentID}
                   onSelect={handleStudentSelect}
                 />
-                
               </div>
               <div className="col-md-3 mb-3">
                 <label className="form-label">Student Type</label>
@@ -290,6 +291,17 @@ export const AddScore = () => {
                   options={scoreFeedingType}
                   selectedOption={assignmentScoreFeedingType}
                   onSelect={handleScoreFeedingType}
+                />
+              </div>
+              <div className="col-md-3 mb-3">
+                <label className="form-label">Academic Year </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="author"
+                  required
+                  value={year}
+                  disabled={true}
                 />
               </div>
             </div>
@@ -316,14 +328,18 @@ export const AddScore = () => {
               </div>
             </div>
             <div>
-              <button type="button" className="btn btn-primary mt-3" onClick={submitScore}>
+              <button
+                type="button"
+                className="btn btn-primary mt-3"
+                onClick={submitScore}
+              >
                 Submit State
               </button>
             </div>
           </form>
         </div>
       </div>
-      <button type="button" className="btn btn-primary mt-3">
+      <button type="button" className="btn btn-primary mt-3" onClick={CompleteCourse}>
         Complete Selected Course
       </button>
     </div>
