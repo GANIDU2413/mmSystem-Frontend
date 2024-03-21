@@ -175,9 +175,9 @@ export const AddScore = () => {
  
   }
 
-  if (authState?.accessToken?.claims.userType === undefined){
-    return <Redirect to='/home'/>
-  }
+  // if (authState?.accessToken?.claims.userType === undefined){
+  //   return <Redirect to='/home'/>
+  // }
 
   return (
     <div className="container mt-5 mb-5">
