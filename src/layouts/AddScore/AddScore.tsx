@@ -183,7 +183,7 @@ export const AddScore = () => {
   }
 
   if (authState?.accessToken?.claims.userType === undefined) {
-    return <Redirect to="/home" />;
+    return <Redirect to="/home"/>;
   }
 
   return (

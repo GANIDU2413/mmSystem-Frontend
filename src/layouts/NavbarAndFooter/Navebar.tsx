@@ -14,7 +14,7 @@ export const Navebar = () => {
 
   console.log(authState);
   return (
-    <nav className="navbar bg-primary fixed-top">
+    <nav className="navbar main-color fixed-top">
       <div className="container-fluid">
         <a
           className="navbar-brand text-white"
