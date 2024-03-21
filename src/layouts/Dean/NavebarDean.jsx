@@ -3,7 +3,7 @@ import { useOktaAuth } from "@okta/okta-react";
 import { SpinerLoading } from "../Utils/SpinerLoading";
 import { IoMenuSharp } from "react-icons/io5";
 
-export const NavebarSM = ({ handleButtonClick }) => {
+export const NavebarDean = ({ handleButtonClick }) => {
   const { oktaAuth, authState } = useOktaAuth();
 
   if (!authState) {
@@ -54,7 +54,7 @@ export const NavebarSM = ({ handleButtonClick }) => {
         >
           <div className="offcanvas-header">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              Hi, Mr.Nuwan Laksisri
+              User Name
             </h5>
             <button
               type="button"
@@ -70,9 +70,10 @@ export const NavebarSM = ({ handleButtonClick }) => {
                   Dashboard
                 </a>
               </li>
+
               <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Marks Feeding
+                <a className="nav-link active" aria-current="page" href="#">
+                  Student Details
                 </a>
               </li>
               <li className="nav-item dropdown">

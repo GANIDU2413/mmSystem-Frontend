@@ -2,10 +2,10 @@ import { Checkbox } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { NavebarMT } from "./NavebarMT";
 import markTableStore from "../../store/markTableStore";
+import { NavebarHOD } from "./NavebarHOD";
 
-export default function MarksTable({ c_id = "ICT1112" }) {
+export default function HODMarksTable({ c_id = "ICT1112" }) {
   const [mrks, setMrks] = useState([]);
   const [allChecked, setAllChecked] = useState(false);
   const [studentIDarr, setStudentIDarr] = useState([]);
@@ -82,31 +82,9 @@ export default function MarksTable({ c_id = "ICT1112" }) {
     setCurrentFilter(stid);
   };
 
-
-  //Approval button
-    const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
-    const appendAlert = (message, type) => {
-      const wrapper = document.createElement('div')
-      wrapper.innerHTML = [
-        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-        `   <div>${message}</div>`,
-        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-        '</div>'
-      ].join('')
-
-      alertPlaceholder.append(wrapper)
-    }
-
-    const alertTrigger = document.getElementById('liveAlertBtn')
-    if (alertTrigger) {
-      alertTrigger.addEventListener('click', () => {
-        appendAlert('Nice, you triggered this alert message!', 'success')
-      })
-    }
-
   return (
     <div className="container">
-      <NavebarMT />
+      <NavebarHOD />
       <div className="py-4">
         <div className=" h2 mt-lg-5 ">Student Marks Finalization</div>
         <div className=" h4 mt-7 ">Course ID : {c_id}</div>
@@ -166,7 +144,7 @@ export default function MarksTable({ c_id = "ICT1112" }) {
       <div className="py-4">
         <button
           type="submit"
-          className="btn btn-outline-primary btn-sm"
+          className="btn btn-outline-success btn-sm"
           id="submitbtn"
           onClick={handleSubmit}
           disabled={!allChecked}
@@ -180,10 +158,6 @@ export default function MarksTable({ c_id = "ICT1112" }) {
         >
           Clean
         </button>
-      </div>
-      <div>
-        <div id="liveAlertPlaceholder"></div>
-        <button type="button" class="btn btn-outline-success mb-4 " id="liveAlertBtn">Show live alert</button>
       </div>
     </div>
   );

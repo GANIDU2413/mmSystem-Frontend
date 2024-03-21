@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useParams, Redirect } from "react-router-dom";
-import { NavebarMT } from "./NavebarMT";
+import { NavebarHOD } from "./NavebarHOD";
 
-export default function MarksEditForm() {
+export default function HODMarksEditForm() {
   const [redirect, setRedirect] = useState(false);
 
   const [marksByID, setMarksByID] = useState({
@@ -57,7 +57,7 @@ export default function MarksEditForm() {
   }
   return (
     <div className="container">
-      <NavebarMT />
+      <NavebarHOD />
       <div className="row">
         <div
           className="col-md-6 offset-md-3 boder p-4   shadow "
