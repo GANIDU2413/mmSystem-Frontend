@@ -12,14 +12,19 @@ export default function HODMarksTable() {
   const [courseIDarr, setCourseIDarr] = useState([])
   const [fildedMarks, setFildedMarks] = useState([]);
   const { currentFilter, setCurrentFilter } = markTableStore();
+  const [selectedCourseID, setSelectedCourseID] = useState("");
 
   let setLevel,setSemester;
 
+  const filterCiddata = (event) => {
+    const cid = event.target.value;
+    setSelectedCourseID(cid); // Update the selected course ID state
+   };
   
-  useEffect(() => {
-    //calling loadMarks() function
-    loadMarks();
-  }, []);
+  // useEffect(() => {
+  //   //calling loadMarks() function
+  //   loadMarks();
+  // }, []);
 
   useEffect(() => {
     const checked = fildedMarks.every((mrk) => mrk.checked);
@@ -41,15 +46,19 @@ export default function HODMarksTable() {
       checked: false,
     }));
 
-
     const marksFilterByID = marksWithChecked.filter(
-      (markCid) => markCid.course_id === c_id
-    );
+      (markCid) => markCid.course_id === selectedCourseID || selectedCourseID === "all"
+   );
+
+    // const marksFilterByID = marksWithChecked.filter(
+    //   (markCid) => markCid.course_id === c_id
+    // );
 
 
     setMrks(marksFilterByID);
-
     setFildedMarks(marksFilterByID);
+
+    
 
     if (currentFilter) {
       const marksFilterBystID = marksFilterByID.filter(
@@ -64,10 +73,15 @@ export default function HODMarksTable() {
       uniqids.add(student_id);
     });
 
+    
     setStudentIDarr(Array.from(uniqids));
 
 
   };
+
+  useEffect(() => {
+    loadMarks();
+   }, [selectedCourseID]);
 
   const loadCID = async()=>{
     const cidResult = await axios.get(
@@ -122,12 +136,12 @@ export default function HODMarksTable() {
     console.log(marksFilterBystID);
   };
 
-  const filterCiddata = (event) =>{
-    const cid = event.target.value;
-    console.log(cid);
+  // const filterCiddata = (event) =>{
+  //   const cid = event.target.value;
+  //   console.log(cid);
 
-    return cid;
-  }
+  //   return cid;
+  // }
 
   let c_id = filterCiddata;
  console.log(c_id);
@@ -150,7 +164,8 @@ const handleButtonClick = (btnlevel, btnsem) => {
           <select
             className="form-select w-25 mx-lg-2 mb-3"
             aria-label="Default select example"
-            onChange={(event) => filterCiddata(event)}
+            value={selectedCourseID}
+            onChange={filterCiddata}
           >
             <option selected value="all">
               Open this to select a Course ID
