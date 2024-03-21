@@ -31,7 +31,7 @@ export default function DataTable(props:any) {
   
   const fetchData = async (value:string)=>{
 
-    if(value==='Open this select a Student' || value==="") 
+    if(value==='Select a student' || value==="") 
       {
         try {
           const response = await axios.get<StudentMark[]>(
@@ -104,7 +104,7 @@ export default function DataTable(props:any) {
             <tr>
               <th style={{textAlign:"center",backgroundColor:'#ebe8e8',width:"250px"}} >
                 <select className="form-select w-100 mx-lg-2" aria-label="Default select example" onChange={(e) => handleSelectedValue(e.target.value)}>
-                  <option>Open this select a Student</option>
+                  <option>Select a student</option>
                   {uniqueStudentIds.map((id) => (
                     <option key={id} value={id}>
                       {id}
