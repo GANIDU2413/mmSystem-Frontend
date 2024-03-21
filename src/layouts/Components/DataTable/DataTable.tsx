@@ -9,21 +9,22 @@ import { render } from '@testing-library/react';
 
 export default function DataTable(props:any) {
   const course_variables: any = useParams();
-  // const stateParamVal: any = (useLocation().state as { stateParam: any }).stateParam;
 
   const [studentMarks, setStudentMarks] = useState([]);
   
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async ()=>{
+    
       try {
         const response = await axios.get('http://localhost:9090/api/AssistantRegistrar/findAllStudentMarksRemainingToApprove/HOD/'+course_variables.course_id);
         setStudentMarks(response.data);
-        console.log(response.data.data);
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-    };
+  }
 
+  useEffect(() => {
+    
     fetchData();
   }, []);
 
@@ -53,7 +54,7 @@ export default function DataTable(props:any) {
                   <td scope="row">{studentMark.student_id}</td>
                   <td>{studentMark.course_id}</td>
                   <td>{studentMark.assignment_type}</td>
-                  <td>{studentMark.assignment}</td>
+                  <td>{studentMark.assignment_score}</td>
                 </tr>
               ))
             }
