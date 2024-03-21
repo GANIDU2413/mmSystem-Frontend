@@ -3,88 +3,115 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { NavebarDean } from "../NavebarDean";
+import finalStudentMarksStore from "../../../store/finalStudentMarksStore";
+import React from "react";
 
 export default function FinalStudentMarks() {
-  const [mrks, setMrks] = useState([]);
+  const [students, setStudents] = useState([]);
   const [allChecked, setAllChecked] = useState(false);
   const [courseCodearr, setCourseCodeArr] = useState([]);
-  const [students, setStudents] = useState([]);
+  const {
+    level: level_out,
+    sem: sem_out,
+    setLevel,
+    setSem,
+  } = finalStudentMarksStore();
+
   let level;
   let sem;
 
   useEffect(() => {
-    //calling loadMarks() function
     loadMarks();
   }, []);
 
   useEffect(() => {
-    const checked = mrks.every((mrk) => mrk.checked);
+    const checked = students.every((student) => student.checked);
     setAllChecked(checked);
-  }, [mrks]);
+  }, [students]);
 
   const handleButtonClick = (btnlevel, btnsem) => {
     level = btnlevel;
     sem = btnsem;
+    setLevel(btnlevel);
+    setSem(btnsem);
     loadMarks();
   };
 
-  //get data using api
   const loadMarks = async () => {
     try {
-      const result = await axios.get(
-        `http://localhost:9090/api/studentMarks/GetMarksByLS/${level},${sem}`
-      );
+      const [marksResponse, gpaResponse] = await Promise.all([
+        axios.get(
+          `http://localhost:9090/api/studentMarks/GetMarksByLS/${
+            level || level_out
+          },${sem || sem_out}`
+        ),
+        axios.get(
+          `http://localhost:9090/api/gpa/GetGPAByLevelSemester/${
+            level || level_out
+          },${sem || sem_out}`
+        ),
+      ]);
 
-      const marksWithChecked = result.data.map((mark) => ({
-        ...mark,
-        checked: false,
-      }));
+      const marksData = marksResponse.data;
+      const gpaData = gpaResponse.data;
 
-      setMrks(marksWithChecked);
-      // for course ID
-      const uniqueIds = new Set();
-      marksWithChecked.forEach(({ course_id }) => {
-        uniqueIds.add(course_id);
-      });
-      setCourseCodeArr(Array.from(uniqueIds));
+      const combinedData = [];
 
-      const studentData = {};
+      marksData.forEach((mark) => {
+        const { student_id, course_id, overall_score, grade } = mark;
+        let studentObj = combinedData.find(
+          (item) => item.student_id === student_id
+        );
 
-      marksWithChecked.forEach((mark) => {
-        const { student_id, course_id, overall_score,grade,sgpa,cgpa } = mark;
-        if (!studentData[student_id]) {
-          studentData[student_id] = {
+        if (!studentObj) {
+          studentObj = {
             student_id: student_id,
-            courses: [{ course_id: course_id, overall_score: overall_score ,grade: grade}],
-            sgpa: sgpa,
-            cgpa: cgpa
+            courses: [],
+            sgpa: null,
+            cgpa: null,
+            checked: false,
           };
-        } else {
-          studentData[student_id].courses.push({
-            course_id: course_id,
-            overall_score: overall_score,
-            grade: grade,
-            sgpa: sgpa,
-            cgpa: cgpa
-          });
+          combinedData.push(studentObj);
         }
 
-        console.log(mark);
+        studentObj.courses.push({
+          course_id: course_id,
+          overall_score: overall_score,
+          grade: grade,
+        });
       });
 
-      const studentArray = Object.values(studentData);
-      setStudents(studentArray);
+      gpaData.forEach((gpa) => {
+        const { student_id, sgpa, cgpa } = gpa;
+        const studentObj = combinedData.find(
+          (item) => item.student_id === student_id
+        );
+
+        if (studentObj) {
+          studentObj.sgpa = sgpa;
+          studentObj.cgpa = cgpa;
+        }
+      });
+
+      setStudents(combinedData);
+
+      // Extract unique course IDs
+      const uniqueCourseIds = new Set();
+      marksData.forEach(({ course_id }) => {
+        uniqueCourseIds.add(course_id);
+      });
+      setCourseCodeArr(Array.from(uniqueCourseIds));
     } catch (error) {
       console.log("error fetching data : ", error);
     }
   };
 
   const handleCheckboxChange = (index) => {
-    const updatedMarks = [...mrks];
-    updatedMarks[index].checked = !updatedMarks[index].checked;
-    setMrks(updatedMarks);
+    const updatedStudents = [...students];
+    updatedStudents[index].checked = !updatedStudents[index].checked;
+    setStudents(updatedStudents);
 
-    const checked = updatedMarks.every((mrk) => mrk.checked);
+    const checked = updatedStudents.every((student) => student.checked);
     setAllChecked(checked);
   };
 
@@ -96,84 +123,90 @@ export default function FinalStudentMarks() {
   return (
     <div className="container">
       <NavebarDean handleButtonClick={handleButtonClick} />
-      <div className="py-4" style={{ marginTop: "70px" }}>
-        <table
-          className="  overflow-x-scroll table border shadow"
-          style={{ marginTop: "60px" }}
-        >
-          <thead>
-            <tr>
-              <th scope="col">Checked</th>
-              <th scope="col">Student ID</th>
-              {courseCodearr.map((id, index) => (
-                <><th key={index} scope="col">
-                  {id}
-                </th><th>Grade</th></>
-              ))}
-              <th scope="col">Edit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {students.map((mrk, index) => (
-              <tr key={index}>
-                <th>
-                  <Checkbox
-                    name="checkbox"
-                    id={index.toString()}
-                    checked={mrk.checked}
-                    onChange={() => handleCheckboxChange(index)}
-                  />
-                </th>
-                <td>{mrk.student_id}</td>
-                {courseCodearr.map((id, index) => {
-                  const courseData = mrk.courses.find(
-                    (c) => c.course_id === id
-                  
-                  );
-                  return (
-                    <>
-                    <td key={index}>
-                      {courseData ? courseData.overall_score : "-"}
+      {students.length !== 0 ? (
+        <>
+          <div className="py-4" style={{ marginTop: "70px" }}>
+            <table
+              className="  overflow-x-scroll table border shadow"
+              style={{ marginTop: "60px" }}
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Checked</th>
+                  <th scope="col">Student ID</th>
+                  {courseCodearr.map((id, index) => (
+                    <React.Fragment key={index}>
+                      <th>{id}</th>
+                      <th>Grade</th>
+                    </React.Fragment>
+                  ))}
+                  <th scope="col">SGPA</th>
+                  <th scope="col">CGPA</th>
+                  <th scope="col">Edit</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students.map((student, index) => (
+                  <tr key={index}>
+                    <th>
+                      <Checkbox
+                        name="checkbox"
+                        id={index.toString()}
+                        checked={student.checked}
+                        onChange={() => handleCheckboxChange(index)}
+                      />
+                    </th>
+                    <td>{student.student_id}</td>
+                    {courseCodearr.map((id, index) => {
+                      const courseData = student.courses.find(
+                        (c) => c.course_id === id
+                      );
+                      return (
+                        <React.Fragment key={index}>
+                          <td>{courseData ? courseData.overall_score : "-"}</td>
+                          <td>{courseData ? courseData.grade : "-"}</td>
+                        </React.Fragment>
+                      );
+                    })}
+                    <td>{student.sgpa ? student.sgpa : "-"}</td>
+                    <td>{student.cgpa ? student.cgpa : "-"}</td>
+                    <td>
+                      <Link
+                        className="btn btn-outline-primary mx-4 btn-sm rounded-pill"
+                        to={`/finalstudentmarkseditfrom/${student.student_id}`}
+                      >
+                        Edit
+                      </Link>
                     </td>
-                    <td key={index}>
-                      {courseData ? courseData.grade : "-"}
-                    </td>
-                    </>
-                  );
-                })}
-                <td>
-                  <Link
-                    className="btn btn-outline-primary mx-4 btn-sm rounded-pill"
-                    to={`/finalstudentmarkseditfrom/${mrk.student_id}`}
-                  >
-                    Edit
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="py-4">
-        <button
-          type="submit"
-          className="btn btn-outline-success btn-sm rounded-pill"
-          id="submitbtn"
-          onClick={handleSubmit}
-          disabled={!allChecked}
-        >
-          Request Certify
-        </button>
-        <button
-          type="button"
-          className="btn btn-outline-danger mx-2 btn-sm rounded-pill"
-          id="clearbtn"
-        >
-          Clean
-        </button>
-      </div>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="py-4">
+            <button
+              type="submit"
+              className="btn btn-outline-success btn-sm rounded-pill"
+              id="submitbtn"
+              onClick={handleSubmit}
+              disabled={!allChecked}
+            >
+              Request Certify
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-danger mx-2 btn-sm rounded-pill"
+              id="clearbtn"
+            >
+              Clean
+            </button>
+          </div>
+        </>
+      ) : (
+        <div className="py-4" style={{ marginTop: "70px" }}>
+          <h1>No Data Found</h1>
+        </div>
+      )}
     </div>
   );
 }
-
-
