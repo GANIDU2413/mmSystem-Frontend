@@ -97,7 +97,6 @@ console.log(c_id)
             
         </select>
         </div>
-        <table className="table border shadow" style={{ marginTop: "30px" }}>
         <table className="table border shadow" style={{ marginTop: "30px" }} >
           <thead>
             <tr>
