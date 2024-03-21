@@ -1,39 +1,110 @@
 
-import { Checkbox } from '@mui/material'
 import './dataTable.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useLocation, useParams } from 'react-router-dom';
-import { render } from '@testing-library/react';
+import { useParams } from 'react-router-dom';
+import { Navebar } from '../NavBar/Navebar-AR';
+
+// Define the type for your student mark data
+type StudentMark = {
+  id: number;
+  student_id: string;
+  course_id: string;
+  academic_year: string;
+  level: string;
+  semester: string;
+  assignment_type: string;
+  assignment_score: string;
+};
+interface DataTableProps {}
 
 
 export default function DataTable(props:any) {
-  const course_variables: any = useParams();
+  const course_variables = useParams<{ course_id: string; course_name?: string }>(); //any = useParams();
 
-  const [studentMarks, setStudentMarks] = useState([]);
+  const [studentMarks, setStudentMarks] = useState<StudentMark[]>([]);
+  const [uniqueStudentIds, setUniqueStudentIds] = useState<string[]>([]);
+  const [selectedValue, setSelectedValue] = useState<string>('');
+
+
   
-  const fetchData = async ()=>{
+  const fetchData = async (value:string)=>{
+
+    if(value==='Open this select a Student' || value==="") 
+      {
+        try {
+          const response = await axios.get<StudentMark[]>(
+            `http://localhost:9090/api/AssistantRegistrar/findAllStudentMarksRemainingToApprove/HOD/${course_variables.course_id}`
+          );
+          
+          setStudentMarks(response.data);
     
-      try {
-        const response = await axios.get('http://localhost:9090/api/AssistantRegistrar/findAllStudentMarksRemainingToApprove/HOD/'+course_variables.course_id);
-        setStudentMarks(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+          // Extract unique student IDs
+          const uniqueIds = Array.from(new Set(response.data.map((item) => item.student_id)));
+    
+          setUniqueStudentIds(uniqueIds);
+    
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
       }
-  }
+      else{
+        try {
+          const response = await axios.get<StudentMark[]>(
+            `http://localhost:9090/api/AssistantRegistrar/findAllStudentMarksRemainingToApproveByStuId/HOD/${course_variables.course_id}/${value}`
+          );
+          const Allresponse = await axios.get<StudentMark[]>(
+            `http://localhost:9090/api/AssistantRegistrar/findAllStudentMarksRemainingToApprove/HOD/${course_variables.course_id}`
+          );
+          
+          setStudentMarks(response.data);
+    
+          // Extract unique student IDs
+          const uniqueIds = Array.from(new Set(Allresponse.data.map((item) => item.student_id)));
+    
+          setUniqueStudentIds(uniqueIds);
+    
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+        
+   
+      
+  };
 
   useEffect(() => {
-    
-    fetchData();
-  }, []);
+    fetchData("");
+  }, [course_variables.course_id]); // React to changes in course_id
 
+  const printSelected = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = event.target.value;
+    console.log(selectedValue);
+    setSelectedValue(selectedValue);
+  };
 
+  const handleSelectedValue = (value: string) => {
+    fetchData(value);
 
+  };
 
   return (
-    <center>
-    <div style={{paddingTop:'65px',width:"95%"}}>
+    <div>
+      <Navebar />
+      {/* Populate the select element with unique student IDs */}
+      
+      
+      <div style={{width:"94%",marginLeft:"3%",marginRight:"3%",marginTop:"65px"}}>
+
+        <select className="form-select w-25 mx-lg-2" aria-label="Default select example" onChange={(e) => handleSelectedValue(e.target.value)}>
+          <option>Open this select a Student</option>
+          {uniqueStudentIds.map((id) => (
+            <option key={id} value={id}>
+              {id}
+            </option>
+          ))}
+        </select>
+        
         <table className="table table-striped">
           <thead>
             <tr>
@@ -45,7 +116,7 @@ export default function DataTable(props:any) {
               <th scope="col">Assignment type</th>
               <th scope="col">Assignment</th>
             </tr>
-    
+      
           </thead>
           <tbody>
             {
@@ -59,15 +130,24 @@ export default function DataTable(props:any) {
               ))
             }
 
-            </tbody>
-          </table>
+          </tbody>
+        </table>
 
-    <div className='right-aligned-div'>
-        <button type="button" className="btn btn-outline-primary">Update Medical</button>&nbsp;&nbsp;
-        <button type="button" className="btn btn-outline-primary">Approve</button>
+        <div className='right-aligned-div'>
+          <button type="button" className="btn btn-outline-primary">Update Medical</button>&nbsp;&nbsp;
+          <button type="button" className="btn btn-outline-primary">Approve</button>
+        </div>
+      </div>
+      
     </div>
-    </div>
-    </center>
   )
-}
 
+
+  }
+
+
+
+
+
+
+  
