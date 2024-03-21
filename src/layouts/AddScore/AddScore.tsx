@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Navebar } from "../NavbarAndFooter/Navebar";
 
 export const AddScore = () => {
   // new marks
@@ -69,6 +70,7 @@ export const AddScore = () => {
   return (
     
     <div className="container mt-5 mb-5">
+      <Navebar></Navebar>
       {displaySuccess && (
         <div className="alert alert-success" role="alert">
           Mark Add successfully
