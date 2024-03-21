@@ -7,7 +7,7 @@ import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import { HomePage } from "./layouts/HomePage/HomePage";
 import { oktaConfig } from "./lib/oktaConfig";
 import { OktaAuth, toRelativeUrl} from '@okta/okta-auth-js';
-import { Security, LoginCallback } from "@okta/okta-react";
+import { Security, LoginCallback, SecureRoute } from "@okta/okta-react";
 import LoginWidget from "./Auth/LoginWidget";
 
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -35,11 +35,10 @@ export const App = () => {
           <Route path="/home">
             <HomePage />
           </Route>
-          <Route path="/addscore">
-            <AddScore />
-          </Route>
+          
           <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
           <Route path='/login/callback' component={LoginCallback}/>
+          <SecureRoute path={'/lecture'}><AddScore/></SecureRoute>
         </Switch>
       </div>
       <Footer />

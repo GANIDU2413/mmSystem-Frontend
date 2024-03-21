@@ -1,7 +1,11 @@
 import { useState } from "react";
 import AddScoreRequest from "../../models/AddScoreRequest";
+import { useOktaAuth } from "@okta/okta-react";
+import { Redirect } from "react-router-dom";
 
 export const AddScore = () => {
+
+  const { authState } = useOktaAuth();
   // new marks
   const [studentID, setStudentID] = useState("Select a Student");
   const [courseID, setCourseID] = useState("Select a Course");
@@ -168,6 +172,10 @@ export const AddScore = () => {
  
   }
 
+  if (authState?.accessToken?.claims.userType === undefined){
+    return <Redirect to='/home'/>
+  }
+
   return (
     <div className="container mt-5 mb-5">
       <div className="card shadow-lg">
@@ -203,6 +211,7 @@ export const AddScore = () => {
                   selectedOption={assignmentType}
                   onSelect={handleAssignmentType}
                 />
+                
               </div>
               <div className="col-md-3 mb-3">
                 <label className="form-label">Course Name </label>
@@ -211,6 +220,7 @@ export const AddScore = () => {
                   className="form-control"
                   name="author"
                   required
+                  disabled={true}
                 />
               </div>
               <div className="col-md-3 mb-3">
@@ -221,6 +231,7 @@ export const AddScore = () => {
                   name="author"
                   required
                   value={year}
+                  disabled={true}
                 />
               </div>
             </div>
@@ -233,6 +244,7 @@ export const AddScore = () => {
                   name="author"
                   required
                   value={level}
+                  disabled={true}
                 />
               </div>
               <div className="col-md-3 mb-3">
@@ -243,6 +255,7 @@ export const AddScore = () => {
                   name="author"
                   required
                   value={semester}
+                  disabled={true}
                 />
               </div>
             </div>
