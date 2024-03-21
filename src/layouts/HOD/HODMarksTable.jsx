@@ -5,13 +5,17 @@ import { Link } from "react-router-dom";
 import markTableStore from "../../store/markTableStore";
 import { NavebarHOD } from "./NavebarHOD";
 
-export default function HODMarksTable({ c_id = "ICT1112" }) {
+export default function HODMarksTable() {
   const [mrks, setMrks] = useState([]);
   const [allChecked, setAllChecked] = useState(false);
   const [studentIDarr, setStudentIDarr] = useState([]);
+  const [courseIDarr, setCourseIDarr] = useState([])
   const [fildedMarks, setFildedMarks] = useState([]);
   const { currentFilter, setCurrentFilter } = markTableStore();
 
+  let setLevel,setSemester;
+
+  
   useEffect(() => {
     //calling loadMarks() function
     loadMarks();
@@ -21,6 +25,10 @@ export default function HODMarksTable({ c_id = "ICT1112" }) {
     const checked = fildedMarks.every((mrk) => mrk.checked);
     setAllChecked(checked);
   }, [fildedMarks]);
+
+  useEffect(()=>{
+    loadCID();
+  },[]);
 
   //get data using api
   const loadMarks = async () => {
@@ -33,9 +41,11 @@ export default function HODMarksTable({ c_id = "ICT1112" }) {
       checked: false,
     }));
 
+
     const marksFilterByID = marksWithChecked.filter(
       (markCid) => markCid.course_id === c_id
     );
+
 
     setMrks(marksFilterByID);
 
@@ -55,7 +65,31 @@ export default function HODMarksTable({ c_id = "ICT1112" }) {
     });
 
     setStudentIDarr(Array.from(uniqids));
+
+
   };
+
+  const loadCID = async()=>{
+    const cidResult = await axios.get(
+      `http://localhost:9090/api/StudentAssessment/get/scorebyLS/${setLevel},${setSemester}`
+    );
+
+    const cidcheckbylevelandsem = cidResult.data.map((cids)=>({
+      ...cids,
+      checked: false,
+    }));
+    console.log(cidcheckbylevelandsem);
+  
+    const uniqCids = new Set();
+
+    cidcheckbylevelandsem.forEach(({ course_id }) => {
+      uniqCids.add(course_id);
+    });
+
+    setCourseIDarr(Array.from(uniqCids));
+    console.log(courseIDarr);
+  
+  }
 
   const handleCheckboxChange = (index) => {
     const updatedMarks = [...fildedMarks];
@@ -70,6 +104,7 @@ export default function HODMarksTable({ c_id = "ICT1112" }) {
 
   const filterDataBySTID = (event) => {
     const stid = event.target.value;
+    console.log(stid);
     if (stid === "all") {
       setFildedMarks(mrks);
       return;
@@ -77,19 +112,58 @@ export default function HODMarksTable({ c_id = "ICT1112" }) {
 
     const marksFilterBystID = mrks.filter(
       (markCid) => markCid.student_id === stid
+
     );
+    // console.log(markCid.student_id);
+
     setFildedMarks(marksFilterBystID);
     setCurrentFilter(stid);
+    console.log(stid);
+    console.log(marksFilterBystID);
   };
+
+  const filterCiddata = (event) =>{
+    const cid = event.target.value;
+    console.log(cid);
+
+    return cid;
+  }
+
+  let c_id = filterCiddata;
+ console.log(c_id);
+//for cid
+const handleButtonClick = (btnlevel, btnsem) => {
+  setLevel=btnlevel;
+  setSemester=btnsem;
+  loadCID();
+};
 
   return (
     <div className="container">
-      <NavebarHOD />
+      <NavebarHOD handleButtonClick={handleButtonClick}/>
       <div className="py-4">
         <div className=" h2 mt-lg-5 ">Student Marks Finalization</div>
-        <div className=" h4 mt-7 ">Course ID : {c_id}</div>
+        
+        <div>
+          {/* <div className=" h4 mt-7 ">Course ID : {c_id}</div> */}
         <div>
           <select
+            className="form-select w-25 mx-lg-2 mb-3"
+            aria-label="Default select example"
+            onChange={(event) => filterCiddata(event)}
+          >
+            <option selected value="all">
+              Open this to select a Course ID
+            </option>
+            {courseIDarr.map((id, index) => (
+              <option key={index} value={id} scope="col">
+                {id}
+              </option>
+            ))}
+          </select>
+        </div>
+
+          <select 
             className="form-select w-25 mx-lg-2"
             aria-label="Default select example"
             onChange={(event) => filterDataBySTID(event)}
@@ -104,6 +178,8 @@ export default function HODMarksTable({ c_id = "ICT1112" }) {
             ))}
           </select>
         </div>
+        
+        
         <table className="table border shadow" style={{ marginTop: "30px" }}>
           <thead>
             <tr>
