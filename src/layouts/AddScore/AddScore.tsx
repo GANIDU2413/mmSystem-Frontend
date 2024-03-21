@@ -1,7 +1,10 @@
-import { useState } from "react";
+
+import { Navebar } from "../NavbarAndFooter/Navebar";
 import AddScoreRequest from "../../models/AddScoreRequest";
 import { useOktaAuth } from "@okta/okta-react";
 import { Redirect } from "react-router-dom";
+import { useState } from "react";
+
 
 export const AddScore = () => {
 
@@ -178,9 +181,22 @@ export const AddScore = () => {
 
   return (
     <div className="container mt-5 mb-5">
+      <Navebar></Navebar>
+      {displaySuccess && (
+        <div className="alert alert-success" role="alert">
+          Mark Add successfully
+        </div>
+      )}
+      {displayWarning && (
+        <div className="alert alert-danger" role="alert">
+          All fields must be filled out
+        </div>
+      )}
+
       <div className="card shadow-lg">
         <div className="card-header">Add new Score</div>
        
+
         <div className="card-body">
         <div className="mt-1 mb-1">
               {displaySuccess && (
