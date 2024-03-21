@@ -3,7 +3,7 @@ import { useOktaAuth } from "@okta/okta-react";
 import { SpinerLoading } from "../Utils/SpinerLoading";
 import { IoMenuSharp } from "react-icons/io5";
 
-export const NavebarDean = ({ handleButtonClick }) => {
+export const NavebarHOD = ({ handleButtonClick }) => {
   const { oktaAuth, authState } = useOktaAuth();
 
   if (!authState) {
@@ -66,13 +66,12 @@ export const NavebarDean = ({ handleButtonClick }) => {
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">
+                <a className="nav-link active" aria-current="page" href="/HODDashBoard">
                   Dashboard
                 </a>
               </li>
-
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">
+                <a className="nav-link" href="/HODmarkstable">
                   Student Details
                 </a>
               </li>
@@ -83,6 +82,7 @@ export const NavebarDean = ({ handleButtonClick }) => {
                   role="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
+                  
                 >
                   Final Marks
                 </a>

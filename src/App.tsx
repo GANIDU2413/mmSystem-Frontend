@@ -23,6 +23,9 @@ import ViewMarks from "./layouts/AR/ViewMarks/ViewMarks";
 import FinalStudentMarks from "./layouts/Dean/FinalMarks/FinalStudentMarks";
 import FinalStudentMarksEditFrom from "./layouts/Dean/FinalMarks/FinalStudentMarksEditFrom";
 import DataTable from "./layouts/Components/DataTable/DataTable";
+import HODDashBoard from "./layouts/HOD/HODDashBoard";
+import HODMarksTable from "./layouts/HOD/HODMarksTable";
+import HODMarksEditForm from "./layouts/HOD/HODMarksEditForm";
 
 
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -101,7 +104,18 @@ export const App = () => {
             <FinalStudentMarksEditFrom/>
           </Route>
 
+          <Route path="/HODDashBoard">
+            <HODDashBoard/>
+          </Route>
+
+          <Route path="/HODmarkstable">
+            <HODMarksTable/>
+          </Route>
           
+          <Route path="/HODmarkseditform/:id">
+            <HODMarksEditForm/>
+          </Route>
+
           <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
           <Route path='/login/callback' component={LoginCallback}/>
 
