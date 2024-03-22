@@ -13,6 +13,8 @@ export default function CourseSelection(props :any) {
     //get data using api
     const [courseData, setCourseData] = useState([]);
 
+    const previousRole = "HOD";
+
     //This useEffect is used to call loadCourseData function when the component is loaded and at eny action on the page
     useEffect(() => {
       loadCourseData();
@@ -21,7 +23,7 @@ export default function CourseSelection(props :any) {
     //Load course data from api and store in result variable
     const loadCourseData = async()=>{
       try{
-        const result=await axios.get(`http://localhost:9090/api/AssistantRegistrar/findCoursesByDepartmentLevelSemester/${department_id}/${level}/${semester}/HOD`);
+        const result=await axios.get(`http://localhost:9090/api/AssistantRegistrar/findCoursesByDepartmentLevelSemester/${department_id}/${level}/${semester}/${previousRole}`);
         setCourseData(result.data);
       }catch(error){
         console.error('Error fetching data:', error);
@@ -56,7 +58,7 @@ export default function CourseSelection(props :any) {
                     <th scope="row" key={index}>{index+1}</th>
                     <td>{course.course_id}</td>
                     <td>{course.course_name}</td>
-                    <td><a href={`/viewMarksRemainingToApprove/${course.course_id}/${course.course_name}`} className="btn btn-primary "  role="button" aria-disabled="true">View Marks</a> </td>
+                    <td><a href={`/viewMarksRemainingToApprove/${course.course_id}/${course.course_name}/${previousRole}`} className="btn btn-primary "  role="button" aria-disabled="true">View Marks</a> </td>
                     {/* <td>
                       <button type="button" className="btn btn-primary btn-sm">
                         <Link to ={{
