@@ -5,13 +5,16 @@ import { Link } from "react-router-dom";
 import { NavebarMT } from "./NavebarMT";
 import markTableStore from "../../store/markTableStore";
 
-export default function MarksTable({ c_id = "ICT1112" }) {
+export default function MarksTable({  }) {
   const [mrks, setMrks] = useState([]);
   const [allChecked, setAllChecked] = useState(false);
   const [studentIDarr, setStudentIDarr] = useState([]);
+  const [courseIDarr, setCourseIDarr] = useState([]);
   const [fildedMarks, setFildedMarks] = useState([]);
   const { currentFilter, setCurrentFilter } = markTableStore();
+  const [selectedCourseID, setSelectedCourseID] = useState("");
 
+  // let c_id;
   useEffect(() => {
     //calling loadMarks() function
     loadMarks();
@@ -34,27 +37,31 @@ export default function MarksTable({ c_id = "ICT1112" }) {
     }));
 
     const marksFilterByID = marksWithChecked.filter(
-      (markCid) => markCid.course_id === c_id
+      (markCid) => markCid.course_id 
     );
 
     setMrks(marksFilterByID);
 
     setFildedMarks(marksFilterByID);
 
-    if (currentFilter) {
-      const marksFilterBystID = marksFilterByID.filter(
-        (markCid) => markCid.student_id === currentFilter
-      );
-      setFildedMarks(marksFilterBystID);
-    }
+    // if (currentFilter) {
+    //   const marksFilterBystID = marksFilterByID.filter(
+    //     (markCid) => markCid.student_id === currentFilter
+    //   );
+    //   setFildedMarks(marksFilterBystID);
+    // }
 
-    const uniqids = new Set();
+    const uniqStudentIDs = new Set();
+    const uniqCourseIDs = new Set();
 
-    marksWithChecked.forEach(({ student_id }) => {
-      uniqids.add(student_id);
+
+    marksWithChecked.forEach(({ student_id, course_id }) => {
+      uniqStudentIDs.add(student_id);
+      uniqCourseIDs.add(course_id);
     });
 
-    setStudentIDarr(Array.from(uniqids));
+    setStudentIDarr(Array.from(uniqStudentIDs));
+    setCourseIDarr(Array.from(uniqCourseIDs));
   };
 
   const handleCheckboxChange = (index) => {
@@ -76,7 +83,7 @@ export default function MarksTable({ c_id = "ICT1112" }) {
     }
 
     const marksFilterBystID = mrks.filter(
-      (markCid) => markCid.student_id === stid
+      (markCid) => markCid.student_id === stid && markCid.course_id === selectedCourseID
     );
     setFildedMarks(marksFilterBystID);
     setCurrentFilter(stid);
@@ -109,8 +116,25 @@ export default function MarksTable({ c_id = "ICT1112" }) {
       <NavebarMT />
       <div className="py-4">
         <div className=" h2 mt-lg-5 ">Student Marks Finalization</div>
-        <div className=" h4 mt-7 ">Course ID : {c_id}</div>
+        <div className=" mb-3">
+          Select Course ID
+          <select
+            className="form-select w-25 mx-lg-2"
+            aria-label="Default select example"
+            onChange={(event) => setSelectedCourseID(event.target.value)}
+          >
+            <option selected value="">
+              Select a Course
+            </option>
+            {courseIDarr.map((id, index) => (
+              <option key={index} value={id}>
+                {id}
+              </option>
+            ))}
+          </select>
+        </div>
         <div>
+        Select Student ID
           <select
             className="form-select w-25 mx-lg-2"
             aria-label="Default select example"
