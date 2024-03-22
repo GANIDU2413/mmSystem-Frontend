@@ -2,253 +2,246 @@ import { Checkbox } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import markTableStore from "../../store/markTableStore";
+
 import { NavebarHOD } from "./NavebarHOD";
+import hodMarksStore from "../../store/hodMarksStore";
 
 export default function HODMarksTable() {
-  const [mrks, setMrks] = useState([]);
+  const [marks, setMarks] = useState([]);
+  const [filteredMarks, setFilteredMarks] = useState([]);
   const [allChecked, setAllChecked] = useState(false);
-  const [studentIDarr, setStudentIDarr] = useState([]);
-  const [courseIDarr, setCourseIDarr] = useState([])
-  const [fildedMarks, setFildedMarks] = useState([]);
-  const { currentFilter, setCurrentFilter } = markTableStore();
-  const [selectedCourseID, setSelectedCourseID] = useState("");
+  const [courseCodearr, setCourseCodeArr] = useState([]);
+  const [studentIdArr, setStudentIdArr] = useState([]);
 
-  let setLevel,setSemester;
-
-  const filterCiddata = (event) => {
-    const cid = event.target.value;
-    setSelectedCourseID(cid); // Update the selected course ID state
-   };
-  
-  // useEffect(() => {
-  //   //calling loadMarks() function
-  //   loadMarks();
-  // }, []);
+  const [alert, setAlert] = useState(false);
+  const [alertType, setAlertType] = useState(null);
+  const {
+    level: level_out,
+    sem: sem_out,
+    courseCode: courseCode_out,
+    studentId: studentId_out,
+    setLevel,
+    setSem,
+    setCourseCode,
+    setStudentId,
+  } = hodMarksStore();
 
   useEffect(() => {
-    const checked = fildedMarks.every((mrk) => mrk.checked);
-    setAllChecked(checked);
-  }, [fildedMarks]);
+    loadMarks(level_out, sem_out);
+    filterByStudentId({ target: { value: studentId_out } });
+    filterByCourseCode({ target: { value: courseCode_out } });
+  }, []);
 
-  useEffect(()=>{
-    loadCID();
-  },[]);
-
-  //get data using api
-  const loadMarks = async () => {
-    const result = await axios.get(
-      "http://localhost:9090/api/StudentAssessment/get/score"
+  const loadMarks = async (level, sem) => {
+    const response = await axios.get(
+      `http://localhost:9090/api/StudentAssessment/get/scorebyLS/${level},${sem}`
     );
 
-    const marksWithChecked = result.data.map((mark) => ({
-      ...mark,
+    const markedData = response.data.map((item) => ({
+      ...item,
       checked: false,
     }));
 
-    const marksFilterByID = marksWithChecked.filter(
-      (markCid) => markCid.course_id === selectedCourseID || selectedCourseID === "all"
-   );
+    setMarks(markedData);
+    setFilteredMarks(markedData);
 
-    // const marksFilterByID = marksWithChecked.filter(
-    //   (markCid) => markCid.course_id === c_id
-    // );
-
-
-    setMrks(marksFilterByID);
-    setFildedMarks(marksFilterByID);
-
-    
-
-    if (currentFilter) {
-      const marksFilterBystID = marksFilterByID.filter(
-        (markCid) => markCid.student_id === currentFilter
-      );
-      setFildedMarks(marksFilterBystID);
-    }
-
-    const uniqids = new Set();
-
-    marksWithChecked.forEach(({ student_id }) => {
-      uniqids.add(student_id);
+    const uniqCourseCodes = new Set();
+    markedData.forEach(({ course_id }) => {
+      uniqCourseCodes.add(course_id);
     });
+    setCourseCodeArr(Array.from(uniqCourseCodes));
 
-    
-    setStudentIDarr(Array.from(uniqids));
-
-
+    const uniqueStudentIds = new Set();
+    markedData.forEach(({ student_id }) => {
+      uniqueStudentIds.add(student_id);
+    });
+    setStudentIdArr(Array.from(uniqueStudentIds));
   };
 
   useEffect(() => {
-    loadMarks();
-   }, [selectedCourseID]);
-
-  const loadCID = async()=>{
-    const cidResult = await axios.get(
-      `http://localhost:9090/api/StudentAssessment/get/scorebyLS/${setLevel},${setSemester}`
-    );
-
-    const cidcheckbylevelandsem = cidResult.data.map((cids)=>({
-      ...cids,
-      checked: false,
-    }));
-    console.log(cidcheckbylevelandsem);
-  
-    const uniqCids = new Set();
-
-    cidcheckbylevelandsem.forEach(({ course_id }) => {
-      uniqCids.add(course_id);
-    });
-
-    setCourseIDarr(Array.from(uniqCids));
-    console.log(courseIDarr);
-  
-  }
+    const checked = filteredMarks.every((student) => student.checked);
+    setAllChecked(checked);
+  }, [filteredMarks]);
 
   const handleCheckboxChange = (index) => {
-    const updatedMarks = [...fildedMarks];
+    const updatedMarks = [...filteredMarks];
     updatedMarks[index].checked = !updatedMarks[index].checked;
-    setFildedMarks(updatedMarks);
+    setFilteredMarks(updatedMarks);
+
+    const checked = updatedMarks.every((student) => student.checked);
+    setAllChecked(checked);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Done");
+  const handleButtonClick = (btnlevel, btnsem) => {
+    // setLevel(btnlevel);
+    // setSem(btnsem);
+    loadMarks(btnlevel, btnsem);
+    setLevel(btnlevel);
+    setSem(btnsem);
   };
 
-  const filterDataBySTID = (event) => {
-    const stid = event.target.value;
-    console.log(stid);
-    if (stid === "all") {
-      setFildedMarks(mrks);
+  const filterByStudentId = (event) => {
+    const studentId = event.target.value;
+
+    if (studentId === "all") {
+      setFilteredMarks(marks);
       return;
     }
-
-    const marksFilterBystID = mrks.filter(
-      (markCid) => markCid.student_id === stid
-
-    );
-    // console.log(markCid.student_id);
-
-    setFildedMarks(marksFilterBystID);
-    setCurrentFilter(stid);
-    console.log(stid);
-    console.log(marksFilterBystID);
+    const filteredMarks = marks.filter((mark) => mark.student_id === studentId);
+    setFilteredMarks(filteredMarks);
+    setStudentId(studentId);
   };
 
-  // const filterCiddata = (event) =>{
-  //   const cid = event.target.value;
-  //   console.log(cid);
+  const filterByCourseCode = (event) => {
+    const courseCode = event.target.value;
 
-  //   return cid;
-  // }
+    if (courseCode === "all") {
+      setFilteredMarks(marks);
+      return;
+    }
+    const filteredMarks = marks.filter((mark) => mark.course_id === courseCode);
+    setFilteredMarks(filteredMarks);
+    setCourseCode(courseCode);
+  };
 
-  let c_id = filterCiddata;
- console.log(c_id);
-//for cid
-const handleButtonClick = (btnlevel, btnsem) => {
-  setLevel=btnlevel;
-  setSemester=btnsem;
-  loadCID();
-};
+  const checkData = () => {
+    if (allChecked === true) {
+      setAlertType("success");
+      setAlert(true);
+      setMarks([]);
+    } else {
+      setAlertType("danger");
+      setAlert(true);
+    }
+  };
 
   return (
     <div className="container">
-      <NavebarHOD handleButtonClick={handleButtonClick}/>
+      <NavebarHOD handleButtonClick={handleButtonClick} />
       <div className="py-4">
-        <div className=" h2 mt-lg-5 ">Student Marks Finalization</div>
-        
-        <div>
-          {/* <div className=" h4 mt-7 ">Course ID : {c_id}</div> */}
-        <div>
-          <select
-            className="form-select w-25 mx-lg-2 mb-3"
-            aria-label="Default select example"
-            value={selectedCourseID}
-            onChange={filterCiddata}
-          >
-            <option selected value="all">
-              Open this to select a Course ID
-            </option>
-            {courseIDarr.map((id, index) => (
-              <option key={index} value={id} scope="col">
-                {id}
-              </option>
-            ))}
-          </select>
+        <div className=" h2 mt-lg-5 ">
+          {marks.length === 0 && !alert
+            ? "Select a department to get data"
+            : "Student Marks Finalization"}
         </div>
 
-          <select 
-            className="form-select w-25 mx-lg-2"
-            aria-label="Default select example"
-            onChange={(event) => filterDataBySTID(event)}
+        {marks.length !== 0 && (
+          <>
+            <div>
+              <div>
+                <select
+                  className="form-select w-25 mx-lg-2 mb-3"
+                  aria-label="Default select example"
+                  onChange={(event) => filterByCourseCode(event)}
+                >
+                  <option selected value="all">
+                    Open this to select a Course ID
+                  </option>
+                  {courseCodearr.map((courseCode, index) => (
+                    <option key={index} value={courseCode} scope="col">
+                      {courseCode}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  className="form-select w-25 mx-lg-2"
+                  aria-label="Default select example"
+                  onChange={(event) => filterByStudentId(event)}
+                >
+                  <option selected value="all">
+                    Open this to select a Student
+                  </option>
+                  {studentIdArr.map((id, index) => (
+                    <option key={index} value={id} scope="col">
+                      {id}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <table
+                className="table border shadow"
+                style={{ marginTop: "30px" }}
+              >
+                <thead>
+                  <tr>
+                    <th scope="col">Checked</th>
+                    <th scope="col">Assessment Type</th>
+                    <th scope="col">Assessment Score</th>
+                    <th scope="col">Edit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredMarks.map((mark, index) => (
+                    <tr key={index}>
+                      <th>
+                        <Checkbox
+                          name="checkbox"
+                          id={index.toString()}
+                          checked={mark.checked}
+                          onChange={() => handleCheckboxChange(index)}
+                        />
+                      </th>
+                      <td>{mark.assignment_type}</td>
+                      <td>{mark.assignment_score}</td>
+                      <td>
+                        <Link to={`/HODmarkseditform/${mark.id}`}>
+                          <button
+                            type="button"
+                            className="btn btn-outline-primary btn-sm"
+                          >
+                            Edit
+                          </button>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="py-4">
+                <button
+                  type="submit"
+                  className="btn btn-outline-success btn-sm"
+                  id="submitbtn"
+                  disabled={!allChecked}
+                >
+                  Submit
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-outline-danger mx-2 btn-sm"
+                  id="clearbtn"
+                >
+                  Clean
+                </button>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-outline-success mb-4"
+              onClick={checkData}
+            >
+              Check Data
+            </button>
+          </>
+        )}
+
+        {alert && (
+          <div
+            className={`alert alert-${alertType} alert-dismissible fade show`}
+            role="alert"
           >
-            <option selected value="all">
-              Open this to select a Student
-            </option>
-            {studentIDarr.map((id, index) => (
-              <option key={index} value={id} scope="col">
-                {id}
-              </option>
-            ))}
-          </select>
-        </div>
-        
-        
-        <table className="table border shadow" style={{ marginTop: "30px" }}>
-          <thead>
-            <tr>
-              <th scope="col">Checked</th>
-              <th scope="col">Assessment Type</th>
-              <th scope="col">Assessment Score</th>
-              <th scope="col">Edit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {fildedMarks.map((mrk, index) => (
-              <tr key={index}>
-                <th>
-                  <Checkbox
-                    name="checkbox"
-                    id={index.toString()}
-                    checked={mrk.checked}
-                    onChange={() => handleCheckboxChange(index)}
-                  />
-                </th>
-
-                <td>{mrk.assignment_type}</td>
-                <td>{mrk.assignment_score}</td>
-
-                <td>
-                  <Link
-                    className="btn btn-outline-primary mx-2 btn-sm"
-                    to={`/markseditform/${mrk.id}`}
-                  >
-                    Edit
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="py-4">
-        <button
-          type="submit"
-          className="btn btn-outline-success btn-sm"
-          id="submitbtn"
-          onClick={handleSubmit}
-          disabled={!allChecked}
-        >
-          Submit
-        </button>
-        <button
-          type="button"
-          className="btn btn-outline-danger mx-2 btn-sm"
-          id="clearbtn"
-        >
-          Clean
-        </button>
+            {alertType === "success"
+              ? "Data submitted successfully"
+              : "Please check all data"}
+            <button
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+              onClick={() => setAlert(false)}
+            ></button>
+          </div>
+        )}
       </div>
     </div>
   );
