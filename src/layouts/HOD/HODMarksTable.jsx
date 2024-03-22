@@ -32,6 +32,12 @@ export default function HODMarksTable() {
     filterByCourseCode({ target: { value: courseCode_out } });
   }, []);
 
+  useEffect(() => {
+    const checked = filteredMarks.every((student) => student.checked);
+    setAllChecked(checked);
+ }, [filteredMarks]);
+
+ 
   const loadMarks = async (level, sem) => {
     const response = await axios.get(
       `http://localhost:9090/api/StudentAssessment/get/scorebyLS/${level},${sem}`
@@ -87,22 +93,28 @@ export default function HODMarksTable() {
       setFilteredMarks(marks);
       return;
     }
-    const filteredMarks = marks.filter((mark) => mark.student_id === studentId);
+    // Filter by both student ID and course ID
+    const filteredMarks = marks.filter(
+      (mark) => mark.student_id === studentId && mark.course_id === courseCode_out
+    );
     setFilteredMarks(filteredMarks);
     setStudentId(studentId);
-  };
+ };
 
-  const filterByCourseCode = (event) => {
-    const courseCode = event.target.value;
+ const filterByCourseCode = (event) => {
+  const courseCode = event.target.value;
 
-    if (courseCode === "all") {
-      setFilteredMarks(marks);
-      return;
-    }
-    const filteredMarks = marks.filter((mark) => mark.course_id === courseCode);
-    setFilteredMarks(filteredMarks);
-    setCourseCode(courseCode);
-  };
+  if (courseCode === "all") {
+    setFilteredMarks(marks);
+    return;
+  }
+  // Filter by both student ID and course ID
+  const filteredMarks = marks.filter(
+    (mark) => mark.course_id === courseCode && mark.student_id === studentId_out
+  );
+  setFilteredMarks(filteredMarks);
+  setCourseCode(courseCode);
+};
 
   const checkData = () => {
     if (allChecked === true) {
@@ -129,6 +141,7 @@ export default function HODMarksTable() {
           <>
             <div>
               <div>
+                Select Course ID
                 <select
                   className="form-select w-25 mx-lg-2 mb-3"
                   aria-label="Default select example"
@@ -143,6 +156,9 @@ export default function HODMarksTable() {
                     </option>
                   ))}
                 </select>
+               </div>
+               <div> 
+                Select Student ID
                 <select
                   className="form-select w-25 mx-lg-2"
                   aria-label="Default select example"

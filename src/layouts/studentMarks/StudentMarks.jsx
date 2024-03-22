@@ -191,7 +191,7 @@ export default function StudentMarks() {
         </>
       ) : (
         <div className="py-4" style={{ marginTop: "70px" }}>
-          <h1>No Data Found</h1>
+          <h1>Pending Final Marks</h1>
         </div>
       )}
     </div>
