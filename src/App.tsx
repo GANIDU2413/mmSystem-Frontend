@@ -65,7 +65,7 @@ export const App = () => {
           <Route path="/arviewmtdmarks">
             <ViewMarks department_id={"Multi_Disciplinary"}/>
           </Route>
-          <Route path="/viewMarksRemainingToApprove/:course_id/:course_name">
+          <Route path="/viewMarksRemainingToApprove/:course_id/:course_name/:previousRole">
             <DataTable/>
           </Route>
 

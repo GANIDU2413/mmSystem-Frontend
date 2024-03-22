@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Navebar } from '../NavBar/Navebar-AR';
 import BackButton from '../BackButton/BackButton';
+import { response } from 'express';
 
 // Define the type for your student mark data
 type StudentMark = {
@@ -21,17 +22,20 @@ interface DataTableProps {}
 
 
 export default function DataTable(props:any) {
-  const course_variables = useParams<{ course_id: string; course_name?: string }>(); //any = useParams();
+  const course_variables = useParams<{ course_id: string; course_name?: string; previousRole?:string }>(); //any = useParams();
 
   const [studentMarks, setStudentMarks] = useState<StudentMark[]>([]);
+  const [studentGrade, setStudentGrade] = useState(); //For student grade
   const [uniqueStudentIds, setUniqueStudentIds] = useState<string[]>([]);
   const [selectedValue, setSelectedValue] = useState<string>('');
+  const [medicalClicked, setMedicalClicked] = useState<boolean>(false);   //For approve button enable disable
+  var selectedOption = "";
 
 
   
   const fetchData = async (value:string)=>{
 
-    if(value==='Open this select a Student' || value==="") 
+    if(value==='Select a student' || value==="") 
       {
         try {
           const response = await axios.get<StudentMark[]>(
@@ -81,13 +85,28 @@ export default function DataTable(props:any) {
   const printSelected = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
     console.log(selectedValue);
-    setSelectedValue(selectedValue);
+    setSelectedValue(selectedOption);
   };
 
   const handleSelectedValue = (value: string) => {
     fetchData(value);
-
+    setMedicalClicked(false);
+    setSelectedValue(value)
+    console.log(selectedOption)
   };
+
+  const handleMedicalClicked = async() => {
+
+    
+        // const response = await axios.post(`http://localhost:9090/api/AssistantRegistrar/updateMarksApprovalLevelByAllParameters/AR/${course_variables.course_id}}/TG-2020-674/HOD/2024`, {
+        //     data: {
+        //         // Your data to be sent in the request body
+        //     }
+        // });
+        alert("Marks Approved Successfully");
+        
+      
+      }
 
   return (
     <div>
@@ -104,17 +123,20 @@ export default function DataTable(props:any) {
             <tr>
               <th style={{textAlign:"center",backgroundColor:'#ebe8e8',width:"250px"}} >
                 <select className="form-select w-100 mx-lg-2" aria-label="Default select example" onChange={(e) => handleSelectedValue(e.target.value)}>
-                  <option>Open this select a Student</option>
+                  <option>Select a student</option>
                   {uniqueStudentIds.map((id) => (
                     <option key={id} value={id}>
                       {id}
                     </option>
                   ))}
                 </select>
-            </th>
-              <th colSpan={100} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>Approve Student Results Before The Results Board <br/> {course_variables.course_id} - {course_variables.course_name}</th>
+              </th>
+              <th colSpan={100} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>
+                Approve Student Results Before The Results Board <br/> {course_variables.course_id} - {course_variables.course_name}
+              </th>
             </tr>
             <tr>
+           
               <th scope="col">Student ID</th>
               <th scope="col">Course ID</th>
               <th scope="col">Assignment type</th>
@@ -138,8 +160,8 @@ export default function DataTable(props:any) {
         </table>
 
         <div className='right-aligned-div'>
-          <button type="button" className="btn btn-outline-primary">Update Medical</button>&nbsp;&nbsp;
-          <button type="button" className="btn btn-outline-primary">Approve</button>&nbsp;&nbsp;
+          <button type="button" className="btn btn-sm btn-success" onClick={() => { setMedicalClicked(true); }}>Update Medical</button>&nbsp;&nbsp;
+          <button type="button" className={`btn btn-sm ${medicalClicked ? 'btn-primary' : 'btn-primary'}`} disabled={!medicalClicked} onClick={handleMedicalClicked}>Approve Marks</button>&nbsp;&nbsp;
           <BackButton /><br/>&nbsp;
         </div>
       </div>
