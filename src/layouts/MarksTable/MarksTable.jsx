@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { NavebarMT } from "./NavebarMT";
 import markTableStore from "../../store/markTableStore";
 
-export default function MarksTable({  }) {
+export default function MarksTable({}) {
   const [mrks, setMrks] = useState([]);
   const [allChecked, setAllChecked] = useState(false);
   const [studentIDarr, setStudentIDarr] = useState([]);
@@ -13,6 +13,10 @@ export default function MarksTable({  }) {
   const [fildedMarks, setFildedMarks] = useState([]);
   const { currentFilter, setCurrentFilter } = markTableStore();
   const [selectedCourseID, setSelectedCourseID] = useState("");
+
+  const [alert, setAlert] = useState(false);
+  const [alertType, setAlertType] = useState(null);
+  const [displayTable, setDisplayTable] = useState(true);
 
   // let c_id;
   useEffect(() => {
@@ -37,7 +41,7 @@ export default function MarksTable({  }) {
     }));
 
     const marksFilterByID = marksWithChecked.filter(
-      (markCid) => markCid.course_id 
+      (markCid) => markCid.course_id
     );
 
     setMrks(marksFilterByID);
@@ -53,7 +57,6 @@ export default function MarksTable({  }) {
 
     const uniqStudentIDs = new Set();
     const uniqCourseIDs = new Set();
-
 
     marksWithChecked.forEach(({ student_id, course_id }) => {
       uniqStudentIDs.add(student_id);
@@ -83,131 +86,157 @@ export default function MarksTable({  }) {
     }
 
     const marksFilterBystID = mrks.filter(
-      (markCid) => markCid.student_id === stid && markCid.course_id === selectedCourseID
+      (markCid) =>
+        markCid.student_id === stid && markCid.course_id === selectedCourseID
     );
     setFildedMarks(marksFilterBystID);
     setCurrentFilter(stid);
   };
 
-
-  //Approval button
-    const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
-    const appendAlert = (message, type) => {
-      const wrapper = document.createElement('div')
-      wrapper.innerHTML = [
-        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-        `   <div>${message}</div>`,
-        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-        '</div>'
-      ].join('')
-
-      alertPlaceholder.append(wrapper)
+  // Alert
+  const checkData = () => {
+    if (allChecked === true) {
+      setAlertType("success");
+      setAlert(true);
+      setDisplayTable(false);
+    } else {
+      setAlertType("danger");
+      setAlert(true);
     }
-
-    const alertTrigger = document.getElementById('liveAlertBtn')
-    if (alertTrigger) {
-      alertTrigger.addEventListener('click', () => {
-        appendAlert('Nice, you triggered this alert message!', 'success')
-      })
-    }
+  };
 
   return (
     <div className="container">
       <NavebarMT />
-      <div className="py-4">
+      <div className="pt-4">
         <div className=" h2 mt-lg-5 ">Student Marks Finalization</div>
-        <div className=" mb-3">
-          Select Course ID
-          <select
-            className="form-select w-25 mx-lg-2"
-            aria-label="Default select example"
-            onChange={(event) => setSelectedCourseID(event.target.value)}
-          >
-            <option selected value="">
-              Select a Course
-            </option>
-            {courseIDarr.map((id, index) => (
-              <option key={index} value={id}>
-                {id}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-        Select Student ID
-          <select
-            className="form-select w-25 mx-lg-2"
-            aria-label="Default select example"
-            onChange={(event) => filterDataBySTID(event)}
-          >
-            <option selected value="all">
-              Open this to select a Student
-            </option>
-            {studentIDarr.map((id, index) => (
-              <option key={index} value={id} scope="col">
-                {id}
-              </option>
-            ))}
-          </select>
-        </div>
-        <table className="table border shadow" style={{ marginTop: "30px" }}>
-          <thead>
-            <tr>
-              <th scope="col">Checked</th>
-              <th scope="col">Assessment Type</th>
-              <th scope="col">Assessment Score</th>
-              <th scope="col">Edit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {fildedMarks.map((mrk, index) => (
-              <tr key={index}>
-                <th>
-                  <Checkbox
-                    name="checkbox"
-                    id={index.toString()}
-                    checked={mrk.checked}
-                    onChange={() => handleCheckboxChange(index)}
-                  />
-                </th>
-
-                <td>{mrk.assignment_type}</td>
-                <td>{mrk.assignment_score}</td>
-
-                <td>
-                  <Link
-                    className="btn btn-outline-primary mx-2 btn-sm"
-                    to={`/markseditform/${mrk.id}`}
-                  >
-                    Edit
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
-      <div className="py-4">
-        <button
-          type="submit"
-          className="btn btn-outline-primary btn-sm"
-          id="submitbtn"
-          onClick={handleSubmit}
-          disabled={!allChecked}
-        >
-          Submit
-        </button>
-        <button
-          type="button"
-          className="btn btn-outline-danger mx-2 btn-sm"
-          id="clearbtn"
-        >
-          Clean
-        </button>
-      </div>
+
+      {displayTable && (
+        <>
+          <div className="pb-4">
+            <div className=" mb-3">
+              Select Course ID
+              <select
+                className="form-select w-25 mx-lg-2"
+                aria-label="Default select example"
+                onChange={(event) => setSelectedCourseID(event.target.value)}
+              >
+                <option selected value="">
+                  Select a Course
+                </option>
+                {courseIDarr.map((id, index) => (
+                  <option key={index} value={id}>
+                    {id}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              Select Student ID
+              <select
+                className="form-select w-25 mx-lg-2"
+                aria-label="Default select example"
+                onChange={(event) => filterDataBySTID(event)}
+              >
+                <option selected value="all">
+                  Open this to select a Student
+                </option>
+                {studentIDarr.map((id, index) => (
+                  <option key={index} value={id} scope="col">
+                    {id}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <table
+              className="table border shadow"
+              style={{ marginTop: "30px" }}
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Checked</th>
+                  <th scope="col">Assessment Type</th>
+                  <th scope="col">Assessment Score</th>
+                  <th scope="col">Edit</th>
+                </tr>
+              </thead>
+              <tbody>
+                {fildedMarks.map((mrk, index) => (
+                  <tr key={index}>
+                    <th>
+                      <Checkbox
+                        name="checkbox"
+                        id={index.toString()}
+                        checked={mrk.checked}
+                        onChange={() => handleCheckboxChange(index)}
+                      />
+                    </th>
+
+                    <td>{mrk.assignment_type}</td>
+                    <td>{mrk.assignment_score}</td>
+
+                    <td>
+                      <Link
+                        className="btn btn-outline-primary mx-2 btn-sm"
+                        to={`/markseditform/${mrk.id}`}
+                      >
+                        Edit
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="py-4">
+            <button
+              type="submit"
+              className="btn btn-outline-primary btn-sm"
+              id="submitbtn"
+              onClick={handleSubmit}
+              disabled={!allChecked}
+            >
+              Submit
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-danger mx-2 btn-sm"
+              id="clearbtn"
+            >
+              Clean
+            </button>
+          </div>
+          <div>
+            <button
+              type="button"
+              class="btn btn-outline-success my-3"
+              onClick={checkData}
+            >
+              Check Data
+            </button>
+          </div>
+        </>
+      )}
+
       <div>
-        <div id="liveAlertPlaceholder"></div>
-        <button type="button" class="btn btn-outline-success mb-4 " id="liveAlertBtn">Show live alert</button>
+        {alert && (
+          <div
+            className={`alert alert-${alertType} alert-dismissible fade show`}
+            role="alert"
+          >
+            {alertType === "success"
+              ? "Data submitted successfully"
+              : "Please check all data"}
+            <button
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+              onClick={() => setAlert(false)}
+            ></button>
+          </div>
+        )}
       </div>
     </div>
   );

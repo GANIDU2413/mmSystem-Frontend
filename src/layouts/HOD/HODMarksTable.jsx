@@ -28,9 +28,22 @@ export default function HODMarksTable() {
 
   useEffect(() => {
     loadMarks(level_out, sem_out);
-    filterByStudentId({ target: { value: studentId_out } });
-    filterByCourseCode({ target: { value: courseCode_out } });
-  }, []);
+  }, [level_out, sem_out]);
+
+  useEffect(() => {
+    const filteredByStudentId = marks.filter(
+      (mark) => studentId_out === "all" || mark.student_id === studentId_out
+    );
+    const filteredByCourseCode = filteredByStudentId.filter(
+      (mark) => courseCode_out === "all" || mark.course_id === courseCode_out
+    );
+    setFilteredMarks(filteredByCourseCode);
+  }, [studentId_out, courseCode_out, marks]);
+
+  useEffect(() => {
+    const checked = filteredMarks.every((student) => student.checked);
+    setAllChecked(checked);
+  }, [filteredMarks]);
 
   const loadMarks = async (level, sem) => {
     const response = await axios.get(
@@ -43,7 +56,6 @@ export default function HODMarksTable() {
     }));
 
     setMarks(markedData);
-    setFilteredMarks(markedData);
 
     const uniqCourseCodes = new Set();
     markedData.forEach(({ course_id }) => {
@@ -58,11 +70,6 @@ export default function HODMarksTable() {
     setStudentIdArr(Array.from(uniqueStudentIds));
   };
 
-  useEffect(() => {
-    const checked = filteredMarks.every((student) => student.checked);
-    setAllChecked(checked);
-  }, [filteredMarks]);
-
   const handleCheckboxChange = (index) => {
     const updatedMarks = [...filteredMarks];
     updatedMarks[index].checked = !updatedMarks[index].checked;
@@ -73,35 +80,9 @@ export default function HODMarksTable() {
   };
 
   const handleButtonClick = (btnlevel, btnsem) => {
-    // setLevel(btnlevel);
-    // setSem(btnsem);
     loadMarks(btnlevel, btnsem);
     setLevel(btnlevel);
     setSem(btnsem);
-  };
-
-  const filterByStudentId = (event) => {
-    const studentId = event.target.value;
-
-    if (studentId === "all") {
-      setFilteredMarks(marks);
-      return;
-    }
-    const filteredMarks = marks.filter((mark) => mark.student_id === studentId);
-    setFilteredMarks(filteredMarks);
-    setStudentId(studentId);
-  };
-
-  const filterByCourseCode = (event) => {
-    const courseCode = event.target.value;
-
-    if (courseCode === "all") {
-      setFilteredMarks(marks);
-      return;
-    }
-    const filteredMarks = marks.filter((mark) => mark.course_id === courseCode);
-    setFilteredMarks(filteredMarks);
-    setCourseCode(courseCode);
   };
 
   const checkData = () => {
@@ -129,10 +110,11 @@ export default function HODMarksTable() {
           <>
             <div>
               <div>
+                Select Course ID
                 <select
                   className="form-select w-25 mx-lg-2 mb-3"
                   aria-label="Default select example"
-                  onChange={(event) => filterByCourseCode(event)}
+                  onChange={(event) => setCourseCode(event.target.value)}
                 >
                   <option selected value="all">
                     Open this to select a Course ID
@@ -143,10 +125,13 @@ export default function HODMarksTable() {
                     </option>
                   ))}
                 </select>
+              </div>
+              <div>
+                Select Student ID
                 <select
                   className="form-select w-25 mx-lg-2"
                   aria-label="Default select example"
-                  onChange={(event) => filterByStudentId(event)}
+                  onChange={(event) => setStudentId(event.target.value)}
                 >
                   <option selected value="all">
                     Open this to select a Student
