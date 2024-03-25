@@ -22,8 +22,14 @@ interface DataTableProps {}
 
 
 export default function DataTable(props:any) {
-  const course_variables = useParams<{ course_id: string; course_name?: string; previousRole?:string }>(); //any = useParams();
 
+
+  const { course_id, course_name, previousRole } = useParams<{
+    course_id: string;
+    course_name?: string;
+    previousRole?: string;
+  }>();
+  
   const [studentMarks, setStudentMarks] = useState<StudentMark[]>([]);
   const [studentGrade, setStudentGrade] = useState(); //For student grade
   const [uniqueStudentIds, setUniqueStudentIds] = useState<string[]>([]);
@@ -39,7 +45,7 @@ export default function DataTable(props:any) {
       {
         try {
           const response = await axios.get<StudentMark[]>(
-            `http://localhost:9090/api/AssistantRegistrar/findAllStudentMarksRemainingToApprove/HOD/${course_variables.course_id}`
+            `http://localhost:9090/api/AssistantRegistrar/findAllStudentMarksRemainingToApprove/HOD/${course_id}`
           );
           
           setStudentMarks(response.data);
@@ -56,10 +62,10 @@ export default function DataTable(props:any) {
       else{
         try {
           const response = await axios.get<StudentMark[]>(
-            `http://localhost:9090/api/AssistantRegistrar/findAllStudentMarksRemainingToApproveByStuId/HOD/${course_variables.course_id}/${value}`
+            `http://localhost:9090/api/AssistantRegistrar/findAllStudentMarksRemainingToApproveByStuId/HOD/${course_id}/${value}`
           );
           const Allresponse = await axios.get<StudentMark[]>(
-            `http://localhost:9090/api/AssistantRegistrar/findAllStudentMarksRemainingToApprove/HOD/${course_variables.course_id}`
+            `http://localhost:9090/api/AssistantRegistrar/findAllStudentMarksRemainingToApprove/HOD/${course_id}`
           );
           
           setStudentMarks(response.data);
@@ -80,7 +86,7 @@ export default function DataTable(props:any) {
 
   useEffect(() => {
     fetchData("");
-  }, [course_variables.course_id]); // React to changes in course_id
+  }, [course_id]); // React to changes in course_id
 
   const printSelected = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
@@ -92,17 +98,19 @@ export default function DataTable(props:any) {
     fetchData(value);
     setMedicalClicked(false);
     setSelectedValue(value)
+    selectedOption = value;
     console.log(selectedOption)
   };
 
   const handleMedicalClicked = async() => {
 
     
-        // const response = await axios.post(`http://localhost:9090/api/AssistantRegistrar/updateMarksApprovalLevelByAllParameters/AR/${course_variables.course_id}}/TG-2020-674/HOD/2024`, {
+        // const response = await axios.post(`http://localhost:9090/api/AssistantRegistrar/updateMarksApprovalLevelByAllParameters/AR/${course_id}/${selectedOption}/${previousRole}/2024`, {
         //     data: {
         //         // Your data to be sent in the request body
         //     }
         // });
+        console.log({course_id});
         alert("Marks Approved Successfully");
         
       
@@ -132,7 +140,7 @@ export default function DataTable(props:any) {
                 </select>
               </th>
               <th colSpan={100} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>
-                Approve Student Results Before The Results Board <br/> {course_variables.course_id} - {course_variables.course_name}
+                Approve Student Results Before The Results Board <br/> {course_id} - {course_name}
               </th>
             </tr>
             <tr>
