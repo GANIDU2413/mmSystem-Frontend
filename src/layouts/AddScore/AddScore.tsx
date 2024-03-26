@@ -2,10 +2,14 @@ import { useState } from "react";
 import AddScoreRequest from "../../models/AddScoreRequest";
 import { useOktaAuth } from "@okta/okta-react";
 import { Redirect } from "react-router-dom";
+import toastr from "toastr";
+import { SpinerLoading } from "../Utils/SpinerLoading";
+
 
 export const AddScore = () => {
+  // to handle okta authentication
   const { authState } = useOktaAuth();
-  // new marks
+  // to handle new score feeding
   const [studentID, setStudentID] = useState("Select a Student");
   const [courseID, setCourseID] = useState("Select a Course");
   const [year, setYear] = useState("");
@@ -19,16 +23,17 @@ export const AddScore = () => {
   const [level, setlevel] = useState("");
   const [semester, setSemester] = useState(" ");
 
-  // Display
+  // to handle Display Worning and Success
   const [displayWarning, setDisplayWaring] = useState(false);
   const [displaySuccess, setDisplaySuccess] = useState(false);
 
+  // to handle dropdown menu properties
   interface DropdownMenuProps {
     options: string[];
     selectedOption: string;
     onSelect: (option: string) => void;
   }
-
+  // to handle all dropdown properties
   const DropdownMenu: React.FC<DropdownMenuProps> = ({
     options,
     selectedOption,
@@ -49,11 +54,7 @@ export const AddScore = () => {
         <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
           {options.map((option, index) => (
             <li key={index}>
-              <a
-                className="dropdown-item"
-                onClick={() => onSelect(option)}
-                href="#"
-              >
+              <a className="dropdown-item" onClick={() => onSelect(option)}>
                 {option}
               </a>
             </li>
@@ -63,6 +64,7 @@ export const AddScore = () => {
     );
   };
 
+  // to store course ID
   const courses: string[] = ["ICT1112", "ICT1122", "ICT1132", "ICT2242"];
   const students: string[] = [
     "TG-2020-671",
@@ -70,6 +72,8 @@ export const AddScore = () => {
     "TG-2020-673",
     "TG-2020-674",
   ];
+
+  // to store assignment types
   const assignmentTypes: string[] = [
     "QUIZ1",
     "QUIZ2",
@@ -79,31 +83,35 @@ export const AddScore = () => {
     "MID",
     "FINAL",
   ];
+
+  // to store score Feeding Type.
   const scoreFeedingType: string[] = ["HOLD", "FEED SCORE"];
 
+  // to handle state of the course acordantly user's input.
   const handleCourseSelect = (setCourse: string): void => {
     setCourseID(setCourse);
   };
-
+  // to handle state of the student acordantly user's input.
   const handleStudentSelect = (setStudent: string): void => {
     setStudentID(setStudent);
   };
-
+  // to handle assignmment type acordantly user's input.
   const handleAssignmentType = (setAssignmentType: string): void => {
     setassignmentType(setAssignmentType);
   };
-
+  // to handle the score feeding type acordantly user's input.
   const handleScoreFeedingType = (
     setAssignmentScoreFeedingType: string
   ): void => {
     setassignmentScoreFeedingScore(setAssignmentScoreFeedingType);
   };
-
+  // to filter the year by using the student ID.
   const extractYear = (academicYear: string): string => {
     const parts = academicYear.split("-");
     return parts[1];
   };
 
+  // to filter the semester and level by using the course code.
   const extractSemesterAndLevel = (semesterAndLevel: string): string[] => {
     if (semesterAndLevel !== "Select a Course") {
       const characters = semesterAndLevel.split("");
@@ -115,6 +123,7 @@ export const AddScore = () => {
     }
   };
 
+  // to hnadle state of student's level, Semester, and academic year.
   const setLevelSemesterAndYear = (): void => {
     const [academicLevel, academicSemester] = extractSemesterAndLevel(courseID);
 
@@ -125,14 +134,16 @@ export const AddScore = () => {
   };
 
   async function submitScore() {
-    console.log(studentID);
-    console.log(courseID);
-    console.log(assignmentScore);
-    console.log(year);
-    console.log(level);
-    console.log(semester);
+    // console.log(studentID);
+    // console.log(courseID);
+    // console.log(assignmentScore);
+    // console.log(year);
+    // console.log(level);
+    // console.log(semester);
 
+    // to feed student score
     const url = `http://localhost:9090/api/lecture/add/score`;
+    // to ensure validation of data feelds
     if (
       studentID !== "" &&
       courseID !== "" &&
@@ -142,6 +153,7 @@ export const AddScore = () => {
       level !== "" &&
       semester !== ""
     ) {
+      // to store data temporary
       const score: AddScoreRequest = new AddScoreRequest(
         studentID,
         courseID,
@@ -151,6 +163,8 @@ export const AddScore = () => {
         level,
         semester
       );
+
+      // to handle the behaviors of data that can be passed into backend.
       const requestOptions = {
         method: "POST",
         headers: {
@@ -159,41 +173,54 @@ export const AddScore = () => {
         body: JSON.stringify(score),
       };
 
+      // to submit score data into the backend.
       const submitScoreResponse = await fetch(url, requestOptions);
+      //  to check wether submition is successful or not.
       if (!submitScoreResponse.ok) {
         throw new Error("Somthing went wrong!");
       }
-      
+      // to set default state of score feeding  feelds.
       setassignmentScore(0);
       setStudentID("Select a Student");
       setYear("");
+      // to desplay succuss alart.
+     
       setDisplayWaring(false);
       setDisplaySuccess(true);
+      toastr.success( studentID + " Mark Add successfully.",'Succuss!')
+
+     
     } else {
+      // to desplay worning alart.
+      
       setDisplayWaring(true);
       setDisplaySuccess(false);
+      toastr.error('Please fill required fields.', 'Error!')
     }
   }
 
+  // set default sate of course selection feelds
   const CompleteCourse = (): void => {
     setCourseID("Select a Course");
     setassignmentType("Select an Assignment Tyep");
     setlevel("");
     setSemester("");
-  }
-
+  };
+  // to ensure the authentication.
   if (authState?.accessToken?.claims.userType === undefined) {
     return <Redirect to="/home"/>;
   }
 
+  // to desplay score feeding form
   return (
     <div className="container mt-5 mb-5">
       <div className="card shadow-lg">
-        <div className="card-header">Add new Score</div>
+        <div className="card-header">Score Feeding Section</div>
 
         <div className="card-body">
           <div className="mt-1 mb-1">
             {displaySuccess && (
+              
               <div className="alert alert-success" role="alert">
                 Mark Add successfully
               </div>
@@ -339,7 +366,11 @@ export const AddScore = () => {
           </form>
         </div>
       </div>
-      <button type="button" className="btn btn-primary mt-3" onClick={CompleteCourse}>
+      <button
+        type="button"
+        className="btn btn-primary mt-3"
+        onClick={CompleteCourse}
+      >
         Complete Selected Course
       </button>
     </div>
