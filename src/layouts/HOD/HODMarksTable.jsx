@@ -102,7 +102,7 @@ export default function HODMarksTable() {
       <div className="py-4">
         <div className=" h2 mt-lg-5 ">
           {marks.length === 0 && !alert
-            ? "Select a department to get data"
+            ? ""
             : "Student Marks Finalization"}
         </div>
 
@@ -203,9 +203,9 @@ export default function HODMarksTable() {
             <button
               type="button"
               class="btn btn-outline-success mb-4"
-              onClick={checkData}
+              onClick={checkData} disabled
             >
-              Check Data
+              Certify
             </button>
           </>
         )}
