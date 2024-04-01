@@ -13,7 +13,7 @@ export const Navebar = () => {
   const handleLogout = async () => oktaAuth.signOut(); // handle logout from okta auth.
 
   return (
-    <nav className="navbar main-color fixed-top">
+    <nav className="navbar main-color fixed-top ">
       <div className="container-fluid">
         {!authState.isAuthenticated ? (
           <a className="navbar-brand text-white">
@@ -49,7 +49,7 @@ export const Navebar = () => {
         </ul>
       </div>
       <div
-        className="offcanvas offcanvas-start"
+        className="offcanvas offcanvas-start "
         id="offcanvasNavbar"
         aria-labelledby="offcanvasNavbarLabel"
       >
@@ -82,59 +82,6 @@ export const Navebar = () => {
                 Score Feeding
               </Link>
             </li>
-            <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Final Marks
-              </a>
-              <ul className="dropdown-menu">
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Level I Sem I
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Level I Sem II
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Level II Sem I
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Level II Sem II
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Level III Sem I
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Level III Sem II
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Level IV Sem I
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Level IV Sem II
-                  </a>
-                </li>
-              </ul>
-            </li>
           </ul>
           <hr></hr>
         </div>
@@ -142,3 +89,6 @@ export const Navebar = () => {
     </nav>
   );
 };
+function useSate(arg0: boolean): [any, any] {
+  throw new Error("Function not implemented.");
+}

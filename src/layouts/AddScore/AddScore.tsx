@@ -3,8 +3,6 @@ import AddScoreRequest from "../../models/AddScoreRequest";
 import { useOktaAuth } from "@okta/okta-react";
 import { Redirect } from "react-router-dom";
 import toastr from "toastr";
-import { SpinerLoading } from "../Utils/SpinerLoading";
-
 
 export const AddScore = () => {
   // to handle okta authentication
@@ -26,6 +24,8 @@ export const AddScore = () => {
   // to handle Display Worning and Success
   const [displayWarning, setDisplayWaring] = useState(false);
   const [displaySuccess, setDisplaySuccess] = useState(false);
+
+ 
 
   // to handle dropdown menu properties
   interface DropdownMenuProps {
@@ -175,27 +175,26 @@ export const AddScore = () => {
 
       // to submit score data into the backend.
       const submitScoreResponse = await fetch(url, requestOptions);
+
       //  to check wether submition is successful or not.
       if (!submitScoreResponse.ok) {
-        throw new Error("Somthing went wrong!");
+        toastr.error("Network Error.", "Error!");
       }
       // to set default state of score feeding  feelds.
       setassignmentScore(0);
       setStudentID("Select a Student");
       setYear("");
       // to desplay succuss alart.
-     
+
       setDisplayWaring(false);
       setDisplaySuccess(true);
-      toastr.success( studentID + " Mark Add successfully.",'Succuss!')
-
-     
+      toastr.success(studentID + " Mark Add successfully.", "Succuss!");
     } else {
       // to desplay worning alart.
-      
+
       setDisplayWaring(true);
       setDisplaySuccess(false);
-      toastr.error('Please fill required fields.', 'Error!')
+      toastr.error("Please fill required fields.", "Error!");
     }
   }
 
@@ -208,7 +207,7 @@ export const AddScore = () => {
   };
   // to ensure the authentication.
   if (authState?.accessToken?.claims.userType === undefined) {
-    return <Redirect to="/home"/>;
+    return <Redirect to="/home" />;
   }
 
   // to desplay score feeding form
@@ -220,7 +219,6 @@ export const AddScore = () => {
         <div className="card-body">
           <div className="mt-1 mb-1">
             {displaySuccess && (
-              
               <div className="alert alert-success" role="alert">
                 Mark Add successfully
               </div>
@@ -284,15 +282,7 @@ export const AddScore = () => {
                 />
               </div>
             </div>
-            <div>
-              <button
-                type="button"
-                className="btn btn-primary mt-3"
-                onClick={setLevelSemesterAndYear}
-              >
-                Enable Score Feeding
-              </button>
-            </div>
+           
             <hr />
             <div className="row">
               <div className="col-md-3 mb-3">
@@ -301,23 +291,6 @@ export const AddScore = () => {
                   options={students}
                   selectedOption={studentID}
                   onSelect={handleStudentSelect}
-                />
-              </div>
-              <div className="col-md-3 mb-3">
-                <label className="form-label">Student Type</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="author"
-                  required
-                />
-              </div>
-              <div className="col-md-3 mb-3">
-                <label className="form-label">Score Type</label>
-                <DropdownMenu
-                  options={scoreFeedingType}
-                  selectedOption={assignmentScoreFeedingType}
-                  onSelect={handleScoreFeedingType}
                 />
               </div>
               <div className="col-md-3 mb-3">
