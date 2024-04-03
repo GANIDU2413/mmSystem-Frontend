@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddScoreRequest from "../../models/AddScoreRequest";
 import { useOktaAuth } from "@okta/okta-react";
 import { Redirect } from "react-router-dom";
@@ -25,7 +25,16 @@ export const AddScore = () => {
   const [displayWarning, setDisplayWaring] = useState(false);
   const [displaySuccess, setDisplaySuccess] = useState(false);
 
+  // fetct courses' data relavant user's state
+ useEffect(() => {
  
+   const fetchCourse = async () => {
+
+    
+   }
+
+           
+ })
 
   // to handle dropdown menu properties
   interface DropdownMenuProps {
@@ -64,6 +73,8 @@ export const AddScore = () => {
     );
   };
 
+  
+
   // to store course ID
   const courses: string[] = ["ICT1112", "ICT1122", "ICT1132", "ICT2242"];
   const students: string[] = [
@@ -84,8 +95,7 @@ export const AddScore = () => {
     "FINAL",
   ];
 
-  // to store score Feeding Type.
-  const scoreFeedingType: string[] = ["HOLD", "FEED SCORE"];
+ 
 
   // to handle state of the course acordantly user's input.
   const handleCourseSelect = (setCourse: string): void => {
@@ -99,12 +109,7 @@ export const AddScore = () => {
   const handleAssignmentType = (setAssignmentType: string): void => {
     setassignmentType(setAssignmentType);
   };
-  // to handle the score feeding type acordantly user's input.
-  const handleScoreFeedingType = (
-    setAssignmentScoreFeedingType: string
-  ): void => {
-    setassignmentScoreFeedingScore(setAssignmentScoreFeedingType);
-  };
+  
   // to filter the year by using the student ID.
   const extractYear = (academicYear: string): string => {
     const parts = academicYear.split("-");
@@ -209,7 +214,6 @@ export const AddScore = () => {
   if (authState?.accessToken?.claims.userType === undefined) {
     return <Redirect to="/home" />;
   }
-
   // to desplay score feeding form
   return (
     <div className="container mt-5 mb-5">
