@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AddScoreRequest from "../../models/AddScoreRequest";
+import AddScoreRequest from "../../../models/AddScoreRequest";
 import { useOktaAuth } from "@okta/okta-react";
 import { Redirect } from "react-router-dom";
 import toastr from "toastr";

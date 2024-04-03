@@ -1,10 +1,10 @@
 // import viteLogo from '/vite.svg'
 import "./App.css";
-import { Footer } from "./layouts/NavbarAndFooter/Footer";
-import { Navebar } from "./layouts/NavbarAndFooter/Navebar";
-import { AddScore } from "./layouts/AddScore/AddScore";
+import { Footer } from "./Lecture/layouts/NavbarAndFooter/Footer";
+import { Navebar } from "./Lecture/layouts/NavbarAndFooter/Navebar";
+import { AddScore } from "./Lecture/layouts/AddScore/AddScore";
 import { Redirect, Route, Switch, useHistory } from "react-router-dom";
-import { HomePage } from "./layouts/HomePage/HomePage";
+import { HomePage } from "./Lecture/layouts/HomePage/HomePage";
 import { oktaConfig } from "./lib/oktaConfig";
 import { OktaAuth, toRelativeUrl } from "@okta/okta-auth-js";
 import { Security, LoginCallback, SecureRoute } from "@okta/okta-react";

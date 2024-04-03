@@ -1,5 +1,5 @@
 import { useOktaAuth } from "@okta/okta-react";
-import { SpinerLoading } from "../layouts/Utils/SpinerLoading"
+import { SpinerLoading } from "../Lecture/layouts/Utils/SpinerLoading"
 import { Redirect } from "react-router-dom";
 import OktaSignInWidget from "./OktaSignInWidget";
 
