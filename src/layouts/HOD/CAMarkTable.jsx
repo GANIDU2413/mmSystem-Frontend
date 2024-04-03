@@ -7,6 +7,8 @@ export default function CAMarkTable() {
     const[studentList,setStudentsList]=useState([]);
     const {course_id}=useParams();
 
+
+
     
     
     console.log(studentList);
@@ -25,6 +27,8 @@ export default function CAMarkTable() {
         setStudentsList(studentIDList.data);
     }
 
+    
+
 
 
   return (
@@ -35,7 +39,9 @@ export default function CAMarkTable() {
                     <tr>
                     <th scope="col">checked</th>
                     <th scope="col">Student ID</th>
-                    <th scope="col">View Marks</th>
+                    <th scope="col">Marks</th>
+                    <th scope="col">Grade</th>
+
                     
                     </tr>
                 </thead>
@@ -45,7 +51,9 @@ export default function CAMarkTable() {
                         <tr>
                             <th scope="row"><Checkbox ></Checkbox></th>
                             <td>{student.student_id}</td>
-                            <td><Link className=' btn btn-primary mx-3 btn-sm' to={`/MarksCheckingForm/${student.student_id}/${course_id}`}>View</Link> </td>
+                            <td>{}</td>
+                            <td>{}</td>
+                            {/* <td><Link className=' btn btn-primary mx-3 btn-sm' to={`/MarksCheckingForm/${student.student_id}/${course_id}`}>View</Link> </td> */}
                         </tr>
                     ))}
                     

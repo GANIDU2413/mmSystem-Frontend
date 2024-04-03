@@ -13,11 +13,11 @@ export default function MarksCheckingForm() {
     semester:" ",
     overall_score:" ",
     grade:" "});
-
   const {student_id}=useParams();
   const {course_id}=useParams();
 
- 
+
+
 
   useEffect(()=>{
     result();
@@ -28,13 +28,20 @@ const result = async () => {
   try {
       const List = await axios.get(`http://localhost:9090/api/studentMarks/getStudentMarksbySC/${course_id},${student_id}`);
       setMarks(List.data);
-     
+      console.log(List.data);
   } catch (error) {
       console.error('Axios request failed:',error);
   }
 };
 
 
+
+
+
+   
+
+console.log(marks)
+  
 
   return (
     <>
@@ -43,19 +50,17 @@ const result = async () => {
             <div class="input-group mb-3">
             <div class="input-group-text">
                 <label>Final Mark</label>
-                <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input"/><br/>
-                <input type ="text" value={marks.overall_score}  ></input>
+              <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input"/><br/> 
+                <input type ="text" value={marks.overall_score}  ></input><br/>
                 <label>Grade</label>
-                <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input"/><br/>
+               <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input"/><br/> 
                 <input type ="text" value={marks.grade}  ></input>
             </div>
             <div>
                 <label>Remark</label>
-                <input type="text" class="form-control" aria-label="Text input with checkbox"/>
+                <input type="text" class="form-control" aria-label="Text input with checkbox"/><br/>
             </div>
             </div>
-
-            console.log("hi")
           
            
     
