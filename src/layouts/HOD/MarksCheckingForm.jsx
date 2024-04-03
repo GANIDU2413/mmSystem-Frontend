@@ -13,11 +13,11 @@ export default function MarksCheckingForm() {
     semester:" ",
     overall_score:" ",
     grade:" "});
+
   const {student_id}=useParams();
   const {course_id}=useParams();
 
-    console.log(student_id,course_id)
-
+ 
 
   useEffect(()=>{
     result();
@@ -28,21 +28,12 @@ const result = async () => {
   try {
       const List = await axios.get(`http://localhost:9090/api/studentMarks/getStudentMarksbySC/${course_id},${student_id}`);
       setMarks(List.data);
-      console.log(List.data);
+     
   } catch (error) {
       console.error('Axios request failed:',error);
   }
 };
 
-
-
-
-
-   
-
-console.log(marks)
-  console.log(marks.grade)
-  
 
 
   return (
@@ -63,6 +54,8 @@ console.log(marks)
                 <input type="text" class="form-control" aria-label="Text input with checkbox"/>
             </div>
             </div>
+
+            console.log("hi")
           
            
     
