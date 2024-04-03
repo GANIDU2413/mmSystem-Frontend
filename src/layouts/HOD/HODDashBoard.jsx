@@ -17,7 +17,6 @@ export default function HODDashBoard() {
     setSem(btnsem);
   };
 
-  
 
   console.log(level)
   return (
