@@ -27,6 +27,7 @@ import HODDashBoard from "./layouts/HOD/HODDashBoard";
 import HODMarksTable from "./layouts/HOD/HODMarksTable";
 import HODMarksEditForm from "./layouts/HOD/HODMarksEditForm";
 import CAMarkTable from "./layouts/HOD/CAMarkTable";
+import MarksCheckingForm from "./layouts/HOD/MarksCheckingForm";
 
 
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -111,6 +112,10 @@ export const App = () => {
 
           <Route path="/CAMarkTable/:course_id">
             <CAMarkTable/>
+          </Route>
+
+          <Route path="/MarksCheckingForm/:student_id/:course_id">
+            <MarksCheckingForm/>
           </Route>
 
           

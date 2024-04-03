@@ -45,7 +45,7 @@ export default function CAMarkTable() {
                         <tr>
                             <th scope="row"><Checkbox ></Checkbox></th>
                             <td>{student.student_id}</td>
-                            <td><Link className=' btn btn-primary mx-3 btn-sm' to={``}>View</Link> </td>
+                            <td><Link className=' btn btn-primary mx-3 btn-sm' to={`/MarksCheckingForm/${student.student_id}/${course_id}`}>View</Link> </td>
                         </tr>
                     ))}
                     
