@@ -28,6 +28,11 @@ import HODMarksTable from "./layouts/HOD/HODMarksTable";
 import HODMarksEditForm from "./layouts/HOD/HODMarksEditForm";
 import CAMarkTable from "./layouts/HOD/CAMarkTable";
 import MarksCheckingForm from "./layouts/HOD/MarksCheckingForm";
+import SystemAnalystDashBoard from "./layouts/SystemAnalyst/SystemAnalystDashBoard";
+import AttendenceSA from "./layouts/SystemAnalyst/AttendenceSA";
+import MedicalsSA from "./layouts/SystemAnalyst/MedicalsSA";
+import SAUserReg from "./layouts/SystemAnalyst/SAUserReg";
+import SAUserManage from "./layouts/SystemAnalyst/SAUserManage";
 
 
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -121,6 +126,26 @@ export const App = () => {
           
           <Route path="/HODmarkseditform/:id">
             <HODMarksEditForm/>
+          </Route>
+
+          <Route path="/sysandashboard">
+            <SystemAnalystDashBoard/>
+          </Route>
+
+          <Route path="/attendencesysan">
+            <AttendenceSA/>
+          </Route>
+
+          <Route path="/medicalsysan">
+            <MedicalsSA/>
+          </Route>
+
+          <Route path="/userregsysan">
+            <SAUserReg/>
+          </Route>
+          
+          <Route path="/usermanagesysan">
+            <SAUserManage/>
           </Route>
 
           <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
