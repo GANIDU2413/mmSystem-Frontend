@@ -39,8 +39,8 @@ export default function CAMarkTable() {
                     <tr>
                     <th scope="col">checked</th>
                     <th scope="col">Student ID</th>
-                    <th scope="col">Marks</th>
-                    <th scope="col">Grade</th>
+                    <th scope="col">Edit</th>
+                    
 
                     
                     </tr>
@@ -51,9 +51,7 @@ export default function CAMarkTable() {
                         <tr>
                             <th scope="row"><Checkbox ></Checkbox></th>
                             <td>{student.student_id}</td>
-                            <td>{}</td>
-                            <td>{}</td>
-                            {/* <td><Link className=' btn btn-primary mx-3 btn-sm' to={`/MarksCheckingForm/${student.student_id}/${course_id}`}>View</Link> </td> */}
+                            <td><Link className=' btn btn-primary mx-3 btn-sm' to={`/MarksCheckingForm/${student.student_id}/${course_id}`}>View</Link> </td> 
                         </tr>
                     ))}
                     
