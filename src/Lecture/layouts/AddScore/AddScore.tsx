@@ -63,7 +63,7 @@ export const AddScore = () => {
     };
     fetchCourse().catch((error: any) => {
       setIsloading(false);
-      toastr.error("Network Error!", "Error!");
+      toastr.error("Network Error!" + error.state, "Error!");
     });
    
   },[]);
