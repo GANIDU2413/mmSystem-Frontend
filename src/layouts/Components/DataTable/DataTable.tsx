@@ -105,11 +105,11 @@ export default function DataTable(props:any) {
   const handleMedicalClicked = async() => {
 
     
-        // const response = await axios.post(`http://localhost:9090/api/AssistantRegistrar/updateMarksApprovalLevelByAllParameters/AR/${course_id}/${selectedOption}/${previousRole}/2024`, {
-        //     data: {
-        //         // Your data to be sent in the request body
-        //     }
-        // });
+          // const response = await axios.post(`http://localhost:9090/api/AssistantRegistrar/updateMarksApprovalLevelByAllParameters/AR/${course_id}/${selectedOption}/${previousRole}/2024`, {
+          //     data: {
+          //         // Your data to be sent in the request body
+          //     }
+          // });
         console.log({course_id});
         alert("Marks Approved Successfully");
         
