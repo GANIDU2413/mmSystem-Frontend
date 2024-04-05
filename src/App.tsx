@@ -36,6 +36,9 @@ import SAUserManage from "./layouts/SystemAnalyst/SAUserManage";
 import ViewAllLecturers from "./layouts/SystemAnalyst/ViewAllLecturers";
 import AddLecturers from "./layouts/SystemAnalyst/AddLecturers";
 import EditLecturers from "./layouts/SystemAnalyst/EditLecturers";
+import EditUser from "./layouts/SystemAnalyst/EditUser";
+import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
+
 
 
 
@@ -162,6 +165,14 @@ export const App = () => {
 
           <Route path="/editlec">
             <EditLecturers/>
+          </Route>
+
+          <Route path="/editUsers">
+            <EditUser/>
+          </Route>
+
+          <Route path="/viewallUsers">
+            <ViewAllUsers/>
           </Route>
 
 
