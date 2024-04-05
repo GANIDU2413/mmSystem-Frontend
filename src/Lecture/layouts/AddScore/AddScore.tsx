@@ -3,6 +3,9 @@ import AddScoreRequest from "../../../models/AddScoreRequest";
 import { useOktaAuth } from "@okta/okta-react";
 import { Redirect } from "react-router-dom";
 import toastr from "toastr";
+import { SpinerLoading } from "../Utils/SpinerLoading";
+import LectureCourseModel from "../../../models/LectureCourseModel";
+
 
 export const AddScore = () => {
   // to handle okta authentication
@@ -15,9 +18,7 @@ export const AddScore = () => {
     "Select an Assignment Tyep"
   );
   const [assignmentScore, setassignmentScore] = useState(0);
-  const [assignmentScoreFeedingType, setassignmentScoreFeedingScore] = useState(
-    "Select Score Feeding Type"
-  );
+
   const [level, setlevel] = useState("");
   const [semester, setSemester] = useState(" ");
 
@@ -25,16 +26,47 @@ export const AddScore = () => {
   const [displayWarning, setDisplayWaring] = useState(false);
   const [displaySuccess, setDisplaySuccess] = useState(false);
 
-  // fetct courses' data relavant user's state
- useEffect(() => {
- 
-   const fetchCourse = async () => {
-         
-    
-   }
+  // to handle Spring Loading
+  const [isLoading, setIsloading] = useState(false);
 
-           
- })
+  const [data, setData] = useState<LectureCourseModel[]>([]);
+
+  // fetct courses' IDs related user's state.
+  useEffect(() => {
+    
+    const fetchCourse = async () => {
+      const userName = authState?.idToken?.claims.preferred_username;
+      const courseURL: string = `http://localhost:9090/api/lectureCourseAssigneds/search/findLectureCourseAssignedByUsername?userName=${userName}`;
+
+      const response = await fetch(courseURL);
+
+      if (!response.ok) {
+        toastr.error("Somthing went wrong!", "Error!");
+      }
+
+      const responseJson = await response.json();
+
+      const responseData = responseJson._embedded.lectureCourseAssigneds;
+
+      const loadCourseID: LectureCourseModel[] = [];
+
+      for (const key in responseData) {
+        loadCourseID.push({
+          courseID: responseData[key].courseID,
+        });
+       
+      }
+
+      setData(loadCourseID);
+      setIsloading(false);
+      console.log(data);
+    };
+    fetchCourse().catch((error: any) => {
+      setIsloading(false);
+      toastr.error("Network Error!", "Error!");
+    });
+   
+  },[]);
 
   // to handle dropdown menu properties
   interface DropdownMenuProps {
@@ -73,8 +105,6 @@ export const AddScore = () => {
     );
   };
 
-  
-
   // to store course ID
   const courses: string[] = ["ICT1112", "ICT1122", "ICT1132", "ICT2242"];
   const students: string[] = [
@@ -95,8 +125,6 @@ export const AddScore = () => {
     "FINAL",
   ];
 
- 
-
   // to handle state of the course acordantly user's input.
   const handleCourseSelect = (setCourse: string): void => {
     setCourseID(setCourse);
@@ -109,7 +137,7 @@ export const AddScore = () => {
   const handleAssignmentType = (setAssignmentType: string): void => {
     setassignmentType(setAssignmentType);
   };
-  
+
   // to filter the year by using the student ID.
   const extractYear = (academicYear: string): string => {
     const parts = academicYear.split("-");
@@ -146,63 +174,82 @@ export const AddScore = () => {
     // console.log(level);
     // console.log(semester);
 
+    setIsloading(true);
+
     // to feed student score
     const url = `http://localhost:9090/api/lecture/add/score`;
     // to ensure validation of data feelds
-    if (
-      studentID !== "" &&
-      courseID !== "" &&
-      assignmentType !== "" &&
-      assignmentScore !== null &&
-      year !== "" &&
-      level !== "" &&
-      semester !== ""
-    ) {
-      // to store data temporary
-      const score: AddScoreRequest = new AddScoreRequest(
-        studentID,
-        courseID,
-        year,
-        assignmentType,
-        assignmentScore,
-        level,
-        semester
-      );
 
-      // to handle the behaviors of data that can be passed into backend.
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(score),
-      };
+    try {
+      if (
+        studentID !== "" &&
+        courseID !== "" &&
+        assignmentType !== "" &&
+        assignmentScore !== null &&
+        year !== "" &&
+        level !== "" &&
+        semester !== ""
+      ) {
+        // to store data temporary
+        const score: AddScoreRequest = new AddScoreRequest(
+          studentID,
+          courseID,
+          year,
+          assignmentType,
+          assignmentScore,
+          level,
+          semester
+        );
 
-      // to submit score data into the backend.
-      const submitScoreResponse = await fetch(url, requestOptions);
+        // to handle the behaviors of data that can be passed into backend.
+        const requestOptions = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(score),
+        };
 
-      //  to check wether submition is successful or not.
-      if (!submitScoreResponse.ok) {
-        toastr.error("Network Error.", "Error!");
+        // to submit score data into the backend.
+        const submitScoreResponse = await fetch(url, requestOptions);
+
+        //  to check wether submition is successful or not.
+        if (!submitScoreResponse.ok) {
+          setIsloading(false);
+          toastr.error(
+            `Failed to submit score. Status:
+         ${submitScoreResponse.status}`,
+            "Response Error!"
+          );
+        }
+
+        setIsloading(false);
+
+        // to set default state of score feeding  feelds.
+        setassignmentScore(0);
+        setStudentID("Select a Student");
+        setYear("");
+
+        // to desplay succuss alart.
+        setDisplayWaring(false);
+        setDisplaySuccess(true);
+        toastr.success(studentID + " Mark Add successfully.", "Succuss!");
+      } else {
+        setIsloading(false);
+        // to desplay worning alart.
+        setDisplayWaring(true);
+        setDisplaySuccess(false);
+        toastr.error("Please fill required fields.", "Error!");
       }
-      // to set default state of score feeding  feelds.
-      setassignmentScore(0);
-      setStudentID("Select a Student");
-      setYear("");
-      // to desplay succuss alart.
-
-      setDisplayWaring(false);
-      setDisplaySuccess(true);
-      toastr.success(studentID + " Mark Add successfully.", "Succuss!");
-    } else {
-      // to desplay worning alart.
-
-      setDisplayWaring(true);
-      setDisplaySuccess(false);
-      toastr.error("Please fill required fields.", "Error!");
+    } catch (error: any) {
+      // Handle network errors
+      console.error("Network Error:", error.messages);
+      setIsloading(false);
+      toastr.error("Network Error occurred.", "Error!");
+    } finally {
+      setIsloading(false);
     }
   }
-
   // set default sate of course selection feelds
   const CompleteCourse = (): void => {
     setCourseID("Select a Course");
@@ -219,129 +266,132 @@ export const AddScore = () => {
     <div className="container mt-5 mb-5">
       <div className="card shadow-lg">
         <div className="card-header">Score Feeding Section</div>
+        {isLoading ? (
+          <SpinerLoading /> // to load spinner
+        ) : (
+          <div className="card-body">
+            <div className="mt-1 mb-1">
+              {displaySuccess && (
+                <div className="alert alert-success" role="alert">
+                  Mark Add successfully
+                </div>
+              )}
+              {displayWarning && (
+                <div className="alert alert-danger" role="alert">
+                  All fields must be filled out
+                </div>
+              )}
+            </div>
+            <form method="POST">
+              <div className="row">
+                <div className="col-md-3 mb-3">
+                  <label className="form-label">Course ID</label>
+                  <DropdownMenu // call dropdrown method
+                    options={courses}
+                    selectedOption={courseID}
+                    onSelect={handleCourseSelect}
+                  />
+                </div>
+                <div className="col-md-3 mb-3">
+                  <label className="form-label"> Assignment Type </label>
+                  <DropdownMenu // call dropdrown method
+                    options={assignmentTypes}
+                    selectedOption={assignmentType}
+                    onSelect={handleAssignmentType}
+                  />
+                </div>
+                <div className="col-md-3 mb-3">
+                  <label className="form-label">Course Name </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="author"
+                    required
+                    disabled={true}
+                  />
+                </div>
+                <div className="col-md-3 mb-3">
+                  <label className="form-label">Level</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="author"
+                    required
+                    value={level}
+                    disabled={true}
+                  />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-3 mb-3">
+                  <label className="form-label">Semester</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="author"
+                    required
+                    value={semester}
+                    disabled={true}
+                  />
+                </div>
+              </div>
 
-        <div className="card-body">
-          <div className="mt-1 mb-1">
-            {displaySuccess && (
-              <div className="alert alert-success" role="alert">
-                Mark Add successfully
+              <hr />
+              <div className="row">
+                <div className="col-md-3 mb-3">
+                  <label className="form-label">Student ID</label>
+                  <DropdownMenu // call dropdrown method
+                    options={students}
+                    selectedOption={studentID}
+                    onSelect={handleStudentSelect}
+                  />
+                </div>
+                <div className="col-md-3 mb-3">
+                  <label className="form-label">Academic Year </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="author"
+                    required
+                    value={year}
+                    disabled={true}
+                  />
+                </div>
+                <div className="col-md-3 mb-3">
+                  <label className="form-label">Enter Score</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="author"
+                    required
+                    onChange={(e) => setassignmentScore(Number(e.target.value))}
+                    value={assignmentScore}
+                  />
+                </div>
               </div>
-            )}
-            {displayWarning && (
-              <div className="alert alert-danger" role="alert">
-                All fields must be filled out
+              <div className="row">
+                <div className="col-md-3 mb-3">
+                  <label className="form-label">Re-Enter Score</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="author"
+                    required
+                  />
+                </div>
               </div>
-            )}
+              <div>
+                <button
+                  type="button"
+                  className="btn btn-primary mt-3"
+                  onClick={submitScore} // call submit score method
+                >
+                  Submit State
+                </button>
+              </div>
+            </form>
           </div>
-          <form method="POST">
-            <div className="row">
-              <div className="col-md-3 mb-3">
-                <label className="form-label">Course ID</label>
-                <DropdownMenu // call dropdrown method 
-                  options={courses}
-                  selectedOption={courseID}
-                  onSelect={handleCourseSelect}
-                />
-              </div>
-              <div className="col-md-3 mb-3">
-                <label className="form-label"> Assignment Type </label>
-                <DropdownMenu // call dropdrown method
-                  options={assignmentTypes}
-                  selectedOption={assignmentType}
-                  onSelect={handleAssignmentType}
-                />
-              </div>
-              <div className="col-md-3 mb-3">
-                <label className="form-label">Course Name </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="author"
-                  required
-                  disabled={true}
-                />
-              </div>
-              <div className="col-md-3 mb-3">
-                <label className="form-label">Level</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="author"
-                  required
-                  value={level}
-                  disabled={true}
-                />
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-3 mb-3">
-                <label className="form-label">Semester</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="author"
-                  required
-                  value={semester}
-                  disabled={true}
-                />
-              </div>
-            </div>
-           
-            <hr />
-            <div className="row">
-              <div className="col-md-3 mb-3">
-                <label className="form-label">Student ID</label>
-                <DropdownMenu // call dropdrown method
-                  options={students}
-                  selectedOption={studentID}
-                  onSelect={handleStudentSelect}
-                />
-              </div>
-              <div className="col-md-3 mb-3">
-                <label className="form-label">Academic Year </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="author"
-                  required
-                  value={year}
-                  disabled={true}
-                />
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-3 mb-3">
-                <label className="form-label">Enter Score</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="author"
-                  required
-                  onChange={(e) => setassignmentScore(Number(e.target.value))}
-                  value={assignmentScore}
-                />
-              </div>
-              <div className="col-md-3 mb-3">
-                <label className="form-label">Re-Enter Score</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="author"
-                  required
-                />
-              </div>
-            </div>
-            <div>
-              <button
-                type="button"
-                className="btn btn-primary mt-3"
-                onClick={submitScore} // call submit score method
-              >
-                Submit State
-              </button>
-            </div>
-          </form>
-        </div>
+        )}
       </div>
       <button
         type="button"
