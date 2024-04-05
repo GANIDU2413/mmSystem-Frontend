@@ -33,23 +33,6 @@ export default function CAMarkTable() {
     }
 
     
-
-
-  
-    
-    
-    
-  
-    
-    
-    
-    
-    
-       
-    
-
-
-
   return (
     <>
         <div className=' container' style={{marginTop:'70px'}}>
