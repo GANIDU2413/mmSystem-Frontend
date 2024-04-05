@@ -1,10 +1,8 @@
-
 import { useEffect, useState } from "react";
 import AddScoreRequest from "../../../models/AddScoreRequest";
 import { useOktaAuth } from "@okta/okta-react";
 import { Redirect } from "react-router-dom";
 import toastr from "toastr";
-
 
 export const AddScore = () => {
   // to handle okta authentication
@@ -205,7 +203,6 @@ export const AddScore = () => {
     }
   }
 
-
   // set default sate of course selection feelds
   const CompleteCourse = (): void => {
     setCourseID("Select a Course");
@@ -218,32 +215,10 @@ export const AddScore = () => {
     return <Redirect to="/home" />;
   }
   // to desplay score feeding form
-
-  // if (authState?.accessToken?.claims.userType === undefined){
-  //   return <Redirect to='/home'/>
-  // }
-
-
   return (
     <div className="container mt-5 mb-5">
-    
-      {displaySuccess && (
-        <div className="alert alert-success" role="alert">
-          Mark Add successfully
-        </div>
-      )}
-      {displayWarning && (
-        <div className="alert alert-danger" role="alert">
-          All fields must be filled out
-        </div>
-      )}
-
       <div className="card shadow-lg">
-
         <div className="card-header">Score Feeding Section</div>
-        <div className="card-header">Add new Score</div>
-       
-
 
         <div className="card-body">
           <div className="mt-1 mb-1">
