@@ -151,8 +151,8 @@ export const App = () => {
             <SAUserReg/>
           </Route>
           
-          <Route path="/usermanagesysan">
-            <SAUserManage/>
+          <Route path="/viewallusers">
+            <ViewAllUsers/>
           </Route>
 
           <Route path="/viewalllec">

@@ -76,7 +76,7 @@ export const NavebarSA = () => {
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/userregsysan">
+                <a className="nav-link" href="/viewalllec">
                   User Management
                 </a>
               </li>
