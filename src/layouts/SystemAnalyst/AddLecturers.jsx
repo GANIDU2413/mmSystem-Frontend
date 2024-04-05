@@ -3,8 +3,8 @@ import React, { useState } from 'react'
 import { Link,Redirect } from 'react-router-dom';
 
 export default function AddLecturers() {
-  const [redirect, setRedirect] = useState(false);
-  const [user,setUser]=useState({
+    const [redirect, setRedirect] = useState(false);
+    const [user,setUser]=useState({
     fname:"",
     lname:"",
     username:"",
