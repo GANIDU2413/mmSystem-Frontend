@@ -237,7 +237,7 @@ export const AddScore = () => {
             <div className="row">
               <div className="col-md-3 mb-3">
                 <label className="form-label">Course ID</label>
-                <DropdownMenu
+                <DropdownMenu // call dropdrown method 
                   options={courses}
                   selectedOption={courseID}
                   onSelect={handleCourseSelect}
@@ -245,7 +245,7 @@ export const AddScore = () => {
               </div>
               <div className="col-md-3 mb-3">
                 <label className="form-label"> Assignment Type </label>
-                <DropdownMenu
+                <DropdownMenu // call dropdrown method
                   options={assignmentTypes}
                   selectedOption={assignmentType}
                   onSelect={handleAssignmentType}
@@ -291,7 +291,7 @@ export const AddScore = () => {
             <div className="row">
               <div className="col-md-3 mb-3">
                 <label className="form-label">Student ID</label>
-                <DropdownMenu
+                <DropdownMenu // call dropdrown method
                   options={students}
                   selectedOption={studentID}
                   onSelect={handleStudentSelect}
@@ -335,7 +335,7 @@ export const AddScore = () => {
               <button
                 type="button"
                 className="btn btn-primary mt-3"
-                onClick={submitScore}
+                onClick={submitScore} // call submit score method
               >
                 Submit State
               </button>
