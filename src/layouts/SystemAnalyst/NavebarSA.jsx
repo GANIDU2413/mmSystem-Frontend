@@ -66,31 +66,37 @@ export const NavebarSA = () => {
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/">
+                <a className="nav-link active" aria-current="page" href="/sysandashboard">
                   Dashboard
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/userregsysan">
                   User Registration
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/">
+                <a className="nav-link" href="/userregsysan">
+                  User Management
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link active" aria-current="page" href="/attendencesysan">
                   Attendences
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/HODDashBoard">
+                <a className="nav-link active" aria-current="page" href="/medicalsysan">
                   Medicals
                 </a>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/HODDashBoard">
+                <a className="nav-link active" aria-current="page" href="/viewalllec">
                   Courses for Lecturers
                 </a>
               </li>
+              
               <hr></hr>
               {/* <li className="nav-item dropdown">
                 <a

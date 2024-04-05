@@ -33,6 +33,10 @@ import AttendenceSA from "./layouts/SystemAnalyst/AttendenceSA";
 import MedicalsSA from "./layouts/SystemAnalyst/MedicalsSA";
 import SAUserReg from "./layouts/SystemAnalyst/SAUserReg";
 import SAUserManage from "./layouts/SystemAnalyst/SAUserManage";
+import ViewAllLecturers from "./layouts/SystemAnalyst/ViewAllLecturers";
+import AddLecturers from "./layouts/SystemAnalyst/AddLecturers";
+import EditLecturers from "./layouts/SystemAnalyst/EditLecturers";
+
 
 
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -147,6 +151,19 @@ export const App = () => {
           <Route path="/usermanagesysan">
             <SAUserManage/>
           </Route>
+
+          <Route path="/viewalllec">
+            <ViewAllLecturers/>
+          </Route>
+
+          <Route path="/addlec">
+            <AddLecturers/>
+          </Route>
+
+          <Route path="/editlec">
+            <EditLecturers/>
+          </Route>
+
 
           <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
           <Route path='/login/callback' component={LoginCallback}/>
