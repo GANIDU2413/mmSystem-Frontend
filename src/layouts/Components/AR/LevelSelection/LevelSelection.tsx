@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import SemesterSelection from '../SemesterSelection/SemesterSelection'
 
 import "./levelSelection.css";
+import SemesterSelection from '../SemesterSelection/SemesterSelection';
 
 export default function LevelSelection(props:any) {
 

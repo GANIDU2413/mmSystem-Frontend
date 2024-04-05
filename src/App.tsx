@@ -22,12 +22,12 @@ import HomePageAR from "./layouts/AR/HomePage/HomePageAR";
 import ViewMarks from "./layouts/AR/ViewMarks/ViewMarks";
 import FinalStudentMarks from "./layouts/Dean/FinalMarks/FinalStudentMarks";
 import FinalStudentMarksEditFrom from "./layouts/Dean/FinalMarks/FinalStudentMarksEditFrom";
-import DataTable from "./layouts/Components/DataTable/DataTable";
 import HODDashBoard from "./layouts/HOD/HODDashBoard";
 import HODMarksTable from "./layouts/HOD/HODMarksTable";
 import HODMarksEditForm from "./layouts/HOD/HODMarksEditForm";
 import CAMarkTable from "./layouts/HOD/CAMarkTable";
 import MarksCheckingForm from "./layouts/HOD/MarksCheckingForm";
+import DataTable from "./layouts/Components/AR/DataTable/DataTable";
 
 
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -68,7 +68,7 @@ export const App = () => {
             <ViewMarks department_id={"Multi_Disciplinary"}/>
           </Route>
           <Route path="/viewMarksRemainingToApprove/:course_id/:course_name/:previousRole">
-            <DataTable/>
+            <DataTable  />
           </Route>
 
           <Route path="/markstable">

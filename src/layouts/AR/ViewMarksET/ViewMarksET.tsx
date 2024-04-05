@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
-import LevelSelection from '../../Components/LevelSelection/LevelSelection'
-import { Navebar } from '../../Components/NavBar/Navebar-AR'
+import { Navebar } from '../../Components/AR/NavBar/Navebar-AR'
+import LevelSelection from '../../Components/AR/LevelSelection/LevelSelection'
+
 
 export default function ViewMarksET() {
   return (
