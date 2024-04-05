@@ -191,7 +191,7 @@ export default function FinalStudentMarks() {
               onClick={handleSubmit}
               disabled={!allChecked}
             >
-              Request Certify
+               Certify
             </button>
             <button
               type="button"
@@ -204,7 +204,7 @@ export default function FinalStudentMarks() {
         </>
       ) : (
         <div className="py-4" style={{ marginTop: "70px" }}>
-          <h1>No Data Found</h1>
+          {/* <h1>No Data Found</h1> */}
         </div>
       )}
     </div>

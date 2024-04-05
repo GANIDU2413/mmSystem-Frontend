@@ -9,7 +9,7 @@ import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import { HomePage } from "./layouts/HomePage/HomePage";
 import { oktaConfig } from "./lib/oktaConfig";
 import { OktaAuth, toRelativeUrl} from '@okta/okta-auth-js';
-import { Security, LoginCallback } from "@okta/okta-react";
+import { Security, LoginCallback, SecureRoute } from "@okta/okta-react";
 import LoginWidget from "./Auth/LoginWidget";
 import MarksTable from "./layouts/MarksTable/MarksTable";
 import MarksEditForm from "./layouts/MarksTable/MarksEditForm";
@@ -26,6 +26,8 @@ import DataTable from "./layouts/Components/DataTable/DataTable";
 import HODDashBoard from "./layouts/HOD/HODDashBoard";
 import HODMarksTable from "./layouts/HOD/HODMarksTable";
 import HODMarksEditForm from "./layouts/HOD/HODMarksEditForm";
+import CAMarkTable from "./layouts/HOD/CAMarkTable";
+import MarksCheckingForm from "./layouts/HOD/MarksCheckingForm";
 
 
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -50,10 +52,6 @@ export const App = () => {
           <Route path="/home">
             <HomePage />
           </Route>
-          <Route path="/addscore">
-            <AddScore />
-          </Route>
-
           <Route path="/arhome">
             <HomePageAR/>
           </Route>
@@ -111,6 +109,17 @@ export const App = () => {
           <Route path="/HODmarkstable">
             <HODMarksTable/>
           </Route>
+
+          <Route path="/CAMarkTable/:course_id">
+            <CAMarkTable/>
+          </Route>
+
+          <Route path="/MarksCheckingForm/:student_id/:course_id">
+            <MarksCheckingForm/>
+          </Route>
+
+          
+
           
           <Route path="/HODmarkseditform/:id">
             <HODMarksEditForm/>
@@ -118,6 +127,10 @@ export const App = () => {
 
           <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
           <Route path='/login/callback' component={LoginCallback}/>
+
+          <SecureRoute path='/addscore'>
+            <AddScore />
+          </SecureRoute>
 
           {/* <Route>
             <Redirect to="/home" />

@@ -53,7 +53,7 @@ export default function HODMarksEditForm() {
   };
 
   if (redirect) {
-    return <Redirect to="/markstable" />;
+    return <Redirect to="/HODmarkstable" />;
   }
   return (
     <div className="container">
@@ -158,7 +158,7 @@ export default function HODMarksEditForm() {
               type="Clear"
               name="Clear"
               className="btn btn-outline-danger mx-2 my-3"
-              to="/markstable"
+              to="/HODmarkstable"
             >
               Cancel
             </Link>

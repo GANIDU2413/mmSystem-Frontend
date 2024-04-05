@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
 import { SpinerLoading } from "../Utils/SpinerLoading";
 import { IoMenuSharp } from "react-icons/io5";
@@ -91,7 +91,7 @@ export const NavebarHOD = ({ handleButtonClick }) => {
                   <li>
                     <p
                       className="dropdown-item"
-                      // onClick={() => handleButtonClick(1, 1)}
+                      onClick={() => handleButtonClick(1, 1)}
                     >
                       Level I Sem I
                     </p>
@@ -99,7 +99,7 @@ export const NavebarHOD = ({ handleButtonClick }) => {
                   <li>
                     <p
                       className="dropdown-item"
-                      // onClick={() => handleButtonClick(1, 2)}
+                      onClick={() => handleButtonClick(1, 2)}
                     >
                       Level I Sem II
                     </p>
@@ -107,7 +107,7 @@ export const NavebarHOD = ({ handleButtonClick }) => {
                   <li>
                     <p
                       className="dropdown-item"
-                      // onClick={() => handleButtonClick(2, 1)}
+                      onClick={() => handleButtonClick(2, 1)}
                     >
                       Level II Sem I
                     </p>
@@ -115,7 +115,7 @@ export const NavebarHOD = ({ handleButtonClick }) => {
                   <li>
                     <p
                       className="dropdown-item"
-                      // onClick={() => handleButtonClick(2, 2)}
+                      onClick={() => handleButtonClick(2, 2)}
                     >
                       Level II Sem II
                     </p>
@@ -123,7 +123,7 @@ export const NavebarHOD = ({ handleButtonClick }) => {
                   <li>
                     <p
                       className="dropdown-item"
-                      // onClick={() => handleButtonClick(3, 1)}
+                      onClick={() => handleButtonClick(3, 1)}
                     >
                       Level III Sem I
                     </p>
@@ -131,7 +131,7 @@ export const NavebarHOD = ({ handleButtonClick }) => {
                   <li>
                     <p
                       className="dropdown-item"
-                      // onClick={() => handleButtonClick(3, 2)}
+                      onClick={() => handleButtonClick(3, 2)}
                     >
                       Level III Sem II
                     </p>
@@ -139,7 +139,7 @@ export const NavebarHOD = ({ handleButtonClick }) => {
                   <li>
                     <p
                       className="dropdown-item"
-                      // onClick={() => handleButtonClick(4, 1)}
+                      onClick={() => handleButtonClick(4, 1)}
                     >
                       Level IV Sem I
                     </p>
@@ -147,7 +147,7 @@ export const NavebarHOD = ({ handleButtonClick }) => {
                   <li>
                     <p
                       className="dropdown-item"
-                      // onClick={() => handleButtonClick(4, 2)}
+                      onClick={() => handleButtonClick(4, 2)}
                     >
                       Level IV Sem II
                     </p>
