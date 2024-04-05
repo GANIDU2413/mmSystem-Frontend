@@ -117,10 +117,7 @@ export const App = () => {
           <Route path="/MarksCheckingForm/:student_id/:course_id">
             <MarksCheckingForm/>
           </Route>
-
-          
-
-          
+ 
           <Route path="/HODmarkseditform/:id">
             <HODMarksEditForm/>
           </Route>
@@ -128,7 +125,7 @@ export const App = () => {
           <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
           <Route path='/login/callback' component={LoginCallback}/>
 
-          <SecureRoute path='/addscore'>
+          <SecureRoute path='/lecture'>
             <AddScore />
           </SecureRoute>
 
