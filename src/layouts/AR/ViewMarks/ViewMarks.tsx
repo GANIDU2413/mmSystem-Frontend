@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react'
-import { Navebar } from '../../Components/AR/NavBar/Navebar-AR';
-import LevelSelection from '../../Components/AR/LevelSelection/LevelSelection';
+import LevelSelection from "../../Components/AR/LevelSelection/LevelSelection";
+import { Navebar } from "../../Components/AR/NavBar/Navebar-AR";
 
 export default function ViewMarks(props:any) {
 var department_id = props.department_id;
