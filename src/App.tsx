@@ -22,7 +22,6 @@ import HomePageAR from "./layouts/AR/HomePage/HomePageAR";
 import ViewMarks from "./layouts/AR/ViewMarks/ViewMarks";
 import FinalStudentMarks from "./layouts/Dean/FinalMarks/FinalStudentMarks";
 import FinalStudentMarksEditFrom from "./layouts/Dean/FinalMarks/FinalStudentMarksEditFrom";
-import DataTable from "./layouts/Components/DataTable/DataTable";
 import HODDashBoard from "./layouts/HOD/HODDashBoard";
 import HODMarksTable from "./layouts/HOD/HODMarksTable";
 import HODMarksEditForm from "./layouts/HOD/HODMarksEditForm";
@@ -38,6 +37,7 @@ import AddLecturers from "./layouts/SystemAnalyst/AddLecturers";
 import EditLecturers from "./layouts/SystemAnalyst/EditLecturers";
 import EditUser from "./layouts/SystemAnalyst/EditUser";
 import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
+import DataTable from "./layouts/Components/AR/DataTable/DataTable";
 
 
 
