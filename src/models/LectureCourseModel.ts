@@ -1,12 +1,9 @@
 class LectureCourseModel {
+  courseID: string;
 
-        courseID : string;
-
-
-        constructor(courseID: string){
-
-            this.courseID = courseID;
-        }
+  constructor(courseID: string) {
+    this.courseID = courseID;
+  }
 }
 
 export default LectureCourseModel;

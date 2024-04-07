@@ -5,14 +5,14 @@ import { Redirect } from "react-router-dom";
 import toastr from "toastr";
 import { SpinerLoading } from "../Utils/SpinerLoading";
 import LectureCourseModel from "../../../models/LectureCourseModel";
-
+import { error } from "console";
 
 export const AddScore = () => {
   // to handle okta authentication
   const { authState } = useOktaAuth();
   // to handle new score feeding
   const [studentID, setStudentID] = useState("Select a Student");
-  const [courseID, setCourseID] = useState("Select a Course");
+  const [courseID, setCourseID] = useState("");
   const [year, setYear] = useState("");
   const [assignmentType, setassignmentType] = useState(
     "Select an Assignment Tyep"
@@ -21,52 +21,75 @@ export const AddScore = () => {
 
   const [level, setlevel] = useState("");
   const [semester, setSemester] = useState(" ");
+  const [courseName, setCourseName] = useState<string>('');
 
   // to handle Display Worning and Success
-  const [displayWarning, setDisplayWaring] = useState(false);
-  const [displaySuccess, setDisplaySuccess] = useState(false);
+  // const [displayWarning, setDisplayWaring] = useState(false);
+  // const [displaySuccess, setDisplaySuccess] = useState(false);
 
   // to handle Spring Loading
   const [isLoading, setIsloading] = useState(false);
 
+  // to handle fetch course IDs from the database
   const [data, setData] = useState<LectureCourseModel[]>([]);
 
+  // Empty dependency array to ensure this effect runs only once on mount
   // fetct courses' IDs related user's state.
   useEffect(() => {
-    
     const fetchCourse = async () => {
-      const userName = authState?.idToken?.claims.preferred_username;
-      const courseURL: string = `http://localhost:9090/api/lectureCourseAssigneds/search/findLectureCourseAssignedByUsername?userName=${userName}`;
+      try {
+        const userName = authState?.idToken?.claims.preferred_username; // get userName from okta
+        const courseURL = `http://localhost:9090/api/lectureCourseAssigneds/search/findLectureCourseAssignedByUsername?userName=${userName}`; // API for handlling course Ids.
 
-      const response = await fetch(courseURL);
+        const response = await fetch(courseURL); // to fetch data
 
-      if (!response.ok) {
-        toastr.error("Somthing went wrong!", "Error!");
+        if (!response.ok) {
+          //throw new Error("Something went wrong!");
+          toastr.error("Something want wrong!", "Error"); // to notify any networking issue
+        }
+
+        // to handle converting JESON data into object
+        const responseJson = await response.json();
+        const responseData: LectureCourseModel[] =
+          responseJson._embedded.lectureCourseAssigneds.map(
+            (item: any) => new LectureCourseModel(item.courseCode)
+          );
+        // to set data
+        setData(responseData);
+        setIsloading(false);
+      } catch (error: any) {
+        // to handle any network issue.
+        setIsloading(false);
+        toastr.error("Network Error!", "Error: " + error.message);
       }
-
-      const responseJson = await response.json();
-
-      const responseData = responseJson._embedded.lectureCourseAssigneds;
-
-      const loadCourseID: LectureCourseModel[] = [];
-
-      for (const key in responseData) {
-        loadCourseID.push({
-          courseID: responseData[key].courseID,
-        });
-       
-      }
-
-      setData(loadCourseID);
-      setIsloading(false);
-      console.log(data);
     };
-    fetchCourse().catch((error: any) => {
-      setIsloading(false);
-      toastr.error("Network Error!" + error.state, "Error!");
-    });
-   
-  },[]);
+
+    fetchCourse(); // to call fetchCourse method.
+  }, [authState]);
+
+  // to handle getting name of the course
+  const fetchCourseName = async (couresDetailsID: string) => {
+    
+    const courseNameUrl = `http://localhost:9090/api/courseDetails/search/findCourseNameByCourseId?courseId=${couresDetailsID}`;
+
+    const response = await fetch(courseNameUrl);
+
+    if (!response.ok) {
+      toastr.error("Network Error", "Error " + response.status);
+    }
+
+    const responseJeson = await response.json();
+
+    const responseData = responseJeson._embedded.courseDetails;
+
+    if (responseData.length > 0) {
+      // Extract the first course name and update the state
+      setCourseName(responseData[0].courseName);
+    } else {
+      throw new Error('No course name found.');
+    }
+    
+  };
 
   // to handle dropdown menu properties
   interface DropdownMenuProps {
@@ -105,8 +128,6 @@ export const AddScore = () => {
     );
   };
 
-  // to store course ID
-  const courses: string[] = ["ICT1112", "ICT1122", "ICT1132", "ICT2242"];
   const students: string[] = [
     "TG-2020-671",
     "TG-2021-672",
@@ -128,6 +149,8 @@ export const AddScore = () => {
   // to handle state of the course acordantly user's input.
   const handleCourseSelect = (setCourse: string): void => {
     setCourseID(setCourse);
+    fetchCourseName(setCourse); //  call the fetchCourseName function immediately after setting the course ID
+   
   };
   // to handle state of the student acordantly user's input.
   const handleStudentSelect = (setStudent: string): void => {
@@ -159,10 +182,8 @@ export const AddScore = () => {
   // to hnadle state of student's level, Semester, and academic year.
   const setLevelSemesterAndYear = (): void => {
     const [academicLevel, academicSemester] = extractSemesterAndLevel(courseID);
-
     setlevel(academicLevel);
     setSemester(academicSemester);
-
     setYear(extractYear(studentID));
   };
 
@@ -231,19 +252,19 @@ export const AddScore = () => {
         setYear("");
 
         // to desplay succuss alart.
-        setDisplayWaring(false);
-        setDisplaySuccess(true);
+        // setDisplayWaring(false);
+        // setDisplaySuccess(true);
         toastr.success(studentID + " Mark Add successfully.", "Succuss!");
       } else {
         setIsloading(false);
         // to desplay worning alart.
-        setDisplayWaring(true);
-        setDisplaySuccess(false);
+        // setDisplayWaring(true);
+        // setDisplaySuccess(false);
         toastr.error("Please fill required fields.", "Error!");
       }
     } catch (error: any) {
       // Handle network errors
-      console.error("Network Error:", error.messages);
+      //console.error("Network Error:", error.messages);
       setIsloading(false);
       toastr.error("Network Error occurred.", "Error!");
     } finally {
@@ -270,7 +291,7 @@ export const AddScore = () => {
           <SpinerLoading /> // to load spinner
         ) : (
           <div className="card-body">
-            <div className="mt-1 mb-1">
+            {/*<div className="mt-1 mb-1">
               {displaySuccess && (
                 <div className="alert alert-success" role="alert">
                   Mark Add successfully
@@ -281,17 +302,25 @@ export const AddScore = () => {
                   All fields must be filled out
                 </div>
               )}
-            </div>
+            </div>*/}
             <form method="POST">
               <div className="row">
                 <div className="col-md-3 mb-3">
                   <label className="form-label">Course ID</label>
-                  <DropdownMenu // call dropdrown method
-                    options={courses}
-                    selectedOption={courseID}
-                    onSelect={handleCourseSelect}
-                  />
+                  <select
+                    className="form-select"
+                    value={courseID}
+                    onChange={(e) => handleCourseSelect(e.target.value)}
+                  >
+                    <option value="">Select a Course</option>
+                    {data.map((item) => (
+                      <option key={item.courseID} value={item.courseID}>
+                        {item.courseID}
+                      </option>
+                    ))}
+                  </select>
                 </div>
+
                 <div className="col-md-3 mb-3">
                   <label className="form-label"> Assignment Type </label>
                   <DropdownMenu // call dropdrown method
@@ -307,6 +336,7 @@ export const AddScore = () => {
                     className="form-control"
                     name="author"
                     required
+                    value={courseName}
                     disabled={true}
                   />
                 </div>
