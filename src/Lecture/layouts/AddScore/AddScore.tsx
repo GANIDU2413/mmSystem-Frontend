@@ -6,12 +6,13 @@ import toastr from "toastr";
 import { SpinerLoading } from "../Utils/SpinerLoading";
 import LectureCourseModel from "../../../models/LectureCourseModel";
 import { error } from "console";
+import StudentCourseEnroll from "../../../models/StudentCourseEnroll";
 
 export const AddScore = () => {
   // to handle okta authentication
   const { authState } = useOktaAuth();
   // to handle new score feeding
-  const [studentID, setStudentID] = useState("Select a Student");
+  const [studentID, setStudentID] = useState("Select Student Id");
   const [courseID, setCourseID] = useState("");
   const [year, setYear] = useState("");
   const [assignmentType, setassignmentType] = useState(
@@ -21,7 +22,8 @@ export const AddScore = () => {
 
   const [level, setlevel] = useState("");
   const [semester, setSemester] = useState(" ");
-  const [courseName, setCourseName] = useState<string>('');
+  const [courseName, setCourseName] = useState<string>("");
+  // to keep type as StudentCourseEnroll model.
 
   // to handle Display Worning and Success
   // const [displayWarning, setDisplayWaring] = useState(false);
@@ -32,6 +34,7 @@ export const AddScore = () => {
 
   // to handle fetch course IDs from the database
   const [data, setData] = useState<LectureCourseModel[]>([]);
+  const [studentIdsData, setStudentIdsData] =  useState<StudentCourseEnroll[]>([]);
 
   // Empty dependency array to ensure this effect runs only once on mount
   // fetct courses' IDs related user's state.
@@ -69,7 +72,8 @@ export const AddScore = () => {
 
   // to handle getting name of the course
   const fetchCourseName = async (couresDetailsID: string) => {
-    
+
+    try{
     const courseNameUrl = `http://localhost:9090/api/courseDetails/search/findCourseNameByCourseId?courseId=${couresDetailsID}`;
 
     const response = await fetch(courseNameUrl);
@@ -86,11 +90,37 @@ export const AddScore = () => {
       // Extract the first course name and update the state
       setCourseName(responseData[0].courseName);
     } else {
-      throw new Error('No course name found.');
+      throw new Error("No course name found.");
     }
-    
+  }catch(error: any){ //if any network error, it will be displayed.
+    toastr.error("Network Error" + error.messages,"Error!" );
+  }
   };
-
+ // to get student Ids related course enrollment.
+  const fetchStudentDetails = async (studentDetailsId: string) => {
+    try {
+      const studentDetailsUrl = `http://localhost:9090/api/studentCourseEnrolls/search/findStudentByCourseId?courseId=${studentDetailsId}`;
+      const response = await fetch(studentDetailsUrl);
+  
+      if (!response.ok) {
+        throw new Error(`Failed to fetch data. Status: ${response.status}`);
+      }
+  
+      const responseJson = await response.json();
+      const responseData = responseJson._embedded.studentCourseEnrolls;
+  
+      const loadStudentDetails: StudentCourseEnroll[] = responseData.map((item: any) => ({
+        studentId: item.studentId
+      }));
+  
+      setStudentIdsData(loadStudentDetails);
+  
+      console.log("Updated studentIdsData:", studentIdsData);
+    } catch (error) {
+      console.error("Error fetching student details:", error);
+      toastr.error("Network Error!", "Error: " );
+    }
+  };
   // to handle dropdown menu properties
   interface DropdownMenuProps {
     options: string[];
@@ -128,12 +158,7 @@ export const AddScore = () => {
     );
   };
 
-  const students: string[] = [
-    "TG-2020-671",
-    "TG-2021-672",
-    "TG-2020-673",
-    "TG-2020-674",
-  ];
+ 
 
   // to store assignment types
   const assignmentTypes: string[] = [
@@ -150,7 +175,8 @@ export const AddScore = () => {
   const handleCourseSelect = (setCourse: string): void => {
     setCourseID(setCourse);
     fetchCourseName(setCourse); //  call the fetchCourseName function immediately after setting the course ID
-   
+    fetchStudentDetails(setCourse); // call studentIds into the drop-drown box.
+    
   };
   // to handle state of the student acordantly user's input.
   const handleStudentSelect = (setStudent: string): void => {
@@ -188,12 +214,7 @@ export const AddScore = () => {
   };
 
   async function submitScore() {
-    // console.log(studentID);
-    // console.log(courseID);
-    // console.log(assignmentScore);
-    // console.log(year);
-    // console.log(level);
-    // console.log(semester);
+   
 
     setIsloading(true);
 
@@ -277,6 +298,7 @@ export const AddScore = () => {
     setassignmentType("Select an Assignment Tyep");
     setlevel("");
     setSemester("");
+    toastr.success("Clear","Success!");
   };
   // to ensure the authentication.
   if (authState?.accessToken?.claims.userType === undefined) {
@@ -286,7 +308,7 @@ export const AddScore = () => {
   return (
     <div className="container mt-5 mb-5">
       <div className="card shadow-lg">
-        <div className="card-header">Score Feeding Section</div>
+        <div className="card-header card-headr-color"><h5>Score Feeding Section --- </h5></div>
         {isLoading ? (
           <SpinerLoading /> // to load spinner
         ) : (
@@ -368,13 +390,20 @@ export const AddScore = () => {
 
               <hr />
               <div className="row">
-                <div className="col-md-3 mb-3">
+              <div className="col-md-3 mb-3">
                   <label className="form-label">Student ID</label>
-                  <DropdownMenu // call dropdrown method
-                    options={students}
-                    selectedOption={studentID}
-                    onSelect={handleStudentSelect}
-                  />
+                  <select
+                    className="form-select"
+                    value={studentID}
+                    onChange={(e) => handleStudentSelect(e.target.value)}
+                  >
+                    <option value="">Select a Student</option>
+                    {studentIdsData.map((item) => (
+                      <option key={item.studentId} value={item.studentId}>
+                        {item.studentId}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="col-md-3 mb-3">
                   <label className="form-label">Academic Year </label>
@@ -410,26 +439,28 @@ export const AddScore = () => {
                   />
                 </div>
               </div>
-              <div>
+              <div className="column">
                 <button
                   type="button"
-                  className="btn btn-primary mt-3"
+                  className="btn btn-primary mt-3 me-2"
                   onClick={submitScore} // call submit score method
                 >
                   Submit State
+                </button>
+
+                <button
+                  type="button"
+                  className="btn btn-success mt-3 ms-2"
+                  onClick={CompleteCourse} // call submit score method
+                >
+                  Reset
                 </button>
               </div>
             </form>
           </div>
         )}
       </div>
-      <button
-        type="button"
-        className="btn btn-primary mt-3"
-        onClick={CompleteCourse}
-      >
-        Complete Selected Course
-      </button>
+      
     </div>
   );
 };
