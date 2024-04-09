@@ -38,6 +38,7 @@ import EditLecturers from "./layouts/SystemAnalyst/EditLecturers";
 import EditUser from "./layouts/SystemAnalyst/EditUser";
 import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
 import DataTable from "./layouts/Components/AR/DataTable/DataTable";
+import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
 
 
 
@@ -132,6 +133,10 @@ export const App = () => {
  
           <Route path="/HODmarkseditform/:id">
             <HODMarksEditForm/>
+          </Route>
+
+          <Route path="/HODMarksReturnSheet/:course_id">
+            <HODMarksReturnSheet/>
           </Route>
 
           <Route path="/sysandashboard">
