@@ -80,80 +80,92 @@ const resultScoreGrade = async () => {
   return (
     <>
           <div>
-            <div>
-            <table
-                  className="table border shadow"
-                  style={{ marginTop: "50px" }}
-                >
-                  <thead>
-                    <tr>
-                      <th scope="col">Assessment Type</th>
-                      <th scope="col">Assessment Score</th>
-                      
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {marks.map((marks, index) => (
-                      <tr key={index}>
-                        {/* <th>
-                          <Checkbox
-                            name="checkbox"
-                            id={index.toString()}
-                            checked={marks.checked}
-                            onChange={() => handleCheckboxChange(index)}
-                          />
-                        </th> */}
-                        <td>{marks.assignment_type}</td>
-                        <td>{marks.assignment_score}</td>
-                        
-                          {/* <Link to={`/HODmarkseditform/${marks.id}`}>
-                            <button
-                              type="button"
-                              className="btn btn-outline-primary btn-sm"
-                            >
-                              Edit
-                            </button>
-                          </Link> */}
-                        
-                      
-                      </tr>
 
+                <div class="container text-center">
+                    <div class="row">
+                      <div class="col">
+                            <table
+                              className="table border shadow"
+                              style={{ marginTop: "50px" }}
+                            >
+                            <thead>
+                              <tr>
+                                <th scope="col">Assessment Type</th>
+                                <th scope="col">Assessment Score</th>
+                                
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {marks.map((marks, index) => (
+                                <tr key={index}>
+                                  {/* <th>
+                                    <Checkbox
+                                      name="checkbox"
+                                      id={index.toString()}
+                                      checked={marks.checked}
+                                      onChange={() => handleCheckboxChange(index)}
+                                    />
+                                  </th> */}
+                                  <td>{marks.assignment_type}</td>
+                                  <td>{marks.assignment_score}</td>
+                                  
+                                    {/* <Link to={`/HODmarkseditform/${marks.id}`}>
+                                      <button
+                                        type="button"
+                                        className="btn btn-outline-primary btn-sm"
+                                      >
+                                        Edit
+                                      </button>
+                                    </Link> */}
+                                  
+                                
+                                </tr>
+
+                                
+                              ))}
+                            
+                            </tbody>
+                            </table>
+                      </div>
                       
-                    ))}
-                  
-                  </tbody>
-                </table>
+                      <div class="col shadow" style={{paddingTop:"100px", marginTop:"30px"}}>
+                            <div>
+                              <h4>CA Marks</h4>
+
+                              <label>Total CA Marks</label>
+                              <input type='text' value="30/40" disabled/>
+
+                              <label>CA Eligibility</label>
+                              <input type='text' value="Eligible" disabled/>
+
+
+                              <h4>Attendance Eligibility</h4>
+
+                              <label>Attendance</label>
+                              <input type='text' value="80%" disabled/>
+
+                              <label> Eligibility</label>
+                              <input type='text' value="Eligible" disabled/>
+
+
+                              <h4>Overall Eligibility</h4>
+
+                              <label>Eligible</label>
+                          
+                            </div>
+                      </div>
+                    </div>
+                 </div>
+            <div>
+            
 
             </div>
           
-              <div>
-                    <h4>CA Marks</h4>
-
-                    <label>Total CA Marks</label>
-                    <input type='text' value="30/40" disabled/>
-
-                    <label>CA Eligibility</label>
-                    <input type='text' value="Eligible" disabled/>
-
-
-                    <h4>Attendance Eligibility</h4>
-
-                    <label>Attendance</label>
-                    <input type='text' value="80%" disabled/>
-
-                    <label>CA Eligibility</label>
-                    <input type='text' value="Eligible" disabled/>
-
-
-                    <h4>Overall Eligibility</h4>
-
-                    <label>Eligible</label>
-                    
-              </div>
+              
 
           </div>
              
-          <div className="py-4">
+          <div className="py-4 px-5">
 
 
                 <label>Final Marks </label>
