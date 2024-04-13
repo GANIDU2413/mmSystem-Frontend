@@ -12,13 +12,14 @@ export const AddScore = () => {
   // to handle okta authentication
   const { authState } = useOktaAuth();
   // to handle new score feeding
-  const [studentID, setStudentID] = useState("Select Student Id");
-  const [courseID, setCourseID] = useState("");
+  const [studentID, setStudentID] = useState("Select a Student");
+  const [courseID, setCourseID] = useState("Select a Course");
   const [year, setYear] = useState("");
   const [assignmentType, setassignmentType] = useState(
     "Select an Assignment Tyep"
   );
   const [assignmentScore, setassignmentScore] = useState(0);
+  const [reassignmentScore, setreassignmentScore] = useState(0);
 
   const [level, setlevel] = useState("");
   const [semester, setSemester] = useState(" ");
@@ -158,8 +159,6 @@ export const AddScore = () => {
     );
   };
 
- 
-
   // to store assignment types
   const assignmentTypes: string[] = [
     "QUIZ1",
@@ -224,10 +223,10 @@ export const AddScore = () => {
 
     try {
       if (
-        studentID !== "" &&
-        courseID !== "" &&
-        assignmentType !== "" &&
-        assignmentScore !== null &&
+        studentID !== "Select a Student" &&
+        courseID !== "Select a Course" &&
+        assignmentType !== "Select an Assignment Tyep" &&
+        assignmentScore !== null && assignmentScore === reassignmentScore &&
         year !== "" &&
         level !== "" &&
         semester !== ""
@@ -269,6 +268,7 @@ export const AddScore = () => {
 
         // to set default state of score feeding  feelds.
         setassignmentScore(0);
+        setreassignmentScore(0);
         setStudentID("Select a Student");
         setYear("");
 
@@ -281,7 +281,7 @@ export const AddScore = () => {
         // to desplay worning alart.
         // setDisplayWaring(true);
         // setDisplaySuccess(false);
-        toastr.error("Please fill required fields.", "Error!");
+        toastr.error("Input is not valid", "Error!");
       }
     } catch (error: any) {
       // Handle network errors
@@ -435,7 +435,8 @@ export const AddScore = () => {
                     type="text"
                     className="form-control"
                     name="author"
-                    required
+                    onChange={(e) => setreassignmentScore(Number(e.target.value))}
+                    value={reassignmentScore}
                   />
                 </div>
               </div>
