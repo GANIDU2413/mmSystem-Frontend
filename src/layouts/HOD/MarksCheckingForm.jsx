@@ -16,7 +16,8 @@ export default function MarksCheckingForm() {
     level:" ",
     semester:" ",
     assignment_score:" ",
-    assignment_type:" "}]);
+    assignment_name:" ",
+    assessment_type:" "}]);
 
     const[finalmarks,setfinalMarks]=useState({
       id:" ",
@@ -106,7 +107,7 @@ const resultScoreGrade = async () => {
                                       onChange={() => handleCheckboxChange(index)}
                                     />
                                   </th> */}
-                                  <td>{marks.assignment_type}</td>
+                                  <td>{marks.assignment_name}</td>
                                   <td>{marks.assignment_score}</td>
                                   
                                     {/* <Link to={`/HODmarkseditform/${marks.id}`}>
