@@ -1,6 +1,6 @@
 
-import { Navebar } from "../NavbarAndFooter/Navebar";
-import AddScoreRequest from "../../models/AddScoreRequest";
+import { Navebar } from "../../NavbarAndFooter/Navebar";
+import AddScoreRequest from "../../../models/AddScoreRequest";
 import { useOktaAuth } from "@okta/okta-react";
 import { Redirect } from "react-router-dom";
 import { useState } from "react";

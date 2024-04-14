@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import AddScoreRequest from "../../../models/AddScoreRequest";
 import { useOktaAuth } from "@okta/okta-react";
 import { Redirect } from "react-router-dom";
@@ -7,8 +7,9 @@ import { SpinerLoading } from "../Utils/SpinerLoading";
 import LectureCourseModel from "../../../models/LectureCourseModel";
 import { error } from "console";
 import StudentCourseEnroll from "../../../models/StudentCourseEnroll";
+import AddScoreProps from "../../../models/AddScoreProps";
 
-export const AddScore = () => {
+export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // to handle okta authentication
   const { authState } = useOktaAuth();
   // to handle new score feeding
@@ -35,7 +36,10 @@ export const AddScore = () => {
 
   // to handle fetch course IDs from the database
   const [data, setData] = useState<LectureCourseModel[]>([]);
-  const [studentIdsData, setStudentIdsData] =  useState<StudentCourseEnroll[]>([]);
+  const [studentIdsData, setStudentIdsData] = useState<StudentCourseEnroll[]>(
+    []
+  );
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Empty dependency array to ensure this effect runs only once on mount
   // fetct courses' IDs related user's state.
@@ -73,53 +77,55 @@ export const AddScore = () => {
 
   // to handle getting name of the course
   const fetchCourseName = async (couresDetailsID: string) => {
+    try {
+      const courseNameUrl = `http://localhost:9090/api/courseDetails/search/findCourseNameByCourseId?courseId=${couresDetailsID}`;
 
-    try{
-    const courseNameUrl = `http://localhost:9090/api/courseDetails/search/findCourseNameByCourseId?courseId=${couresDetailsID}`;
+      const response = await fetch(courseNameUrl);
 
-    const response = await fetch(courseNameUrl);
+      if (!response.ok) {
+        toastr.error("Network Error", "Error " + response.status);
+      }
 
-    if (!response.ok) {
-      toastr.error("Network Error", "Error " + response.status);
+      const responseJeson = await response.json();
+
+      const responseData = responseJeson._embedded.courseDetails;
+
+      if (responseData.length > 0) {
+        // Extract the first course name and update the state
+        setCourseName(responseData[0].courseName);
+      } else {
+        throw new Error("No course name found.");
+      }
+    } catch (error: any) {
+      //if any network error, it will be displayed.
+      toastr.error("Network Error" + error.messages, "Error!");
     }
-
-    const responseJeson = await response.json();
-
-    const responseData = responseJeson._embedded.courseDetails;
-
-    if (responseData.length > 0) {
-      // Extract the first course name and update the state
-      setCourseName(responseData[0].courseName);
-    } else {
-      throw new Error("No course name found.");
-    }
-  }catch(error: any){ //if any network error, it will be displayed.
-    toastr.error("Network Error" + error.messages,"Error!" );
-  }
   };
- // to get student Ids related course enrollment.
+  // to get student Ids related course enrollment.
   const fetchStudentDetails = async (studentDetailsId: string) => {
     try {
       const studentDetailsUrl = `http://localhost:9090/api/studentCourseEnrolls/search/findStudentByCourseId?courseId=${studentDetailsId}`;
       const response = await fetch(studentDetailsUrl);
-  
+
       if (!response.ok) {
         throw new Error(`Failed to fetch data. Status: ${response.status}`);
       }
-  
+
       const responseJson = await response.json();
       const responseData = responseJson._embedded.studentCourseEnrolls;
-  
-      const loadStudentDetails: StudentCourseEnroll[] = responseData.map((item: any) => ({
-        studentId: item.studentId
-      }));
-  
+
+      const loadStudentDetails: StudentCourseEnroll[] = responseData.map(
+        (item: any) => ({
+          studentId: item.studentId,
+        })
+      );
+
       setStudentIdsData(loadStudentDetails);
-  
+
       console.log("Updated studentIdsData:", studentIdsData);
     } catch (error) {
       console.error("Error fetching student details:", error);
-      toastr.error("Network Error!", "Error: " );
+      toastr.error("Network Error!", "Error: ");
     }
   };
   // to handle dropdown menu properties
@@ -175,7 +181,6 @@ export const AddScore = () => {
     setCourseID(setCourse);
     fetchCourseName(setCourse); //  call the fetchCourseName function immediately after setting the course ID
     fetchStudentDetails(setCourse); // call studentIds into the drop-drown box.
-    
   };
   // to handle state of the student acordantly user's input.
   const handleStudentSelect = (setStudent: string): void => {
@@ -185,6 +190,8 @@ export const AddScore = () => {
   const handleAssignmentType = (setAssignmentType: string): void => {
     setassignmentType(setAssignmentType);
   };
+
+  
 
   // to filter the year by using the student ID.
   const extractYear = (academicYear: string): string => {
@@ -213,8 +220,6 @@ export const AddScore = () => {
   };
 
   async function submitScore() {
-   
-
     setIsloading(true);
 
     // to feed student score
@@ -226,7 +231,8 @@ export const AddScore = () => {
         studentID !== "Select a Student" &&
         courseID !== "Select a Course" &&
         assignmentType !== "Select an Assignment Tyep" &&
-        assignmentScore !== null && assignmentScore === reassignmentScore &&
+        assignmentScore !== null &&
+        assignmentScore === reassignmentScore &&
         year !== "" &&
         level !== "" &&
         semester !== ""
@@ -282,6 +288,7 @@ export const AddScore = () => {
         // setDisplayWaring(true);
         // setDisplaySuccess(false);
         toastr.error("Input is not valid", "Error!");
+        console.log(selectedFile)
       }
     } catch (error: any) {
       // Handle network errors
@@ -298,7 +305,13 @@ export const AddScore = () => {
     setassignmentType("Select an Assignment Tyep");
     setlevel("");
     setSemester("");
-    toastr.success("Clear","Success!");
+    toastr.success("Clear", "Success!");
+  };
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedFile(event.target.files[0]);
+    }
   };
   // to ensure the authentication.
   if (authState?.accessToken?.claims.userType === undefined) {
@@ -306,9 +319,11 @@ export const AddScore = () => {
   }
   // to desplay score feeding form
   return (
-    <div className="container mt-5 mb-5">
+    <div className="container mt-3 md-5">
       <div className="card shadow-lg">
-        <div className="card-header card-headr-color"><h5>Score Feeding Section --- </h5></div>
+        <div className="card-header card-headr-color">
+          <h5>Score Feeding Section --- </h5>
+        </div>
         {isLoading ? (
           <SpinerLoading /> // to load spinner
         ) : (
@@ -389,57 +404,78 @@ export const AddScore = () => {
               </div>
 
               <hr />
-              <div className="row">
-              <div className="col-md-3 mb-3">
-                  <label className="form-label">Student ID</label>
-                  <select
-                    className="form-select"
-                    value={studentID}
-                    onChange={(e) => handleStudentSelect(e.target.value)}
-                  >
-                    <option value="">Select a Student</option>
-                    {studentIdsData.map((item) => (
-                      <option key={item.studentId} value={item.studentId}>
-                        {item.studentId}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="col-md-3 mb-3">
-                  <label className="form-label">Academic Year </label>
+
+              {option ? (
+                <>
+                  <div className="row">
+                    <div className="col-md-3 mb-3">
+                      <label className="form-label">Student ID</label>
+                      <select
+                        className="form-select"
+                        value={studentID}
+                        onChange={(e) => handleStudentSelect(e.target.value)}
+                      >
+                        <option value="">Select a Student</option>
+                        {studentIdsData.map((item) => (
+                          <option key={item.studentId} value={item.studentId}>
+                            {item.studentId}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="col-md-3 mb-3">
+                      <label className="form-label">Academic Year </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="author"
+                        required
+                        value={year}
+                        disabled={true}
+                      />
+                    </div>
+                    <div className="col-md-3 mb-3">
+                      <label className="form-label">Enter Score</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="author"
+                        required
+                        onChange={(e) =>
+                          setassignmentScore(Number(e.target.value))
+                        }
+                        value={assignmentScore}
+                      />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-3 mb-3">
+                      <label className="form-label">Re-Enter Score</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="author"
+                        onChange={(e) =>
+                          setreassignmentScore(Number(e.target.value))
+                        }
+                        value={reassignmentScore}
+                      />
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="col-md-6 mb-6">
+                  <label htmlFor="csvFileInput" className="form-label">
+                    Upload CSV File
+                  </label>
                   <input
-                    type="text"
+                    type="file"
                     className="form-control"
-                    name="author"
-                    required
-                    value={year}
-                    disabled={true}
+                    id="csvFileInput"
+                    onChange={handleFileChange}
                   />
                 </div>
-                <div className="col-md-3 mb-3">
-                  <label className="form-label">Enter Score</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="author"
-                    required
-                    onChange={(e) => setassignmentScore(Number(e.target.value))}
-                    value={assignmentScore}
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-3 mb-3">
-                  <label className="form-label">Re-Enter Score</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="author"
-                    onChange={(e) => setreassignmentScore(Number(e.target.value))}
-                    value={reassignmentScore}
-                  />
-                </div>
-              </div>
+              )}
               <div className="column">
                 <button
                   type="button"
@@ -461,7 +497,6 @@ export const AddScore = () => {
           </div>
         )}
       </div>
-      
     </div>
   );
 };
