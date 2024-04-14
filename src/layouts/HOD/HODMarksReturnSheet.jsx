@@ -325,7 +325,7 @@ export default function HODMarksReturnSheet() {
                                             let headers = []; 
                                             if(calc.type=="Final Marks")
                                             {
-                                                headers.push(<td key={`${index}`} scope="col">{calc.mark}</td>);
+                                                headers.push(<td key={`${index}`} scope="col">{calc.percentage}</td>);
                                             }
                                             return headers;
                                         }
