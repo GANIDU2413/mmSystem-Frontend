@@ -9,7 +9,7 @@ import { error } from "console";
 import StudentCourseEnroll from "../../../models/StudentCourseEnroll";
 import AddScoreProps from "../../../models/AddScoreProps";
 import Papa, { ParseResult } from "papaparse";
-
+import Modal from 'react-modal';
 export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // to handle okta authentication
   const { authState } = useOktaAuth();
@@ -42,7 +42,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   );
   // to save data from csv file
   const [csvData, setCsvData] = useState<string[][] | null>(null);
-
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   // Empty dependency array to ensure this effect runs only once on mount
   // fetct courses' IDs related user's state.
   useEffect(() => {
@@ -219,6 +219,10 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     setYear(extractYear(studentID));
   };
 
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
   async function submitScore() {
     setIsloading(true);
 
@@ -316,7 +320,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
           
           if (result.data && result.data.length > 0) {
             setCsvData(result.data);
-            console.log(result.data)
+            setModalIsOpen(true);
           }
         },
         header: true, // Set to true if CSV has headers
@@ -473,7 +477,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
                     </div>
                   </div>
                 </>
-              ) : (
+              ) : ( //score reading will be desplayed
                 <div className="container mt-4">
                   <h3 className="mb-4">Score Reader</h3>
                   <input
@@ -483,24 +487,42 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
                     className="form-control mb-4"
                   />
                   {csvData && csvData.length > 0 && (
-                    <table className="table">
-                      <thead>
-                        <tr>
-                          {Object.keys(csvData[0]).map((header, index) => (
-                            <th key={index}>{header}</th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {csvData.map((row, rowIndex) => (
-                          <tr key={rowIndex}>
-                            {Object.values(row).map((cell, cellIndex) => (
-                              <td key={cellIndex}>{cell}</td>
-                            ))}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                    
+                   <Modal isOpen={modalIsOpen} onRequestClose={closeModal} >
+                   <div className="modal-content">
+                     <div className="modal-header card-headr-color">
+                       <h5 className="modal-title">Score Sheet</h5>
+                       <button type="button" className="btn-close" onClick={closeModal}></button>
+                     </div>
+                     <div className="modal-body">
+                       <table className="table">
+                         <thead>
+                           <tr>
+                             {csvData.length > 0 &&
+                               Object.keys(csvData[0]).map((header, index) => (
+                                 <th key={index}>{header}</th>
+                               ))}
+                           </tr>
+                         </thead>
+                         <tbody>
+                           {csvData.map((row, rowIndex) => (
+                             <tr key={rowIndex}>
+                               {Object.values(row).map((cell, cellIndex) => (
+                                 <td key={cellIndex}>{cell}</td>
+                               ))}
+                             </tr>
+                           ))}
+                         </tbody>
+                       </table>
+                     </div>
+                     <div className="modal-footer">
+                       <button type="button" className="btn btn-secondary" onClick={closeModal}>
+                         Close
+                       </button>
+                     </div>
+                   </div>
+                 </Modal>
+                 
                   )}
                 </div>
               )}
