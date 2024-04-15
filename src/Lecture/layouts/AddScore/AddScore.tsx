@@ -8,6 +8,7 @@ import LectureCourseModel from "../../../models/LectureCourseModel";
 import { error } from "console";
 import StudentCourseEnroll from "../../../models/StudentCourseEnroll";
 import AddScoreProps from "../../../models/AddScoreProps";
+import Papa, { ParseResult } from "papaparse";
 
 export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // to handle okta authentication
@@ -39,7 +40,8 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   const [studentIdsData, setStudentIdsData] = useState<StudentCourseEnroll[]>(
     []
   );
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // to save data from csv file
+  const [csvData, setCsvData] = useState<string[][] | null>(null);
 
   // Empty dependency array to ensure this effect runs only once on mount
   // fetct courses' IDs related user's state.
@@ -191,8 +193,6 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     setassignmentType(setAssignmentType);
   };
 
-  
-
   // to filter the year by using the student ID.
   const extractYear = (academicYear: string): string => {
     const parts = academicYear.split("-");
@@ -288,7 +288,6 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
         // setDisplayWaring(true);
         // setDisplaySuccess(false);
         toastr.error("Input is not valid", "Error!");
-        console.log(selectedFile)
       }
     } catch (error: any) {
       // Handle network errors
@@ -308,9 +307,20 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     toastr.success("Clear", "Success!");
   };
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      setSelectedFile(event.target.files[0]);
+  // to handle csv score feeding file
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      Papa.parse(file, {
+        complete: (result: ParseResult<string[]>) => {
+          
+          if (result.data && result.data.length > 0) {
+            setCsvData(result.data);
+            console.log(result.data)
+          }
+        },
+        header: true, // Set to true if CSV has headers
+      });
     }
   };
   // to ensure the authentication.
@@ -464,16 +474,34 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
                   </div>
                 </>
               ) : (
-                <div className="col-md-6 mb-6">
-                  <label htmlFor="csvFileInput" className="form-label">
-                    Upload CSV File
-                  </label>
+                <div className="container mt-4">
+                  <h3 className="mb-4">Score Reader</h3>
                   <input
                     type="file"
-                    className="form-control"
-                    id="csvFileInput"
-                    onChange={handleFileChange}
+                    accept=".csv"
+                    onChange={handleFileUpload}
+                    className="form-control mb-4"
                   />
+                  {csvData && csvData.length > 0 && (
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          {Object.keys(csvData[0]).map((header, index) => (
+                            <th key={index}>{header}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {csvData.map((row, rowIndex) => (
+                          <tr key={rowIndex}>
+                            {Object.values(row).map((cell, cellIndex) => (
+                              <td key={cellIndex}>{cell}</td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
                 </div>
               )}
               <div className="column">

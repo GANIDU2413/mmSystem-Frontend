@@ -1,5 +1,5 @@
-import { useOktaAuth } from '@okta/okta-react';
-import { useState } from 'react';
+// import { useOktaAuth } from '@okta/okta-react';
+// import { useState } from 'react';
 import { AddScore } from '../AddScore';
 
 export const ManageAddScore = () => {
