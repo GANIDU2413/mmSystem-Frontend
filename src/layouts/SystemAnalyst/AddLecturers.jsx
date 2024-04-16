@@ -5,14 +5,20 @@ import { Link,Redirect } from 'react-router-dom';
 export default function AddLecturers() {
     const [redirect, setRedirect] = useState(false);
     const [user,setUser]=useState({
-    fname:"",
-    lname:"",
+    user_id:"",
+    full_name:"",
+    name_with_initials:"",
     username:"",
     email:"",
     password:""
     });
 
-const{fname,lname,username,email,password}=user;
+const{user_id,full_name,name_with_initials,username,email,password}=user;
+
+const fullNameConvertToInitial=(fullname)=>{
+    const getfullname = fullname.split(' ');
+    const namewithinitials = getfullname
+}
 
 const onInputChange = (e)=>{
     setUser({...user,[e.target.name]:e.target.value});
@@ -35,29 +41,15 @@ if (redirect) {
                 <h2 className='text-center m-4'>Register Academics</h2>
                 <form onSubmit={(e)=>onSubmit(e)}>
                     <div className='mb-3'>
-                        <label htmlFor='fName' className='form-label'>
-                            First Name
+                        <label htmlFor='full_Name' className='form-label'>
+                            Full Name
                         </label>
                         <input 
                         type={"text"}
                         className='form-control'
                         placeholder='Enter your First Name'
-                        name='fname' 
-                        value={fname}
-                        onChange={(e)=>onInputChange(e)}
-                        />
-                        
-                    </div>
-                    <div className='mb-3'>
-                        <label htmlFor='lName' className='form-label'>
-                            Last Name
-                        </label>
-                        <input 
-                        type={"text"}
-                        className='form-control'
-                        placeholder='Enter your Last Name'
-                        name='lname' 
-                        value={lname}
+                        name='full_name' 
+                        value={full_name}
                         onChange={(e)=>onInputChange(e)}
                         />
                         
@@ -76,8 +68,6 @@ if (redirect) {
                         onChange={(e)=>onInputChange(e)}
                         />
                         
-
-
                     </div>
 
                     <div className='mb-3'>
