@@ -16,8 +16,10 @@ export default function AddLecturers() {
 const{user_id,full_name,name_with_initials,username,email,password}=user;
 
 const fullNameConvertToInitial=(fullname)=>{
+    if(!fullname) return '';
     const getfullname = fullname.split(' ');
-    const namewithinitials = getfullname
+    const namewithinitials = getfullname.map(n => n[0].toUpperCase()).join('. ');
+    return namewithinitials;
 }
 
 const onInputChange = (e)=>{
@@ -40,6 +42,21 @@ if (redirect) {
             <div className='col-md-6 offset-md-3 border p-4 mt-2 shadow'>
                 <h2 className='text-center m-4'>Register Academics</h2>
                 <form onSubmit={(e)=>onSubmit(e)}>
+
+                    <div className='mb-3'>
+                        <label htmlFor='full_Name' className='form-label'>
+                            Lecturer ID
+                        </label>
+                        <input 
+                        type={"text"}
+                        className='form-control'
+                        placeholder='Enter your First Name'
+                        name='user_id' 
+                        value={user_id}
+                        onChange={(e)=> onInputChange(e)}                        
+                        />
+                    </div>
+
                     <div className='mb-3'>
                         <label htmlFor='full_Name' className='form-label'>
                             Full Name
@@ -50,7 +67,10 @@ if (redirect) {
                         placeholder='Enter your First Name'
                         name='full_name' 
                         value={full_name}
-                        onChange={(e)=>onInputChange(e)}
+                        onChange={(e)=>{
+                            onInputChange(e);
+                            name_with_initials = fullNameConvertToInitial(e);
+                        }}                        
                         />
                         
                     </div>
