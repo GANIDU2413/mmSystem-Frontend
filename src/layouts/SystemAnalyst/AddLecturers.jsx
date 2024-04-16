@@ -10,10 +10,12 @@ export default function AddLecturers() {
     name_with_initials:"",
     username:"",
     email:"",
-    password:""
+    password:"",
+    registered_year:"",
+    role:"",
     });
 
-const{user_id,full_name,name_with_initials,username,email,password}=user;
+const{user_id,full_name,name_with_initials,username,email,password,registered_year,role}=user;
 
 const fullNameConvertToInitial=(fullname)=>{
     if(!fullname) return '';
@@ -113,6 +115,32 @@ if (redirect) {
                         className='form-control'
                         name='password' 
                         value={password}
+                        onChange={(e)=>onInputChange(e)}
+                        />
+                    </div>
+
+                    <div className='mb-3'>
+                        <label htmlFor='Email' className='form-label'>
+                            Registered Year
+                        </label>
+                        <input 
+                        type={"text"}
+                        className='form-control'
+                        name='registered_year' 
+                        value={registered_year}
+                        onChange={(e)=>onInputChange(e)}
+                        />
+                    </div>
+
+                    <div className='mb-3'>
+                        <label htmlFor='Email' className='form-label'>
+                            User Role
+                        </label>
+                        <input 
+                        type={"text"}
+                        className='form-control'
+                        name='role' 
+                        value={role}
                         onChange={(e)=>onInputChange(e)}
                         />
                     </div>
