@@ -24,7 +24,7 @@ export default function ViewAllLecturers() {
       loadUsers();
     };
   return (
-    <div className='container'>
+    <div className='container ' style={{marginTop:"70px"}}>
         <div className='py-4'>
           <table className="table border shadow">
             <thead>
@@ -41,7 +41,7 @@ export default function ViewAllLecturers() {
                 <th scope="col">Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody >
 
               {
                   users.map((user,index)=>(
