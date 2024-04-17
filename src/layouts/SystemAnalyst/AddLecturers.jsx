@@ -8,19 +8,20 @@ export default function AddLecturers() {
     user_id:"",
     full_name:"",
     name_with_initials:"",
-    username:"",
+    user_name:"",
     email:"",
     password:"",
     registered_year:"",
     role:"",
     });
 
-const{user_id,full_name,name_with_initials,username,email,password,registered_year,role}=user;
+const{user_id,full_name,name_with_initials,user_name,email,password,registered_year,role}=user;
 
 const fullNameConvertToInitial=(fullname)=>{
-    if(!fullname) return '';
+    if(typeof fullname !== 'string' || fullname.trim() === '') return '';
     const getfullname = fullname.split(' ');
-    const namewithinitials = getfullname.map(n => n[0].toUpperCase()).join('. ');
+    if(getfullname.length === 0) return '';
+    const namewithinitials = getfullname.slice(0, -1).map(n => n[0].toUpperCase()).join('. ')+' '+getfullname[getfullname.length -1];
     return namewithinitials;
 }
 
@@ -30,7 +31,8 @@ const onInputChange = (e)=>{
 
 const onSubmit=async (e)=>{
     e.preventDefault();
-    await axios.post("for add a lecturer API",user);
+    const updatedUSer = {...user,name_with_initials: fullNameConvertToInitial(full_name)}
+    await axios.post("http://localhost:9090/api/lecreg/savelecdetails",updatedUSer);
     setRedirect(true);
 }
 
@@ -69,10 +71,7 @@ if (redirect) {
                         placeholder='Enter your First Name'
                         name='full_name' 
                         value={full_name}
-                        onChange={(e)=>{
-                            onInputChange(e);
-                            name_with_initials = fullNameConvertToInitial(e);
-                        }}                        
+                        onChange={(e)=>onInputChange(e)}                        
                         />
                         
                     </div>
@@ -85,8 +84,8 @@ if (redirect) {
                         type={"text"}
                         className='form-control'
                         placeholder='Enter your Username'
-                        name='username' 
-                        value={username}
+                        name='user_name' 
+                        value={user_name}
                         onChange={(e)=>onInputChange(e)}
                         />
                         
