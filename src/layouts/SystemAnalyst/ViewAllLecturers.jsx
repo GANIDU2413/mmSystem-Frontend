@@ -28,7 +28,7 @@ export default function ViewAllLecturers() {
         <div className='py-4'>
           <table className="table border shadow">
             <thead>
-              <tr >
+              <tr>
                 <th scope="col">ID</th>
                 <th scope="col">User ID</th>
                 <th scope="col">Full Name</th>
@@ -57,7 +57,7 @@ export default function ViewAllLecturers() {
                           <td>{user.role}</td>
                           <td>
                               <Link className='btn btn-outline-primary mx-2 btn-sm' 
-                                to={`/edituser/${user.id}`} >Edit</Link>
+                                to={`/editlec/${user.id}`} >Edit</Link>
                               <button className='btn btn-danger mx-2 btn-sm'
                                 onClick={()=>deleteUser(user.id)} >Delete</button>
 
