@@ -30,10 +30,39 @@ export default function MarksCheckingForm() {
 
     });
 
+    const[attendanceEligibility,setAttendenceEligibility]=useState(
+      {
+        id: "",
+        student_id: "",
+        course_id: "",
+        percentage: "",
+        eligibility: ""
+      }
+    )
+
+    const[calculations,setCalculations]=useState(
+      [{
+        id:"",
+        student_id: "",
+        course_id: "",
+        type: "",
+        mark: "",
+        percentage: "",
+        description: ""
+      }]
+    );
+
+    console.log(calculations)
+
+    const[evaluationCriteria,setEvaluationCriteria]=useState([]);
+
     
 
   const {student_id}=useParams();
   const {course_id}=useParams();
+
+  console.log(course_id);
+  console.log(student_id);
 
 
 
@@ -41,7 +70,13 @@ export default function MarksCheckingForm() {
   useEffect(()=>{
     result();
     resultScoreGrade();
+    Eligi();
 },[course_id,student_id]);
+
+  useEffect(()=>
+  {
+    result1();
+  },[course_id]);
 
 
 const result = async () => {
@@ -75,6 +110,34 @@ const resultScoreGrade = async () => {
 };
 
 
+const Eligi=async()=>
+{
+  const result=await axios.get(`http://localhost:9090/api/attendanceEligibility/getAttendanceEligibilityByStuIdCourseId/${course_id},${student_id}`);
+  setAttendenceEligibility(result.data);
+  console.log(result);
+
+  const list3=await axios.get(`http://localhost:9090/api/marksCalculations/getMarksCalculationByStuID/${course_id},${student_id}`);
+  setCalculations(list3.data);
+  console.log(list3.data)
+
+}
+
+const result1 = async()=>{
+  try
+  {
+      const list=await axios.get(`http://localhost:9090/api/evaluationCriteria/getCriteria/${course_id}`);
+      setEvaluationCriteria(list.data);
+
+      console.log(list.data);
+
+  }
+  catch(error)
+  {
+      console.error(error);
+  }
+}
+
+
 
 
 
@@ -97,33 +160,175 @@ const resultScoreGrade = async () => {
                               </tr>
                             </thead>
                             <tbody>
-                              {marks.map((marks, index) => (
-                                <tr key={index}>
-                                  {/* <th>
-                                    <Checkbox
-                                      name="checkbox"
-                                      id={index.toString()}
-                                      checked={marks.checked}
-                                      onChange={() => handleCheckboxChange(index)}
-                                    />
-                                  </th> */}
-                                  <td>{marks.assignment_name}</td>
-                                  <td>{marks.assignment_score}</td>
-                                  
-                                    {/* <Link to={`/HODmarkseditform/${marks.id}`}>
-                                      <button
-                                        type="button"
-                                        className="btn btn-outline-primary btn-sm"
-                                      >
-                                        Edit
-                                      </button>
-                                    </Link> */}
-                                  
-                                
-                                </tr>
 
-                                
-                              ))}
+
+                          
+
+                                  {
+                                    evaluationCriteria.map((evaluationCriteria, index) => 
+                                    {
+                                      let headers = []; 
+                                          if(evaluationCriteria.type=="CA")
+                                          {
+                                          if (evaluationCriteria.no_of_conducted > 1) 
+                                          {
+                                            marks.map((ele,index)=>
+                                                {
+                                                  if(ele.assignment_name==evaluationCriteria.assessment_type)
+                                                  {
+                                                      
+                                                        headers.push(
+                                                        
+                                                              <tr key={`${index}`}>
+                                                                  <td  scope="col">{ele.assignment_type}</td>
+                                                                  <td  scope="col">{ele.assignment_score}</td>
+                                                              </tr>
+                                                        
+                                                        )
+                                                      }
+                                                  }).flat()
+                                            calculations.map((ele,index)=>
+                                                  {
+                                                      if(ele.type==evaluationCriteria.assessment_type)
+                                                      {
+                                                        headers.push(
+                                                          <tr key={`${index}`} >
+                                                            <th scope="col">{evaluationCriteria.description}</th>
+                                                             <th  scope="col">{ele.mark}</th>
+                                                          </tr>
+                                                        
+                                                      );
+                                                      }
+                                                  }) 
+                                          } else
+                                              {
+                                                 marks.map((ele,index)=>
+                                                  {
+                                                      if(ele.assignment_name==evaluationCriteria.assessment_type)
+                                                      {
+                                                          headers.push(
+                                                            <tr key={`${index}`} >
+                                                                <td scope="col">{ele.assignment_type}</td>
+                                                                <td  scope="col">{ele.assignment_score}</td>
+                                                            </tr>
+                                                          );
+                                                      }
+                                                  }).flat()
+                                              }
+
+                                              
+
+                                                  calculations.map((calculations,index2)=>{
+                                                  if(evaluationCriteria.assessment_type==calculations.type)
+                                                  {
+                                                     headers.push(
+                                                      <tr>
+                                                        <th  scope="col">{calculations.description}</th>
+                                                        <th  scope="col">{calculations.percentage}</th>
+                                                      </tr>
+                                                     );
+                                                  }
+                                                  }).flat()
+
+                                                  
+
+
+                                                  
+
+                                          }
+
+                                              
+
+                                          
+                                                  
+                                          return headers;
+                                      }
+
+
+                                      
+
+                                      
+
+                                    ).flat()
+
+
+
+                                    }
+
+                                    
+
+                                    
+
+                                    {
+                                    evaluationCriteria.map((evaluationCriteria, index) => 
+                                    {
+                                      let headers = []; 
+
+                                      if(evaluationCriteria.type=="End")
+                                      {
+                                          marks.map((ele,index)=>
+                                          {
+                                              if(ele.assignment_name==evaluationCriteria.assessment_type)
+                                              {
+                                                      headers.push(
+                                                        <tr key={`${index}`}>
+                                                            <td  scope="col">{ele.assignment_type}</td>
+                                                            <td  scope="col">{ele.assignment_score}</td>
+                                                        </tr>
+                                                      );
+                                                
+
+                                                  calculations.map((calculations,index2)=>{
+                                                      if(evaluationCriteria.assessment_type==calculations.type && ele.assignment_type!=="1st Marking" && ele.assignment_type!=="2nd Marking")
+                                                      {
+                                                       headers.push(
+                                                        <tr key={`${index2}`}>
+                                                          <th  scope="col">{calculations.description}</th>
+                                                          <th  scope="col">{calculations.percentage}</th>
+                                                        </tr>
+                                                  )}
+                                                      })
+                                              }
+                                              
+                                          }).flat()
+                                      }
+                                      return headers;
+
+                                    })
+                                    .flat()
+                                    }
+
+                                    {
+                                      calculations.map((ele,index)=>
+                                      {
+                                          let headers = []; 
+
+                                          if(ele.type=="Final Marks")
+                                          {
+                                              headers.push(
+                                              <tr key={`${index}`}>
+                                                <td  scope="col">{ele.description}</td>
+                                                <td  scope="col">{ele.mark}</td>
+                                              </tr>
+                                              );
+                                          }
+
+                                          return headers;
+                                      }).flat()
+                                      
+                                    }
+
+
+
+
+                                                                  
+
+                                                              
+                                                                  
+                                                          
+
+
+                             
                             
                             </tbody>
                             </table>
@@ -134,7 +339,18 @@ const resultScoreGrade = async () => {
                               <h4>CA Marks</h4>
 
                               <label>Total CA Marks</label>
-                              <input type='text' value="30/40" disabled/>
+
+                              {
+                                 calculations.map((ele,index)=>
+                                 {
+                                    let headers = []; 
+                                     if(ele.type=="Total CA Mark")
+                                     {
+                                         headers.push(<input type='text' value={ele.percentage} disabled/>);
+                                     }
+                                     return headers;
+                                 }).flat()
+                               }
 
                               <label>CA Eligibility</label>
                               <input type='text' value="Eligible" disabled/>
@@ -142,11 +358,13 @@ const resultScoreGrade = async () => {
 
                               <h4>Attendance Eligibility</h4>
 
+                            
+
                               <label>Attendance</label>
-                              <input type='text' value="80%" disabled/>
+                              <input type='text' value={attendanceEligibility.percentage} disabled/>
 
                               <label> Eligibility</label>
-                              <input type='text' value="Eligible" disabled/>
+                              <input type='text' value={attendanceEligibility.eligibility} disabled/>
 
 
                               <h4>Overall Eligibility</h4>

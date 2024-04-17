@@ -80,13 +80,13 @@ export default function HODMarksReturnSheet() {
                                         {
                                           marks.map((ele,index)=>
                                              {
-                                                if(ele.assessment_type==evaluationCriteria.assessment_type)
+                                                if(ele.assignment_name==evaluationCriteria.assessment_type)
                                                 {
-                                                    const existsInHeaders = headers.some(header => header.props.children == ele.assignment_name);
+                                                    const existsInHeaders = headers.some(header => header.props.children == ele.assignment_type);
     
                                                         // If the assignment_name does not exist in the headers array, push the new element
                                                     if (!existsInHeaders) {
-                                                     headers.push(<th key={`${index}`} scope="col">{ele.assignment_name}</th>);
+                                                     headers.push(<th key={`${index}`} scope="col">{ele.assignment_type}</th>);
                                                     }
                                                     }
                                                 })
@@ -98,7 +98,20 @@ export default function HODMarksReturnSheet() {
                                                     }
                                                 })
                                         } else {
-                                                headers.push(<th key={`${index}`} scope="col">{evaluationCriteria.assessment_type}</th>);
+                                                
+                                            marks.map((ele,index)=>
+                                            {
+                                               if(ele.assignment_name==evaluationCriteria.assessment_type)
+                                               {
+                                                   const existsInHeaders = headers.some(header => header.props.children == ele.assignment_type);
+   
+                                                       // If the assignment_name does not exist in the headers array, push the new element
+                                                   if (!existsInHeaders) {
+                                                    headers.push(<th key={`${index}`} scope="col">{ele.assignment_type}</th>);
+                                                   }
+                                                   }
+                                               })
+                                            
                                                 }
                                  
                                  
@@ -146,17 +159,17 @@ export default function HODMarksReturnSheet() {
                                     {
                                         marks.map((ele,index)=>
                                         {
-                                            if(ele.assessment_type==evaluationCriteria.assessment_type)
+                                            if(ele.assignment_name==evaluationCriteria.assessment_type)
                                             {
-                                                const existsInHeaders = headers.some(header => header.props.children == ele.assignment_name);
+                                                const existsInHeaders = headers.some(header => header.props.children == ele.assignment_type);
 
                                                 // If the assignment_name does not exist in the headers array, push the new element
                                                 if (!existsInHeaders) {
-                                                    headers.push(<th key={`${index}`} scope="col">{ele.assignment_name}</th>);
+                                                    headers.push(<th key={`${index}`} scope="col">{ele.assignment_type}</th>);
                                                 }
 
                                                 calculations.map((calculations,index2)=>{
-                                                    if(evaluationCriteria.assessment_type==calculations.type && ele.assignment_name!=="1st Marking" && ele.assignment_name!=="2nd Marking")
+                                                    if(evaluationCriteria.assessment_type==calculations.type && ele.assignment_type!=="1st Marking" && ele.assignment_type!=="2nd Marking")
                                                     {
                                                      headers.push(<th key={`${index2}`} scope="col">{calculations.description}</th>);
                                                     }
@@ -208,7 +221,7 @@ export default function HODMarksReturnSheet() {
                                                 {
                                                     if(mark.student_id==ele)
                                                     {
-                                                        if(evaluationCriteria.assessment_type==mark.assessment_type)
+                                                        if(evaluationCriteria.assessment_type==mark.assignment_name)
                                                         {
                                                             headers.push(<td key={`${index}`} scope="col">{mark.assignment_score}</td>);
                                                         }
@@ -232,7 +245,7 @@ export default function HODMarksReturnSheet() {
                                                 {
                                                     if(mark.student_id==ele)
                                                     {
-                                                        if(evaluationCriteria.assessment_type==mark.assessment_type)
+                                                        if(evaluationCriteria.assessment_type==mark.assignment_name)
                                                         {
                                                             headers.push(<td key={`${index}`} scope="col">{mark.assignment_score}</td>);
                                                         }
@@ -289,14 +302,14 @@ export default function HODMarksReturnSheet() {
                                         marks.map((mark,index)=>
                                         {
                                             if(mark.student_id==ele){
-                                                if(mark.assessment_type==evaluationCriteria.assessment_type)
+                                                if(mark.assignment_name==evaluationCriteria.assessment_type)
                                                  {
                                                  headers.push(<td key={`${index}`} scope="col">{mark.assignment_score}</td>);
                                                 
 
                                                 calculations.map((calculations,index2)=>{
                                                     if(calculations.student_id==ele){
-                                                        if(evaluationCriteria.assessment_type==calculations.type && mark.assignment_name!=="1st Marking" && mark.assignment_name!=="2nd Marking")
+                                                        if(evaluationCriteria.assessment_type==calculations.type && mark.assignment_type!=="1st Marking" && mark.assignment_type!=="2nd Marking")
                                                         {
                                                         headers.push(<td key={`${index2}`} scope="col">{calculations.percentage}</td>);
                                                         }
@@ -325,7 +338,7 @@ export default function HODMarksReturnSheet() {
                                             let headers = []; 
                                             if(calc.type=="Final Marks")
                                             {
-                                                headers.push(<td key={`${index}`} scope="col">{calc.percentage}</td>);
+                                                headers.push(<td key={`${index}`} scope="col">{calc.mark}</td>);
                                             }
                                             return headers;
                                         }
