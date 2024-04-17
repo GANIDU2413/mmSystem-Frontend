@@ -53,7 +53,7 @@ export default function LecturersManagement() {
     };
 
     if (redirect) {
-        return <Redirect to="/viewalllec" />;
+        return <Redirect to="/lecmanage" />;
     }
 
     return (
@@ -61,7 +61,7 @@ export default function LecturersManagement() {
             <div className='row'>
                 <div className='col-md-12'>
                     <div className='py-4'>
-                        <table className="table border shadow" style={{ overflowX: 'auto' }}>
+                        <table className="table border shadow" >
                             <thead>
                                 <tr>
                                     <th scope="col">ID</th>
@@ -76,7 +76,7 @@ export default function LecturersManagement() {
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody style={{height:'200em',overflow:'scroll'}}>
                                 {users.map((user, index) => (
                                     <tr key={index}>
                                         <th scope="row">{index + 1}</th>
@@ -136,7 +136,7 @@ export default function LecturersManagement() {
                             </div>
                             <div className='col-md-3 d-flex align-items-end'>
                                 <button type='submit' className='btn btn-outline-primary mx-2'>Submit</button>
-                                <Link className='btn btn-outline-danger mx-2' to="/viewalllec">Cancel</Link>
+                                <Link className='btn btn-outline-danger mx-2' to="/lecmanage">Cancel</Link>
                             </div>
                         </div>
                     </form>
