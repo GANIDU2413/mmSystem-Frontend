@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import './LecturersManagement.css';
 
 export default function LecturersManagement() {
     const [users, setUser] = useState([]);
-    const [redirect, setRedirect] = useState(false);
     const [user, setUserDetails] = useState({
         user_id: "",
         full_name: "",
@@ -17,10 +17,11 @@ export default function LecturersManagement() {
     });
 
     const { id } = useParams();
+    const [refreshKey, setRefreshKey] = useState(Date.now());
 
     useEffect(() => {
         loadUsers();
-    }, []);
+    }, [refreshKey]);
 
     const loadUsers = async () => {
         const result = await axios.get("http://localhost:9090/api/lecreg/get/alllecturersdetails");
@@ -49,24 +50,30 @@ export default function LecturersManagement() {
         e.preventDefault();
         const updatedUser = { ...user, name_with_initials: fullNameConvertToInitial(user.full_name) };
         await axios.post("http://localhost:9090/api/lecreg/savelecdetails", updatedUser);
-        setRedirect(true);
+
+        setUserDetails({
+            user_id: "",
+            full_name: "",
+            name_with_initials: "",
+            user_name: "",
+            email: "",
+            password: "",
+            registered_year: "",
+            role: "",
+        });
+
+        setRefreshKey(Date.now());
     };
 
-    if (redirect) {
-        return <Redirect to="/lecmanage" />;
-    }
+    
 
     return (
         <div className='container'>
             <div className='row'>
                 <div className='col-md-12'>
-                    <div className='py-4'>
-                        <div style={{position:'relative'}}></div>
-                            <div style={{
-                                height:'150px',
-                                overflow:'auto',
-                                marginTop:'20px',
-                                }}></div>
+                    <div className='py-5'>
+                        <div id='table-wrapper'></div>
+                            <div id='table-scroll' ></div>
                                 <table className="table border shadow" >
                                     <thead>
                                         <tr>
@@ -106,7 +113,7 @@ export default function LecturersManagement() {
                 </div>
             </div>
             <div className='row'>
-                <div className='col-md-6 offset-md-3 border p-4 mt-2 shadow'>
+                <div className='col-md-12 border p-4 mt-2 mb-5 shadow'>
                     <h2 className='text-center m-4'>Register Academics</h2>
                     <form onSubmit={(e) => onSubmit(e)}>
                         <div className='mb-3 row'>
@@ -142,7 +149,9 @@ export default function LecturersManagement() {
                             </div>
                             <div className='col-md-3 d-flex align-items-end'>
                                 <button type='submit' className='btn btn-outline-primary mx-2'>Submit</button>
-                                <Link className='btn btn-outline-danger mx-2' to="/lecmanage">Cancel</Link>
+                                {/* me cancel eka weda ne thama  */}
+                                <Link className='btn btn-outline-danger mx-2' to="/lecmanage">Cancel</Link> 
+                                
                             </div>
                         </div>
                     </form>

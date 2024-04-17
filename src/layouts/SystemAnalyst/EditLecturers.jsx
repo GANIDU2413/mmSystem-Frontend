@@ -7,14 +7,18 @@ export default function EditLecturers() {
     const [redirect, setRedirect] = useState(false);
     const {id}=useParams();
     const [user,setUser]=useState({
-        fname:"",
-        lname:"",
-        username:"",
+        user_id:"",
+        full_name:"",
+        name_with_initials:"",
+        user_name:"",
         email:"",
-        password:""
+        password:"",
+        registered_year:"",
+        role:""
     });
 
-    const{fname,lname,username,email,password}=user;
+    const{user_id,full_name,name_with_initials,user_name,email,password,registered_year,role}=user;
+
 
     const onInputChange = (e)=>{
         setUser({...user,[e.target.name]:e.target.value});
@@ -36,7 +40,7 @@ export default function EditLecturers() {
     }
 
     const loadUser = async ()=>{
-        const result = await axios.get(`load academic person by id API`);
+        const result = await axios.get(`http://localhost:9090/api/lecreg/get/alllecturersdetails`);
         setUser(result.data);
     };
 
@@ -47,30 +51,29 @@ export default function EditLecturers() {
                     <h2 className='text-center m-4'>Edit Academics</h2>
                     <form onSubmit={(e)=>onSubmit(e)}>
                         <div className='mb-3'>
+                            <label htmlFor='full_Name' className='form-label'>
+                                Lecturer ID
+                            </label>
+                            <input 
+                            type={"text"}
+                            className='form-control'
+                            placeholder='Enter your Lecturer ID'
+                            name='user_id' 
+                            value={user_id}
+                            onChange={(e)=> onInputChange(e)}                        
+                            />
+                        </div>
+
+                        <div className='mb-3'>
                             <label htmlFor='fName' className='form-label'>
-                                First Name
+                                Full Name
                             </label>
                             <input 
                             type={"text"}
                             className='form-control'
                             placeholder='Enter your First Name'
-                            name='fname' 
-                            value={fname}
-                            onChange={(e)=>onInputChange(e)}
-                            />
-                            
-                        </div>
-
-                        <div className='mb-3'>
-                            <label htmlFor='lName' className='form-label'>
-                                Last Name
-                            </label>
-                            <input 
-                            type={"text"}
-                            className='form-control'
-                            placeholder='Enter your Last Name'
-                            name='lname' 
-                            value={lname}
+                            name='full_name' 
+                            value={full_name}
                             onChange={(e)=>onInputChange(e)}
                             />
                             
@@ -78,14 +81,29 @@ export default function EditLecturers() {
 
                         <div className='mb-3'>
                             <label htmlFor='Username' className='form-label'>
+                                Name with Initials
+                            </label>
+                            <input 
+                            type={"text"}
+                            className='form-control'
+                            placeholder='Enter your Name with Initials'
+                            name='name_with_initials' 
+                            value={name_with_initials}
+                            onChange={(e)=>onInputChange(e)}
+                            />
+                            
+                        </div>
+
+                        <div className='mb-3'>
+                            <label htmlFor='lName' className='form-label'>
                                 Username
                             </label>
                             <input 
                             type={"text"}
                             className='form-control'
-                            placeholder='Enter your Username'
-                            name='username' 
-                            value={username}
+                            placeholder='Enter your Last Name'
+                            name='user_name' 
+                            value={user_name}
                             onChange={(e)=>onInputChange(e)}
                             />
                             
@@ -114,6 +132,32 @@ export default function EditLecturers() {
                             className='form-control'
                             name='password' 
                             value={password}
+                            onChange={(e)=>onInputChange(e)}
+                            />
+                        </div>
+
+                        <div className='mb-3'>
+                            <label htmlFor='Email' className='form-label'>
+                                Registered Year
+                            </label>
+                            <input 
+                            type={"text"}
+                            className='form-control'
+                            name='registered_year' 
+                            value={registered_year}
+                            onChange={(e)=>onInputChange(e)}
+                            />
+                        </div>
+
+                        <div className='mb-3'>
+                            <label htmlFor='Email' className='form-label'>
+                                User Role
+                            </label>
+                            <input 
+                            type={"text"}
+                            className='form-control'
+                            name='role' 
+                            value={role}
                             onChange={(e)=>onInputChange(e)}
                             />
                         </div>
