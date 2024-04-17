@@ -5,9 +5,8 @@ import { Link, Redirect, useParams } from 'react-router-dom';
 export default function EditLecturers() {
 
     const [redirect, setRedirect] = useState(false);
-    const {aid}=useParams();
+    const {id}=useParams();
     const [user,setUser]=useState({
-        id:"",
         user_id:"",
         full_name:"",
         name_with_initials:"",
@@ -18,7 +17,7 @@ export default function EditLecturers() {
         role:""
     });
 
-    const{id,user_id,full_name,name_with_initials,user_name,email,password,registered_year,role}=user;
+    const{user_id,full_name,name_with_initials,user_name,email,password,registered_year,role}=user;
 
 
     const onInputChange = (e)=>{
@@ -32,7 +31,7 @@ export default function EditLecturers() {
 
     const onSubmit=async (e)=>{
         e.preventDefault();
-        await axios.put(`http://localhost:9090/api/lecreg/edit/alecdetails/${aid}`,user);
+        await axios.put(`http://localhost:9090/api/lecreg/edit/alecdetails/${id}`,user);
         setRedirect(true);
     };
 
