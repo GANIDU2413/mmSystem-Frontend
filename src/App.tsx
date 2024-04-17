@@ -39,6 +39,7 @@ import EditUser from "./layouts/SystemAnalyst/EditUser";
 import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
 import DataTable from "./layouts/Components/AR/DataTable/DataTable";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
+import LecturersManagement from "./layouts/SystemAnalyst/UserManagement/LecturersManagement";
 
 
 
@@ -177,6 +178,10 @@ export const App = () => {
 
           <Route path="/viewallUsers">
             <ViewAllUsers/>
+          </Route>
+
+          <Route path="/lecmanage">
+            <LecturersManagement/>
           </Route>
 
 
