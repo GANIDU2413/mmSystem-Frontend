@@ -10,6 +10,7 @@ import StudentCourseEnroll from "../../../models/StudentCourseEnroll";
 import AddScoreProps from "../../../models/AddScoreProps";
 import Papa, { ParseResult } from "papaparse";
 import Modal from 'react-modal';
+import EvaluationCriteriaModel from "../../../models/EvaluationCriteriaModel";
 export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // to handle okta authentication
   const { authState } = useOktaAuth();
@@ -43,6 +44,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // to save data from csv file
   const [csvData, setCsvData] = useState<string[][] | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [evaluationData, setEvaluationData] = useState<EvaluationCriteriaModel[]>([]);
   // Empty dependency array to ensure this effect runs only once on mount
   // fetct courses' IDs related user's state.
   useEffect(() => {
@@ -130,6 +132,34 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
       toastr.error("Network Error!", "Error: ");
     }
   };
+
+  // to get evaluation criteria by using course id
+  const fetchEvaluationCriteria = async (evaluationCourseId: string) =>{
+     try{
+      const criteriaUrl = `http://localhost:9090/api/evaluationCriterias/search/findEvaluationCriteriaByCourseId?courseId=${evaluationCourseId}`;
+      
+      const response = await fetch(criteriaUrl);
+
+      if(!response.ok){
+        toastr.error("Network Error", "Error" + " " + response.status);
+      }
+
+      const responseJeson = await response.json();
+
+      const responseData: EvaluationCriteriaModel[] = responseJeson._embedded.evaluationCriterias.map(
+        (item: any) => new EvaluationCriteriaModel(item.courseId,item.type,
+          item.assignmentType,item.noOfConducted,
+          item.noOfTaken,item.percentage,
+          item.description)
+      );
+
+      setEvaluationData(responseData);
+      console.log(responseData);
+
+     }catch(error:any){
+      toastr.error("Network Error" + " " + error.messages, "Error!");
+     }
+  };
   // to handle dropdown menu properties
   interface DropdownMenuProps {
     options: string[];
@@ -142,7 +172,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     selectedOption,
     onSelect,
   }) => {
-    setLevelSemesterAndYear();
+   
     return (
       <div className="dropdown">
         <button
@@ -168,25 +198,28 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   };
 
   // to store assignment types
-  const assignmentTypes: string[] = [
-    "QUIZ1",
-    "QUIZ2",
-    "QUIZ3",
-    "ASSIGNMENT1",
-    "ASSIGNMENT1",
-    "MID",
-    "FINAL",
-  ];
+  // const assignmentTypes: string[] = [
+  //   "QUIZ1",
+  //   "QUIZ2",
+  //   "QUIZ3",
+  //   "ASSIGNMENT1",
+  //   "ASSIGNMENT1",
+  //   "MID",
+  //   "FINAL",
+  // ];
 
   // to handle state of the course acordantly user's input.
   const handleCourseSelect = (setCourse: string): void => {
     setCourseID(setCourse);
     fetchCourseName(setCourse); //  call the fetchCourseName function immediately after setting the course ID
     fetchStudentDetails(setCourse); // call studentIds into the drop-drown box.
+    fetchEvaluationCriteria(setCourse); // call assignment type into the score feeding form.
+    setLevelSemesterAndYear(setCourse);
   };
   // to handle state of the student acordantly user's input.
   const handleStudentSelect = (setStudent: string): void => {
     setStudentID(setStudent);
+    setYear(extractYear(setStudent));
   };
   // to handle assignmment type acordantly user's input.
   const handleAssignmentType = (setAssignmentType: string): void => {
@@ -212,11 +245,11 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   };
 
   // to hnadle state of student's level, Semester, and academic year.
-  const setLevelSemesterAndYear = (): void => {
-    const [academicLevel, academicSemester] = extractSemesterAndLevel(courseID);
+  const setLevelSemesterAndYear = (courseIdFromSelected : string): void => {
+    const [academicLevel, academicSemester] = extractSemesterAndLevel(courseIdFromSelected);
     setlevel(academicLevel);
     setSemester(academicSemester);
-    setYear(extractYear(studentID));
+   
   };
 
   const closeModal = () => {
@@ -374,11 +407,18 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
 
                 <div className="col-md-3 mb-3">
                   <label className="form-label"> Assignment Type </label>
-                  <DropdownMenu // call dropdrown method
-                    options={assignmentTypes}
-                    selectedOption={assignmentType}
-                    onSelect={handleAssignmentType}
-                  />
+                  <select
+                    className="form-select"
+                    value={assignmentType}
+                    onChange={(e) => handleAssignmentType(e.target.value)}
+                  >
+                    <option value="">Select a Course</option>
+                    {evaluationData.map((item) => (
+                      <option key={item.assignmentType} value={item.assignmentType}>
+                        {item.assignmentType}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="col-md-3 mb-3">
                   <label className="form-label">Course Name </label>
