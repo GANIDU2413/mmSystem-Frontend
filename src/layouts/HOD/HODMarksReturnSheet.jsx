@@ -2,18 +2,16 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'; 
 import axios from 'axios';
+import { Link} from 'react-router-dom'
 
 export default function HODMarksReturnSheet() {
 
     const[marks,setMarks]=useState([]);
     const[evaluationCriteria,setEvaluationCriteria]=useState([]);
     const[calculations,setCalculations]=useState([]);
-
     const[studentList,setStudentList]=useState([]);
-
     const {course_id}=useParams();
-
-
+    const[approval_level,setApprovalLevel]=useState('');
 
 
     useEffect(()=>
@@ -22,28 +20,47 @@ export default function HODMarksReturnSheet() {
       
     },[course_id]);
 
+
+
+
  const result = async()=>{
     try
     {
+        
         const list=await axios.get(`http://localhost:9090/api/evaluationCriteria/getCriteria/${course_id}`);
+        if(list.data==null)
+        {
+            setEvaluationCriteria([]);
+        }
+        else
         setEvaluationCriteria(list.data);
+
+        
 
         console.log(list.data);
 
         const list2=await axios.get(`http://localhost:9090/api/StudentAssessment/get/scoreByCourseId/${course_id}`);
+        
         setMarks(list2.data);
 
         console.log(list2.data);
 
         const list3=await axios.get(`http://localhost:9090/api/marksCalculations/getMarksCalculation/${course_id}`);
+        
         setCalculations(list3.data);
 
         console.log(list3.data);
+
+        
 
 
     }
     catch(error)
     {
+        if (error.response && error.response.status === 404)
+        {
+            console.log(error.response.message);
+        }
         console.error(error);
     }
  }
@@ -58,7 +75,27 @@ export default function HODMarksReturnSheet() {
         result1();
     },[course_id]);
     
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
     
+            // Set the approval level
+            setApprovalLevel("HOD");
+    
+            // Make the axios call to update the approval level
+            const response = await axios.put(`http://localhost:9090/api/approvalLevel/updateApprovalLevel/${course_id}/${new Date().getFullYear()}/${approval_level}`);
+    
+            // Check if the request was successful
+            if (response.status === 200) {
+                console.log("Approval level updated successfully");
+                // Optionally, perform additional actions here
+            } else {
+                console.error("Failed to update approval level");
+            }
+        } catch (error) {
+            console.error("Error updating approval level: ", error);
+        }
+    };
 
 
 
@@ -66,7 +103,7 @@ export default function HODMarksReturnSheet() {
   return (
         <>
             <h1>Course code : {course_id}</h1>
-            <table className="table border shadow"  style={{ marginTop: "30px" }}>
+            <table className="table shadow table-bordered"  style={{ marginTop: "30px" }}>
                 <thead>
                     <tr >
                         <th scope="col">Student_ID</th>     
@@ -198,6 +235,7 @@ export default function HODMarksReturnSheet() {
                                     }).flat()
                                     
                                }
+                               <th>View</th>
                         </tr>
                 </thead>
 
@@ -345,6 +383,8 @@ export default function HODMarksReturnSheet() {
                                         
                                     }).flat()
                                 }
+                                    
+                                        <td><Link className=' btn btn-primary mx-3 btn-sm' to={`/MarksCheckingForm/${ele}/${course_id}`}>View</Link> </td>
                                 
                             </tr>
                         ))
@@ -355,6 +395,11 @@ export default function HODMarksReturnSheet() {
             </table>
 
 
+            <form onSubmit={handleSubmit}>
+            <input to={``} type="submit" value="Request Certify" className="btn btn-outline-success btn-sm" id="submitbtn" /> <br/><br/>
+            </form>
+
+            
 
     </>
   )

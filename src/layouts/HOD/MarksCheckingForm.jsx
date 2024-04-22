@@ -2,9 +2,12 @@ import React, { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios';
 import { useEffect } from 'react';
-import { Checkbox } from '@mui/material';
 
 export default function MarksCheckingForm() {
+  
+
+  const[text,setText]=useState('');
+  const[approval_level,setApprovalLevel]=useState('');
 
 
 
@@ -86,18 +89,12 @@ const result = async () => {
       console.log(List.data);
   } catch (error) {
       console.error('Axios request failed:',error);
+      
   }
 
 };
 
-// const onSubmit = async (e) => {
-//   e.preventDefault();
-//   await axios.put(
-//     `http://localhost:9090/api/StudentAssessment/edit/score/${student_id}`,
-//     marks
-//   );
-//   setRedirect(true);
-// };
+
 
 const resultScoreGrade = async () => {
   try {
@@ -112,14 +109,28 @@ const resultScoreGrade = async () => {
 
 const Eligi=async()=>
 {
-  const result=await axios.get(`http://localhost:9090/api/attendanceEligibility/getAttendanceEligibilityByStuIdCourseId/${course_id},${student_id}`);
-  setAttendenceEligibility(result.data);
-  console.log(result);
+  try{
 
-  const list3=await axios.get(`http://localhost:9090/api/marksCalculations/getMarksCalculationByStuID/${course_id},${student_id}`);
-  setCalculations(list3.data);
-  console.log(list3.data)
+      const result=await axios.get(`http://localhost:9090/api/attendanceEligibility/getAttendanceEligibilityByStuIdCourseId/${course_id},${student_id}`);
+      setAttendenceEligibility(result.data);
+      console.log(result);
 
+      const list3=await axios.get(`http://localhost:9090/api/marksCalculations/getMarksCalculationByStuID/${course_id},${student_id}`);
+      setCalculations(list3.data);
+      console.log(list3.data)
+
+  }catch(error)
+  {
+    if (error.response && error.response.status === 404)
+    {
+      console.log(error)
+
+
+    }
+    console.log(error)
+  }
+
+  
 }
 
 const result1 = async()=>{
@@ -138,29 +149,90 @@ const result1 = async()=>{
 }
 
 
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+          try {
+            // Assuming you have a way to get the course coordinator's ID based on the course_id
+            const getCourseCoordinatorId = async (courseId) => {
+              // Example API call to fetch course details
+              const response = await axios.get(`http://localhost:9090/api/courses/${courseId}`);
+              return response.data.coordinatorId; // Assuming the response includes the coordinator's ID
+             };
+             
+            // Create the notification object
+            const notification = {
+              receiver_id:"K", // Course coordinator's ID
+              course_id:course_id,
+              student_id: student_id, // Student ID from useParams
+              remark: text, // Remark from the text area
+              status: "send", // Status set to "send"
+            };
+        
+            // Send the notification
+            const response = await axios.post(`http://localhost:9090/api/notifications/sendNotification`, notification);
+            setText(''); // Clear the text area
+
+            if(response.status==200)
+            {
+              toast.success(response.data.messsage);
+            }
+          } catch (error) {
+            console.error('Error sending notification:', error);
+          }
+        };
+ 
+        const handleNotify = async (e) => {
+          e.preventDefault();
+          try {
+      
+              // Set the approval level
+              setApprovalLevel("lecturer");
+
+              console.log(approval_level);
+      
+              // Make the axios call to update the approval level
+              const response = await axios.put(`http://localhost:9090/api/approvalLevel/updateApprovalLevel/${course_id}/${new Date().getFullYear()}/${approval_level}`);
+      
+              // Check if the request was successful
+              if (response.status === 200) {
+                  console.log("Approval level updated successfully");
+                  // Optionally, perform additional actions here
+              } else {
+                  console.error("Failed to update approval level");
+              }
+          } catch (error) {
+              console.error("Error updating approval level: ", error);
+          }
+      };
+      
+
 
 
 
   return (
     <>
-          <div>
+          <div className=' bg-white'>
 
-                <div class="container text-center">
+                <div class="container bg-transparent">
                     <div class="row">
-                      <div class="col">
-                            <table
-                              className="table border shadow"
+                      <div class="col text-center">
+                        <table
+                              className="table shadow"
                               style={{ marginTop: "50px" }}
                             >
-                            <thead>
+                            {/* <thead >
                               <tr>
                                 <th scope="col">Assessment Type</th>
                                 <th scope="col">Assessment Score</th>
                                 
                               </tr>
-                            </thead>
+                            </thead> */}
                             <tbody>
-
+                              <tr>
+                                <th scope="col">Assessment Type</th>
+                                <th scope="col">Assessment Score</th>
+                                
+                              </tr>
 
                           
 
@@ -218,41 +290,21 @@ const result1 = async()=>{
 
                                               
 
-                                                  calculations.map((calculations,index2)=>{
+                                                  calculations.map((calculations,index)=>{
                                                   if(evaluationCriteria.assessment_type==calculations.type)
                                                   {
                                                      headers.push(
-                                                      <tr>
+                                                      <tr key={`${index}`}>
                                                         <th  scope="col">{calculations.description}</th>
                                                         <th  scope="col">{calculations.percentage}</th>
                                                       </tr>
                                                      );
                                                   }
                                                   }).flat()
-
-                                                  
-
-
-                                                  
-
-                                          }
-
-                                              
-
-                                          
-                                                  
+                                          }          
                                           return headers;
                                       }
-
-
-                                      
-
-                                      
-
                                     ).flat()
-
-
-
                                     }
 
                                     
@@ -318,116 +370,117 @@ const result1 = async()=>{
                                       
                                     }
 
-
-
-
-                                                                  
-
-                                                              
-                                                                  
-                                                          
-
-
-                             
-                            
                             </tbody>
                             </table>
                       </div>
                       
-                      <div class="col shadow" style={{paddingTop:"100px", marginTop:"30px"}}>
-                            <div>
-                              <h4>CA Marks</h4>
+                      <div class="col" style={{ marginTop: "50px" }}>
+                            <div className='shadow px-4 py-4'>
+                              
+                              <table className=' pt-4'>
+                                <tr>
+                                  <th>Eligibility   </th>
+                                </tr>
+                                <tr><th><br /></th></tr>
+                                <tr>
+                                  <th>CA Marks</th>
+                                </tr>
+                                <tr>
+                                  <td>Total CA Marks</td>
+                                  <td>
+                                    {
+                                      calculations.map((ele,index)=>
+                                      {
+                                          let headers = []; 
+                                          if(ele.type=="Total CA Mark")
+                                          {
+                                              headers.push(<input className=' mx-4' size="5" key={`${index}`}
+                                                type='text' value={ele.percentage} disabled/>);
+                                          }
+                                          return headers;
+                                      }).flat()
+                                    }
+                                  </td>
+                                  <td>CA Eligibility</td>
+                                  <td><input type='text' className=' mx-4' size="5" value="Eligible" disabled/></td>
+                                </tr>
+                                  <tr><th><br /></th></tr>
+                                <tr>
+                                  <th>Attendance Eligibility</th>
+                                </tr>
+                                <tr>
+                                  <td>Attendance</td>
+                                  <td><input type='text' className=' mx-4' size="5" value={attendanceEligibility.percentage} disabled/></td>
+                                  <td>Eligibility</td>
+                                  <td><input type='text' className=' mx-4' size="5" value={attendanceEligibility.eligibility} disabled/></td>
+                                </tr>
+                                <tr><th><br /></th></tr>
+                                <tr>
+                                  <th>Overall Eligibility</th>
+                                  </tr>
+                                <tr>
+                                  <td>Eligibility</td>
+                                  <td>
+                                    <input type='text' className=' mx-4' size="5" value={attendanceEligibility.eligibility} disabled/>
+                                  </td>
+                                </tr>
+                              </table>
 
-                              <label>Total CA Marks</label>
-
-                              {
-                                 calculations.map((ele,index)=>
-                                 {
-                                    let headers = []; 
-                                     if(ele.type=="Total CA Mark")
-                                     {
-                                         headers.push(<input type='text' value={ele.percentage} disabled/>);
-                                     }
-                                     return headers;
-                                 }).flat()
-                               }
-
-                              <label>CA Eligibility</label>
-                              <input type='text' value="Eligible" disabled/>
-
-
-                              <h4>Attendance Eligibility</h4>
-
-                            
-
-                              <label>Attendance</label>
-                              <input type='text' value={attendanceEligibility.percentage} disabled/>
-
-                              <label> Eligibility</label>
-                              <input type='text' value={attendanceEligibility.eligibility} disabled/>
-
-
-                              <h4>Overall Eligibility</h4>
-
-                              <label>Eligible</label>
+                              
+                              
                           
                             </div>
+                            <div>
+                              <div className="py-4 px-5" class="col shadow mt-4 p-4">
+
+                                <label>Final Marks </label>
+                                <input type='text' className=' mx-3' value={finalmarks.overall_score}disabled/>
+
+                                <label >Grade </label>
+                                <input type='text' className=' mx-3' value={finalmarks.grade}disabled/>
+                                
+                                  
+                              </div>
+                              </div>
+
+                            <div  class="col mt-4 shadow p-4">
+                              <form onSubmit={handleSubmit}>
+                              
+                                <div >
+                                  <label for="exampleFormControlTextarea1" class="form-label">Notification</label>  
+                                    <textarea
+                                      value={text}
+                                      className='form-control w-100 '
+                                      onChange={(e) => setText(e.target.value)}
+                                      placeholder="Type your message here..."
+                                    />
+                                  <input type="submit" className=' btn btn-outline-success btn-sm mt-3' value="Send"/>
+                                </div>
+
+                               
+                              </form>
+                            </div>
+
+                            <div >
+                                    <form onSubmit={handleNotify}>
+                                    <input type='submit' value="Return" className="btn shadow btn-outline-success btn-sm w-25 float-end my-4" 
+                                    id="submitbtn"/>
+                                      
+                                    <Link to={`/HODMarksReturnSheet/${course_id}`} 
+                                    type="submit" className="btn shadow btn-outline-success btn-sm w-25 float-end my-4" 
+                                    id="backbtn"> 
+                                      Back
+                                    </Link></form>
+                            </div>
+                            
                       </div>
-                    </div>
-                 </div>
+                  </div>
+               </div>
             <div>
-            
+          </div>
+        </div>
 
-            </div>
           
-              
-
-          </div>
-             
-          <div className="py-4 px-5">
-
-
-                <label>Final Marks </label>
-                <input type='text' value={finalmarks.overall_score}disabled/>
-
-                <label>Grade </label>
-                <input type='text' value={finalmarks.grade}disabled/>
-
-                <Link to={``}>
-                          <button
-                            type="button"
-                            className="btn btn-outline-primary btn-sm"
-                          >
-                            Ask to Verify
-                          </button>
-                      </Link><br/><br/>
-
-
-                
-                   <Link to={`/CAMarkTable/${student_id}/${course_id}`}>
-                      <button
-                        type="submit"
-                        className="btn btn-outline-success btn-sm"
-                        id="submitbtn"
-                        // disabled={!allChecked}
-                      >
-                        Submit
-                      </button>
-                      </Link><br/><br/>
-
-
-                <button
-                  type="button"
-                  className="btn btn-outline-danger mx-2 btn-sm"
-                  id="clearbtn"
-                >
-                  Clean
-                </button>
-          </div>
-            
-           
-    
-
     </>
   )
 }
