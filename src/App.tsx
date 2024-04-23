@@ -40,6 +40,7 @@ import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
 import DataTable from "./layouts/Components/AR/DataTable/DataTable";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
 import LecturersManagement from "./layouts/SystemAnalyst/UserManagement/LecturersManagement";
+import AssignLecturerCourse from "./layouts/SystemAnalyst/AssignLecturer/AssignLecturerCourse";
 
 
 
@@ -182,6 +183,10 @@ export const App = () => {
 
           <Route path="/lecmanage">
             <LecturersManagement/>
+          </Route>
+
+          <Route path="/assignlec">
+            <AssignLecturerCourse/>
           </Route>
 
 
