@@ -5,12 +5,13 @@ import { Redirect } from "react-router-dom";
 import toastr from "toastr";
 import { SpinerLoading } from "../Utils/SpinerLoading";
 import LectureCourseModel from "../../../models/LectureCourseModel";
-import { error } from "console";
 import StudentCourseEnroll from "../../../models/StudentCourseEnroll";
 import AddScoreProps from "../../../models/AddScoreProps";
 import Papa, { ParseResult } from "papaparse";
 import Modal from 'react-modal';
 import EvaluationCriteriaModel from "../../../models/EvaluationCriteriaModel";
+import EvaluationCriteriaNameModel from "../../../models/EvaluationCriteriaNameModel";
+
 export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // to handle okta authentication
   const { authState } = useOktaAuth();
@@ -44,7 +45,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // to save data from csv file
   const [csvData, setCsvData] = useState<string[][] | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
-  const [evaluationData, setEvaluationData] = useState<EvaluationCriteriaModel[]>([]);
+  const [evaluationData, setEvaluationData] = useState<EvaluationCriteriaNameModel[]>([]);
   // Empty dependency array to ensure this effect runs only once on mount
   // fetct courses' IDs related user's state.
   useEffect(() => {
@@ -133,13 +134,13 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     }
   };
 
-  // to get evaluation criteria by using course id
-  const fetchEvaluationCriteria = async (evaluationCourseId: string) =>{
+  // to get evaluation criteria  by using course id
+  const fetchEvaluationCriteriaType = async (evaluationCourseId: string) =>{
      try{
       const criteriaUrl = `http://localhost:9090/api/evaluationCriterias/search/findEvaluationCriteriaByCourseId?courseId=${evaluationCourseId}`;
       
       const response = await fetch(criteriaUrl);
-
+      
       if(!response.ok){
         toastr.error("Network Error", "Error" + " " + response.status);
       }
@@ -153,67 +154,45 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
           item.description)
       );
 
-      setEvaluationData(responseData);
+      //setEvaluationData(responseData);
       console.log(responseData);
 
      }catch(error:any){
       toastr.error("Network Error" + " " + error.messages, "Error!");
      }
   };
-  // to handle dropdown menu properties
-  interface DropdownMenuProps {
-    options: string[];
-    selectedOption: string;
-    onSelect: (option: string) => void;
+  
+  // to get evaluation criteria name by course id 
+  const fetchEvaluationCriteriaName = async (evaluationCourseId : string) => {
+
+    try{
+      const criteriaUrl = `http://localhost:9090/api/evaluationCriteriaNames/search/findEvaluationCriteriaNameByCourseId?courseId=${evaluationCourseId}`;
+      
+      const response = await fetch(criteriaUrl);
+      
+      if(!response.ok){
+        toastr.error("Network Error", "Error" + " " + response.status);
+      }
+
+      const responseJeson = await response.json();
+
+      const responseData: EvaluationCriteriaNameModel[] = responseJeson._embedded.evaluationCriteriaNames.map(
+        (item: any) => new EvaluationCriteriaNameModel(item.assignmentName)
+      );
+
+      setEvaluationData(responseData);
+      console.log(responseData);
+
+     }catch(error:any){
+      toastr.error("Network Error" + " " + error.messages, "Error!");
+     }
   }
-  // to handle all dropdown properties
-  const DropdownMenu: React.FC<DropdownMenuProps> = ({
-    options,
-    selectedOption,
-    onSelect,
-  }) => {
-   
-    return (
-      <div className="dropdown">
-        <button
-          className="form-control btn btn-secondary dropdown-toggle"
-          type="button"
-          id="dropdownMenuButton1"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          {selectedOption}
-        </button>
-        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          {options.map((option, index) => (
-            <li key={index}>
-              <a className="dropdown-item" onClick={() => onSelect(option)}>
-                {option}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  };
-
-  // to store assignment types
-  // const assignmentTypes: string[] = [
-  //   "QUIZ1",
-  //   "QUIZ2",
-  //   "QUIZ3",
-  //   "ASSIGNMENT1",
-  //   "ASSIGNMENT1",
-  //   "MID",
-  //   "FINAL",
-  // ];
-
   // to handle state of the course acordantly user's input.
   const handleCourseSelect = (setCourse: string): void => {
     setCourseID(setCourse);
     fetchCourseName(setCourse); //  call the fetchCourseName function immediately after setting the course ID
     fetchStudentDetails(setCourse); // call studentIds into the drop-drown box.
-    fetchEvaluationCriteria(setCourse); // call assignment type into the score feeding form.
+    fetchEvaluationCriteriaName(setCourse); // call assignment type into the score feeding form.
     setLevelSemesterAndYear(setCourse);
   };
   // to handle state of the student acordantly user's input.
@@ -244,7 +223,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     }
   };
 
-  // to hnadle state of student's level, Semester, and academic year.
+  // to handle state of student's level, Semester, and academic year.
   const setLevelSemesterAndYear = (courseIdFromSelected : string): void => {
     const [academicLevel, academicSemester] = extractSemesterAndLevel(courseIdFromSelected);
     setlevel(academicLevel);
@@ -252,10 +231,12 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
    
   };
 
+  // to handle close csv mark sheet 
   const closeModal = () => {
     setModalIsOpen(false);
   };
 
+  // to handle submition of score 
   async function submitScore() {
     setIsloading(true);
 
@@ -414,8 +395,8 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
                   >
                     <option value="">Select a Course</option>
                     {evaluationData.map((item) => (
-                      <option key={item.assignmentType} value={item.assignmentType}>
-                        {item.assignmentType}
+                      <option key={item.assignmentName} value={item.assignmentName}>
+                        {item.assignmentName}
                       </option>
                     ))}
                   </select>
