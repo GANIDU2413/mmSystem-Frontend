@@ -1,6 +1,21 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useState } from 'react'
+
 
 export default function AssignLecturerCourse() {
+    const [cids,setCids]=useState();
+    const [cCoordinatorids,setCCoordinatorids]=useState();
+
+
+    const loadCids= async()=>{
+        const results = await axios.get("");
+        setCids(results.data);
+        console.log(results.data);
+    }
+
+    const loadcCoordinatorids=async()=>{
+        
+    }
   return (
     <>
       <div className='container'>
