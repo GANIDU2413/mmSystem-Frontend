@@ -108,9 +108,9 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     }
   };
   // to get student Ids related course enrollment.
-  const fetchStudentDetails = async (studentDetailsId: string) => {
+  const fetchStudentDetails = async (studentDetailsId: string, assignmentName : string) => {
     try {
-      const studentDetailsUrl = `http://localhost:9090/api/studentCourseEnrolls/search/findStudentByCourseId?courseId=${studentDetailsId}`;
+      const studentDetailsUrl = `http://localhost:9090/api/studentCourseEnrolls/search/findByCourseIdAndAssignmentName?courseId=${studentDetailsId}&assignmentName=${assignmentName}`;
       const response = await fetch(studentDetailsUrl);
 
       if (!response.ok) {
@@ -192,7 +192,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   const handleCourseSelect = (setCourse: string): void => {
     setCourseID(setCourse);
     fetchCourseName(setCourse); //  call the fetchCourseName function immediately after setting the course ID
-    fetchStudentDetails(setCourse); // call studentIds into the drop-drown box.
+   
     fetchEvaluationCriteriaName(setCourse); // call assignment type into the score feeding form.
     setLevelSemesterAndYear(setCourse);
   };
@@ -208,6 +208,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     const evaluationNameString = setAssignmentType;
     const evaluationName = evaluationNameString.replace(/\d+/g, '');
     setEvaluationNameData(evaluationName);
+    fetchStudentDetails(courseID,setAssignmentType); // call studentIds into the drop-drown box.
    
   };
 
@@ -328,6 +329,12 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
       setIsloading(false);
     }
   }
+  
+  // after submmiting , student's state should be updated.
+  const updateStudentScoreState = async () =>{
+
+  }
+
   // set default sate of course selection feelds
   const CompleteCourse = (): void => {
     setCourseID("Select a Course");
@@ -583,3 +590,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     </div>
   );
 };
+function async(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}
+
