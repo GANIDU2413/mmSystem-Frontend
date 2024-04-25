@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios';
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function MarksCheckingForm() {
   
@@ -148,62 +150,44 @@ const result1 = async()=>{
   }
 }
 
-
-        const handleSubmit = async (e) => {
-          e.preventDefault();
-          try {
-            // Assuming you have a way to get the course coordinator's ID based on the course_id
-            const getCourseCoordinatorId = async (courseId) => {
-              // Example API call to fetch course details
-              const response = await axios.get(`http://localhost:9090/api/courses/${courseId}`);
-              return response.data.coordinatorId; // Assuming the response includes the coordinator's ID
-             };
-             
-            // Create the notification object
-            const notification = {
-              receiver_id:"K", // Course coordinator's ID
-              course_id:course_id,
-              student_id: student_id, // Student ID from useParams
-              remark: text, // Remark from the text area
-              status: "send", // Status set to "send"
-            };
-        
-            // Send the notification
-            const response = await axios.post(`http://localhost:9090/api/notifications/sendNotification`, notification);
-            setText(''); // Clear the text area
-
-            if(response.status==200)
-            {
-              toast.success(response.data.messsage);
-            }
-          } catch (error) {
-            console.error('Error sending notification:', error);
-          }
-        };
- 
-        const handleNotify = async (e) => {
-          e.preventDefault();
-          try {
-      
-              // Set the approval level
-              setApprovalLevel("lecturer");
-
-              console.log(approval_level);
-      
-              // Make the axios call to update the approval level
-              const response = await axios.put(`http://localhost:9090/api/approvalLevel/updateApprovalLevel/${course_id}/${new Date().getFullYear()}/${approval_level}`);
-      
-              // Check if the request was successful
-              if (response.status === 200) {
-                  console.log("Approval level updated successfully");
-                  // Optionally, perform additional actions here
-              } else {
-                  console.error("Failed to update approval level");
+          const handleSubmit = async (e) => {
+            e.preventDefault();
+            try {
+              // Call the function to get the course coordinator's ID
+              const cc = await getCourseCoordinatorId(course_id);
+          
+              // Create the notification object
+              const notification = {
+                receiver_id: cc.data.content, // Course coordinator's ID
+                course_id: course_id,
+                student_id: student_id, // Student ID from useParams
+                remark: text, // Remark from the text area
+                status: "send", // Status set to "send"
+              };
+          
+              // Send the notification
+              const response = await axios.post(`http://localhost:9090/api/notifications/sendNotification`, notification);
+              setText(''); // Clear the text area
+          
+              if(response.status == 200) {
+                toast.success(response.data.messsage);
               }
-          } catch (error) {
-              console.error("Error updating approval level: ", error);
-          }
-      };
+            } catch (error) {
+              console.error('Error sending notification:', error);
+            }
+          };
+          
+          // Define the getCourseCoordinatorId function outside of handleSubmit
+          const getCourseCoordinatorId = async (course_id) => {
+            //API call to fetch course details
+            const cc = await axios.get(`http://localhost:9090/api/ccmanage/getCCByCourse/${course_id}`);
+            
+            // Assuming the response includes the coordinator's ID
+            return cc; // Return the response to be used in handleSubmit
+          };
+ 
+ 
+        
       
 
 
@@ -457,20 +441,18 @@ const result1 = async()=>{
                                   <input type="submit" className=' btn btn-outline-success btn-sm mt-3' value="Send"/>
                                 </div>
 
+                                
+
                                
                               </form>
                             </div>
 
-                            <div >
-                                    <form onSubmit={handleNotify}>
-                                    <input type='submit' value="Return" className="btn shadow btn-outline-success btn-sm w-25 float-end my-4" 
-                                    id="submitbtn"/>
-                                      
+                            <div > 
                                     <Link to={`/HODMarksReturnSheet/${course_id}`} 
                                     type="submit" className="btn shadow btn-outline-success btn-sm w-25 float-end my-4" 
                                     id="backbtn"> 
                                       Back
-                                    </Link></form>
+                                    </Link>
                             </div>
                             
                       </div>
