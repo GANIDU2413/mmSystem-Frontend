@@ -1,21 +1,19 @@
 // import viteLogo from '/vite.svg'
 import "./App.css";
-import { Footer } from "./layouts/NavbarAndFooter/Footer";
-import { Navebar } from "./layouts/NavbarAndFooter/Navebar";
-import { AddScore } from "./layouts/AddScore/AddScore";
-
+import { Footer } from "./Lecture/layouts/NavbarAndFooter/Footer";
+import { Navebar } from "./Lecture/layouts/NavbarAndFooter/Navebar";
+import { AddScore } from "./Lecture/layouts/AddScore/AddScore";
 import { Redirect, Route, Switch, useHistory } from "react-router-dom";
-
-import { HomePage } from "./layouts/HomePage/HomePage";
+import { HomePage } from "./Lecture/layouts/HomePage/HomePage";
 import { oktaConfig } from "./lib/oktaConfig";
-import { OktaAuth, toRelativeUrl} from '@okta/okta-auth-js';
+import { OktaAuth, toRelativeUrl } from "@okta/okta-auth-js";
 import { Security, LoginCallback, SecureRoute } from "@okta/okta-react";
 import LoginWidget from "./Auth/LoginWidget";
+import { ManageAddScore } from "./Lecture/layouts/AddScore/ManageAddScore/ManageAddScore";
 import MarksTable from "./layouts/MarksTable/MarksTable";
 import MarksEditForm from "./layouts/MarksTable/MarksEditForm";
 import StudentMarks from "./layouts/studentMarks/StudentMarks";
 import StudentMarksEditForm from "./layouts/studentMarks/StudentMarksEditForm";
-
 import StudentCourseEditLayout from "./layouts/studentMarks/StudentCourseEditLayout";
 import ThirdYearEligibility from "./layouts/Dean/ThirdYearEligibility/ThirdYearEligibility";
 import HomePageAR from "./layouts/AR/HomePage/HomePageAR";
@@ -43,11 +41,11 @@ import LecturersManagement from "./layouts/SystemAnalyst/UserManagement/Lecturer
 import AssignLecturerCourse from "./layouts/SystemAnalyst/AssignLecturer/AssignLecturerCourse";
 
 
-
-
+// to configure okta authentication
 const oktaAuth = new OktaAuth(oktaConfig);
 
 export const App = () => {
+  // to handle authentication
   const customAuthHandler = () => {
     history.push("/login");
   };
@@ -57,17 +55,27 @@ export const App = () => {
   const restoreOriginalUri = async (__oktaAuth: any, orginalUri: any) => {
     history.replace(toRelativeUrl(orginalUri || "/", window.location.origin));
   };
+
+  // to handle routing
   return (
     <div className="d-flex flex-column min-vh-100">
-       <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri} onAuthRequired={customAuthHandler}>
-      
-      <div className="flex-grow-1">
-        <Switch>
-        
-          <Route path="/home">
-            <HomePage />
-          </Route>
-          <Route path="/arhome">
+      <Security
+        oktaAuth={oktaAuth}
+        restoreOriginalUri={restoreOriginalUri}
+        onAuthRequired={customAuthHandler}
+      >
+        <Navebar />
+        <div className="flex-grow-1">
+          <Switch>
+            <Route path="/" exact>
+              <Redirect to="/home" />
+              <HomePage />
+            </Route>
+            <Route path="/home">
+              <HomePage />
+            </Route>
+            
+            <Route path="/arhome">
             <HomePageAR/>
           </Route>
           <Route path="/arviewictmarks">
@@ -180,32 +188,21 @@ export const App = () => {
           <Route path="/viewallUsers">
             <ViewAllUsers/>
           </Route>
-
-          <Route path="/lecmanage">
-            <LecturersManagement/>
-          </Route>
-
-          {/* <Route path="/assignlec">
-            <AssignLecturerCourse/>
-          </Route> */}
-
-
-          <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
-          <Route path='/login/callback' component={LoginCallback}/>
-          <SecureRoute path={"/lecture"}>
-            <AssignLecturerCourse/>
-          </SecureRoute>
-{/* 
-          <SecureRoute path='/lecture'>
-            <AddScore />
-          </SecureRoute> */}
-
-          {/* <Route>
-            <Redirect to="/home" />
-          </Route> */}
-        </Switch>
-      </div>
-      <Footer />
+            
+            <Route path="/addscore">
+              <AddScore option={true}/>
+            </Route>
+            <Route
+              path="/login"
+              render={() => <LoginWidget config={oktaConfig} />}
+            />
+            <Route path="/login/callback" component={LoginCallback} />
+            <SecureRoute path={"/lecture"}>
+              <ManageAddScore />
+            </SecureRoute>
+          </Switch>
+        </div>
+        <Footer />
       </Security>
     </div>
   );
