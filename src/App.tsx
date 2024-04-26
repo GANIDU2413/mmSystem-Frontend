@@ -43,6 +43,7 @@ import DeanDashBoard from "./layouts/Dean/DeanDashBoard";
 import EStarListPage from "./layouts/AR/EStarListPage/EStarListPage";
 import UpdateEStarPage from "./layouts/AR/UpdateEStarPage/UpdateEStarPage";
 import MainNavbar from "./layouts/NavbarAndFooter/MainNavebar";
+import DashBoardSA from "./layouts/SystemAnalyst/DashBoardSA/DashBoardSA";
 
 
 
@@ -233,6 +234,10 @@ export const App = () => {
 
             <SecureRoute path={"/Dean"}>
               <DeanDashBoard/>
+            </SecureRoute>
+
+            <SecureRoute path={"/system_analysis"}>
+              <DashBoardSA/>
             </SecureRoute>
 
           </Switch>

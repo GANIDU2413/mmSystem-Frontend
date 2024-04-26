@@ -13,7 +13,7 @@ export default function MainNavbar() {
       return <NavebarAR />;
     } else if (authState?.accessToken?.claims.userType === 'hod') {
       // Add code for HOD
-    } else if (authState?.accessToken?.claims.userType === 'sa') {
+    } else if (authState?.accessToken?.claims.userType === 'system_analysis') {
       return <NavebarSA />;
     } else if (authState?.accessToken?.claims.userType === 'lecturer') {
       // Add code for lecturer
