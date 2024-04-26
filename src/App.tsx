@@ -39,9 +39,11 @@ import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
 import LecturersManagement from "./layouts/SystemAnalyst/UserManagement/LecturersManagement";
 import AssignLecturerCourse from "./layouts/SystemAnalyst/AssignLecturer/AssignLecturerCourse";
 import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
+import DeanDashBoard from "./layouts/Dean/DeanDashBoard";
 import EStarListPage from "./layouts/AR/EStarListPage/EStarListPage";
 import UpdateEStarPage from "./layouts/AR/UpdateEStarPage/UpdateEStarPage";
 import MainNavbar from "./layouts/NavbarAndFooter/MainNavebar";
+
 
 
 
@@ -144,9 +146,9 @@ export const App = () => {
             <FinalStudentMarks/>
           </Route>
 
-          <Route path="/HODDashBoard">
+          {/* <Route path="/HODDashBoard">
             <HODDashBoard/>
-          </Route>
+          </Route> */}
 
           <Route path="/HODmarkstable">
             <HODMarksTable/>
@@ -222,8 +224,17 @@ export const App = () => {
 
             <SecureRoute path={"/ar"}>
               <HomePageAR />
-             
+            
             </SecureRoute>
+
+            <SecureRoute path={"/HOD"}>
+              <HODDashBoard/>
+            </SecureRoute>
+
+            <SecureRoute path={"/Dean"}>
+              <DeanDashBoard/>
+            </SecureRoute>
+
           </Switch>
         </div>
         <Footer />

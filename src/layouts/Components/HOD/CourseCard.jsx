@@ -11,11 +11,13 @@ export default function CourseCard({level,semester}) {
    
     console.log(level,semester)
 
+    let dep_id="ICT"
+    let approved_level="course_coordinator"
     
 
     const result = async () => {
         try {
-            const list = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level},${semester}`);
+            const list = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${dep_id}/${level}/${semester}/${approved_level}`);
             console.log(list.data);
             setCidN(list.data);
             seterrorMsg("");
