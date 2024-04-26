@@ -48,7 +48,7 @@ export default function CourseSelection(props) {
                     <td>{course.course_id}</td>
                     <td>{course.course_name}</td>
                     <td>{course.type}</td>
-                    <td><a href={`/viewMarks/${course.course_id}/${course.course_name}`} className="btn btn-primary "  role="button" aria-disabled="true">View Marks</a> </td>      {/* Button to view marks */}
+                    <td><a href={`/viewMarks/${course.course_id}/${course.course_name}`} className="btn btn-primary btn-sm"  role="button" aria-disabled="true">View Marks</a> </td>      {/* Button to view marks */}
                 </tr>
                 ))
               }
