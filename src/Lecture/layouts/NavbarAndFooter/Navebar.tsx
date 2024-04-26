@@ -53,10 +53,11 @@ export const Navebar = () => {
         id="offcanvasNavbar"
         aria-labelledby="offcanvasNavbarLabel"
       >
-        <div className="offcanvas-header">
-          <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
+        <div className="offcanvas-header card-headr-color">
+          <h5 className="offcanvas-title " id="offcanvasNavbarLabel">
             Mr. {authState?.idToken?.claims.name /*Display user's username*/}
           </h5>
+
           <button
             type="button"
             className="btn-close"
