@@ -38,6 +38,7 @@ import DataTable from "./layouts/Components/AR/DataTable/DataTablee";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
 import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
 import EStarListPage from "./layouts/AR/EStarListPage/EStarListPage";
+import UpdateEStarPage from "./layouts/AR/UpdateEStarPage/UpdateEStarPage";
 
 
 // to configure okta authentication
@@ -84,7 +85,7 @@ export const App = () => {
           </Route>
 
           <Route path="/viewEStarUpdate/updateEStar/:course_id/:course_name/:student_id/:grade/:exam_type/:academic_year">  {/* Link to E* grade update form */}
-            {/* <UpdateEStarPage/> */}
+            <UpdateEStarPage/>
           </Route>
 
           <Route path="/arviewictmarks">  {/* Link to view ICT marks page */}
