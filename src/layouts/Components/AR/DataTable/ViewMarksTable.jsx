@@ -138,7 +138,6 @@ export default function ViewMarksTable() {
                     </th>
                   </tr>
                   <tr>
-                
                     <th scope="col">Student ID</th>
                     <th scope="col">Overall Score</th>
                     <th scope="col">Grade</th>
@@ -150,6 +149,7 @@ export default function ViewMarksTable() {
                   {
                     studentGrades.map((element,index)=>(
                       <tr key={index}>
+                        
                         <td>{element.student_id}</td>
                         <td>{element.overall_score}</td>
                         <td>{element.grade}</td>

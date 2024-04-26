@@ -33,7 +33,6 @@ export default function CourseSelection(props) {
         <table className="table">
             <thead>
                 <tr>
-
                 <th scope="col"></th>
                 <th scope="col">Course Code</th>
                 <th scope="col">Course Name</th>
@@ -44,17 +43,13 @@ export default function CourseSelection(props) {
             <tbody>
               {
                 courseData.map((course, index) => (
-                  
                   <tr className="clickable-row" key={index}>
-                    
                     <th scope="row" key={index}>{index+1}</th>
                     <td>{course.course_id}</td>
                     <td>{course.course_name}</td>
                     <td>{course.type}</td>
                     <td><a href={`/viewMarks/${course.course_id}/${course.course_name}`} className="btn btn-primary "  role="button" aria-disabled="true">View Marks</a> </td>      {/* Button to view marks */}
-                    
                 </tr>
-               
                 ))
               }
                 
