@@ -66,18 +66,18 @@ export const NavebarSA = () => {
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/sysandashboard">
+                <a className="nav-link active" aria-current="page" href="/system_analysis">
                   Dashboard
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/userregsysan">
-                  User Registration
+                <a className="nav-link" href="/manageallstudents">
+                  Student Management
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/viewalllec">
-                  User Management
+                <a className="nav-link" href="/managestaff">
+                  Staff Management
                 </a>
               </li>
               <li className="nav-item">
@@ -92,7 +92,7 @@ export const NavebarSA = () => {
               </li>
 
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/viewalllec">
+                <a className="nav-link active" aria-current="page" href="/assignleccourse">
                   Courses for Lecturers
                 </a>
               </li>

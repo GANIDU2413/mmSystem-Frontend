@@ -5,8 +5,12 @@ export default function DashBoardSA() {
 
   return (
     <div>
-        <NavebarSA></NavebarSA>
-        <h1>Dashboard</h1>
+        <div className=' container'>
+            <NavebarSA/>
+            <div className=' py-4'>
+                <h2 className=' mt-lg-4'>Hello, System Analyst...</h2>
+            </div>
+        </div>
     </div>
   )
 }

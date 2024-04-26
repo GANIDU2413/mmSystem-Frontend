@@ -25,10 +25,7 @@ import HODMarksEditForm from "./layouts/HOD/HODMarksEditForm";
 import CAMarkTable from "./layouts/HOD/CAMarkTable";
 import MarksCheckingForm from "./layouts/HOD/MarksCheckingForm";
 import SystemAnalystDashBoard from "./layouts/SystemAnalyst/SystemAnalystDashBoard";
-import AttendenceSA from "./layouts/SystemAnalyst/AttendenceSA";
-import MedicalsSA from "./layouts/SystemAnalyst/MedicalsSA";
 import SAUserReg from "./layouts/SystemAnalyst/SAUserReg";
-import SAUserManage from "./layouts/SystemAnalyst/SAUserManage";
 import ViewAllLecturers from "./layouts/SystemAnalyst/ViewAllLecturers";
 import AddLecturers from "./layouts/SystemAnalyst/AddLecturers";
 import EditLecturers from "./layouts/SystemAnalyst/EditLecturers";
@@ -44,6 +41,8 @@ import EStarListPage from "./layouts/AR/EStarListPage/EStarListPage";
 import UpdateEStarPage from "./layouts/AR/UpdateEStarPage/UpdateEStarPage";
 import MainNavbar from "./layouts/NavbarAndFooter/MainNavebar";
 import DashBoardSA from "./layouts/SystemAnalyst/DashBoardSA/DashBoardSA";
+import MedicalsEligibiltyManage from "./layouts/SystemAnalyst/Medicals/MedicalsEligibiltyManage";
+import AttendenceEligibilityManage from "./layouts/SystemAnalyst/Attendence/AttendenceEligibilityManage";
 
 
 
@@ -176,11 +175,11 @@ export const App = () => {
           </Route>
 
           <Route path="/attendencesysan">
-            <AttendenceSA/>
+            <AttendenceEligibilityManage/>
           </Route>
 
           <Route path="/medicalsysan">
-            <MedicalsSA/>
+            <MedicalsEligibiltyManage/>
           </Route>
 
           <Route path="/userregsysan">
@@ -191,8 +190,8 @@ export const App = () => {
             <ViewAllUsers/>
           </Route>
 
-          <Route path="/viewalllec">
-            <ViewAllLecturers/>
+          <Route path="/manageallstudents">
+            <ViewAllUsers/>
           </Route>
 
           <Route path="/addlec">
@@ -207,9 +206,14 @@ export const App = () => {
             <EditUser/>
           </Route>
 
-          <Route path="/viewallUsers">
-            <ViewAllUsers/>
+          <Route path="/managestaff">
+            <LecturersManagement/>
           </Route>
+
+          <Route path="/assignleccourse">
+            <AssignLecturerCourse/>
+          </Route>
+          
             
             <Route path="/addscore">
               <AddScore option={true}/>
