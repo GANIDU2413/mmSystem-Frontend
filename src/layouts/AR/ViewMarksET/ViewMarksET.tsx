@@ -1,10 +1,10 @@
 import LevelSelection from "../../Components/AR/LevelSelection/LevelSelection";
-import { Navebar } from "../../Components/AR/NavBar/Navebar-AR";
+import { NavebarAR } from "../../Components/AR/NavBarAR/NavebarAR";
 
 export default function ViewMarksET() {
   return (
     <div>
-        <Navebar/>
+        <NavebarAR />
         <LevelSelection department={"ET"}/>
     </div>
   )

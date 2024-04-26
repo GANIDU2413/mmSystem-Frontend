@@ -1,11 +1,12 @@
-import { Navebar } from "../../Components/AR/NavBar/Navebar-AR";
+import { NavebarAR } from "../../Components/AR/NavBarAR/NavebarAR";
+
 
 export default function HomePageAR() {
 
   
   return (
     <div>
-        <Navebar/>
+        <NavebarAR />
     </div>
   )
 }

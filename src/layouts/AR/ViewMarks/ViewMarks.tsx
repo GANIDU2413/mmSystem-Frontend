@@ -1,7 +1,7 @@
 import { Redirect } from "react-router-dom";
 import LevelSelection from "../../Components/AR/LevelSelection/LevelSelection";
-import { Navebar } from "../../Components/AR/NavBar/Navebar-AR";
 import { useOktaAuth } from "@okta/okta-react";
+import { NavebarAR } from "../../Components/AR/NavBarAR/NavebarAR";
 
 export default function ViewMarks(props:any) {
   const { authState } = useOktaAuth();
@@ -12,7 +12,7 @@ export default function ViewMarks(props:any) {
 //   }
   return (
     <div>
-        <Navebar/>
+        <NavebarAR />
         <LevelSelection department_id={department_id}/>
     </div>
   )
