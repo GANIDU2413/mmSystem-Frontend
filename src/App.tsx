@@ -62,7 +62,7 @@ export const App = () => {
         restoreOriginalUri={restoreOriginalUri}
         onAuthRequired={customAuthHandler}
       >
-        <Navebar />
+        {/* <Navebar /> */}
         <div className="flex-grow-1">
           <Switch>
             <Route path="/" exact>
