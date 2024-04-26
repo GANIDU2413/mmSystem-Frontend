@@ -19,7 +19,6 @@ import ThirdYearEligibility from "./layouts/Dean/ThirdYearEligibility/ThirdYearE
 import HomePageAR from "./layouts/AR/HomePage/HomePageAR";
 import ViewMarks from "./layouts/AR/ViewMarks/ViewMarks";
 import FinalStudentMarks from "./layouts/Dean/FinalMarks/FinalStudentMarks";
-import FinalStudentMarksEditFrom from "./layouts/Dean/FinalMarks/FinalStudentMarksEditFrom";
 import HODDashBoard from "./layouts/HOD/HODDashBoard";
 import HODMarksTable from "./layouts/HOD/HODMarksTable";
 import HODMarksEditForm from "./layouts/HOD/HODMarksEditForm";
@@ -37,6 +36,7 @@ import EditUser from "./layouts/SystemAnalyst/EditUser";
 import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
 import DataTable from "./layouts/Components/AR/DataTable/DataTable";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
+import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
 
 
 // to configure okta authentication
@@ -110,17 +110,16 @@ export const App = () => {
             <StudentCourseEditLayout/>
           </Route>
 
+          <Route path="/deanFinalMarkSheet">
+            <DeanFinalMarkSheet/>
+          </Route>
+
           <Route path="/thirdyeareligibility">
             <ThirdYearEligibility/>
           </Route>
 
           <Route path="/finalstudentmarks">
             <FinalStudentMarks/>
-          </Route>
-
-          
-          <Route path="/finalstudentmarkseditfrom/:student_id">
-            <FinalStudentMarksEditFrom/>
           </Route>
 
           <Route path="/HODDashBoard">
