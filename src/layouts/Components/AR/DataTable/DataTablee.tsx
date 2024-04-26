@@ -3,9 +3,9 @@ import './dataTable.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { Navebar } from '../NavBar/Navebar-AR';
 import BackButton from '../BackButton/BackButton';
 import { response } from 'express';
+import { NavebarAR } from '../NavBarAR/NavebarAR';
 
 // Define the type for your student mark data
 type StudentMark = {
@@ -110,7 +110,7 @@ export default function DataTable(props:any) {
 
   return (
     <div>
-      <Navebar />
+      <NavebarAR />
       {/* Populate the select element with unique student IDs */}
       
       

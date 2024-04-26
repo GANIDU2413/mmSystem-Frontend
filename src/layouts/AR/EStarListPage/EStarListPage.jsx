@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Navebar } from '../../Components/AR/NavBar/Navebar-AR'
 import axios from 'axios';
 import './eStarListPage.css';
 import BackButton from '../../Components/AR/BackButton/BackButton';
 import { useHistory } from 'react-router-dom';
+import { NavebarAR } from '../../Components/AR/NavBarAR/NavebarAR';
 
 export default function EStarListPage() {
 
@@ -35,7 +35,7 @@ export default function EStarListPage() {
 
   return (
     <div>
-        <Navebar/>    {/*Navigation bar*/}
+        <NavebarAR/>    {/*Navigation bar*/}
         
 
         {courseList.length===0 ?(   //If there are no students having E* Grades under AR approval, display the following message

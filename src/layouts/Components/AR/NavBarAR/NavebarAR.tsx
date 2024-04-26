@@ -3,7 +3,7 @@ import { useOktaAuth } from "@okta/okta-react";
 import { SpinerLoading } from "../../../Utils/SpinerLoading";
 import { IoMenuSharp } from "react-icons/io5";
 
-export const Navebar = () => {
+export const NavebarAR = () => {
 
   const {oktaAuth , authState} = useOktaAuth();
 
