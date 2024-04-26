@@ -185,17 +185,20 @@ export const App = () => {
             <LecturersManagement/>
           </Route>
 
-          <Route path="/assignlec">
+          {/* <Route path="/assignlec">
             <AssignLecturerCourse/>
-          </Route>
+          </Route> */}
 
 
           <Route path='/login' render={ () => <LoginWidget config={oktaConfig}/>}/>
           <Route path='/login/callback' component={LoginCallback}/>
-
+          <SecureRoute path={"/lecture"}>
+            <AssignLecturerCourse/>
+          </SecureRoute>
+{/* 
           <SecureRoute path='/lecture'>
             <AddScore />
-          </SecureRoute>
+          </SecureRoute> */}
 
           {/* <Route>
             <Redirect to="/home" />

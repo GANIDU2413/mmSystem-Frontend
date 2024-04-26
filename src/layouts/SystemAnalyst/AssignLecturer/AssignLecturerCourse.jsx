@@ -1,11 +1,13 @@
 import axios from 'axios';
 import React, { useState } from 'react'
+import { Redirect } from "react-router-dom";
+import { useOktaAuth } from "@okta/okta-react";
 
 
 export default function AssignLecturerCourse() {
     const [cids,setCids]=useState();
     const [cCoordinatorids,setCCoordinatorids]=useState();
-
+    const {authState} = useOktaAuth();
 
     const loadCids= async()=>{
         const results = await axios.get("");
@@ -16,9 +18,16 @@ export default function AssignLecturerCourse() {
     const loadcCoordinatorids=async()=>{
         
     }
+
+    if (authState?.accessToken?.claims.userType === undefined) {
+        return <Redirect to="/HODDashBoard" />;
+      }
+
   return (
     <>
-      <div className='container'>
+
+    <div className='container'>
+        
         <div className='row'>
             <form className="row g-3 m-4">
                 <div className='col-md-5 mb-4'>
