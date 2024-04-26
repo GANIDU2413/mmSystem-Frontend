@@ -97,6 +97,32 @@ export default function HODMarksReturnSheet() {
         }
     };
 
+    const handleNotify = async (e) => {
+        e.preventDefault();
+        try {
+    
+            // Set the approval level
+            setApprovalLevel("lecturer");
+
+            console.log(approval_level);
+    
+            // Make the axios call to update the approval level
+            const response = await axios.put(`http://localhost:9090/api/approvalLevel/updateApprovalLevel/${course_id}/${new Date().getFullYear()}/${approval_level}`);
+    
+            // Check if the request was successful
+            if (response.status === 200) {
+                console.log("Approval level updated successfully");
+                // Optionally, perform additional actions here
+                toast.success("Notification sent successfully")
+                
+            } else {
+                console.error("Failed to update approval level");
+            }
+        } catch (error) {
+            console.error("Error updating approval level: ", error);
+        }
+    };
+
 
 
 
@@ -394,7 +420,9 @@ export default function HODMarksReturnSheet() {
                 </tbody>
             </table>
 
-
+            <form onSubmit={handleNotify}>
+                <input type='submit' value="Return" className="btn shadow btn-outline-success btn-sm w-25 float-end my-4" id="submitbtn"/>
+            </form>
             <form onSubmit={handleSubmit}>
             <input to={``} type="submit" value="Request Certify" className="btn btn-outline-success btn-sm" id="submitbtn" /> <br/><br/>
             </form>

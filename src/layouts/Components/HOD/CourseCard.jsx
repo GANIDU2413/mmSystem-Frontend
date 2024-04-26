@@ -6,6 +6,8 @@ export default function CourseCard({level,semester}) {
 
     const[cidN,setCidN]=useState([])
     const history = useHistory();
+
+    const[errorMsg,seterrorMsg]=useState('');
    
     console.log(level,semester)
 
@@ -16,15 +18,19 @@ export default function CourseCard({level,semester}) {
             const list = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level},${semester}`);
             console.log(list.data);
             setCidN(list.data);
+            seterrorMsg("");
         } catch (error) {
             if (error.response && error.response.status === 404) {
                 console.error('No data found for the given level and semester');
-                console.log(error.response.data.message)
-                // Optionally, set a default state or show an error message to the user
+                console.log(error.response.data.message);
+                seterrorMsg(error.response.data.message);
+              
                 setCidN([]); // Set an empty array or any default state
+
             } else {
                 // Handle other types of errors
                 console.error('An error occurred:', error);
+                seterrorMsg('An error occurred:', error);
             }
         }
     };
