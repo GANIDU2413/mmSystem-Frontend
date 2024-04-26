@@ -130,6 +130,9 @@ if (redirect) {
                         onChange={(e)=>onInputChange(e)}
                         />
                     </div>
+                    {/* add button */}
+                    
+
 
                     <div className='mb-3'>
                         <label htmlFor='Email' className='form-label'>
