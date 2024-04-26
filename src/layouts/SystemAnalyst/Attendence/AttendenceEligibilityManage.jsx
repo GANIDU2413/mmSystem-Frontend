@@ -48,14 +48,30 @@ const fetchData = async () => {
     }
  };
 
+ const downloadTemplate = () => {
+  // Create a new workbook
+  const wb = XLSX.utils.book_new();
+  // Create a new worksheet with the specified column headers
+  const ws = XLSX.utils.json_to_sheet([
+    { student_id: "", course_id: "", percentage: "", eligibility: "" }
+  ], { header: ["student_id", "course_id", "percentage", "eligibility"], skipHeader: false });
+  // Add the worksheet to the workbook
+  XLSX.utils.book_append_sheet(wb, ws, "Attendance Eligibility Template");
+  // Write the workbook to a file and download it
+  XLSX.writeFile(wb, "Attendance_Eligibility_Template.xlsx");
+};
+
  return (
     <div className='container'>
       <NavebarSA />
       <div className='py-4'>
         <div className="h2 mt-lg-5">Attendence</div>
+        <div className=' my-2' style={{float:"right"}}>
+          <button onClick={downloadTemplate} className='btn btn-success mt-3'>Download Template</button>
+        </div>
         <div>
           <form onSubmit={onSubmit}>
-            <input type="file" className='btn btn-secondary mx-2 btn-sm' accept='.xlsx, .xls' onChange={handleFileUpload} />
+            <input type="file" className='btn btn-secondary mx-2 btn-sm my-1' accept='.xlsx, .xls' onChange={handleFileUpload} />
             {data.length > 0 && (
               <table className='table'>
                 <thead>
@@ -76,7 +92,7 @@ const fetchData = async () => {
                 </tbody>
               </table>
             )}
-            <button type='submit' className='btn btn-outline-success btn-sm'>Submit</button>
+            <button type='submit' className='btn btn-outline-success btn-sm my-1'>Submit</button>
           </form>
         </div>
       </div>
