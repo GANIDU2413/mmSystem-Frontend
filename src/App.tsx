@@ -73,24 +73,39 @@ export const App = () => {
               <HomePage />
             </Route>
             
-            <Route path="/arhome">
+          {/* AR navigations start here ---------------------------------------------*/}
+          <Route path="/arhome">  {/*Link to AR Home page*/}
             <HomePageAR/>
           </Route>
-          <Route path="/arviewictmarks">
+
+          <Route path="/viewEStarList">  {/* Link to view E* student list page */}
+            {/* <EStarListPage/> */}
+          </Route>
+
+          <Route path="/viewEStarUpdate/updateEStar/:course_id/:course_name/:student_id/:grade/:exam_type/:academic_year">  {/* Link to E* grade update form */}
+            {/* <UpdateEStarPage/> */}
+          </Route>
+
+          <Route path="/arviewictmarks">  {/* Link to view ICT marks page */}
             <ViewMarks department_id={"ICT"}/>
           </Route>
-          <Route path="/arviewetmarks">
+
+          <Route path="/arviewetmarks">  {/* Link to view ET marks page */}
             <ViewMarks department_id={"ET"}/>
           </Route>
-          <Route path="/arviewbstmarks">
+
+          <Route path="/arviewbstmarks">  {/* Link to view BST marks page */}
             <ViewMarks department_id={"BST"}/>
           </Route>
-          <Route path="/arviewmtdmarks">
+
+          <Route path="/arviewmtdmarks">    {/* Link to view Multi Disciplinary marks page */}
             <ViewMarks department_id={"Multi_Disciplinary"}/>
           </Route>
-          <Route path="/viewMarksRemainingToApprove/:course_id/:course_name/:previousRole">
+          
+          <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}
             <DataTable/>
           </Route>
+          {/* AR navigations ends here ---------------------------------------------*/}
 
           <Route path="/markstable">
             <MarksTable/>
