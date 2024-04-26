@@ -37,6 +37,7 @@ import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
 import DataTable from "./layouts/Components/AR/DataTable/DataTablee";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
 import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
+import EStarListPage from "./layouts/AR/EStarListPage/EStarListPage";
 
 
 // to configure okta authentication
@@ -62,7 +63,7 @@ export const App = () => {
         restoreOriginalUri={restoreOriginalUri}
         onAuthRequired={customAuthHandler}
       >
-        <Navebar />
+        {/* <Navebar /> */}
         <div className="flex-grow-1">
           <Switch>
             <Route path="/" exact>
@@ -79,7 +80,7 @@ export const App = () => {
           </Route>
 
           <Route path="/viewEStarList">  {/* Link to view E* student list page */}
-            {/* <EStarListPage/> */}
+            <EStarListPage/>
           </Route>
 
           <Route path="/viewEStarUpdate/updateEStar/:course_id/:course_name/:student_id/:grade/:exam_type/:academic_year">  {/* Link to E* grade update form */}
