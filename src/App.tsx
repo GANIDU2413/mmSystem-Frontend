@@ -200,6 +200,11 @@ export const App = () => {
             <SecureRoute path={"/lecture"}>
               <ManageAddScore />
             </SecureRoute>
+
+            <SecureRoute path={"/ar"}>
+              <HomePageAR />
+             
+            </SecureRoute>
           </Switch>
         </div>
         <Footer />
