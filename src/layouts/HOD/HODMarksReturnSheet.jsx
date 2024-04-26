@@ -155,10 +155,17 @@ export default function HODMarksReturnSheet() {
                                                 })
                                           calculations.map((ele,index)=>
                                                 {
-                                                    if(ele.type==evaluationCriteria.assessment_type)
+                                                    const existsInHeaders = headers.some(header => header.props.children == evaluationCriteria.description);
+    
+                                                        // If the assignment_name does not exist in the headers array, push the new element
+                                                    if (!existsInHeaders) {
+                                                     if(ele.type==evaluationCriteria.assessment_type)
                                                     {
                                                         headers.push(<th key={`${index}`} scope="col">{evaluationCriteria.description}</th>);
                                                     }
+                                                    }
+                                                    
+                                                    
                                                 })
                                         } else {
                                                 
@@ -179,11 +186,17 @@ export default function HODMarksReturnSheet() {
                                  
                                  
                                                 calculations.map((calculations,index2)=>{
+
                                                 if(evaluationCriteria.assessment_type==calculations.type)
                                                 {
+                                                 const existsInHeaders = headers.some(header => header.props.children == calculations.description);
+                                                 if (!existsInHeaders) {
                                                  headers.push(<th key={`${index2}`} scope="col">{calculations.description}</th>);
                                                 }
+                                                }
                                                 })
+
+                                                
 
 
                                                 

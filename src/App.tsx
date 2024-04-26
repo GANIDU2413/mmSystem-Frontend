@@ -37,8 +37,10 @@ import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
 import DataTable from "./layouts/Components/AR/DataTable/DataTablee";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
 import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
+import DeanDashBoard from "./layouts/Dean/DeanDashBoard";
 import EStarListPage from "./layouts/AR/EStarListPage/EStarListPage";
 import UpdateEStarPage from "./layouts/AR/UpdateEStarPage/UpdateEStarPage";
+
 
 
 // to configure okta authentication
@@ -64,7 +66,7 @@ export const App = () => {
         restoreOriginalUri={restoreOriginalUri}
         onAuthRequired={customAuthHandler}
       >
-        <Navebar />
+        {/* <Navebar /> */}
         <div className="flex-grow-1">
           <Switch>
             <Route path="/" exact>
@@ -139,9 +141,9 @@ export const App = () => {
             <FinalStudentMarks/>
           </Route>
 
-          <Route path="/HODDashBoard">
+          {/* <Route path="/HODDashBoard">
             <HODDashBoard/>
-          </Route>
+          </Route> */}
 
           <Route path="/HODmarkstable">
             <HODMarksTable/>
@@ -219,6 +221,15 @@ export const App = () => {
               <HomePageAR />
              
             </SecureRoute>
+
+            <SecureRoute path={"/HOD"}>
+              <HODDashBoard/>
+            </SecureRoute>
+
+            <SecureRoute path={"/Dean"}>
+              <DeanDashBoard/>
+            </SecureRoute>
+
           </Switch>
         </div>
         <Footer />
