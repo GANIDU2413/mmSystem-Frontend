@@ -48,9 +48,9 @@ export default function CAMarkTable() {
                     </tr>
                 </thead>
                 <tbody>
-                    {marks.map((student)=>
+                    {marks.map((student,index)=>
                     (
-                        <tr>
+                        <tr key={index}>
                             <th scope="row"><Checkbox ></Checkbox></th>
                             <td>{student.student_id}</td>
 
