@@ -9,3 +9,8 @@
     margin-bottom: 10px;
     position: sticky;
   }
+
+  thead{
+    position: sticky;
+    
+}
