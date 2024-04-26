@@ -14,8 +14,9 @@ export default function CourseSelection(props) {
 
     const loadCourseData = async()=>{       // Function to fetch course data
         try{
-          const result=await axios.get(`http://localhost:9090/api/AssistantRegistrar/getViewMarksCourseList/${level}/${semester}`);     // API call to fetch course data
+          const result=await axios.get(`http://localhost:9090/api/AssistantRegistrar/getViewMarksCourseList/${level}/${semester}/${department_id}`);     // API call to fetch course data
           setCourseData(result.data);       // Setting the fetched data to the state
+          console.log(result.data)
           
         }catch(error){
           console.error('Error fetching data:', error);     // Logging error
