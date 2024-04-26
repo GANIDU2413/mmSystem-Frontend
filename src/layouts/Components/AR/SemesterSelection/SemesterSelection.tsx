@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import CourseSelection from '../CourseSelection/CourseSelection'
+import CourseSelection from '../CourseSelection/CourseSelection';
 
 export default function SemesterSelection(props :any) {
   var level=props.level;

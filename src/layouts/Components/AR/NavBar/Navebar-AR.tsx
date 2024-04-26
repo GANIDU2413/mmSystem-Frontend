@@ -1,6 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
 import { SpinerLoading } from "../../../Utils/SpinerLoading";
+import { IoMenuSharp } from "react-icons/io5";
 
 export const Navebar = () => {
 
@@ -22,8 +23,14 @@ export const Navebar = () => {
           data-bs-target="#offcanvasNavbar"
           aria-controls="offcanvasNavbar"
           href="#"
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+          }}
         >
-          Faculty Of Technology, Marking Management System 
+          <IoMenuSharp size={35} /> Faculty Of Technology, Marking Management System 
         </a>
         <ul className="navbar-nav ms-auto">
            {!authState.isAuthenticated?
@@ -65,11 +72,19 @@ export const Navebar = () => {
                  Dashboard
                 </a>
               </li>
+              
               <li className="nav-item">
                 <a className="nav-link" href="#">
                   Create Results Board
                 </a>
               </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/viewEStarList">
+                  Update E* Grades With Medicals
+                </a>
+              </li>
+
+              <hr></hr>
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -104,9 +119,10 @@ export const Navebar = () => {
                   </li>
                 </ul>
               </li>
+              <hr></hr>
             </ul>
             
-            <hr></hr>
+            
           </div>
         </div>
       </div>
