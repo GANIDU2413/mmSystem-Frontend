@@ -38,6 +38,7 @@ import EditUser from "./layouts/SystemAnalyst/EditUser";
 import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
 import DataTable from "./layouts/Components/AR/DataTable/DataTable";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
+import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
 
 
 
@@ -101,7 +102,9 @@ export const App = () => {
             <StudentCourseEditLayout/>
           </Route>
 
-          
+          <Route path="/deanFinalMarkSheet">
+            <DeanFinalMarkSheet/>
+          </Route>
 
           <Route path="/thirdyeareligibility">
             <ThirdYearEligibility/>
