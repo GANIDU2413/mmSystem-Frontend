@@ -15,6 +15,11 @@ export default function DeanFinalMarkSheet() {
         setFinalResults(result.data);
         console.log(result.data);
 
+        finalResults.map((ele)=>
+        {
+                
+        })
+
 
 
     }
