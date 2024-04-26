@@ -2,9 +2,12 @@
 import { NavebarHOD } from './NavebarHOD'
 import CourseCard from '../Components/HOD/CourseCard'
 import { useState } from 'react';
+import { useOktaAuth } from "@okta/okta-react";
+import { Redirect } from "react-router-dom";
 
 
 export default function HODDashBoard() {
+  const { authState } = useOktaAuth();
 
   const[level,setLevel]=useState()
   const[sem,setSem]=useState()
@@ -19,6 +22,10 @@ export default function HODDashBoard() {
 
 
   console.log(level)
+
+  if (authState?.accessToken?.claims.userType !== 'ICTHOD') {
+    return <Redirect to="/" />;
+  }
   return (
     <>
     <div className=' container'>
