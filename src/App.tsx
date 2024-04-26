@@ -34,7 +34,7 @@ import AddLecturers from "./layouts/SystemAnalyst/AddLecturers";
 import EditLecturers from "./layouts/SystemAnalyst/EditLecturers";
 import EditUser from "./layouts/SystemAnalyst/EditUser";
 import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
-import DataTable from "./layouts/Components/AR/DataTable/DataTable";
+import DataTable from "./layouts/Components/AR/DataTable/DataTablee";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
 import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
 

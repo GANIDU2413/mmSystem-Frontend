@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import "./courseSelection.css";
-import DataTable from '../DataTable/DataTable';
+import DataTable from '../DataTable/DataTablee';
 import { Link } from 'react-router-dom';
 
 export default function CourseSelection(props :any) {
