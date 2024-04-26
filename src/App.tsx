@@ -41,6 +41,7 @@ import AssignLecturerCourse from "./layouts/SystemAnalyst/AssignLecturer/AssignL
 import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
 import EStarListPage from "./layouts/AR/EStarListPage/EStarListPage";
 import UpdateEStarPage from "./layouts/AR/UpdateEStarPage/UpdateEStarPage";
+import MainNavbar from "./layouts/NavbarAndFooter/MainNavebar";
 
 
 
@@ -68,6 +69,7 @@ export const App = () => {
         onAuthRequired={customAuthHandler}
       >
         {/* <Navebar /> */}
+        <MainNavbar/>
         <div className="flex-grow-1">
           <Switch>
             <Route path="/" exact>
