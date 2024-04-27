@@ -43,7 +43,7 @@ export default function EStarListPage() {
 
   return (
     <div>
-        <NavebarAR/>    {/*Navigation bar*/}
+        
         
 
         {courseList.length===0 ?(   //If there are no students having E* Grades under AR approval, display the following message

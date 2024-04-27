@@ -104,7 +104,7 @@ export default function ViewMarksTable() {
   return (
     <div>
         
-        <NavebarAR />     {/*Navigation bar*/}
+        
         <div style={{width:"97%",marginLeft:"auto",marginRight:"auto",marginTop:"65px"}}>
         {
           eStarStudentsAvailability ?     // check whether there are students having E* grades

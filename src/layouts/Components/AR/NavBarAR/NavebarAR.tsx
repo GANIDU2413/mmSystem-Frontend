@@ -59,7 +59,7 @@ export const NavebarAR = () => {
         >
           <div className="offcanvas-header">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              Hi, Assistant Registrar
+            Mr. {authState?.idToken?.claims.name /*Display user's username*/}
             </h5>
             <button
               type="button"

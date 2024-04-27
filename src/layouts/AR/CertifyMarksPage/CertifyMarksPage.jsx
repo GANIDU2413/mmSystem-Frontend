@@ -16,7 +16,7 @@ export default function CertifyMarksPage(props) {
     }
   return (
     <div>
-        <NavebarAR />
+        
         <div style={{width:"98%",marginLeft:"auto",marginRight:"auto",marginTop:"85px",alignContent:'center'}}>
 
             
