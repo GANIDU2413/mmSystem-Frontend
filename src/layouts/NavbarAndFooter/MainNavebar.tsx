@@ -3,6 +3,8 @@ import { useOktaAuth } from "@okta/okta-react";
 import { NavebarSA } from '../SystemAnalyst/NavebarSA';
 import { NavebarAR } from '../Components/AR/NavBarAR/NavebarAR';
 import { Navebar } from '../../Lecture/layouts/NavbarAndFooter/Navebar';
+import { NavebarHOD } from '../HOD/NavebarHOD';
+import { NavebarDean } from '../Dean/NavebarDean';
 
 
 export default function MainNavbar() {
@@ -12,7 +14,7 @@ export default function MainNavbar() {
     if (authState?.accessToken?.claims.userType === 'ar') {
       return <NavebarAR />;
     } else if (authState?.accessToken?.claims.userType === 'hod') {
-      // Add code for HOD
+      //  return <NavebarHOD />;
     } else if (authState?.accessToken?.claims.userType === 'system_analysis') {
       return <NavebarSA />;
     } else if (authState?.accessToken?.claims.userType === 'lecturer') {
@@ -23,7 +25,7 @@ export default function MainNavbar() {
     } else if (authState?.accessToken?.claims.userType === 'admin') {
       // Add code for admin
     } else if (authState?.accessToken?.claims.userType === 'dean') {
-      // Add code for dean
+      return <NavebarDean />;
     }
   }
 
