@@ -43,7 +43,7 @@ export default function CertifyMarksPage(props) {
 
                         <div class="d-grid gap-3" style={{marginTop:"50px",marginRight:"30px"}}>
                             <label className="semesterLabel" >Semester 1</label>
-                            <button class="btn btn-primary" type="button">Level 1</button>
+                            <a class="btn btn-primary" type="button" href='arFinalMarkSheet/1/1'>Level 1</a>
                             <button class="btn btn-primary" type="button">Level 2</button>
                             <button class="btn btn-primary" type="button">Level 3</button>
                             <button class="btn btn-primary" type="button">Level 4</button>

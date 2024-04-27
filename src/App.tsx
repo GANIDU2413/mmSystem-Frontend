@@ -129,6 +129,10 @@ export const App = () => {
           <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}
             <ViewMarksTable/>
           </Route>
+
+          <Route path="/arFinalMarkSheet/:level/:semester">   {/* Link to view marks remaining to approve page */}
+            <DeanFinalMarkSheet/>
+          </Route>
           {/* AR navigations ends here ---------------------------------------------*/}
 
           <Route path="/markstable">
