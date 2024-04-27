@@ -35,28 +35,28 @@ export default function CertifyMarksPage(props) {
               </tbody> */}
               
             </table>
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm">
+            <div className="container">
+                <div className="row">
+                    <div className="col-sm">
 
                         
 
-                        <div class="d-grid gap-3" style={{marginTop:"50px",marginRight:"30px"}}>
+                        <div className="d-grid gap-3" style={{marginTop:"50px",marginRight:"30px"}}>
                             <label className="semesterLabel" >Semester 1</label>
-                            <a class="btn btn-primary" type="button" href='arFinalMarkSheet/1/1'>Level 1</a>
-                            <button class="btn btn-primary" type="button">Level 2</button>
-                            <button class="btn btn-primary" type="button">Level 3</button>
-                            <button class="btn btn-primary" type="button">Level 4</button>
+                            <a className="btn btn-primary" type="button" href='arFinalMarkSheet/1/1'>Level 1</a>
+                            <button className="btn btn-primary" type="button">Level 2</button>
+                            <button className="btn btn-primary" type="button">Level 3</button>
+                            <button className="btn btn-primary" type="button">Level 4</button>
                         </div>
                     </div>
 
-                    <div class="col-sm">
-                        <div class="d-grid gap-3" style={{marginTop:"50px",marginLeft:"30px"}}>
+                    <div className="col-sm">
+                        <div className="d-grid gap-3" style={{marginTop:"50px",marginLeft:"30px"}}>
                             <label className="semesterLabel">Semester 2</label>
-                            <button class="btn btn-primary" type="button">Level 1</button>
-                            <button class="btn btn-primary" type="button">Level 2</button>
-                            <button class="btn btn-primary" type="button">Level 3</button>
-                            <button class="btn btn-primary" type="button">Level 4</button>
+                            <button className="btn btn-primary" type="button">Level 1</button>
+                            <button className="btn btn-primary" type="button">Level 2</button>
+                            <button className="btn btn-primary" type="button">Level 3</button>
+                            <button className="btn btn-primary" type="button">Level 4</button>
                         </div>
                     </div>
                 </div>
