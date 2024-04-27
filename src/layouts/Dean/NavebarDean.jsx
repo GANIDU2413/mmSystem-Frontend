@@ -2,9 +2,8 @@ import { Link, NavLink } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
 import { SpinerLoading } from "../Utils/SpinerLoading";
 import { IoMenuSharp } from "react-icons/io5";
-import DeanFinalMarkSheet from "./FinalMarks/DeanFinalMarkSheet";
 
-export const NavebarDean = ({ handleButtonClick }) => {
+export const NavebarDean = () => {
   const { oktaAuth, authState } = useOktaAuth();
 
   if (!authState) {
@@ -67,16 +66,18 @@ export const NavebarDean = ({ handleButtonClick }) => {
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">
+                <a className="nav-link active" aria-current="page" href="dean">
                   Dashboard
                 </a>
               </li>
 
-              <li className="nav-item">
+              
+
+              {/* <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="#">
                   Student Details
                 </a>
-              </li>
+              </li> */}
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -89,9 +90,9 @@ export const NavebarDean = ({ handleButtonClick }) => {
                 </a>
                 <ul className="dropdown-menu">
                   <li>
-                      <Link to="/deanFinalMarkSheet/1/1" className="dropdown-item">
+                      <a href="/deanFinalMarkSheet/1/1" className="dropdown-item">
                           Level I Sem I
-                      </Link>
+                      </a>
                   </li>
                   <li>
                       <Link to="/deanFinalMarkSheet/1/2" className="dropdown-item">
@@ -109,9 +110,9 @@ export const NavebarDean = ({ handleButtonClick }) => {
                     </Link>
                   </li>
                   <li>
-                  <Link to="/deanFinalMarkSheet/3/1" className="dropdown-item">
-                      Level III Sem I
-                  </Link>
+                    <a href="/deanFinalMarkSheet/3/1" className="dropdown-item">
+                        Level III Sem I
+                    </a>
                   </li>
                   <li>
                      <Link to="/deanFinalMarkSheet/3/2" className="dropdown-item">
