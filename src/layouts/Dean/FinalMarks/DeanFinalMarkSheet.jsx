@@ -145,8 +145,10 @@ export default function DeanFinalMarkSheet() {
               </div>
             </>
           ) : (
-            <div class="alert alert-primary" role="alert">
-              {error}
+            <div className=' container' style={{ marginTop: '150px' }}>
+              <div className="alert alert-primary" role="alert">
+                {error}
+              </div>
             </div>
           )}
         </div>
