@@ -131,7 +131,7 @@ export const App = () => {
           </Route>
 
           <Route path="/arFinalMarkSheet/:level/:semester">   {/* Link to view marks remaining to approve page */}
-            <DeanFinalMarkSheet/>
+            <DeanFinalMarkSheet approved_level={"HOD"}/>
           </Route>
           {/* AR navigations ends here ---------------------------------------------*/}
 
