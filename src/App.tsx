@@ -25,21 +25,27 @@ import HODMarksEditForm from "./layouts/HOD/HODMarksEditForm";
 import CAMarkTable from "./layouts/HOD/CAMarkTable";
 import MarksCheckingForm from "./layouts/HOD/MarksCheckingForm";
 import SystemAnalystDashBoard from "./layouts/SystemAnalyst/SystemAnalystDashBoard";
-import AttendenceSA from "./layouts/SystemAnalyst/AttendenceSA";
-import MedicalsSA from "./layouts/SystemAnalyst/MedicalsSA";
 import SAUserReg from "./layouts/SystemAnalyst/SAUserReg";
-import SAUserManage from "./layouts/SystemAnalyst/SAUserManage";
 import ViewAllLecturers from "./layouts/SystemAnalyst/ViewAllLecturers";
 import AddLecturers from "./layouts/SystemAnalyst/AddLecturers";
 import EditLecturers from "./layouts/SystemAnalyst/EditLecturers";
 import EditUser from "./layouts/SystemAnalyst/EditUser";
 import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
-import DataTable from "./layouts/Components/AR/DataTable/DataTablee";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
+import LecturersManagement from "./layouts/SystemAnalyst/UserManagement/LecturersManagement";
+import AssignLecturerCourse from "./layouts/SystemAnalyst/AssignLecturer/AssignLecturerCourse";
 import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
 import DeanDashBoard from "./layouts/Dean/DeanDashBoard";
 import EStarListPage from "./layouts/AR/EStarListPage/EStarListPage";
 import UpdateEStarPage from "./layouts/AR/UpdateEStarPage/UpdateEStarPage";
+import ViewMarksTable from "./layouts/Components/AR/DataTable/ViewMarksTable";
+import MainNavbar from "./layouts/NavbarAndFooter/MainNavebar";
+import DashBoardSA from "./layouts/SystemAnalyst/DashBoardSA/DashBoardSA";
+import MedicalsEligibiltyManage from "./layouts/SystemAnalyst/Medicals/MedicalsEligibiltyManage";
+import AttendenceEligibilityManage from "./layouts/SystemAnalyst/Attendence/AttendenceEligibilityManage";
+import StudentsManagement from "./layouts/SystemAnalyst/UserManagement/StudentsManagement";
+import ManageCourseModule from "./layouts/SystemAnalyst/CourseModule/ManageCourseModule";
+
 
 
 
@@ -67,6 +73,7 @@ export const App = () => {
         onAuthRequired={customAuthHandler}
       >
         {/* <Navebar /> */}
+        <MainNavbar/>
         <div className="flex-grow-1">
           <Switch>
             <Route path="/" exact>
@@ -107,7 +114,7 @@ export const App = () => {
           </Route>
           
           <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}
-            <DataTable/>
+            <ViewMarksTable/>
           </Route>
           {/* AR navigations ends here ---------------------------------------------*/}
 
@@ -170,11 +177,11 @@ export const App = () => {
           </Route>
 
           <Route path="/attendencesysan">
-            <AttendenceSA/>
+            <AttendenceEligibilityManage/>
           </Route>
 
           <Route path="/medicalsysan">
-            <MedicalsSA/>
+            <MedicalsEligibiltyManage/>
           </Route>
 
           <Route path="/userregsysan">
@@ -185,8 +192,8 @@ export const App = () => {
             <ViewAllUsers/>
           </Route>
 
-          <Route path="/viewalllec">
-            <ViewAllLecturers/>
+          <Route path="/manageallstudents">
+            <StudentsManagement/>
           </Route>
 
           <Route path="/addlec">
@@ -201,9 +208,18 @@ export const App = () => {
             <EditUser/>
           </Route>
 
-          <Route path="/viewallUsers">
-            <ViewAllUsers/>
+          <Route path="/managestaff">
+            <LecturersManagement/>
           </Route>
+
+          <Route path="/assignleccourse">
+            <AssignLecturerCourse/>
+          </Route>
+
+          <Route path="/sysanicoursemodule">
+            <ManageCourseModule/>
+          </Route>
+          
             
             <Route path="/addscore">
               <AddScore option={true}/>
@@ -219,7 +235,7 @@ export const App = () => {
 
             <SecureRoute path={"/ar"}>
               <HomePageAR />
-             
+            
             </SecureRoute>
 
             <SecureRoute path={"/HOD"}>
@@ -230,10 +246,13 @@ export const App = () => {
               <DeanDashBoard/>
             </SecureRoute>
 
+            <SecureRoute path={"/system_analysis"}>
+              <DashBoardSA/>
+            </SecureRoute>
+
           </Switch>
         </div>
         <Footer />
-
       </Security>
     </div>
   );
