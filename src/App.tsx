@@ -154,7 +154,7 @@ export const App = () => {
           </Route>
 
           <Route path="/deanFinalMarkSheet/:level/:semester">
-            <DeanFinalMarkSheet/>
+            <DeanFinalMarkSheet approved_level={"AR"}/>
           </Route>
 
           <Route path="/thirdyeareligibility">
