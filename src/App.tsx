@@ -130,7 +130,7 @@ export const App = () => {
             <ViewMarksTable/>
           </Route>
 
-          <Route path="/arFinalMarkSheet/:level/:semester">   {/* Link to view marks remaining to approve page */}
+          <Route path="/arFinalMarkSheet/:level/:semester">   {/* Link to view marks remaining to certify page */}
             <DeanFinalMarkSheet approved_level={"HOD"}/>
           </Route>
           {/* AR navigations ends here ---------------------------------------------*/}
