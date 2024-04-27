@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 export default function ManageCourseModule() {
@@ -10,6 +10,20 @@ export default function ManageCourseModule() {
     const [hours, setCourseHours] = useState('');
     const [level, setLevel] = useState('');
     const [semester, setSemester] = useState('');
+    const [courseData, setCourseData] = useState([]);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:9090/api/courses/getallcourses');
+            setCourseData(response.data.content);
+        } catch (error) {
+            console.error('Error fetching data from API:', error);
+        }
+    };
 
     const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,6 +52,7 @@ export default function ManageCourseModule() {
         setCourseHours('');
         setLevel('');
         setSemester('');
+        window.location.reload();
     } catch (error) {
         console.error('Error adding course:', error);
         alert('Error adding course. Please try again.');
@@ -130,6 +145,36 @@ export default function ManageCourseModule() {
         </form>
         <div>
             <div className="h2 mt-lg-5">Existing Courses</div>
+            {courseData.length > 0 && (
+                <table className='table'>
+                <thead>
+                <tr>
+                    <th>Course Name</th>
+                    <th>Course ID</th>
+                    <th>Type</th>
+                    <th>Department</th>
+                    <th>Credit</th>
+                    <th>Hours</th>
+                    <th>Level</th>
+                    <th>Semester</th>
+                </tr>
+                </thead>
+                <tbody>
+                {courseData.map((row, index) => (
+                    <tr key={index}>
+                    <td>{row.course_name}</td>
+                    <td>{row.course_id}</td>
+                    <td>{row.type}</td>
+                    <td>{row.department_id}</td>
+                    <td>{row.credit}</td>
+                    <td>{row.hours}</td>
+                    <td>{row.level}</td>
+                    <td>{row.semester}</td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+            )}
         </div>
     </div>
  );
