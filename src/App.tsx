@@ -45,6 +45,7 @@ import MedicalsEligibiltyManage from "./layouts/SystemAnalyst/Medicals/MedicalsE
 import AttendenceEligibilityManage from "./layouts/SystemAnalyst/Attendence/AttendenceEligibilityManage";
 import StudentsManagement from "./layouts/SystemAnalyst/UserManagement/StudentsManagement";
 import ManageCourseModule from "./layouts/SystemAnalyst/CourseModule/ManageCourseModule";
+import CertifyMarksPage from "./layouts/AR/CertifyMarksPage/CertifyMarksPage";
 
 
 
@@ -111,6 +112,18 @@ export const App = () => {
 
           <Route path="/arviewmtdmarks">    {/* Link to view Multi Disciplinary marks page */}
             <ViewMarks department_id={"Multi_Disciplinary"}/>
+          </Route>
+
+          <Route path="/arcerfityictmarks">  {/* Link to certify ICT marks page */}
+            <CertifyMarksPage department_id={"ICT"}/>
+          </Route>
+
+          <Route path="/arcerfityetmarks">  {/* Link to certify ET marks page */}
+            <CertifyMarksPage department_id={"ET"}/>
+          </Route>
+
+          <Route path="/arcertifybstmarks">  {/* Link to certify BST marks page */}
+            <CertifyMarksPage department_id={"BST"}/>
           </Route>
           
           <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}

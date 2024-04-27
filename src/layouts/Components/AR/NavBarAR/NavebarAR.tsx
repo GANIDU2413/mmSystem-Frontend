@@ -120,6 +120,37 @@ export const NavebarAR = () => {
                 </ul>
               </li>
               <hr></hr>
+
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Certify marks
+                </a>
+                <ul className="dropdown-menu">
+                  <li>
+                    <a className="dropdown-item" href="/arcerfityictmarks">
+                      Department of ICT
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="/arcerfityetmarks">
+                      Department of ET
+                    </a>
+                  </li>
+                  <li></li>
+                  <li>
+                    <a className="dropdown-item" href="/arcertifybstmarks">
+                      Department of BST
+                    </a>
+                  </li>
+                  
+                </ul>
+              </li>
             </ul>
             
             
