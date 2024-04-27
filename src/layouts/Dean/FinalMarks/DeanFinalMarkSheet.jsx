@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router';
 import { ToastContainer, toast } from 'react-toastify';
 
-export default function DeanFinalMarkSheet() {
+export default function DeanFinalMarkSheet(props ) {
     const [finalResults, setFinalResults] = useState([]);
     const [courses, setCourses] = useState([]);
     const [students, setStudents] = useState([]);
@@ -12,7 +12,9 @@ export default function DeanFinalMarkSheet() {
 
     const[error, setError] = useState("");
 
-    let approved_level = "HOD";
+    const {approved_level}=props
+
+    //let approved_level = "HOD";
 
     
     const resultSheet = async () => {
