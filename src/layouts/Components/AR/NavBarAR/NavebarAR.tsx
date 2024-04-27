@@ -93,7 +93,7 @@ export const NavebarAR = () => {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  View and certify marks
+                  View marks
                 </a>
                 <ul className="dropdown-menu">
                   <li>

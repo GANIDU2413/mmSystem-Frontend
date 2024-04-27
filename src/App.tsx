@@ -31,7 +31,6 @@ import AddLecturers from "./layouts/SystemAnalyst/AddLecturers";
 import EditLecturers from "./layouts/SystemAnalyst/EditLecturers";
 import EditUser from "./layouts/SystemAnalyst/EditUser";
 import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
-import DataTable from "./layouts/Components/AR/DataTable/DataTablee";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
 import LecturersManagement from "./layouts/SystemAnalyst/UserManagement/LecturersManagement";
 import AssignLecturerCourse from "./layouts/SystemAnalyst/AssignLecturer/AssignLecturerCourse";
@@ -39,6 +38,7 @@ import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
 import DeanDashBoard from "./layouts/Dean/DeanDashBoard";
 import EStarListPage from "./layouts/AR/EStarListPage/EStarListPage";
 import UpdateEStarPage from "./layouts/AR/UpdateEStarPage/UpdateEStarPage";
+import ViewMarksTable from "./layouts/Components/AR/DataTable/ViewMarksTable";
 import MainNavbar from "./layouts/NavbarAndFooter/MainNavebar";
 import DashBoardSA from "./layouts/SystemAnalyst/DashBoardSA/DashBoardSA";
 import MedicalsEligibiltyManage from "./layouts/SystemAnalyst/Medicals/MedicalsEligibiltyManage";
@@ -114,7 +114,7 @@ export const App = () => {
           </Route>
           
           <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}
-            <DataTable/>
+            <ViewMarksTable/>
           </Route>
           {/* AR navigations ends here ---------------------------------------------*/}
 

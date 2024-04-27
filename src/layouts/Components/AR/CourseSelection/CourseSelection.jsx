@@ -8,14 +8,26 @@ import "./courseSelection.css";
 export default function CourseSelection(props) {
 
     const { level, semester, department_id } = props;       // Destructuring props
-    const [selectedCourseId, setSelectedCourseId] = useState(null);    // State to store selected course id
     const [courseData, setCourseData] = useState([]);   // State to store course data
+    const [coursesAvailability, setCoursesAvailability] = useState([]);   // State to store courses availability
     const previousRole = "HOD";     // Role of the previous user
 
     const loadCourseData = async()=>{       // Function to fetch course data
         try{
-          const result=await axios.get(`http://localhost:9090/api/AssistantRegistrar/getViewMarksCourseList/${level}/${semester}`);     // API call to fetch course data
-          setCourseData(result.data);       // Setting the fetched data to the state
+          const result=await axios.get(`http://localhost:9090/api/AssistantRegistrar/getViewMarksCourseList/${level}/${semester}/${department_id}`);     // API call to fetch course data
+
+          if(result.data.length>0){
+            setCoursesAvailability(true);       // Setting the availability of courses to true
+            setCourseData(result.data);       // Setting the fetched data to the state
+
+          }else{
+
+            setCoursesAvailability(false);      // Setting the availability of courses to false
+          
+          }
+
+
+          
           
         }catch(error){
           console.error('Error fetching data:', error);     // Logging error
@@ -29,10 +41,12 @@ export default function CourseSelection(props) {
 
   return (
     <div>
-        <table className="table">
+
+      {
+        coursesAvailability ? (
+          <table className="table">
             <thead>
                 <tr>
-
                 <th scope="col"></th>
                 <th scope="col">Course Code</th>
                 <th scope="col">Course Name</th>
@@ -43,23 +57,26 @@ export default function CourseSelection(props) {
             <tbody>
               {
                 courseData.map((course, index) => (
-                  
                   <tr className="clickable-row" key={index}>
-                    
                     <th scope="row" key={index}>{index+1}</th>
                     <td>{course.course_id}</td>
                     <td>{course.course_name}</td>
                     <td>{course.type}</td>
-                    <td><a href={`/viewMarks/${course.course_id}/${course.course_name}`} className="btn btn-primary "  role="button" aria-disabled="true">View Marks</a> </td>      {/* Button to view marks */}
-                    
+                    <td><a href={`/viewMarks/${course.course_id}/${course.course_name}`} className="btn btn-primary btn-sm"  role="button" aria-disabled="true">View Marks</a></td>  
                 </tr>
-               
                 ))
               }
                 
             </tbody>
-            </table>
-            {<br/>}{<br/>}{<br/>}
+          </table>
+        ):(
+          <div className="alert alert-danger" role="alert" style={{marginTop:"70px",textAlign:"center"}}>
+            <h5>No courses Registered for this semester</h5>
+          </div>
+        )
+      }
+        
+            {<br/>}{<br/>}
             &nbsp; Level {level}{<br/>}
             &nbsp; Semester {semester}{<br/>}
             &nbsp; department - {department_id}
