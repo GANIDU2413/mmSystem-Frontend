@@ -43,6 +43,8 @@ import MainNavbar from "./layouts/NavbarAndFooter/MainNavebar";
 import DashBoardSA from "./layouts/SystemAnalyst/DashBoardSA/DashBoardSA";
 import MedicalsEligibiltyManage from "./layouts/SystemAnalyst/Medicals/MedicalsEligibiltyManage";
 import AttendenceEligibilityManage from "./layouts/SystemAnalyst/Attendence/AttendenceEligibilityManage";
+import StudentsManagement from "./layouts/SystemAnalyst/UserManagement/StudentsManagement";
+import ManageCourseModule from "./layouts/SystemAnalyst/CourseModule/ManageCourseModule";
 
 
 
@@ -191,7 +193,7 @@ export const App = () => {
           </Route>
 
           <Route path="/manageallstudents">
-            <ViewAllUsers/>
+            <StudentsManagement/>
           </Route>
 
           <Route path="/addlec">
@@ -212,6 +214,10 @@ export const App = () => {
 
           <Route path="/assignleccourse">
             <AssignLecturerCourse/>
+          </Route>
+
+          <Route path="/sysanicoursemodule">
+            <ManageCourseModule/>
           </Route>
           
             
