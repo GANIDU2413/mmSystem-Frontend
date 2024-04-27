@@ -26,7 +26,7 @@ export default function LevelSelection(props:any) {
                 <button className="nav-link " id="nav-level2-tab" data-bs-toggle="tab" data-bs-target="#nav-level2" type="button" role="tab" aria-controls="nav-level2" aria-selected="false" onClick={() => callSemester(2)}>LEVEL 2</button>
                 <button className="nav-link " id="nav-level3-tab" data-bs-toggle="tab" data-bs-target="#nav-level3" type="button" role="tab" aria-controls="nav-level3" aria-selected="false" onClick={() => callSemester(3)}>LEVEL 3</button>
                 <button className="nav-link " id="nav-level4-tab" data-bs-toggle="tab" data-bs-target="#nav-level4" type="button" role="tab" aria-controls="nav-level3" aria-selected="false" onClick={() => callSemester(4)}>LEVEL 4</button>
-                    <label style={{paddingTop:"7px",paddingLeft:"400px",fontSize:"18px"}}><b>{level_selection_tpe}</b></label>
+                    <label style={{paddingTop:"7px",paddingLeft:"300px",fontSize:"18px"}}><b>{level_selection_tpe}  - Department of {department_id}</b></label>
             </div>
 
         </nav>

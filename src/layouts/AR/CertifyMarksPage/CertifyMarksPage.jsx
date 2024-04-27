@@ -1,12 +1,19 @@
 import React from 'react'
 import { NavebarAR } from '../../Components/AR/NavBarAR/NavebarAR';
 import BackButton from '../../Components/AR/BackButton/BackButton';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import './certifyMarksPage.css';
+import { useOktaAuth } from '@okta/okta-react';
 
 export default function CertifyMarksPage(props) {
+
     const department_id = props.department_id;
     const history = useHistory();
+    const { authState } = useOktaAuth();
+
+    if (authState?.accessToken?.claims.userType !== 'ar') {
+      return <Redirect to="/ar" />;
+    }
   return (
     <div>
         <NavebarAR />

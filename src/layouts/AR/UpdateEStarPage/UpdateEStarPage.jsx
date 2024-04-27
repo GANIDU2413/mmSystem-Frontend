@@ -1,11 +1,16 @@
 import React from 'react'
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import './updateEStarPage.css';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import BackButton from '../../Components/AR/BackButton/BackButton';
+import { useOktaAuth } from '@okta/okta-react';
 
 export default function UpdateEStarPage() {
+
+    const { authState } = useOktaAuth();
+
+  
 
     
 

@@ -251,7 +251,7 @@ export const App = () => {
             </SecureRoute>
 
             <SecureRoute path={"/ar"}>
-              <HomePageAR />
+              <ViewMarks department_id={"ICT"}/>
             
             </SecureRoute>
 
