@@ -60,6 +60,9 @@ export default function CertifyMarksPage(props) {
                         </div>
                     </div>
                 </div>
+                <div className='right-aligned-div'>
+                  <br/><BackButton/> <br/>&nbsp;
+                </div>
             </div>
             
         </div>
