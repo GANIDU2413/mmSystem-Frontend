@@ -149,7 +149,7 @@ export const App = () => {
             <StudentCourseEditLayout/>
           </Route>
 
-          <Route path="/deanFinalMarkSheet">
+          <Route path="/deanFinalMarkSheet/:level/:semester">
             <DeanFinalMarkSheet/>
           </Route>
 
@@ -255,7 +255,7 @@ export const App = () => {
               <HODDashBoard/>
             </SecureRoute>
 
-            <SecureRoute path={"/Dean"}>
+            <SecureRoute path={"/dean"}>
               <DeanDashBoard/>
             </SecureRoute>
 
