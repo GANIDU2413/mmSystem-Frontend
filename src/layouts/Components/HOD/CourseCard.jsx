@@ -11,12 +11,24 @@ export default function CourseCard({level,semester}) {
 
     
 
-    const result=async()=>{
-        const list=await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level},${semester}`)
-        console.log(list.data);
-        setCidN(list.data);
-    }
-
+    const result = async () => {
+        try {
+            const list = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level},${semester}`);
+            console.log(list.data);
+            setCidN(list.data);
+        } catch (error) {
+            if (error.response && error.response.status === 404) {
+                console.error('No data found for the given level and semester');
+                console.log(error.response.data.message)
+                // Optionally, set a default state or show an error message to the user
+                setCidN([]); // Set an empty array or any default state
+            } else {
+                // Handle other types of errors
+                console.error('An error occurred:', error);
+            }
+        }
+    };
+    
     useEffect(() => {
         result();
 
@@ -26,7 +38,7 @@ export default function CourseCard({level,semester}) {
 
       
        const handleCardSelect = (course_id) => {
-        history.push(`/CAMarkTable/${course_id}`);
+        history.push(`/HODMarksReturnSheet/${course_id}`);
         };
 
 
