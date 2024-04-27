@@ -12,6 +12,7 @@ import Modal from "react-modal";
 import EvaluationCriteriaModel from "../../../models/EvaluationCriteriaModel";
 import EvaluationCriteriaNameModel from "../../../models/EvaluationCriteriaNameModel";
 import { stat } from "fs";
+import axios from "axios";
 
 export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // to handle okta authentication
@@ -23,8 +24,8 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   const [assignmentType, setassignmentType] = useState(
     "Select an Assignment Type"
   );
-  const [assignmentScore, setassignmentScore] = useState("0");
-  const [reassignmentScore, setreassignmentScore] = useState("0");
+  const [assignmentScore, setassignmentScore] = useState("");
+  const [reassignmentScore, setreassignmentScore] = useState("");
 
   const [level, setlevel] = useState("");
   const [semester, setSemester] = useState(" ");
@@ -45,6 +46,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   );
   // to save data from csv file
   const [csvData, setCsvData] = useState<string[][] | null>(null);
+  const [file, setFile] = useState<File | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [evaluationData, setEvaluationData] = useState<
     EvaluationCriteriaNameModel[]
@@ -393,12 +395,34 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
           if (result.data && result.data.length > 0) {
             setCsvData(result.data);
             setModalIsOpen(true);
+            setFile(file);
           }
         },
         header: true, // Set to true if CSV has headers
       });
     }
   };
+
+  const handleCsvSumit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if(file){
+      const formData = new FormData();
+      formData.append('file',file);
+      
+      try{
+        await axios.post('http://localhost:9090/api/lecture/upload/studentScore',formData, {
+          
+        headers: {
+          'Content-Type' : 'multipart/from-data',
+        },
+        });
+        toastr.success("CSV File upload successfully");
+      }catch(error){
+        console.log(error)
+        toastr.error('Faild to upload CSV file');
+      }
+    }
+  }
   // to ensure the authentication.
   if (authState?.accessToken?.claims.userType === undefined) {
     return <Redirect to="/home" />;
