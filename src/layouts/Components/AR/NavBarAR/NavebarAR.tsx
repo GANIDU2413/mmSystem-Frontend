@@ -11,7 +11,10 @@ export const NavebarAR = () => {
     return <SpinerLoading/>
   }
 
-  const handleLogout = async () => oktaAuth.signOut();
+  const handleLogout = async () =>{
+    oktaAuth.signOut();
+  }
+  
 
   console.log(authState);
   return (
