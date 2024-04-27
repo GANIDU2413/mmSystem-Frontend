@@ -2,12 +2,15 @@ import React from 'react'
 import { useState } from 'react'
 import * as XLSX from "xlsx"
 import { NavebarSA } from './NavebarSA'
+import axios from 'axios';
 
 
 export default function SAUserReg() {
   const [data, setData] = useState([]);
-  
+
   console.log(data);
+
+
   const handleFileUpload = (e) => {
     const reader = new FileReader();
     reader.readAsBinaryString(e.target.files[0]);
@@ -22,6 +25,11 @@ export default function SAUserReg() {
 
   }
 
+  const OnSubmit=async (e)=>{
+    e.preventDefault();
+    await axios.post("http://localhost:9090/api/studentdetails/savestudentsdetails",data);
+  };
+
   return (
     <>
       <div className=' container'>
@@ -29,6 +37,9 @@ export default function SAUserReg() {
         <div className=' py-4'>
           <div className=" h2 mt-lg-5 ">User Registration</div>
           <div>
+            <form onSubmit={e=>OnSubmit(e)}>
+
+            
             <input type="file" className=' btn btn-secondary mx-2 btn-sm' accept='.xlsx, .xls' onChange={handleFileUpload}/>
             {data.length >0 &&(
               <table className='table'>
@@ -52,7 +63,8 @@ export default function SAUserReg() {
                 </tbody>
               </table>
             )}
-            <input type='button' className=' btn btn-outline-success btn-sm' value="Sumbit"/>
+            <button type='submit' className=' btn btn-outline-success btn-sm'>Submit</button>
+            </form>
           </div>
         </div>
       </div>
