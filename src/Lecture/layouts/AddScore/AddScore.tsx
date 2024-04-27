@@ -8,9 +8,10 @@ import LectureCourseModel from "../../../models/LectureCourseModel";
 import StudentCourseEnroll from "../../../models/StudentCourseEnroll";
 import AddScoreProps from "../../../models/AddScoreProps";
 import Papa, { ParseResult } from "papaparse";
-import Modal from 'react-modal';
+import Modal from "react-modal";
 import EvaluationCriteriaModel from "../../../models/EvaluationCriteriaModel";
 import EvaluationCriteriaNameModel from "../../../models/EvaluationCriteriaNameModel";
+import { stat } from "fs";
 
 export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // to handle okta authentication
@@ -20,10 +21,10 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   const [courseID, setCourseID] = useState("Select a Course");
   const [year, setYear] = useState("");
   const [assignmentType, setassignmentType] = useState(
-    "Select an Assignment Tyep"
+    "Select an Assignment Type"
   );
-  const [assignmentScore, setassignmentScore] = useState(0);
-  const [reassignmentScore, setreassignmentScore] = useState(0);
+  const [assignmentScore, setassignmentScore] = useState("0");
+  const [reassignmentScore, setreassignmentScore] = useState("0");
 
   const [level, setlevel] = useState("");
   const [semester, setSemester] = useState(" ");
@@ -45,7 +46,9 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // to save data from csv file
   const [csvData, setCsvData] = useState<string[][] | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
-  const [evaluationData, setEvaluationData] = useState<EvaluationCriteriaNameModel[]>([]);
+  const [evaluationData, setEvaluationData] = useState<
+    EvaluationCriteriaNameModel[]
+  >([]);
   const [evaluationNameData, setEvaluationNameData] = useState("");
   // Empty dependency array to ensure this effect runs only once on mount
   // fetct courses' IDs related user's state.
@@ -108,7 +111,10 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     }
   };
   // to get student Ids related course enrollment.
-  const fetchStudentDetails = async (studentDetailsId: string, assignmentName : string) => {
+  const fetchStudentDetails = async (
+    studentDetailsId: string,
+    assignmentName: string
+  ) => {
     try {
       const studentDetailsUrl = `http://localhost:9090/api/studentCourseEnrolls/search/findByCourseIdAndAssignmentName?courseId=${studentDetailsId}&assignmentName=${assignmentName}`;
       const response = await fetch(studentDetailsUrl);
@@ -139,9 +145,9 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // const fetchEvaluationCriteriaType = async (evaluationCourseId: string) =>{
   //    try{
   //     const criteriaUrl = `http://localhost:9090/api/evaluationCriterias/search/findEvaluationCriteriaByCourseId?courseId=${evaluationCourseId}`;
-      
+
   //     const response = await fetch(criteriaUrl);
-      
+
   //     if(!response.ok){
   //       toastr.error("Network Error", "Error" + " " + response.status);
   //     }
@@ -162,54 +168,53 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   //     toastr.error("Network Error" + " " + error.messages, "Error!");
   //    }
   // };
-  
-  // to get evaluation criteria name by course id 
-  const fetchEvaluationCriteriaName = async (evaluationCourseId : string) => {
 
-    try{
+  // to get evaluation criteria name by course id
+  const fetchEvaluationCriteriaName = async (evaluationCourseId: string) => {
+    try {
       const criteriaUrl = `http://localhost:9090/api/evaluationCriteriaNames/search/findEvaluationCriteriaNameByCourseId?courseId=${evaluationCourseId}`;
-      
+
       const response = await fetch(criteriaUrl);
-      
-      if(!response.ok){
+
+      if (!response.ok) {
         toastr.error("Network Error", "Error" + " " + response.status);
       }
 
       const responseJeson = await response.json();
 
-      const responseData: EvaluationCriteriaNameModel[] = responseJeson._embedded.evaluationCriteriaNames.map(
-        (item: any) => new EvaluationCriteriaNameModel(item.assignmentName)
-      );
+      const responseData: EvaluationCriteriaNameModel[] =
+        responseJeson._embedded.evaluationCriteriaNames.map(
+          (item: any) => new EvaluationCriteriaNameModel(item.assignmentName)
+        );
 
       setEvaluationData(responseData);
-      
-
-     }catch(error:any){
+    } catch (error: any) {
       toastr.error("Network Error" + " " + error.messages, "Error!");
-     }
-  }
+    }
+  };
   // to handle state of the course acordantly user's input.
   const handleCourseSelect = (setCourse: string): void => {
     setCourseID(setCourse);
     fetchCourseName(setCourse); //  call the fetchCourseName function immediately after setting the course ID
-   
+
     fetchEvaluationCriteriaName(setCourse); // call assignment type into the score feeding form.
     setLevelSemesterAndYear(setCourse);
+    //fetchStudentDetails(courseID,assignmentType); // call studentIds into the drop-drown box.
   };
   // to handle state of the student acordantly user's input.
   const handleStudentSelect = (setStudent: string): void => {
     setStudentID(setStudent);
     setYear(extractYear(setStudent));
+   
   };
   // to handle assignmment type acordantly user's input.
   const handleAssignmentType = (setAssignmentType: string): void => {
     setassignmentType(setAssignmentType);
-    // to get assignment name 
+    // to get assignment name
     const evaluationNameString = setAssignmentType;
-    const evaluationName = evaluationNameString.replace(/\d+/g, '');
+    const evaluationName = evaluationNameString.replace(/\d+/g, "");
     setEvaluationNameData(evaluationName);
-    fetchStudentDetails(courseID,setAssignmentType); // call studentIds into the drop-drown box.
-   
+    fetchStudentDetails(courseID,setAssignmentType);
   };
 
   // to filter the year by using the student ID.
@@ -231,51 +236,53 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   };
 
   // to handle state of student's level, Semester, and academic year.
-  const setLevelSemesterAndYear = (courseIdFromSelected : string): void => {
-    const [academicLevel, academicSemester] = extractSemesterAndLevel(courseIdFromSelected);
+  const setLevelSemesterAndYear = (courseIdFromSelected: string): void => {
+    const [academicLevel, academicSemester] =
+      extractSemesterAndLevel(courseIdFromSelected);
     setlevel(academicLevel);
     setSemester(academicSemester);
-   
   };
 
-  // to handle close csv mark sheet 
+  // to handle close csv mark sheet
   const closeModal = () => {
     setModalIsOpen(false);
   };
 
-  // to handle submition of score 
+  // to handle submition of score
   async function submitScore() {
     setIsloading(true);
+    
 
     // to feed student score
     const url = `http://localhost:9090/api/lecture/add/score`;
     // to ensure validation of data feelds
 
     try {
-      console.log(evaluationNameData);
+       // Validate if the input is a positive number
+    if (!(parseFloat(assignmentScore) >= 0 && parseFloat(assignmentScore) <= 100)) {
+      toastr.error("Input is not valid", "Error!");
+    }else{
       if (
         studentID !== "Select a Student" &&
         courseID !== "Select a Course" &&
-        assignmentType !== "Select an Assignment Tyep" &&
+        assignmentType !== "Select an Assignment Type" &&
         assignmentScore !== null &&
-        assignmentScore === reassignmentScore &&
+        assignmentScore === reassignmentScore.replace(/\s+/g, '') &&
         year !== "" &&
         level !== "" &&
-        semester !== "" && evaluationNameData !== ""
-        
-       
+        semester !== "" &&
+        evaluationNameData !== ""
       ) {
         // to store data temporary
         const score: AddScoreRequest = new AddScoreRequest(
-          studentID, 
+          studentID,
           courseID,
           year,
           assignmentType, // Quize1 , Quize2 , Assignment1 etc
           assignmentScore,
           level,
           semester,
-          evaluationNameData // Quize , Asssignment 
-        
+          evaluationNameData // Quize , Asssignment
         );
 
         // to handle the behaviors of data that can be passed into backend.
@@ -289,7 +296,10 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
 
         // to submit score data into the backend.
         const submitScoreResponse = await fetch(url, requestOptions);
-
+        updateStudentScoreState();
+        
+       
+       
         //  to check wether submition is successful or not.
         if (!submitScoreResponse.ok) {
           setIsloading(false);
@@ -301,14 +311,19 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
         }
 
         setIsloading(false);
-      
 
         // to set default state of score feeding  feelds.
-        setassignmentScore(0);
-        setreassignmentScore(0);
+        setassignmentScore("0");
+        setreassignmentScore("0");
+        //setassignmentType("Select an Assignment Type")
         setStudentID("Select a Student");
         setYear("");
-
+        setCourseID("Select a Course");
+        setassignmentType("Select an Assignment Type");
+        setSemester("");
+        setlevel("");
+        setCourseName("");
+        
         // to desplay succuss alart.
         // setDisplayWaring(false);
         // setDisplaySuccess(true);
@@ -319,7 +334,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
         // setDisplayWaring(true);
         // setDisplaySuccess(false);
         toastr.error("Input is not valid", "Error!");
-      }
+      }}
     } catch (error: any) {
       // Handle network errors
       //console.error("Network Error:", error.messages);
@@ -327,13 +342,38 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
       toastr.error("Network Error occurred.", "Error!");
     } finally {
       setIsloading(false);
-    }
+    } 
   }
-  
-  // after submmiting , student's state should be updated.
-  const updateStudentScoreState = async () =>{
 
-  }
+  // after submmiting , student's state should be updated.
+  const updateStudentScoreState = async () => {
+    const url = `http://localhost:9090/api/lecture/update/studentState?courseID=${courseID}&assignmentType=${assignmentType}&studentId=${studentID}`;
+
+    const requestData = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json", // Assuming you're sending JSON data
+        // Add any other headers if required
+      },
+      // Add body data if needed
+      body: JSON.stringify({
+        // Add any data you want to send in the request body
+      }),
+    };
+
+    try {
+      const response = await fetch(url, requestData);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      // If you need to process the response, you can do it here
+      // const responseData = await response.json();
+      // Process responseData if needed
+    } catch (error) {
+      // Handle errors here
+      console.error("There was a problem with the fetch operation:", error);
+    }
+  };
 
   // set default sate of course selection feelds
   const CompleteCourse = (): void => {
@@ -350,7 +390,6 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     if (file) {
       Papa.parse(file, {
         complete: (result: ParseResult<string[]>) => {
-          
           if (result.data && result.data.length > 0) {
             setCsvData(result.data);
             setModalIsOpen(true);
@@ -375,18 +414,6 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
           <SpinerLoading /> // to load spinner
         ) : (
           <div className="card-body">
-            {/*<div className="mt-1 mb-1">
-              {displaySuccess && (
-                <div className="alert alert-success" role="alert">
-                  Mark Add successfully
-                </div>
-              )}
-              {displayWarning && (
-                <div className="alert alert-danger" role="alert">
-                  All fields must be filled out
-                </div>
-              )}
-            </div>*/}
             <form method="POST">
               <div className="row">
                 <div className="col-md-3 mb-3">
@@ -414,7 +441,10 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
                   >
                     <option value="">Select a Course</option>
                     {evaluationData.map((item) => (
-                      <option key={item.assignmentName} value={item.assignmentName}>
+                      <option
+                        key={item.assignmentName}
+                        value={item.assignmentName}
+                      >
                         {item.assignmentName}
                       </option>
                     ))}
@@ -496,7 +526,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
                         name="author"
                         required
                         onChange={(e) =>
-                          setassignmentScore(Number(e.target.value))
+                          setassignmentScore((e.target.value.replace(/\s+/g, '')))
                         }
                         value={assignmentScore}
                       />
@@ -510,14 +540,15 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
                         className="form-control"
                         name="author"
                         onChange={(e) =>
-                          setreassignmentScore(Number(e.target.value))
+                          setreassignmentScore((e.target.value))
                         }
                         value={reassignmentScore}
                       />
                     </div>
                   </div>
                 </>
-              ) : ( //score reading will be desplayed
+              ) : (
+                //score reading will be desplayed
                 <div className="container mt-4">
                   <h3 className="mb-4">Score Reader</h3>
                   <input
@@ -527,42 +558,50 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
                     className="form-control mb-4"
                   />
                   {csvData && csvData.length > 0 && (
-                    
-                   <Modal isOpen={modalIsOpen} onRequestClose={closeModal} >
-                   <div className="modal-content">
-                     <div className="modal-header card-headr-color">
-                       <h5 className="modal-title">Score Sheet</h5>
-                       <button type="button" className="btn-close" onClick={closeModal}></button>
-                     </div>
-                     <div className="modal-body">
-                       <table className="table">
-                         <thead>
-                           <tr>
-                             {csvData.length > 0 &&
-                               Object.keys(csvData[0]).map((header, index) => (
-                                 <th key={index}>{header}</th>
-                               ))}
-                           </tr>
-                         </thead>
-                         <tbody>
-                           {csvData.map((row, rowIndex) => (
-                             <tr key={rowIndex}>
-                               {Object.values(row).map((cell, cellIndex) => (
-                                 <td key={cellIndex}>{cell}</td>
-                               ))}
-                             </tr>
-                           ))}
-                         </tbody>
-                       </table>
-                     </div>
-                     <div className="modal-footer">
-                       <button type="button" className="btn btn-secondary" onClick={closeModal}>
-                         Close
-                       </button>
-                     </div>
-                   </div>
-                 </Modal>
-                 
+                    <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
+                      <div className="modal-content">
+                        <div className="modal-header card-headr-color">
+                          <h5 className="modal-title">Score Sheet</h5>
+                          <button
+                            type="button"
+                            className="btn-close"
+                            onClick={closeModal}
+                          ></button>
+                        </div>
+                        <div className="modal-body">
+                          <table className="table">
+                            <thead>
+                              <tr>
+                                {csvData.length > 0 &&
+                                  Object.keys(csvData[0]).map(
+                                    (header, index) => (
+                                      <th key={index}>{header}</th>
+                                    )
+                                  )}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {csvData.map((row, rowIndex) => (
+                                <tr key={rowIndex}>
+                                  {Object.values(row).map((cell, cellIndex) => (
+                                    <td key={cellIndex}>{cell}</td>
+                                  ))}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="modal-footer">
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={closeModal}
+                          >
+                            Close
+                          </button>
+                        </div>
+                      </div>
+                    </Modal>
                   )}
                 </div>
               )}
@@ -590,7 +629,3 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     </div>
   );
 };
-function async(arg0: boolean) {
-  throw new Error("Function not implemented.");
-}
-

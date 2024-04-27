@@ -11,10 +11,12 @@ import { Security, LoginCallback, SecureRoute } from "@okta/okta-react";
 import LoginWidget from "./Auth/LoginWidget";
 import { ManageAddScore } from "./Lecture/layouts/AddScore/ManageAddScore/ManageAddScore";
 
+
 // to configure okta authentication
 const oktaAuth = new OktaAuth(oktaConfig);
 
 export const App = () => {
+ 
   // to handle authentication
   const customAuthHandler = () => {
     history.push("/login");
@@ -26,6 +28,7 @@ export const App = () => {
     history.replace(toRelativeUrl(orginalUri || "/", window.location.origin));
   };
 
+  
   // to handle routing
   return (
     <div className="d-flex flex-column min-vh-100">
@@ -52,9 +55,10 @@ export const App = () => {
               render={() => <LoginWidget config={oktaConfig} />}
             />
             <Route path="/login/callback" component={LoginCallback} />
-            <SecureRoute path={"/lecture"}>
-              <ManageAddScore />
-            </SecureRoute>
+              <SecureRoute path="/lecture">
+                <ManageAddScore />
+              </SecureRoute>
+              
           </Switch>
         </div>
         <Footer />
