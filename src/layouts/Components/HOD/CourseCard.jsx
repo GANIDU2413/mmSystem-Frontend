@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import HODMarksReturnSheet from '../../HOD/HODMarksReturnSheet';
+import { NavebarHOD } from '../../HOD/NavebarHOD';
 
 export default function CourseCard(props) {
 
@@ -61,7 +62,8 @@ export default function CourseCard(props) {
     
        return (
         <>
-           <div className="row">
+           <div className="row" style={{marginTop:"70px", padding:"2%"}}>
+            <NavebarHOD />
              {
                cidN && cidN.length > 0 ? (
                  cidN.map((courseInfo, index) => (

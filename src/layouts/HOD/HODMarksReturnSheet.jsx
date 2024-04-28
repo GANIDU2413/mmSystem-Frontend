@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
+import { NavebarHOD } from './NavebarHOD';
 
 export default function HODMarksReturnSheet(props) {
     const [marks, setMarks] = useState([]);
@@ -13,6 +14,7 @@ export default function HODMarksReturnSheet(props) {
     const { course_id, course_name } = useParams();
     const [approval_level, setApprovalLevel] = useState('');
     const history = useHistory();
+    const [isChecked, setIsChecked] = useState(false);
 
     useEffect(() => {
         result();
@@ -75,8 +77,11 @@ export default function HODMarksReturnSheet(props) {
 
     return (
         <>
-            <h1>{course_name} - {course_id}</h1>
-            <table className="table shadow table-bordered" style={{ marginTop: "30px" }}>
+            <NavebarHOD />
+            <div className=' container' style={{marginTop:"70px"}}>
+            
+            <h2>{course_name} - {course_id}</h2>
+            <table className="table shadow table-bordered" style={{ marginTop: "30px", width: '100%' }}>
                 <thead>
                     <tr>
                         <th scope="col">Student_ID</th>
@@ -269,12 +274,37 @@ export default function HODMarksReturnSheet(props) {
                     }
                 </tbody>
             </table>
-            <form onSubmit={handleReturn}>
-                <input type='submit' value="Return" className="btn shadow btn-outline-success btn-sm w-25 float-end my-4" id="submitbtn" />
-            </form>
+            <div >
+                <form onSubmit={handleReturn}>
+                <input
+                    type='submit'
+                    value="Return"
+                    className="btn shadow btn-outline-success btn-sm w-25 float-end my-4"
+                    id="submitbtn"
+                    style={{ float: 'right', width: '10px'}}
+                />
+
+                </form>
+            </div>
+            
+           
+
             <form onSubmit={handleSubmit}>
-                <input to={``} type="submit" value="Request Certify" className="btn btn-outline-success btn-sm" id="submitbtn" /> <br /><br />
+                <div className="mb-3 form-check">
+                    <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="check"
+                        checked={isChecked}
+                        onChange={() => setIsChecked(!isChecked)}
+                    />
+                    <label className="form-check-label" htmlFor="check">
+                        I affirm that I have checked the results and confirm the accuracy for approval.
+                    </label>
+                </div>
+                <input to={``} type="submit" value="Request Certify" className="btn btn-outline-success btn-sm"  id="submitbtn" disabled={!isChecked} style={{ width: '150px'}}/> <br /><br />
             </form>
+            </div>
         </>
     )
 }

@@ -3,8 +3,8 @@ import { useOktaAuth } from "@okta/okta-react";
 import { NavebarSA } from '../SystemAnalyst/NavebarSA';
 import { NavebarAR } from '../Components/AR/NavBarAR/NavebarAR';
 import { Navebar } from '../../Lecture/layouts/NavbarAndFooter/Navebar';
-import { NavebarHOD } from '../HOD/NavebarHOD';
 import { NavebarDean } from '../Dean/NavebarDean';
+import { NavebarHOD } from '../HOD/NavebarHOD';
 
 
 export default function MainNavbar() {
