@@ -8,11 +8,13 @@ export default function ViewMarks(props:any) {
   const { authState } = useOktaAuth();
   var department_id = props.department_id;
 
- if (authState?.accessToken?.claims.userType !== 'ar') {
-   return <Redirect to="/ar" />;
-   }
+//  if (authState?.accessToken?.claims.userType !== 'ar') {
+//    return <Redirect to="/ar" />;
+//    }
   return (
     <div>
+       
+        
         <NavebarAR/>
         <LevelSelection department_id={department_id} level_selection_tpe={"View student marks"}/>
 
