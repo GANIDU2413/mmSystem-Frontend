@@ -30,11 +30,6 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   const [level, setlevel] = useState("");
   const [semester, setSemester] = useState(" ");
   const [courseName, setCourseName] = useState<string>("");
-  // to keep type as StudentCourseEnroll model.
-
-  // to handle Display Worning and Success
-  // const [displayWarning, setDisplayWaring] = useState(false);
-  // const [displaySuccess, setDisplaySuccess] = useState(false);
 
   // to handle Spring Loading
   const [isLoading, setIsloading] = useState(false);
@@ -143,34 +138,6 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     }
   };
 
-  // // to get evaluation criteria  by using course id
-  // const fetchEvaluationCriteriaType = async (evaluationCourseId: string) =>{
-  //    try{
-  //     const criteriaUrl = `http://localhost:9090/api/evaluationCriterias/search/findEvaluationCriteriaByCourseId?courseId=${evaluationCourseId}`;
-
-  //     const response = await fetch(criteriaUrl);
-
-  //     if(!response.ok){
-  //       toastr.error("Network Error", "Error" + " " + response.status);
-  //     }
-
-  //     const responseJeson = await response.json();
-
-  //     const responseData: EvaluationCriteriaModel[] = responseJeson._embedded.evaluationCriterias.map(
-  //       (item: any) => new EvaluationCriteriaModel(item.courseId,item.type,
-  //         item.assignmentType,item.noOfConducted,
-  //         item.noOfTaken,item.percentage,
-  //         item.description)
-  //     );
-
-  //     //setEvaluationNameData(responseData);
-  //     //console.log(responseData);
-
-  //    }catch(error:any){
-  //     toastr.error("Network Error" + " " + error.messages, "Error!");
-  //    }
-  // };
-
   // to get evaluation criteria name by course id
   const fetchEvaluationCriteriaName = async (evaluationCourseId: string) => {
     try {
@@ -207,7 +174,6 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   const handleStudentSelect = (setStudent: string): void => {
     setStudentID(setStudent);
     setYear(extractYear(setStudent));
-   
   };
   // to handle assignmment type acordantly user's input.
   const handleAssignmentType = (setAssignmentType: string): void => {
@@ -216,7 +182,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     const evaluationNameString = setAssignmentType;
     const evaluationName = evaluationNameString.replace(/\d+/g, "");
     setEvaluationNameData(evaluationName);
-    fetchStudentDetails(courseID,setAssignmentType);
+    fetchStudentDetails(courseID, setAssignmentType);
   };
 
   // to filter the year by using the student ID.
@@ -253,90 +219,92 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // to handle submition of score
   async function submitScore() {
     setIsloading(true);
-    
 
     // to feed student score
     const url = `http://localhost:9090/api/lecture/add/score`;
     // to ensure validation of data feelds
 
     try {
-       // Validate if the input is a positive number
-    if (!(parseFloat(assignmentScore) >= 0 && parseFloat(assignmentScore) <= 100)) {
-      toastr.error("Input is not valid", "Error!");
-    }else{
+      // Validate if the input is a positive number
       if (
-        studentID !== "Select a Student" &&
-        courseID !== "Select a Course" &&
-        assignmentType !== "Select an Assignment Type" &&
-        assignmentScore !== null &&
-        assignmentScore === reassignmentScore.replace(/\s+/g, '') &&
-        year !== "" &&
-        level !== "" &&
-        semester !== "" &&
-        evaluationNameData !== ""
+        !(
+          parseFloat(assignmentScore) >= 0 && parseFloat(assignmentScore) <= 100
+        )
       ) {
-        // to store data temporary
-        const score: AddScoreRequest = new AddScoreRequest(
-          studentID,
-          courseID,
-          year,
-          assignmentType, // Quize1 , Quize2 , Assignment1 etc
-          assignmentScore,
-          level,
-          semester,
-          evaluationNameData // Quize , Asssignment
-        );
-
-        // to handle the behaviors of data that can be passed into backend.
-        const requestOptions = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(score),
-        };
-
-        // to submit score data into the backend.
-        const submitScoreResponse = await fetch(url, requestOptions);
-        updateStudentScoreState();
-        
-       
-       
-        //  to check wether submition is successful or not.
-        if (!submitScoreResponse.ok) {
-          setIsloading(false);
-          toastr.error(
-            `Failed to submit score. Status:
-         ${submitScoreResponse.status}`,
-            "Response Error!"
-          );
-        }
-
-        setIsloading(false);
-
-        // to set default state of score feeding  feelds.
-        setassignmentScore("0");
-        setreassignmentScore("0");
-        //setassignmentType("Select an Assignment Type")
-        setStudentID("Select a Student");
-        setYear("");
-        setCourseID("Select a Course");
-        setassignmentType("Select an Assignment Type");
-        setSemester("");
-        setlevel("");
-        setCourseName("");
-        
-        // to desplay succuss alart.
-        // setDisplayWaring(false);
-        // setDisplaySuccess(true);
-        toastr.success(studentID + " Mark Add successfully.", "Succuss!");
-      } else {
-        setIsloading(false);
-        // to desplay worning alart.
-        // setDisplayWaring(true);
-        // setDisplaySuccess(false);
         toastr.error("Input is not valid", "Error!");
-      }}
+      } else {
+        if (
+          studentID !== "Select a Student" &&
+          courseID !== "Select a Course" &&
+          assignmentType !== "Select an Assignment Type" &&
+          assignmentScore !== null &&
+          assignmentScore === reassignmentScore.replace(/\s+/g, "") &&
+          year !== "" &&
+          level !== "" &&
+          semester !== "" &&
+          evaluationNameData !== ""
+        ) {
+          // to store data temporary
+          const score: AddScoreRequest = new AddScoreRequest(
+            studentID,
+            courseID,
+            year,
+            assignmentType, // Quize1 , Quize2 , Assignment1 etc
+            assignmentScore,
+            level,
+            semester,
+            evaluationNameData // Quize , Asssignment
+          );
+
+          // to handle the behaviors of data that can be passed into backend.
+          const requestOptions = {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(score),
+          };
+
+          // to submit score data into the backend.
+          const submitScoreResponse = await fetch(url, requestOptions);
+          updateStudentScoreState();
+
+          //  to check wether submition is successful or not.
+          if (!submitScoreResponse.ok) {
+            setIsloading(false);
+            toastr.error(
+              `Failed to submit score. Status:
+         ${submitScoreResponse.status}`,
+              "Response Error!"
+            );
+          }
+
+          setIsloading(false);
+
+          // to set default state of score feeding  feelds.
+          setassignmentScore("0");
+          setreassignmentScore("0");
+          //setassignmentType("Select an Assignment Type")
+          setStudentID("Select a Student");
+          setYear("");
+          setCourseID("Select a Course");
+          setassignmentType("Select an Assignment Type");
+          setSemester("");
+          setlevel("");
+          setCourseName("");
+
+          // to desplay succuss alart.
+          // setDisplayWaring(false);
+          // setDisplaySuccess(true);
+          toastr.success(studentID + " Mark Add successfully.", "Succuss!");
+        } else {
+          setIsloading(false);
+          // to desplay worning alart.
+          // setDisplayWaring(true);
+          // setDisplaySuccess(false);
+          toastr.error("Input is not valid", "Error!");
+        }
+      }
     } catch (error: any) {
       // Handle network errors
       //console.error("Network Error:", error.messages);
@@ -344,7 +312,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
       toastr.error("Network Error occurred.", "Error!");
     } finally {
       setIsloading(false);
-    } 
+    }
   }
 
   // after submmiting , student's state should be updated.
@@ -403,26 +371,42 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     }
   };
 
+  // to upload scv file
   const handleCsvSumit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if(file){
+    if (file) {
       const formData = new FormData();
-      formData.append('file',file);
-      
-      try{
-        await axios.post('http://localhost:9090/api/lecture/upload/studentScore',formData, {
-          
-        headers: {
-          'Content-Type' : 'multipart/from-data',
-        },
-        });
-        toastr.success("CSV File upload successfully");
-      }catch(error){
-        console.log(error)
-        toastr.error('Faild to upload CSV file');
+      formData.append("file", file);
+
+      try {
+        const response = await axios.post(
+          "http://localhost:9090/api/lecture/upload/csvFile",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/from-data",
+            },
+          }
+        );
+        if (
+          response.data ===
+          "Failed to process CSV file: No student enrolled in the course with courseId: ICT1112 and assignmentType: Quize1"
+        ) {
+          toastr.error(response.data);
+        } else {
+          toastr.success("CSV File upload successfully");
+        }
+
+        console.log(response.data);
+      } catch (error) {
+        toastr.error("Faild to upload CSV file");
       }
     }
-  }
+  };
+
+ 
+  // // Download CSV file with headers only
+  // downloadCSVWithHeaders(headers, 'headers.csv')
   // to ensure the authentication.
   if (authState?.accessToken?.claims.userType === undefined) {
     return <Redirect to="/home" />;
@@ -550,7 +534,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
                         name="author"
                         required
                         onChange={(e) =>
-                          setassignmentScore((e.target.value.replace(/\s+/g, '')))
+                          setassignmentScore(e.target.value.replace(/\s+/g, ""))
                         }
                         value={assignmentScore}
                       />
@@ -563,12 +547,28 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
                         type="text"
                         className="form-control"
                         name="author"
-                        onChange={(e) =>
-                          setreassignmentScore((e.target.value))
-                        }
+                        onChange={(e) => setreassignmentScore(e.target.value)}
                         value={reassignmentScore}
                       />
                     </div>
+                  </div>
+
+                  <div className="column">
+                    <button
+                      type="button"
+                      className="btn btn-primary mt-3 me-2"
+                      onClick={submitScore} // call submit score method
+                    >
+                      Submit State
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-success mt-3 ms-2"
+                      onClick={CompleteCourse} // call submit score method
+                    >
+                      Reset
+                    </button>
                   </div>
                 </>
               ) : (
@@ -627,25 +627,32 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
                       </div>
                     </Modal>
                   )}
+                  <div className="column">
+                    <button
+                      type="button"
+                      className="btn btn-primary mt-3 ms-2"
+                      onClick={handleCsvSumit} // call submit score method
+                    >
+                      Submit State
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-success mt-3 ms-2"
+                      onClick={CompleteCourse} // call submit score method
+                    >
+                      Reset
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-success mt-3 ms-2"
+                      onClick={CompleteCourse} // call submit score method
+                    >
+                      Download CSV file
+                    </button>
+                  </div>
                 </div>
               )}
-              <div className="column">
-                <button
-                  type="button"
-                  className="btn btn-primary mt-3 me-2"
-                  onClick={submitScore} // call submit score method
-                >
-                  Submit State
-                </button>
-
-                <button
-                  type="button"
-                  className="btn btn-success mt-3 ms-2"
-                  onClick={CompleteCourse} // call submit score method
-                >
-                  Reset
-                </button>
-              </div>
             </form>
           </div>
         )}
