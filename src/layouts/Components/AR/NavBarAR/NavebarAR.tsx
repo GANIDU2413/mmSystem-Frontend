@@ -58,9 +58,9 @@ export const NavebarAR = () => {
           aria-labelledby="offcanvasNavbarLabel"
         >
           <div className="offcanvas-header">
-            <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-            Mr. {authState?.idToken?.claims.name /*Display user's username*/}
-            </h5>
+            <h6 className="offcanvas-title" id="offcanvasNavbarLabel">
+            Hello, {authState?.idToken?.claims.name /*Display user's username*/}
+            </h6>
             <button
               type="button"
               className="btn-close"

@@ -1,4 +1,4 @@
-.card {
+.functionCard {
     background-color: rgb(245, 245, 245);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.5s ease,color 0.2s ease, background-color 0.5s ease;;
@@ -8,19 +8,19 @@
     width: 19rem;
 }
 
-.card:hover {
+.functionCard:hover {
     transform: scale(1.05); /* Increase size on hover */
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
     background-color: rgb(167, 167, 167);
     color: white;
   }
 
-  .btn-primary {
+  .home-page-class-button {
     width: 150px;
     border-radius: 10px;
   }
 
-.container {
+.functionCardContainer {
     margin-top: 100px;
     align-items: center;
     align-content: center;
