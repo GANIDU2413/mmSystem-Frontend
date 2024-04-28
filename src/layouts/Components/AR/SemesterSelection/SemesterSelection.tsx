@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import CourseSelection from '../CourseSelection/CourseSelection'
+import CourseSelection from '../CourseSelection/CourseSelection';
 
 export default function SemesterSelection(props :any) {
   var level=props.level;
@@ -18,7 +18,8 @@ export default function SemesterSelection(props :any) {
 
   return (
     
-    <div style={{marginTop:5,marginLeft:0,marginRight:0}}>
+    <div style={{marginTop:8,marginLeft:0,marginRight:0}}>
+      
         <ul className="nav nav-pills mb-3" id="semesterSelectionTab" role="tablist">
       
             <li className="nav-item" role="presentation">

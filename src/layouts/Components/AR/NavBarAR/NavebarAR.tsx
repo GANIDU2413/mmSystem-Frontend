@@ -1,8 +1,9 @@
 import { Link, NavLink } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
 import { SpinerLoading } from "../../../Utils/SpinerLoading";
+import { IoMenuSharp } from "react-icons/io5";
 
-export const Navebar = () => {
+export const NavebarAR = () => {
 
   const {oktaAuth , authState} = useOktaAuth();
 
@@ -10,7 +11,10 @@ export const Navebar = () => {
     return <SpinerLoading/>
   }
 
-  const handleLogout = async () => oktaAuth.signOut();
+  const handleLogout = async () =>{
+    oktaAuth.signOut();
+  }
+  
 
   console.log(authState);
   return (
@@ -22,8 +26,14 @@ export const Navebar = () => {
           data-bs-target="#offcanvasNavbar"
           aria-controls="offcanvasNavbar"
           href="#"
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+          }}
         >
-          Faculty Of Technology, Marking Management System 
+          <IoMenuSharp size={35} /> Faculty Of Technology, Marking Management System 
         </a>
         <ul className="navbar-nav ms-auto">
            {!authState.isAuthenticated?
@@ -49,7 +59,7 @@ export const Navebar = () => {
         >
           <div className="offcanvas-header">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              Hi, Assistant Registrar
+            Mr. {authState?.idToken?.claims.name /*Display user's username*/}
             </h5>
             <button
               type="button"
@@ -65,11 +75,24 @@ export const Navebar = () => {
                  Dashboard
                 </a>
               </li>
+              
               <li className="nav-item">
                 <a className="nav-link" href="#">
                   Create Results Board
                 </a>
               </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/viewMedicals">
+                  View Medical List
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/viewEStarList">
+                  Update E* Grades With Medicals
+                </a>
+              </li>
+
+              {/* <hr></hr> */}
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -78,7 +101,7 @@ export const Navebar = () => {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  View and certify marks
+                  View marks
                 </a>
                 <ul className="dropdown-menu">
                   <li>
@@ -104,9 +127,41 @@ export const Navebar = () => {
                   </li>
                 </ul>
               </li>
+              {/* <hr></hr> */}
+
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Certify marks
+                </a>
+                <ul className="dropdown-menu">
+                  <li>
+                    <a className="dropdown-item" href="/arcerfityictmarks">
+                      Department of ICT
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="/arcerfityetmarks">
+                      Department of ET
+                    </a>
+                  </li>
+                  <li></li>
+                  <li>
+                    <a className="dropdown-item" href="/arcertifybstmarks">
+                      Department of BST
+                    </a>
+                  </li>
+                  
+                </ul>
+              </li>
             </ul>
             
-            <hr></hr>
+            
           </div>
         </div>
       </div>

@@ -57,7 +57,7 @@ export default function HODMarksEditForm() {
   }
   return (
     <div className="container">
-      <NavebarHOD />
+      
       <div className="row">
         <div
           className="col-md-6 offset-md-3 boder p-4   shadow "

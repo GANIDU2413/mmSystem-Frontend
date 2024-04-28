@@ -66,18 +66,18 @@ export const NavebarSA = () => {
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/sysandashboard">
+                <a className="nav-link active" aria-current="page" href="/system_analysis">
                   Dashboard
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/userregsysan">
-                  User Registration
+                <a className="nav-link" href="/manageallstudents">
+                  Student Management
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/viewalllec">
-                  User Management
+                <a className="nav-link" href="/managestaff">
+                  Staff Management
                 </a>
               </li>
               <li className="nav-item">
@@ -92,246 +92,18 @@ export const NavebarSA = () => {
               </li>
 
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/viewalllec">
+                <a className="nav-link active" aria-current="page" href="/coursemodule">
+                  Course Module
+                </a>
+              </li>
+
+              <li className="nav-item">
+                <a className="nav-link active" aria-current="page" href="/assignleccourse">
                   Courses for Lecturers
                 </a>
               </li>
               
               <hr></hr>
-              {/* <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  
-                >
-                  Department of ICT
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(1, 1)}
-                    >
-                      Level I Sem I
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(1, 2)}
-                    >
-                      Level I Sem II
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(2, 1)}
-                    >
-                      Level II Sem I
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(2, 2)}
-                    >
-                      Level II Sem II
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(3, 1)}
-                    >
-                      Level III Sem I
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(3, 2)}
-                    >
-                      Level III Sem II
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(4, 1)}
-                    >
-                      Level IV Sem I
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(4, 2)}
-                    >
-                      Level IV Sem II
-                    </p>
-                  </li>
-                </ul>
-              </li>
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  
-                >
-                  Department of ET
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(1, 1)}
-                    >
-                      Level I Sem I
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(1, 2)}
-                    >
-                      Level I Sem II
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(2, 1)}
-                    >
-                      Level II Sem I
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(2, 2)}
-                    >
-                      Level II Sem II
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(3, 1)}
-                    >
-                      Level III Sem I
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(3, 2)}
-                    >
-                      Level III Sem II
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(4, 1)}
-                    >
-                      Level IV Sem I
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(4, 2)}
-                    >
-                      Level IV Sem II
-                    </p>
-                  </li>
-                </ul>
-              </li>
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  
-                >
-                  Department of BST
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(1, 1)}
-                    >
-                      Level I Sem I
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(1, 2)}
-                    >
-                      Level I Sem II
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(2, 1)}
-                    >
-                      Level II Sem I
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(2, 2)}
-                    >
-                      Level II Sem II
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(3, 1)}
-                    >
-                      Level III Sem I
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(3, 2)}
-                    >
-                      Level III Sem II
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(4, 1)}
-                    >
-                      Level IV Sem I
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="dropdown-item"
-                      // onClick={() => handleButtonClick(4, 2)}
-                    >
-                      Level IV Sem II
-                    </p>
-                  </li>
-                </ul>
-              </li> */}
             </ul>
 
             
