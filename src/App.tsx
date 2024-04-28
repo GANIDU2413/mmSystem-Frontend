@@ -46,6 +46,7 @@ import AttendenceEligibilityManage from "./layouts/SystemAnalyst/Attendence/Atte
 import StudentsManagement from "./layouts/SystemAnalyst/UserManagement/StudentsManagement";
 import ManageCourseModule from "./layouts/SystemAnalyst/CourseModule/ManageCourseModule";
 import CertifyMarksPage from "./layouts/AR/CertifyMarksPage/CertifyMarksPage";
+import ViewMedicalPage from "./layouts/AR/ViewMedicalTablePage/ViewMedicalPage";
 
 
 
@@ -135,7 +136,7 @@ export const App = () => {
           </Route>
 
           <Route path="/viewMedicals">   {/* Link to view medical page */}
-            <DeanFinalMarkSheet approved_level={"HOD"}/>
+            <ViewMedicalPage/>
           </Route>
           {/* AR navigations ends here ---------------------------------------------*/}
 

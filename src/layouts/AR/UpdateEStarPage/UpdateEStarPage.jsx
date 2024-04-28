@@ -33,7 +33,7 @@ export default function UpdateEStarPage() {
 
     const loadAllMedicalSubmissions = async() => {   //Function to load the medical submission details from the backend
 
-        const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissions/${studentDetails.academic_year}`);   //Get all the medical submission details from the backend
+        const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissionsByYear/${studentDetails.academic_year}`);   //Get all the medical submission details from the backend
         
         if(result.data.length>0){    //condition to check if the medical list is uploaded
             setMedicalListUploaded(true);   //Set the medicalListUploaded state to true if the medical list is uploaded

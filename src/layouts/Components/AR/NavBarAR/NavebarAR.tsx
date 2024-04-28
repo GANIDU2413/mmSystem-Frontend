@@ -82,7 +82,7 @@ export const NavebarAR = () => {
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
+                <a className="nav-link" href="/viewMedicals">
                   View Medical list
                 </a>
               </li>
