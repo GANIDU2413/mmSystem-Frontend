@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function ManageCourseModule() {
     const [course_name, setCourseName] = useState('');
@@ -25,8 +28,50 @@ export default function ManageCourseModule() {
         }
     };
 
+    const validateForm = () => {
+        // Example validation: check if course_name is not empty
+        if (!course_name) {
+            toast.error("Course name is required.");
+            return false;
+        }
+        if (!course_id) {
+            toast.error("Course ID is required.");
+            return false;
+        }
+        if (!type) {
+            toast.error("Module type is required.");
+            return false;
+        }
+        if (!department_id) {
+            toast.error("Department is required.");
+            return false;
+        }
+        if (!credit) {
+            toast.error("Course credit is required.");
+            return false;
+        }
+        if (!hours) {
+            toast.error("Course hours is required.");
+            return false;
+        }
+        if (!level) {
+            toast.error("Level is required.");
+            return false;
+        }
+        if (!semester) {
+            toast.error("Semester is required.");
+            return false;
+        }
+
+        return true;
+    };
+
     const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+        return; // Exit if validation fails
+    }
 
     const courseData = {
         course_name,
@@ -42,7 +87,7 @@ export default function ManageCourseModule() {
     try {
         const response = await axios.post('http://localhost:9090/api/courses/insertacourse', courseData);
         console.log(response.data);
-        alert('Course added successfully!');
+        toast.success('Course added successfully!');
       // Optionally, clear the form fields after successful submission
         setCourseName('');
         setCourseId('');
@@ -55,12 +100,15 @@ export default function ManageCourseModule() {
         fetchData();
     } catch (error) {
         console.error('Error adding course:', error);
-        alert('Error adding course. Please try again.');
+        toast.error('Error adding course. Please try again.');
     }
  };
 
+ 
+
  return (
     <div className='container' style={{marginTop:"70px"}}>
+        <ToastContainer/>
         <div className=' mt-4 mb-5'>
         <div className='h2 mt-lg-5'>Manage Course Module</div>
         </div>
