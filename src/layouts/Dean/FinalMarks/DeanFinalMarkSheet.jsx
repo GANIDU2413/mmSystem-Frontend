@@ -107,7 +107,7 @@ export default function DeanFinalMarkSheet(props ) {
          toast.success("Approval level updated successfully");
        
          setTimeout(() => {
-           history.push(`/dean`);
+          history.goBack();
       }, 3000);
       } catch (error) {
          if (error.code === 'ERR_NETWORK') {
@@ -172,14 +172,6 @@ export default function DeanFinalMarkSheet(props ) {
                         ))}
                  </tbody>
                 </table>
-              </div>
-              <div className="py-4">
-                <button type="submit" className="btn btn-outline-success btn-sm rounded-pill" id="submitbtn">
-                   Certify
-                </button>
-                <button type="button" className="btn btn-outline-danger mx-2 btn-sm rounded-pill" id="clearbtn">
-                 Clean
-                </button>
               </div>
 
             <form onSubmit={handleSubmit}>
