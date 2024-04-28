@@ -136,8 +136,8 @@ export const App = () => {
             <StudentCourseEditLayout/>
           </Route>
 
-          <Route path="/deanFinalMarkSheet">
-            <DeanFinalMarkSheet/>
+          <Route path="/deanFinalMarkSheet/:level/:semester">
+            <DeanFinalMarkSheet approved_level={"AR"}/>
           </Route>
 
           <Route path="/thirdyeareligibility">
@@ -242,7 +242,7 @@ export const App = () => {
               <HODDashBoard/>
             </SecureRoute>
 
-            <SecureRoute path={"/Dean"}>
+            <SecureRoute path={"/dean"}>
               <DeanDashBoard/>
             </SecureRoute>
 

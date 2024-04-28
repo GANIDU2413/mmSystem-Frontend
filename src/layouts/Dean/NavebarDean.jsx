@@ -3,7 +3,7 @@ import { useOktaAuth } from "@okta/okta-react";
 import { SpinerLoading } from "../Utils/SpinerLoading";
 import { IoMenuSharp } from "react-icons/io5";
 
-export const NavebarDean = ({ handleButtonClick }) => {
+export const NavebarDean = () => {
   const { oktaAuth, authState } = useOktaAuth();
 
   if (!authState) {
@@ -66,16 +66,18 @@ export const NavebarDean = ({ handleButtonClick }) => {
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">
+                <a className="nav-link active" aria-current="page" href="dean">
                   Dashboard
                 </a>
               </li>
 
-              <li className="nav-item">
+              
+
+              {/* <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="#">
                   Student Details
                 </a>
-              </li>
+              </li> */}
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -88,68 +90,44 @@ export const NavebarDean = ({ handleButtonClick }) => {
                 </a>
                 <ul className="dropdown-menu">
                   <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(1, 1)}
-                    >
-                      Level I Sem I
-                    </p>
+                      <a href="/deanFinalMarkSheet/1/1" className="dropdown-item">
+                          Level I Sem I
+                      </a>
                   </li>
                   <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(1, 2)}
-                    >
+                      <Link to="/deanFinalMarkSheet/1/2" className="dropdown-item">
                       Level I Sem II
-                    </p>
+                      </Link>
                   </li>
                   <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(2, 1)}
-                    >
+                      <Link to="/deanFinalMarkSheet/2/1" className="dropdown-item">
                       Level II Sem I
-                    </p>
+                      </Link>
                   </li>
                   <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(2, 2)}
-                    >
+                    <Link to="/deanFinalMarkSheet/2/2" className="dropdown-item">
                       Level II Sem II
-                    </p>
+                    </Link>
                   </li>
                   <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(3, 1)}
-                    >
-                      Level III Sem I
-                    </p>
+                    <a href="/deanFinalMarkSheet/3/1" className="dropdown-item">
+                        Level III Sem I
+                    </a>
                   </li>
                   <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(3, 2)}
-                    >
-                      Level III Sem II
-                    </p>
+                     <Link to="/deanFinalMarkSheet/3/2" className="dropdown-item">
+                        Level III Sem II
+                    </Link>
                   </li>
                   <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(4, 1)}
-                    >
+                     <Link to="/deanFinalMarkSheet/4/1" className="dropdown-item">
                       Level IV Sem I
-                    </p>
+                    </Link>
                   </li>
                   <li>
-                    <p
-                      className="dropdown-item"
-                      onClick={() => handleButtonClick(4, 2)}
-                    >
+                    <Link to="/deanFinalMarkSheet/4/2" className="dropdown-item">
                       Level IV Sem II
-                    </p>
+                    </Link>
                   </li>
                 </ul>
               </li>

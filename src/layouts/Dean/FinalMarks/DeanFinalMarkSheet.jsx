@@ -1,46 +1,37 @@
-import React, { useEffect, useState } from 'react'
-import { NavebarDean } from '../NavebarDean'
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router';
+import { ToastContainer, toast } from 'react-toastify';
 
-export default function DeanFinalMarkSheet() {
-    const [finalResults,setFinalResults] = useState([
-        {
-            student_id:"",
-            courses:[
-                {
-                    course_id:"",
-                    overall_score: "",
-                    grade:""
-                }
-            ]
-        }
-    ]);
+export default function DeanFinalMarkSheet(props ) {
+    const [finalResults, setFinalResults] = useState([]);
+    const [courses, setCourses] = useState([]);
+    const [students, setStudents] = useState([]);
+    const { level,semester } = useParams();
+    const[studentGPA, setStudentGPA] = useState([{}]);
 
-   // const[student,setStudent]=useState([]);
+    const[error, setError] = useState("");
+
+    const {approved_level}=props
+
+    //let approved_level = "HOD";
+
     
-
-    let level=3
-    let sem=1
-    let department_id="ICT"
-    let approved_level="HOD"  //AR
-
     const resultSheet = async () => {
         try {
-            const result = await axios.get(`http://localhost:9090/api/studentMarks/GetMarksByDLS/${department_id}/${level}/${sem}/${approved_level}`);
-            const data = result.data;
+            const result = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}`);
+            const data = result.data.content;
 
-            // Process data to group courses by student_id
-
-
-            // reduce: This method is used to transform the array of data into a new array where each student has an array of courses.
-            // acc: The accumulator that collects the processed data.
-            // curr: The current item being processed in the array.
-            //existingStudent: Checks if the current student already exists in the accumulator.
-            //If the student exists, it pushes the new course into the courses array of that student.
-            //If the student does not exist, it creates a new student object and pushes it into the accumulator.
-
-            const processedData = data.reduce((acc, curr) => {
+            
+            const gpa = await axios.get(`http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level},${semester}`);
+            const gpaData = gpa.data.content;
+            setStudentGPA(gpaData);
+            
+            
+            
+          const processedData = data.reduce((acc, curr) => {
                 const existingStudent = acc.find(student => student.student_id === curr.student_id);
+                const gpaInfo = gpaData.find(ele => ele.student_id === curr.student_id);
                 if (existingStudent) {
                     existingStudent.courses.push({
                         course_id: curr.course_id,
@@ -48,6 +39,7 @@ export default function DeanFinalMarkSheet() {
                         grade: curr.grade,
                     });
                 } else {
+                  
                     acc.push({
                         student_id: curr.student_id,
                         courses: [{
@@ -55,31 +47,112 @@ export default function DeanFinalMarkSheet() {
                             overall_score: curr.overall_score,
                             grade: curr.grade,
                         }]
+                        
                     });
+
+
                 }
                 return acc;
             }, []);
 
+            
+
             setFinalResults(processedData);
-            console.log(processedData);
+
+            const courseIdsSet = new Set();
+            processedData.forEach(student => {
+                student.courses.forEach(course => {
+                    courseIdsSet.add(course.course_id);
+                });
+            });
+            setCourses(Array.from(courseIdsSet));
+
+            
+
+            setStudents(processedData.map(student => student.student_id));
+            
+            
+            
+          
+            
+
         } catch (error) {
-            console.error("Error fetching data:", error);
-        }
+            console.error(error);
+            setError(error.message);
+          }
+        
     };
 
-
-    useEffect(()=>{
+    useEffect(() => {
         resultSheet();
-    }, [])
+    }, [level,semester,approved_level]);
 
-
-
-    
-  return (
-    <>
-        <div>
-            {/* <NavebarDean></NavebarDean> */}
+    return (
+        <div className="container">
+          {finalResults.length !== 0 ? (
+            <>
+              <div className="py-4" style={{ marginTop: "70px" }}>
+                <table className="overflow-x-scroll table border shadow" style={{ marginTop: "60px" }}>
+                 <thead>
+                    <tr>
+                      <th scope="col">Student ID</th>
+                      {courses.map((id, index) => (
+                        <React.Fragment key={index}>
+                          <th>{id}</th>
+                          <th>Grade</th>
+                        </React.Fragment>
+                      ))}
+                      <th scope="col">SGPA</th>
+                      <th scope="col">CGPA</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                        {finalResults.map((student, index) => (
+                            <tr key={index}>
+                            <td>{student.student_id}</td>
+                            {courses.map((id, index) => {
+                                const courseData = student.courses.find(
+                                (c) => c.course_id === id
+                                );
+                                return (
+                                <React.Fragment key={index}>
+                                    <td>{courseData ? courseData.overall_score : "-"}</td>
+                                    <td>{courseData ? courseData.grade : "-"}</td>
+                                </React.Fragment>
+                                );
+                            })}
+                            {studentGPA.map((gpa, index) => {
+                                    if(gpa.student_id === student.student_id){
+                                        return (
+                                            <React.Fragment key={index}>
+                                                <td>{gpa.sgpa}</td>
+                                                <td>{gpa.cgpa}</td>
+                                            </React.Fragment>
+                                        );
+                                    }
+                            })}
+                             
+                            </tr>
+                        ))}
+                 </tbody>
+                </table>
+              </div>
+              <div className="py-4">
+                <button type="submit" className="btn btn-outline-success btn-sm rounded-pill" id="submitbtn">
+                   Certify
+                </button>
+                <button type="button" className="btn btn-outline-danger mx-2 btn-sm rounded-pill" id="clearbtn">
+                 Clean
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className=' container' style={{ marginTop: '150px' }}>
+              <div className="alert alert-primary" role="alert">
+                {error}
+              </div>
+            </div>
+          )}
         </div>
-    </>
-  )
+      );
 }
