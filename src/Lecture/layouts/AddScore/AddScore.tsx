@@ -408,7 +408,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // // Download CSV file with headers only
   // downloadCSVWithHeaders(headers, 'headers.csv')
   // to ensure the authentication.
-  if (authState?.accessToken?.claims.userType === undefined) {
+  if (authState?.accessToken?.claims.userType !== "lecture") {
     return <Redirect to="/home" />;
   }
   // to desplay score feeding form

@@ -26,15 +26,12 @@ import CAMarkTable from "./layouts/HOD/CAMarkTable";
 import MarksCheckingForm from "./layouts/HOD/MarksCheckingForm";
 import SystemAnalystDashBoard from "./layouts/SystemAnalyst/SystemAnalystDashBoard";
 import SAUserReg from "./layouts/SystemAnalyst/SAUserReg";
-import ViewAllLecturers from "./layouts/SystemAnalyst/ViewAllLecturers";
 import AddLecturers from "./layouts/SystemAnalyst/AddLecturers";
 import EditLecturers from "./layouts/SystemAnalyst/EditLecturers";
 import EditUser from "./layouts/SystemAnalyst/EditUser";
 import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
-
 import { VcManagment } from "./VC/layouts/VcManagment";
-
 import LecturersManagement from "./layouts/SystemAnalyst/UserManagement/LecturersManagement";
 import AssignLecturerCourse from "./layouts/SystemAnalyst/AssignLecturer/AssignLecturerCourse";
 import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
@@ -250,7 +247,6 @@ export const App = () => {
             <ManageCourseModule/>
           </Route>
           
-           
             <Route path="/addscore">
               <AddScore option={true} />
             </Route>
