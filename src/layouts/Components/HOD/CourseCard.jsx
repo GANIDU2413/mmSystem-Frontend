@@ -1,18 +1,23 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
+import HODMarksReturnSheet from '../../HOD/HODMarksReturnSheet';
 
-export default function CourseCard({level,semester}) {
+export default function CourseCard(props) {
 
-    const[cidN,setCidN]=useState([])
+    const[cidN,setCidN]=useState([
+        {
+            course_id: '',
+            course_name: ''
+        }
+    ])
     const history = useHistory();
 
     const[errorMsg,seterrorMsg]=useState('');
+    const{level,semester}=useParams();
+    const{approved_level}=props;
    
     console.log(level,semester)
-
-    
-    let approved_level="course_coordinator"
     
 
     const result = async () => {
@@ -20,6 +25,7 @@ export default function CourseCard({level,semester}) {
             const list = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level}/${semester}/${approved_level}`);
             console.log(list.data);
             setCidN(list.data);
+            console.log(cidN);
             seterrorMsg("");
         } catch (error) {
             if (error.response && error.response.status === 404) {
@@ -44,37 +50,44 @@ export default function CourseCard({level,semester}) {
        }, [level, semester]); // This effect runs whenever level or semester changes
        
 
+       
       
-       const handleCardSelect = (course_id) => {
-        history.push(`/HODMarksReturnSheet/${course_id}`);
-        };
+       
+       
 
 
   
 
     
-  return (
-    <>
-
-
-
-        <div className="row">
-            {
-                cidN?.map((courseInfo,index)=>(
-                    
-                    <div className="card border-primary mb-3 mx-lg-3 shadow" style={{maxWidth:'18rem',cursor:'pointer'}} key={index} onClick={()=>(handleCardSelect(courseInfo.course_id))}>
-                        
-                        <div className="card-header">Course code : {courseInfo.course_id}</div>
-                        <div className="card-body ">
-                            {/* {console.log(courseInfo.course_id)} */}
-                            <h5 className="card-title"> {courseInfo.course_name} </h5>
-                            {/* {console.log(courseInfo.course_name)} */}
-                        </div>
-                    </div>  
-                ))
-            }
-                     
-        </div>
-    </>
-  )
+       return (
+        <>
+           <div className="row">
+             {
+               cidN && cidN.length > 0 ? (
+                 cidN.map((courseInfo, index) => (
+                   <div
+                     className="card border-primary mb-3 mx-lg-3 shadow"
+                     style={{ maxWidth: '18rem', cursor: 'pointer' }}
+                     key={index}
+                     onClick={() => history.push(`/HODMarksReturnSheet/${courseInfo.course_id}/${courseInfo.course_name}`)}
+                   >
+                     <div className="card-header">Course code : {courseInfo.course_id}</div>
+                     <div className="card-body">
+                       <h5 className="card-title">{courseInfo.course_name}</h5>
+                     </div>
+                   </div>
+                 ))
+               ) : (
+                <div className=' container' style={{ marginTop: '150px' }}>
+                <div className="alert alert-primary" role="alert">
+                  {errorMsg}
+                </div>
+                </div>
+               )
+             }
+           </div>
+        </>
+       );
+       
+           
 }

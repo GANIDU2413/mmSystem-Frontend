@@ -48,6 +48,8 @@ import ManageCourseModule from "./layouts/SystemAnalyst/CourseModule/ManageCours
 import CertifyMarksPage from "./layouts/AR/CertifyMarksPage/CertifyMarksPage";
 import ViewMedicalPage from "./layouts/AR/ViewMedicalTablePage/ViewMedicalPage";
 import CertifyError from "./layouts/Components/AR/CertifyError/CertifyError";
+import CourseCard from "./layouts/Components/HOD/CourseCard";
+
 
 
 
@@ -175,9 +177,13 @@ export const App = () => {
             <FinalStudentMarks/>
           </Route>
 
-          {/* <Route path="/HODDashBoard">
+          <Route path="/HODDashBoard">
             <HODDashBoard/>
-          </Route> */}
+          </Route>
+
+          <Route path="/CourseCard/:level/:semester">
+            <CourseCard approved_level={"course_coordinator"}/>
+          </Route>
 
           <Route path="/HODmarkstable">
             <HODMarksTable/>
@@ -195,7 +201,7 @@ export const App = () => {
             <HODMarksEditForm/>
           </Route>
 
-          <Route path="/HODMarksReturnSheet/:course_id">
+          <Route path="/HODMarksReturnSheet/:course_id/:course_name">
             <HODMarksReturnSheet/>
           </Route>
 
