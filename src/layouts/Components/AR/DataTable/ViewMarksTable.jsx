@@ -119,16 +119,16 @@ export default function ViewMarksTable() {
 
             studentsAvailability ?     // check whether there are students
             (
-              <table className="table table-striped">
-                <thead>
+              <table className="table table-striped data-table">
+                <thead className='tableHead'>
                   <tr>
                     <th style={{textAlign:"center",backgroundColor:'#ebe8e8',width:"250px"}} >
                       
-                      <select className="form-select w-100 mx-lg-2" aria-label="Default select example" onChange={(e) => handleSelectedValue(e.target.value)}>    {/* select box to select the student id */} 
-                        <option >All students</option>
+                      <select className="form-select w-100 mx-lg-2 id-selection" aria-label="Default select example" onChange={(e) => handleSelectedValue(e.target.value)}>    {/* select box to select the student id */} 
+                        <option className='selectionOption' >All students</option>
                         {
                           uniqueStudentIds.map((item)=>(
-                            <option key={item} value={item}> {item} </option>
+                            <option className='selectionOption' key={item} value={item}> {item} </option>
                           ))
                         }
                         
@@ -170,7 +170,7 @@ export default function ViewMarksTable() {
           
           )
         }
-        <div className='right-aligned-div'>   {/* back button */} 
+        <div className='right-aligned-div back-button-div'>   {/* back button */} 
           <BackButton/> &nbsp;&nbsp;&nbsp;
         </div><br/>
         </div>

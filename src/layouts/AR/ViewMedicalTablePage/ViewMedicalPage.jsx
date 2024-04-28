@@ -83,24 +83,24 @@ export default function ViewMedicalPage() {
             medicalAvailability ? (
 
 
-              <table className="table table-striped">
+              <table className="table table-striped dataTable">
 
 
-                <thead>
+                <thead className='table-body'>
 
 
                   <tr>
 
                     <th style={{textAlign:"center",backgroundColor:'#ebe8e8',width:"250px"}}>
                       
-                      <select className="form-select w-100 mx-lg-1" aria-label="Default select example" onChange={(e)=>{handleSelectedValue(e.target.value)}}>    {/* select box to select the acedemic year */} 
+                      <select className="form-select w-100 mx-lg-1  yearSelection" aria-label="Default select example" onChange={(e)=>{handleSelectedValue(e.target.value)}}>    {/* select box to select the acedemic year */} 
                           
-                          <option >All Years</option>
+                          <option className='selectionOptions' >All Years</option>
 
                           {
 
                             uniqueYears.map((year,index)=>(
-                              <option key={index}>
+                              <option className='selectionOptions' key={index}>
                                 {year}
                               </option>
                             ))
@@ -153,7 +153,7 @@ export default function ViewMedicalPage() {
               toast.error("No medical submissions available",{autoClose:3000})
             )
           }
-          <div className='right-aligned-div'>
+          <div className='right-aligned-div back-button-div'>
             <br/><BackButton/> <br/>&nbsp;
           </div>
             

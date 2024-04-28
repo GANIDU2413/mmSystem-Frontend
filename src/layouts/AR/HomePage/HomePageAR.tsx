@@ -24,7 +24,7 @@ export default function HomePageAR() {
             <div className="card text-center functionCard">
               <div className="card-body">
                   <br/><h5 className="card-title">Create Result Board</h5><br/>
-                <a href="#" className="btn btn-primary">Create</a>
+                <a href="#" className="btn btn-primary home-page-class-button">Create</a>
               </div>
             </div>
           </div>
@@ -33,7 +33,7 @@ export default function HomePageAR() {
             <div className="card text-center functionCard">
               <div className="card-body">
                   <br/><h5 className="card-title">View Medical List</h5><br/>
-                <a href="/viewMedicals" className="btn btn-primary">View</a>
+                <a href="/viewMedicals" className="btn btn-primary home-page-class-button">View</a>
               </div>
             </div>
           </div>
@@ -42,7 +42,7 @@ export default function HomePageAR() {
             <div className="card text-center functionCard">
               <div className="card-body">
                 <br/><h5 className="card-title">Update E* Grades </h5><br/>
-                <a href="/viewEStarList" className="btn btn-primary">Update</a>
+                <a href="/viewEStarList" className="btn btn-primary home-page-class-button">Update</a>
               </div>
             </div>
           </div>
@@ -51,7 +51,7 @@ export default function HomePageAR() {
             <div className="card text-center functionCard">
               <div className="card-body">
                 <br/><h5 className="card-title">Certify Marks - ICT</h5><br/>
-                <a href="/arcerfityictmarks" className="btn btn-primary">Certify</a>
+                <a href="/arcerfityictmarks" className="btn btn-primary home-page-class-button">Certify</a>
               </div>
             </div>
           </div>
@@ -60,7 +60,7 @@ export default function HomePageAR() {
             <div className="card text-center functionCard">
               <div className="card-body">
                 <br/><h5 className="card-title">Certify Marks - ET</h5><br/>
-                <a href="/arcerfityetmarks" className="btn btn-primary">Certify</a>
+                <a href="/arcerfityetmarks" className="btn btn-primary home-page-class-button">Certify</a>
               </div>
             </div>
           </div>
@@ -69,7 +69,7 @@ export default function HomePageAR() {
             <div className="card text-center functionCard">
               <div className="card-body">
                 <br/><h5 className="card-title">Certify Marks - BST</h5><br/>
-                <a href="/arcertifybstmarks" className="btn btn-primary">Certify</a>
+                <a href="/arcertifybstmarks" className="btn btn-primary home-page-class-button">Certify</a>
               </div>
             </div>
           </div>
@@ -78,7 +78,7 @@ export default function HomePageAR() {
             <div className="card text-center functionCard">
               <div className="card-body">
                 <br/><h5 className="card-title">View Marks - ICT </h5><br/>
-                <a href="/arviewictmarks" className="btn btn-primary">View</a>
+                <a href="/arviewictmarks" className="btn btn-primary home-page-class-button">View</a>
               </div>
             </div>
           </div>
@@ -87,7 +87,7 @@ export default function HomePageAR() {
             <div className="card text-center functionCard">
               <div className="card-body">
                 <br/><h5 className="card-title">View Marks - ET </h5><br/>
-                <a href="/arviewetmarks" className="btn btn-primary">View</a>
+                <a href="/arviewetmarks" className="btn btn-primary home-page-class-button">View</a>
               </div>
             </div>
           </div>
@@ -96,7 +96,7 @@ export default function HomePageAR() {
             <div className="card text-center functionCard">
               <div className="card-body">
                 <br/><h5 className="card-title">View Marks - BST </h5><br/>
-                <a href="/arviewbstmarks" className="btn btn-primary">View</a>
+                <a href="/arviewbstmarks" className="btn btn-primary home-page-class-button">View</a>
               </div>
             </div>
           </div>
@@ -105,7 +105,7 @@ export default function HomePageAR() {
             <div className="card text-center functionCard">
               <div className="card-body">
                 <br/><h5 className="card-title">View Marks - Multi Disciplinary </h5><br/>
-                <a href="/arviewmtdmarks" className="btn btn-primary">View</a>
+                <a href="/arviewmtdmarks" className="btn btn-primary home-page-class-button">View</a>
               </div>
             </div>
           </div>

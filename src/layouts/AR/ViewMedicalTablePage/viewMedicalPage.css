@@ -1,21 +1,21 @@
-.right-aligned-div {
+.back-button-div {
     text-align: right;
     margin-bottom: 10px;
     position: sticky;
   }
-thead{
+.table-body{
     background-color: #ffffff;
     position: sticky;
     top: 65px;
     z-index: 1;
 }
 
-table {
+.dataTable {
   text-align: center;
 }
 
 
-select {
+.yearSelection {
   padding: 8px; /* Add padding to the select box */
   font-size: 16px; /* Set the font size */
   border: 1px solid #ccc; /* Add border */
@@ -26,7 +26,7 @@ select {
 }
 
 /* Styling the options within the select element */
-option {
+.selectionOptions {
   padding: 8px; /* Add padding to the options */
   font-size: 16px; /* Set the font size */
   background-color: #fff; /* Set background color */
@@ -34,6 +34,6 @@ option {
 }
 
 /* Styling the select element when hovered */
-select:hover {
+.yearSelection:hover {
   border-color: #999; /* Change border color on hover */
 }
