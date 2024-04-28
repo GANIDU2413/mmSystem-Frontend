@@ -9,34 +9,15 @@ export default function HODDashBoard() {
   const[level,setLevel]=useState()
   const[sem,setSem]=useState()
 
- 
-  const handleButtonClick = (btnlevel, btnsem) => {
-   
-    console.log(btnlevel)
-    setLevel(btnlevel)
-    setSem(btnsem);
-  };
+
 
 
 
   return (
-    <div>
-    <div className=' container'>
-        <NavebarHOD handleButtonClick={handleButtonClick}/>
-            <div className>
-              {
-                level!= null && sem != null?(
-                  <CourseCard level={level} semester={sem}></CourseCard>
-                ):(
-                  <div className="py-4" style={{ marginTop: "70px" }}>
-                    <h1>Pending Course Details</h1>
-                  </div>
-                )
-                
-
-              }
-            </div>
-    </div>
-    </div>
+    <>  <NavebarHOD/>
+        <div className=' container mt-5'>
+           <h1>Head of Department Dashboard</h1>
+        </div>
+    </>
   )
 }

@@ -32,6 +32,9 @@ import EditLecturers from "./layouts/SystemAnalyst/EditLecturers";
 import EditUser from "./layouts/SystemAnalyst/EditUser";
 import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
+
+import { VcManagment } from "./VC/layouts/VcManagment";
+
 import LecturersManagement from "./layouts/SystemAnalyst/UserManagement/LecturersManagement";
 import AssignLecturerCourse from "./layouts/SystemAnalyst/AssignLecturer/AssignLecturerCourse";
 import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
@@ -45,8 +48,10 @@ import MedicalsEligibiltyManage from "./layouts/SystemAnalyst/Medicals/MedicalsE
 import AttendenceEligibilityManage from "./layouts/SystemAnalyst/Attendence/AttendenceEligibilityManage";
 import StudentsManagement from "./layouts/SystemAnalyst/UserManagement/StudentsManagement";
 import ManageCourseModule from "./layouts/SystemAnalyst/CourseModule/ManageCourseModule";
-
-
+import CertifyMarksPage from "./layouts/AR/CertifyMarksPage/CertifyMarksPage";
+import ViewMedicalPage from "./layouts/AR/ViewMedicalTablePage/ViewMedicalPage";
+import CertifyError from "./layouts/Components/AR/CertifyError/CertifyError";
+import CourseCard from "./layouts/Components/HOD/CourseCard";
 
 
 // to configure okta authentication
@@ -83,6 +88,7 @@ export const App = () => {
             <Route path="/home">
               <HomePage />
             </Route>
+
             
           {/* AR navigations start here ---------------------------------------------*/}
           <Route path="/arhome">  {/*Link to AR Home page*/}
@@ -112,9 +118,29 @@ export const App = () => {
           <Route path="/arviewmtdmarks">    {/* Link to view Multi Disciplinary marks page */}
             <ViewMarks department_id={"Multi_Disciplinary"}/>
           </Route>
+
+          <Route path="/arcerfityictmarks">  {/* Link to certify ICT marks page */}
+            <CertifyMarksPage department_id={"ICT"}/>
+          </Route>
+
+          <Route path="/arcerfityetmarks">  {/* Link to certify ET marks page */}
+            <CertifyMarksPage department_id={"ET"}/>
+          </Route>
+
+          <Route path="/arcertifybstmarks">  {/* Link to certify BST marks page */}
+            <CertifyMarksPage department_id={"BST"}/>
+          </Route>
           
           <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}
             <ViewMarksTable/>
+          </Route>
+
+          <Route path="/arFinalMarkSheet/:level/:semester">   {/* Link to view marks remaining to certify page */}
+            <DeanFinalMarkSheet approved_level={"HOD"}/>
+          </Route>
+
+          <Route path="/viewMedicals">   {/* Link to view medical page */}
+            <ViewMedicalPage/>
           </Route>
           {/* AR navigations ends here ---------------------------------------------*/}
 
@@ -148,9 +174,13 @@ export const App = () => {
             <FinalStudentMarks/>
           </Route>
 
-          {/* <Route path="/HODDashBoard">
+          <Route path="/HODDashBoard">
             <HODDashBoard/>
-          </Route> */}
+          </Route>
+
+          <Route path="/CourseCard/:level/:semester">
+            <CourseCard approved_level={"course_coordinator"}/>
+          </Route>
 
           <Route path="/HODmarkstable">
             <HODMarksTable/>
@@ -168,7 +198,7 @@ export const App = () => {
             <HODMarksEditForm/>
           </Route>
 
-          <Route path="/HODMarksReturnSheet/:course_id">
+          <Route path="/HODMarksReturnSheet/:course_id/:course_name">
             <HODMarksReturnSheet/>
           </Route>
 
@@ -220,18 +250,23 @@ export const App = () => {
             <ManageCourseModule/>
           </Route>
           
-            
+           
             <Route path="/addscore">
-              <AddScore option={true}/>
+              <AddScore option={true} />
             </Route>
             <Route
               path="/login"
               render={() => <LoginWidget config={oktaConfig} />}
             />
             <Route path="/login/callback" component={LoginCallback} />
-            <SecureRoute path={"/lecture"}>
+            <SecureRoute path="/lecture">
               <ManageAddScore />
             </SecureRoute>
+
+            <SecureRoute path="/vc">
+              <VcManagment/>
+            </SecureRoute>
+
 
             <SecureRoute path={"/ar"}>
               <HomePageAR />
@@ -249,6 +284,7 @@ export const App = () => {
             <SecureRoute path={"/system_analysis"}>
               <DashBoardSA/>
             </SecureRoute>
+
 
           </Switch>
         </div>
