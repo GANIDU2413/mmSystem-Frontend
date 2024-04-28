@@ -13,7 +13,7 @@ export default function ViewMarks(props:any) {
    }
   return (
     <div>
-        
+        <NavebarAR/>
         <LevelSelection department_id={department_id} level_selection_tpe={"View student marks"}/>
 
         

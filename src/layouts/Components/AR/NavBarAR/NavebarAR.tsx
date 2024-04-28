@@ -82,6 +82,11 @@ export const NavebarAR = () => {
                 </a>
               </li>
               <li className="nav-item">
+                <a className="nav-link" href="#">
+                  View Medical list
+                </a>
+              </li>
+              <li className="nav-item">
                 <a className="nav-link" href="/viewEStarList">
                   Update E* Grades With Medicals
                 </a>

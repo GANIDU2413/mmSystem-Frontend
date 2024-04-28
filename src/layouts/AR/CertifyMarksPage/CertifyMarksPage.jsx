@@ -11,9 +11,9 @@ export default function CertifyMarksPage(props) {
     const history = useHistory();
     const { authState } = useOktaAuth();
 
-    if (authState?.accessToken?.claims.userType !== 'ar') {
-      return <Redirect to="/ar" />;
-    }
+    // if (authState?.accessToken?.claims.userType !== 'ar') {
+    //   return <Redirect to="/ar" />;
+    // }
   return (
     <div>
         

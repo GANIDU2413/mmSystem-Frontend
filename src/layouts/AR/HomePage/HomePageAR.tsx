@@ -6,9 +6,9 @@ import { Redirect } from "react-router-dom";
 export default function HomePageAR() {
   const { authState } = useOktaAuth();
 
-  if (authState?.accessToken?.claims.userType !== 'ar') {
-    return <Redirect to="/ar" />;
-  }
+  // if (authState?.accessToken?.claims.userType !== 'ar') {
+  //   return <Redirect to="/ar" />;
+  // }
   
   return (
     <div>
