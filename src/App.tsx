@@ -263,7 +263,7 @@ export const App = () => {
             </SecureRoute>
 
             <SecureRoute path={"/ar"}>
-              
+              <HomePageAR />
             
             </SecureRoute>
 
