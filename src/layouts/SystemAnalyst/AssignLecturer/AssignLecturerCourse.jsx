@@ -13,13 +13,10 @@ export default function AssignLecturerCourse() {
         loadCids();
     }, []);
 
-    useEffect(() => {
-        loadcCoordinatorids();
-    }, []);
-
     const loadCids = async () => {
         try {
             const response = await axios.get('http://localhost:9090/api/courses/allcoursesids');
+            console.log(response.data);
             if (Array.isArray(response.data.content)) {
                 setCids(response.data.content);
                 console.log(response.data.content);
@@ -29,9 +26,7 @@ export default function AssignLecturerCourse() {
         } catch (error) {
             console.error("Error fetching course IDs:", error);
         }
-    };
 
-    const loadcCoordinatorids = async () => {
         try {
             const result = await axios.get('http://localhost:9090/api/lecreg/allLecids');
             if (Array.isArray(result.data.content)) {

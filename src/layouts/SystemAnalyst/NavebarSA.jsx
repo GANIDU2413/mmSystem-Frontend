@@ -65,6 +65,10 @@ export const NavebarSA = () => {
           </div>
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
+              <div>
+                <h6>System Analyst</h6>
+                <p className=" mx-5">{authState?.idToken?.claims.name}</p>
+              </div>
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/system_analysis">
                   Dashboard

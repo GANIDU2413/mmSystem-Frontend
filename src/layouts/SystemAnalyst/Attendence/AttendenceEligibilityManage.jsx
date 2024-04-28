@@ -34,6 +34,7 @@ const fetchData = async () => {
       setData(parsedData);
     };
     reader.onerror = (error) => {
+      toast.error("Mistake reading file. Please try again.");
       console.error("Error reading file:", error);
     };
     reader.readAsArrayBuffer(e.target.files[0]);

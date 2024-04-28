@@ -53,12 +53,12 @@ export default function StudentsManagement() {
         const wb = XLSX.utils.book_new();
         // Create a new worksheet with the specified column headers
         const ws = XLSX.utils.json_to_sheet([
-            { student_id: "", course_id: "", percentage: "", eligibility: "" }
-        ], { header: ["student_id", "course_id", "percentage", "eligibility"], skipHeader: false });
+            { student_id: "", full_name: "", name_with_initials: "", user_name: "", email: "", password: "", registered_year: "", department_id: "" }
+        ], { header: ["student_id", "full_name", "name_with_initials", "user_name","email","password","registered_year","department_id"], skipHeader: false });
         // Add the worksheet to the workbook
-        XLSX.utils.book_append_sheet(wb, ws, "Attendance Eligibility Template");
+        XLSX.utils.book_append_sheet(wb, ws, "Students Register Template");
         // Write the workbook to a file and download it
-        XLSX.writeFile(wb, "Attendance_Eligibility_Template.xlsx");
+        XLSX.writeFile(wb, "Students_Register_Template.xlsx");
     };
 
   return (
