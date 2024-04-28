@@ -9,7 +9,6 @@ import { useHistory } from 'react-router-dom';
 export default function MarksCheckingForm() {
   const history = useHistory();
   const [text, setText] = useState('');
-  const [approval_level, setApprovalLevel] = useState('');
 
   const [marks, setMarks] = useState([
     {
@@ -88,7 +87,7 @@ export default function MarksCheckingForm() {
   const resultScoreGrade = async () => {
     try {
       const finalMarkList = await axios.get(`http://localhost:9090/api/studentMarks/getStudentMarksbySC/${course_id},${student_id}`);
-      setfinalMarks(finalMarkList.data);
+      setfinalMarks(finalMarkList.data.content);
       console.log(finalMarkList.data);
     } catch (error) {
       console.error('Axios request failed:', error);
@@ -166,6 +165,8 @@ export default function MarksCheckingForm() {
     <>
       <ToastContainer />
       <div className=' bg-white'>
+      <h2>Student ID   :{student_id} </h2>
+      
         <div class="container bg-transparent">
           <div class="row">
             <div class="col text-center">
@@ -331,7 +332,7 @@ export default function MarksCheckingForm() {
                       onChange={(e) => setText(e.target.value)}
                       placeholder="Type your message here..."
                     />
-                    <input type="submit" className=' btn btn-outline-success btn-sm mt-3' value="Send" />
+                    <input type="submit" className={`btn btn-outline-success btn-sm mt-3 ${text ? '' : 'disabled'}`} value="Send" />
                   </div>
                 </form>
               </div>
