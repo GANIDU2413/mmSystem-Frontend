@@ -3,4 +3,11 @@
     font-size:25px;
 }
 
-.btn {}
+.level-button {
+    width: 250px;
+    border-radius: 5px;
+}
+
+.level-set{
+    justify-content: center;
+}
