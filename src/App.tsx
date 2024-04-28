@@ -47,6 +47,7 @@ import StudentsManagement from "./layouts/SystemAnalyst/UserManagement/StudentsM
 import ManageCourseModule from "./layouts/SystemAnalyst/CourseModule/ManageCourseModule";
 import CertifyMarksPage from "./layouts/AR/CertifyMarksPage/CertifyMarksPage";
 import ViewMedicalPage from "./layouts/AR/ViewMedicalTablePage/ViewMedicalPage";
+import CertifyError from "./layouts/Components/AR/CertifyError/CertifyError";
 
 
 
@@ -125,6 +126,10 @@ export const App = () => {
 
           <Route path="/arcertifybstmarks">  {/* Link to certify BST marks page */}
             <CertifyMarksPage department_id={"BST"}/>
+          </Route>
+
+          <Route path="/arcertifyavailability">  {/* Link to show error page when there is a course not approved by the HOD*/}
+            <CertifyError/>
           </Route>
           
           <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}

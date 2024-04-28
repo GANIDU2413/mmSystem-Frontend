@@ -83,7 +83,7 @@ export const NavebarAR = () => {
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="/viewMedicals">
-                  View Medical list
+                  View Medical List
                 </a>
               </li>
               <li className="nav-item">
@@ -92,7 +92,7 @@ export const NavebarAR = () => {
                 </a>
               </li>
 
-              <hr></hr>
+              {/* <hr></hr> */}
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -127,7 +127,7 @@ export const NavebarAR = () => {
                   </li>
                 </ul>
               </li>
-              <hr></hr>
+              {/* <hr></hr> */}
 
               <li className="nav-item dropdown">
                 <a
