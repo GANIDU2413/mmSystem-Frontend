@@ -86,7 +86,7 @@ export default function ManageCourseModule() {
 
     try {
         const response = await axios.post('http://localhost:9090/api/courses/insertacourse', courseData);
-        console.log(response.data);
+        console.log(response.data.content);
         toast.success('Course added successfully!');
       // Optionally, clear the form fields after successful submission
         setCourseName('');
