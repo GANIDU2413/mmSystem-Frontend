@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router';
 import { ToastContainer, toast } from 'react-toastify';
+import { useHistory, useParams } from 'react-router-dom'
 
 export default function DeanFinalMarkSheet(props ) {
     const [finalResults, setFinalResults] = useState([]);
@@ -9,12 +9,13 @@ export default function DeanFinalMarkSheet(props ) {
     const [students, setStudents] = useState([]);
     const { level,semester } = useParams();
     const[studentGPA, setStudentGPA] = useState([{}]);
+    const history =useHistory();
+
 
     const[error, setError] = useState("");
 
     const {approved_level}=props
-
-    //let approved_level = "HOD";
+    
 
     
     const resultSheet = async () => {
@@ -87,6 +88,41 @@ export default function DeanFinalMarkSheet(props ) {
         resultSheet();
     }, [level,semester,approved_level]);
 
+
+    const handleSubmit = async (e) => {
+      let response = null;
+      e.preventDefault();
+      try {
+         let nextApprovedlevel = "";
+         if (approved_level === "HOD") {
+           nextApprovedlevel = "AR";
+         } else if (approved_level === "AR") {
+           nextApprovedlevel = "Dean";
+         }
+         console.log(nextApprovedlevel);
+     
+         // Use the nextApprovedlevel variable directly in the network request
+         response = await axios.put(`http://localhost:9090/api/approvalLevel/updateApprovalLevelByDean/${level}/${semester}/${new Date().getFullYear()}/${nextApprovedlevel}`);
+     
+         toast.success("Approval level updated successfully");
+       
+         setTimeout(() => {
+           history.push(`/dean`);
+      }, 3000);
+      } catch (error) {
+         if (error.code === 'ERR_NETWORK') {
+           setError("Network error. Please check your network connection");
+           console.error("Network error: ", error);
+           toast.error("Network error. Please check your network connection");
+         } else {
+            setError("Failed to update approval level");
+           console.error("Error updating approval level: ", error);
+           toast.error("Failed to update approval level");
+         }
+      }
+     };
+     
+
     return (
         <div className="container">
           {finalResults.length !== 0 ? (
@@ -145,10 +181,18 @@ export default function DeanFinalMarkSheet(props ) {
                  Clean
                 </button>
               </div>
+
+            <form onSubmit={handleSubmit}>
+              <input to={``} type="submit" value="Request Certify" className="btn btn-outline-success btn-sm" id="submitbtn" /> <br/><br/>
+            </form>
+            <ToastContainer />
             </>
           ) : (
+           
             <div className=' container' style={{ marginTop: '150px' }}>
               <div className="alert alert-primary" role="alert">
+                {`No data found for  level ${level} and semester ${semester} to Approve`} 
+                <br/>
                 {error}
               </div>
             </div>
