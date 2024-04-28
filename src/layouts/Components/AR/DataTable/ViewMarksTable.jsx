@@ -13,7 +13,7 @@ export default function ViewMarksTable() {
   const [studentGrades, setStudentGrades] = useState([]);     // state to store the student grades 
   const [uniqueStudentIds, setUniqueStudentIds] = useState([]);     // state to store the unique student ids
   const [eStarStudentsAvailability, setEStarStudentsAvailability] = useState(false);      // state to store the availability of students  having E* grades
-  const [studentsAvailability, setStudentsAvailability] = useState(false);      // state to store the availability of students
+  const [studentsAvailability, setStudentsAvailability] = useState(true);      // state to store the availability of students
   const selectedOption = "All students";   // default selected option
 
 
@@ -104,7 +104,7 @@ export default function ViewMarksTable() {
   return (
     <div>
         
-        <NavebarAR />     {/*Navigation bar*/}
+        
         <div style={{width:"97%",marginLeft:"auto",marginRight:"auto",marginTop:"65px"}}>
         {
           eStarStudentsAvailability ?     // check whether there are students having E* grades
@@ -123,6 +123,7 @@ export default function ViewMarksTable() {
                 <thead>
                   <tr>
                     <th style={{textAlign:"center",backgroundColor:'#ebe8e8',width:"250px"}} >
+                      
                       <select className="form-select w-100 mx-lg-2" aria-label="Default select example" onChange={(e) => handleSelectedValue(e.target.value)}>    {/* select box to select the student id */} 
                         <option >All students</option>
                         {

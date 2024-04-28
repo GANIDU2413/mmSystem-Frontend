@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import "./courseSelection.css";
+import BackButton from '../BackButton/BackButton';
 
 
 
@@ -76,10 +77,11 @@ export default function CourseSelection(props) {
         )
       }
         
-            {<br/>}{<br/>}
+            {<br/>}
             &nbsp; Level {level}{<br/>}
             &nbsp; Semester {semester}{<br/>}
-            &nbsp; department - {department_id}
+            &nbsp; department - {department_id}  
+
             
     </div>
   )

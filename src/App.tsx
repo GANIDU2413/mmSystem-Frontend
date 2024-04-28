@@ -45,7 +45,11 @@ import MedicalsEligibiltyManage from "./layouts/SystemAnalyst/Medicals/MedicalsE
 import AttendenceEligibilityManage from "./layouts/SystemAnalyst/Attendence/AttendenceEligibilityManage";
 import StudentsManagement from "./layouts/SystemAnalyst/UserManagement/StudentsManagement";
 import ManageCourseModule from "./layouts/SystemAnalyst/CourseModule/ManageCourseModule";
+import CertifyMarksPage from "./layouts/AR/CertifyMarksPage/CertifyMarksPage";
+import ViewMedicalPage from "./layouts/AR/ViewMedicalTablePage/ViewMedicalPage";
+import CertifyError from "./layouts/Components/AR/CertifyError/CertifyError";
 import CourseCard from "./layouts/Components/HOD/CourseCard";
+
 
 
 
@@ -113,9 +117,29 @@ export const App = () => {
           <Route path="/arviewmtdmarks">    {/* Link to view Multi Disciplinary marks page */}
             <ViewMarks department_id={"Multi_Disciplinary"}/>
           </Route>
+
+          <Route path="/arcerfityictmarks">  {/* Link to certify ICT marks page */}
+            <CertifyMarksPage department_id={"ICT"}/>
+          </Route>
+
+          <Route path="/arcerfityetmarks">  {/* Link to certify ET marks page */}
+            <CertifyMarksPage department_id={"ET"}/>
+          </Route>
+
+          <Route path="/arcertifybstmarks">  {/* Link to certify BST marks page */}
+            <CertifyMarksPage department_id={"BST"}/>
+          </Route>
           
           <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}
             <ViewMarksTable/>
+          </Route>
+
+          <Route path="/arFinalMarkSheet/:level/:semester">   {/* Link to view marks remaining to certify page */}
+            <DeanFinalMarkSheet approved_level={"HOD"}/>
+          </Route>
+
+          <Route path="/viewMedicals">   {/* Link to view medical page */}
+            <ViewMedicalPage/>
           </Route>
           {/* AR navigations ends here ---------------------------------------------*/}
 
@@ -239,7 +263,7 @@ export const App = () => {
             </SecureRoute>
 
             <SecureRoute path={"/ar"}>
-              <HomePageAR />
+              <ViewMarks department_id={"ICT"}/>
             
             </SecureRoute>
 

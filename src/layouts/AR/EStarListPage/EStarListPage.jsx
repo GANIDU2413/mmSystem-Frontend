@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import './eStarListPage.css';
 import BackButton from '../../Components/AR/BackButton/BackButton';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { NavebarAR } from '../../Components/AR/NavBarAR/NavebarAR';
 
 export default function EStarListPage() {
@@ -11,9 +11,13 @@ export default function EStarListPage() {
     const [courseList,setCourseList]=useState([]);    //Use state to store the courses and student details under AR approval
     const history = useHistory(); // Initialize useHistory hook to navigate to different pages
 
+    
+
+    
 
 
     const loadData = async() => {   //Function to load the student details havind E* from the backend
+      
 
         const result = await axios.get("http://localhost:9090/api/AssistantRegistrar/getEStarDetails");   //Get all the course and student details having E* from the backend
       
@@ -28,14 +32,18 @@ export default function EStarListPage() {
 
     
     useEffect(()=>{   //Use effect to load the data when the page is loaded
+
+    
         setCourseList([]);    //Set the courseList state to empty array when there is an action on the page
         loadData();
+
+        
     },[]);
 
 
   return (
     <div>
-        <NavebarAR/>    {/*Navigation bar*/}
+        
         
 
         {courseList.length===0 ?(   //If there are no students having E* Grades under AR approval, display the following message
