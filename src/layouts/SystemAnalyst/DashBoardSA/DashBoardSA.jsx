@@ -16,7 +16,8 @@ export default function DashBoardSA() {
                   <h4 className=' pt-2 mx-3'>{authState?.idToken?.claims.name}...</h4> 
                 </div> 
             </div>
-            <div className=' center'>
+            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'}}>
+            <div className=' center' >
               <div className='row g-3'>
 
                 <div className="card shadow m-4" style={{width: "18rem"}}>
@@ -72,6 +73,7 @@ export default function DashBoardSA() {
                 </div>
                 
               </div>
+            </div>
             </div>
         </div>
     </div>
