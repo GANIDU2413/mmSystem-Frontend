@@ -52,7 +52,7 @@ export default function ManageCourseModule() {
         setCourseHours('');
         setLevel('');
         setSemester('');
-        window.location.reload();
+        fetchData();
     } catch (error) {
         console.error('Error adding course:', error);
         alert('Error adding course. Please try again.');
@@ -62,7 +62,7 @@ export default function ManageCourseModule() {
  return (
     <div className='container' style={{marginTop:"70px"}}>
         <div className=' mt-4 mb-5'>
-        <h1 className='h1'>Manage Course Module</h1>
+        <div className='h2 mt-lg-5'>Manage Course Module</div>
         </div>
         <form onSubmit={handleSubmit}>
         <div className="row g-3 my-1">
@@ -177,5 +177,5 @@ export default function ManageCourseModule() {
             )}
         </div>
     </div>
- );
+    );
 }

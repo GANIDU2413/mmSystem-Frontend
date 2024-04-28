@@ -68,52 +68,10 @@ export default function LecturersManagement() {
     
 
     return (
-        <div className='container'>
+        <div className='container' style={{marginTop:"70px"}}>
+            
             <div className='row'>
-                <div className='col-md-12'>
-                    <div className='py-5'>
-                        <div id='table-wrapper'></div>
-                            <div id='table-scroll' ></div>
-                                <table className="table border shadow" >
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">User ID</th>
-                                            <th scope="col">Full Name</th>
-                                            <th scope="col">Name with Initials</th>
-                                            <th scope="col">User Name</th>
-                                            <th scope="col">E-mail</th>
-                                            <th scope="col">Password</th>
-                                            <th scope="col">Reg-Year</th>
-                                            <th scope="col">Role</th>
-                                            <th scope="col">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody >
-                                        {users.map((user, index) => (
-                                            <tr key={index}>
-                                                <th scope="row">{index + 1}</th>
-                                                <td>{user.user_id}</td>
-                                                <td>{user.full_name}</td>
-                                                <td>{user.name_with_initials}</td>
-                                                <td>{user.user_name}</td>
-                                                <td>{user.email}</td>
-                                                <td>{user.password}</td>
-                                                <td>{user.registered_year}</td>
-                                                <td>{user.role}</td>
-                                                <td>
-                                                    <Link className='btn btn-outline-primary mx-2 btn-sm' to={`/edituser/${user.id}`}>Edit</Link>
-                                                    <button className='btn btn-danger mx-2 btn-sm' onClick={() => deleteUser(user.id)}>Delete</button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                    </div>
-                </div>
-            </div>
-            <div className='row'>
-                <div className='col-md-12 border p-4 mt-2 mb-5 shadow'>
+                <div className='col-md-12 border p-4 mt-2 mb-3 shadow'>
                     <h2 className='text-center m-4'>Register Academics</h2>
                     <form onSubmit={(e) => onSubmit(e)}>
                         <div className='mb-3 row'>
@@ -157,6 +115,51 @@ export default function LecturersManagement() {
                     </form>
                 </div>
             </div>
+
+            <div className='row'>
+                <div className='col-md-12'>
+                    <div className='pb-5'>
+                        <div id='table-wrapper'></div>
+                            <div id='table-scroll' ></div>
+                                <table className="table border shadow" >
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">User ID</th>
+                                            <th scope="col">Full Name</th>
+                                            <th scope="col">Name with Initials</th>
+                                            <th scope="col">User Name</th>
+                                            <th scope="col">E-mail</th>
+                                            <th scope="col">Password</th>
+                                            <th scope="col">Reg-Year</th>
+                                            <th scope="col">Role</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody >
+                                        {users.map((user, index) => (
+                                            <tr key={index}>
+                                                <th scope="row">{index + 1}</th>
+                                                <td>{user.user_id}</td>
+                                                <td>{user.full_name}</td>
+                                                <td>{user.name_with_initials}</td>
+                                                <td>{user.user_name}</td>
+                                                <td>{user.email}</td>
+                                                <td>{user.password}</td>
+                                                <td>{user.registered_year}</td>
+                                                <td>{user.role}</td>
+                                                <td>
+                                                    <Link className='btn btn-outline-primary mx-2 btn-sm' to={`/edituser/${user.id}`}>Edit</Link>
+                                                    <button className='btn btn-danger mx-2 btn-sm' onClick={() => deleteUser(user.id)}>Delete</button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     );
 }

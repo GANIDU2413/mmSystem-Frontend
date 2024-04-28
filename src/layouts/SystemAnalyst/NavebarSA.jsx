@@ -92,7 +92,7 @@ export const NavebarSA = () => {
               </li>
 
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/coursemodule">
+                <a className="nav-link active" aria-current="page" href="/sysanicoursemodule">
                   Course Module
                 </a>
               </li>

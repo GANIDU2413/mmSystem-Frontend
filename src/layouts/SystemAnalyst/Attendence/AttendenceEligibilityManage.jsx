@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import * as XLSX from "xlsx";
 import axios from 'axios';
 import { NavebarSA } from '../NavebarSA';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function AttendanceEligibilityManage() {
  const [data, setData] = useState([]);
@@ -40,11 +43,11 @@ const fetchData = async () => {
     e.preventDefault();
     try {
       await axios.post("http://localhost:9090/api/attendanceEligibility/insertbulkattendance", data);
-      alert("Data submitted successfully!");
-      window.location.reload();
+      toast.success("Data submitted successfully!");
+      fetchData();
     } catch (error) {
       console.error("Error submitting data:", error);
-      alert("Error submitting data. Please try again.");
+      toast.error("Error submitting data. Please try again.");
     }
  };
 
@@ -96,6 +99,7 @@ const fetchData = async () => {
           </form>
         </div>
       </div>
+      <ToastContainer />
       <div>
       <div className="h2 mt-lg-5">Attendance Data</div>
           {attendanceData.length > 0 && (
