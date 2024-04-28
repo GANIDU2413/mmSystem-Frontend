@@ -32,6 +32,9 @@ import EditLecturers from "./layouts/SystemAnalyst/EditLecturers";
 import EditUser from "./layouts/SystemAnalyst/EditUser";
 import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
+
+import { VcManagment } from "./VC/layouts/VcManagment";
+
 import LecturersManagement from "./layouts/SystemAnalyst/UserManagement/LecturersManagement";
 import AssignLecturerCourse from "./layouts/SystemAnalyst/AssignLecturer/AssignLecturerCourse";
 import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
@@ -49,9 +52,6 @@ import CertifyMarksPage from "./layouts/AR/CertifyMarksPage/CertifyMarksPage";
 import ViewMedicalPage from "./layouts/AR/ViewMedicalTablePage/ViewMedicalPage";
 import CertifyError from "./layouts/Components/AR/CertifyError/CertifyError";
 import CourseCard from "./layouts/Components/HOD/CourseCard";
-
-
-
 
 
 // to configure okta authentication
@@ -88,6 +88,7 @@ export const App = () => {
             <Route path="/home">
               <HomePage />
             </Route>
+
             
           {/* AR navigations start here ---------------------------------------------*/}
           <Route path="/arhome">  {/*Link to AR Home page*/}
@@ -249,18 +250,23 @@ export const App = () => {
             <ManageCourseModule/>
           </Route>
           
-            
+           
             <Route path="/addscore">
-              <AddScore option={true}/>
+              <AddScore option={true} />
             </Route>
             <Route
               path="/login"
               render={() => <LoginWidget config={oktaConfig} />}
             />
             <Route path="/login/callback" component={LoginCallback} />
-            <SecureRoute path={"/lecture"}>
+            <SecureRoute path="/lecture">
               <ManageAddScore />
             </SecureRoute>
+
+            <SecureRoute path="/vc">
+              <VcManagment/>
+            </SecureRoute>
+
 
             <SecureRoute path={"/ar"}>
               <HomePageAR />
@@ -278,6 +284,7 @@ export const App = () => {
             <SecureRoute path={"/system_analysis"}>
               <DashBoardSA/>
             </SecureRoute>
+
 
           </Switch>
         </div>
