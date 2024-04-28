@@ -129,10 +129,6 @@ export const App = () => {
           <Route path="/arcertifybstmarks">  {/* Link to certify BST marks page */}
             <CertifyMarksPage department_id={"BST"}/>
           </Route>
-
-          <Route path="/arcertifyavailability">  {/* Link to show error page when there is a course not approved by the HOD*/}
-            <CertifyError/>
-          </Route>
           
           <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}
             <ViewMarksTable/>

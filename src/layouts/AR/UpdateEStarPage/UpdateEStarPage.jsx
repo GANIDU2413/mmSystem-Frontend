@@ -5,10 +5,13 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import BackButton from '../../Components/AR/BackButton/BackButton';
 import { useOktaAuth } from '@okta/okta-react';
+import { ToastContainer, toast } from 'react-toastify';
+import { useHistory } from 'react-router-dom';
 
 export default function UpdateEStarPage() {
 
     const { authState } = useOktaAuth();
+    const history = useHistory();
 
   
 
@@ -84,18 +87,25 @@ export default function UpdateEStarPage() {
         const result1 = await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentGrade" , updateDataOject);   //Update the student grade with the new grade
         
         if(result1.data<0){     //condition to check is there a error with updating the grade
-            alert("Error with updating grade");  
-        };
+            alert("Error with updating grade"); 
+            toast.error('Error with updating grade'); 
+        }else{
+            toast.success('Grade updated successfully',{autoClose:2000});
+        }
 
         if(newGrade==="MC"){        //condition to check whether the new grade is MC
             const result2= await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade" , updateDataOject);       //Update the student final grade with the WH grade
             
             if(result2.data<0){ 
-                alert("Error with updating Final Grade");  
+                toast.error('Error with updating final grade',{autoClose:2000});  
+            }else{
+                toast.success('Final grade updated successfully',{autoClose:2000});
+
             }
         };
-        
-        window.history.back();      //Back to the previous page
+        setTimeout(() => {
+            history.goBack();     //Back to the previous page
+        }, 3000);
 
     };
     
@@ -153,6 +163,7 @@ export default function UpdateEStarPage() {
                 
                 
             }
+            <ToastContainer />
             <div className='right-aligned-div'><br/>
             <button className="btn btn-success btn-sm" onClick={updateGrade} >Update</button>&nbsp;&nbsp;
               <BackButton/> <br/>&nbsp;
