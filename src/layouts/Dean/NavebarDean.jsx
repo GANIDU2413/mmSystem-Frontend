@@ -204,29 +204,37 @@ export const NavebarDean = () => {
           aria-labelledby="offcanvasNavbarLabel"
         >
           <div className="offcanvas-header">
-            <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              User Name
-            </h5>
+            <h6 className="offcanvas-title" id="offcanvasNavbarLabel">
+            </h6>
             <button
               type="button"
               className="btn-close"
               data-bs-dismiss="offcanvas"
               aria-label="Close"
             ></button>
+            
           </div>
           <div className="offcanvas-body">
-
-            <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
+              
+              <div className=" h5 mt-2">
+                {/*Display user's username*/}
+                {authState?.idToken?.claims.name }
+              </div>
+            <ul className="navbar-nav justify-content-end flex-grow-1 pe-3" style={{listStyleType:"none"}}>
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/HODDashBoard">
                   Dashboard
                 </a>
               </li>
-              </ul>
-
-            {department.map((dept, index) => (
-
-                <li className="nav-item dropdown">
+              <hr />
+              <li className="nav-item">
+                <a className="nav-link active" aria-current="page">
+                    Approvel of Marks
+                </a>
+              </li>
+              {department.map((dept, index) => (
+                
+                <li className="nav-item dropdown mx-5">
                 <a
                   className="nav-link dropdown-toggle"
                   href="#"
@@ -237,22 +245,26 @@ export const NavebarDean = () => {
                 >
                   Department of {dept}
                 </a>
-                <ul className="dropdown-menu">
+                <ul className="dropdown-menu" >
                   {levels.map((level, index) => {
                     return semesters.map((semester, index) => (    
                       <>
-                        <li>
+                        <li className="nav-item">
                           <a href={`/deanFinalMarkSheet/${level}/${semester}`} className="dropdown-item">
                             Level {level} Sem {semester}
                           </a>
                         </li>
-                        <li></li>
+                        
                       </>
                     ));
                   })}
                 </ul>
               </li>
+              
+              
             ))}
+            <hr />
+            </ul>
 
             
           </div>

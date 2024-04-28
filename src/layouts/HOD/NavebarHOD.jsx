@@ -62,7 +62,7 @@ export const NavebarHOD = () => {
         >
           <div className="offcanvas-header">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              User Name
+             
             </h5>
             <button
               type="button"
@@ -73,17 +73,27 @@ export const NavebarHOD = () => {
           </div>
           <div className="offcanvas-body">
 
+                <div className=" h5 mt-2">
+                {/*Display user's username*/}
+                {authState?.idToken?.claims.name }
+              </div>
+
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/HODDashBoard">
+                <a className="nav-link active" aria-current="page" href="/hod">
                   Dashboard
                 </a>
               </li>
-              </ul>
+              <li className="nav-item">
+                <a className="nav-link active" aria-current="page" href="/hod">
+                    Approvel of Marks
+                </a>
+              </li>
+              <hr />  
 
             {department.map((dept, index) => (
 
-                <li className="nav-item dropdown">
+                <li className="nav-item dropdown mx-5">
                 <a
                   className="nav-link dropdown-toggle"
                   href="#"
@@ -110,7 +120,8 @@ export const NavebarHOD = () => {
                 </ul>
               </li>
             ))}
-
+            <hr />
+          </ul>
             {/* <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/HODDashBoard">

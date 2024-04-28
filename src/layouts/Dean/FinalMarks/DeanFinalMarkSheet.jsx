@@ -15,6 +15,9 @@ export default function DeanFinalMarkSheet(props ) {
     const[error, setError] = useState("");
 
     const {approved_level}=props
+
+    const [isChecked, setIsChecked] = useState(false);
+
     
 
     
@@ -62,13 +65,11 @@ export default function DeanFinalMarkSheet(props ) {
 
             const courseIdsSet = new Set();
             processedData.forEach(student => {
-                student.courses.forEach(course => {
-                    courseIdsSet.add(course.course_id);
-                });
+              student.courses.forEach(course => {
+                courseIdsSet.add(course.course_id);
+              });
             });
             setCourses(Array.from(courseIdsSet));
-
-            
 
             setStudents(processedData.map(student => student.student_id));
             
@@ -124,71 +125,91 @@ export default function DeanFinalMarkSheet(props ) {
      
 
     return (
-        <div className="container">
-          {finalResults.length !== 0 ? (
-            <>
-              <div className="py-4" style={{ marginTop: "70px" }}>
-                <table className="overflow-x-scroll table border shadow" style={{ marginTop: "60px" }}>
-                 <thead>
-                    <tr>
-                      <th scope="col">Student ID</th>
-                      {courses.map((id, index) => (
-                        <React.Fragment key={index}>
-                          <th>{id}</th>
-                          <th>Grade</th>
-                        </React.Fragment>
-                      ))}
-                      <th scope="col">SGPA</th>
-                      <th scope="col">CGPA</th>
-                    </tr>
-                 </thead>
-                 <tbody>
-                        {finalResults.map((student, index) => (
-                            <tr key={index}>
-                            <td>{student.student_id}</td>
-                            {courses.map((id, index) => {
-                                const courseData = student.courses.find(
-                                (c) => c.course_id === id
-                                );
-                                return (
-                                <React.Fragment key={index}>
-                                    <td>{courseData ? courseData.overall_score : "-"}</td>
-                                    <td>{courseData ? courseData.grade : "-"}</td>
-                                </React.Fragment>
-                                );
-                            })}
-                            {studentGPA.map((gpa, index) => {
-                                    if(gpa.student_id === student.student_id){
-                                        return (
-                                            <React.Fragment key={index}>
-                                                <td>{gpa.sgpa}</td>
-                                                <td>{gpa.cgpa}</td>
-                                            </React.Fragment>
-                                        );
-                                    }
-                            })}
-                             
-                            </tr>
-                        ))}
-                 </tbody>
-                </table>
-              </div>
-
-            <form onSubmit={handleSubmit}>
-              <input to={``} type="submit" value="Request Certify" className="btn btn-outline-success btn-sm" id="submitbtn" /> <br/><br/>
-            </form>
-            <ToastContainer />
-            </>
-          ) : (
-           
-            <div className=' container' style={{ marginTop: '150px' }}>
-              <div className="alert alert-primary" role="alert">
-                {`No data found for  level ${level} and semester ${semester} to Approve`} 
-                <br/>
-                {error}
-              </div>
-            </div>
-          )}
+      <div className="container">
+      {finalResults.length !== 0 ? (
+        <>
+        <div className="py-4" style={{ marginTop: "70px" }}>
+          <table className="overflow-x-scroll table border shadow" style={{ marginTop: "60px" }}>
+          <thead>
+            <tr>
+            <th scope="col">Student ID</th>
+            {courses.map((id, index) => (
+              <React.Fragment key={index}>
+              <th>{id}</th>
+              <th>Grade</th>
+              </React.Fragment>
+            ))}
+            <th scope="col">SGPA</th>
+            <th scope="col">CGPA</th>
+            </tr>
+          </thead>
+          <tbody>
+            {finalResults.map((student, index) => (
+            <tr key={index}>
+              <td>{student.student_id}</td>
+              {courses.map((id, index) => {
+              const courseData = student.courses.find((c) => c.course_id === id);
+              return (
+                <React.Fragment key={index}>
+                <td>{courseData ? courseData.overall_score : "-"}</td>
+                <td>{courseData ? courseData.grade : "-"}</td>
+                </React.Fragment>
+              );
+              })}
+              {studentGPA.map((gpa, index) => {
+              if (gpa.student_id === student.student_id) {
+                return (
+                <React.Fragment key={index}>
+                  <td>{gpa.sgpa}</td>
+                  <td>{gpa.cgpa}</td>
+                </React.Fragment>
+                );
+              }
+              })}
+            </tr>
+            ))}
+          </tbody>
+          </table>
         </div>
-      );
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3 form-check">
+          <input
+            type="checkbox"
+            className="form-check-input"
+            id="check"
+            checked={isChecked}
+            onChange={() => setIsChecked(!isChecked)}
+          />
+          <label className="form-check-label" htmlFor="check">
+            I affirm that I have checked the results and confirm the accuracy for approval.
+          </label>
+          </div>
+
+          <input
+          to={``}
+          type="submit"
+          value="Request Certify"
+          className="btn btn-outline-success btn-sm"
+          id="submitbtn"
+          disabled={!isChecked}
+          style={{
+            width: "10%",
+          }} />
+          <br />
+          <br />
+        </form>
+        <ToastContainer />
+        </>
+      ) : (
+        <div className=" container" style={{ marginTop: "150px" }}>
+        <div className="alert alert-primary" role="alert">
+          {`No data found for  level ${level} and semester ${semester} to Approve`}
+          <br />
+          {error}
+        </div>
+        </div>
+      )}
+      </div>
+    );
 }
