@@ -14,7 +14,7 @@ export default function MainNavbar() {
     if (authState?.accessToken?.claims.userType === 'ar') {
       return <NavebarAR />;
     } else if (authState?.accessToken?.claims.userType === 'hod') {
-      //  return <NavebarHOD />;
+        return <NavebarHOD />;
     } else if (authState?.accessToken?.claims.userType === 'system_analysis') {
       return <NavebarSA />;
     } else if (authState?.accessToken?.claims.userType === 'lecturer') {
