@@ -45,6 +45,7 @@ import MedicalsEligibiltyManage from "./layouts/SystemAnalyst/Medicals/MedicalsE
 import AttendenceEligibilityManage from "./layouts/SystemAnalyst/Attendence/AttendenceEligibilityManage";
 import StudentsManagement from "./layouts/SystemAnalyst/UserManagement/StudentsManagement";
 import ManageCourseModule from "./layouts/SystemAnalyst/CourseModule/ManageCourseModule";
+import CourseCard from "./layouts/Components/HOD/CourseCard";
 
 
 
@@ -148,9 +149,13 @@ export const App = () => {
             <FinalStudentMarks/>
           </Route>
 
-          {/* <Route path="/HODDashBoard">
+          <Route path="/HODDashBoard">
             <HODDashBoard/>
-          </Route> */}
+          </Route>
+
+          <Route path="/CourseCard/:level/:semester">
+            <CourseCard approved_level={"course_coordinator"}/>
+          </Route>
 
           <Route path="/HODmarkstable">
             <HODMarksTable/>
@@ -168,7 +173,7 @@ export const App = () => {
             <HODMarksEditForm/>
           </Route>
 
-          <Route path="/HODMarksReturnSheet/:course_id">
+          <Route path="/HODMarksReturnSheet/:course_id/:course_name">
             <HODMarksReturnSheet/>
           </Route>
 

@@ -4,13 +4,14 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link} from 'react-router-dom'
 
-export default function HODMarksReturnSheet() {
+export default function HODMarksReturnSheet(props) {
 
     const[marks,setMarks]=useState([]);
     const[evaluationCriteria,setEvaluationCriteria]=useState([]);
     const[calculations,setCalculations]=useState([]);
     const[studentList,setStudentList]=useState([]);
-    const {course_id}=useParams();
+    const {course_id, course_name} = useParams();
+
     const[approval_level,setApprovalLevel]=useState('');
 
 
@@ -128,7 +129,7 @@ export default function HODMarksReturnSheet() {
 
   return (
         <>
-            <h1>Course code : {course_id}</h1>
+            <h1>{course_name} - {course_id}</h1>
             <table className="table shadow table-bordered"  style={{ marginTop: "30px" }}>
                 <thead>
                     <tr >
