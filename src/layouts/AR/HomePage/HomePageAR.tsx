@@ -11,6 +11,7 @@ export default function HomePageAR() {
   //   return <Redirect to="/ar" />;
   // }
   
+  
   return (
     <div>
       
