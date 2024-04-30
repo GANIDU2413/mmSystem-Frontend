@@ -7,10 +7,10 @@ class AddScoreRequest {
     assignmentScore: string;
     level: string;
     semester: string;
-    assignmentName:string;
+    evaluationCriteriaId:string;
 
     constructor(studentID: string, courseID: string, year:string, assignmentType:string,
-                assignmentScore: string, level: string, semester: string, assignmentName:string){
+                assignmentScore: string, level: string, semester: string, evaluationCriteriaId:string){
 
                     this.studentID = studentID
                     this.courseID = courseID
@@ -19,7 +19,7 @@ class AddScoreRequest {
                     this.assignmentScore = assignmentScore
                     this.level = level
                     this.semester = semester
-                    this.assignmentName = assignmentName
+                    this.evaluationCriteriaId = evaluationCriteriaId
                     
                 }
 }
