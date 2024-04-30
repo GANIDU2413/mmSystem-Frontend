@@ -3,7 +3,7 @@ import { useOktaAuth } from "@okta/okta-react";
 import { SpinerLoading } from "../Utils/SpinerLoading";
 import { IoMenuSharp } from "react-icons/io5";
 
-export const NavebarHOD = ({ handleButtonClick }) => {
+export const NavebarHOD = () => {
   const { oktaAuth, authState } = useOktaAuth();
 
   if (!authState) {
@@ -13,6 +13,14 @@ export const NavebarHOD = ({ handleButtonClick }) => {
   const handleLogout = async () => oktaAuth.signOut();
 
   console.log(authState);
+
+
+  //const levels=["I","II","III","IV"];
+  const levels =[1,2,3,4]
+  //const semesters=["I","II"];
+  const semesters=[1,2]
+  const department=["ICT","ET","BST"];
+
   return (
     <nav className="navbar bg-primary fixed-top">
       <div className="container-fluid">
@@ -54,7 +62,7 @@ export const NavebarHOD = ({ handleButtonClick }) => {
         >
           <div className="offcanvas-header">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              User Name
+             
             </h5>
             <button
               type="button"
@@ -64,7 +72,57 @@ export const NavebarHOD = ({ handleButtonClick }) => {
             ></button>
           </div>
           <div className="offcanvas-body">
+
+                <div className=" h5 mt-2">
+                {/*Display user's username*/}
+                {authState?.idToken?.claims.name }
+              </div>
+
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
+              <li className="nav-item">
+                <a className="nav-link active" aria-current="page" href="/hod">
+                  Dashboard
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link active" aria-current="page" href="/hod">
+                    Approvel of Marks
+                </a>
+              </li>
+              <hr />  
+
+            {department.map((dept, index) => (
+
+                <li className="nav-item dropdown mx-5">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  
+                >
+                  Department of {dept}
+                </a>
+                <ul className="dropdown-menu">
+                  {levels.map((level, index) => {
+                    return semesters.map((semester, index) => (    
+                      <>
+                        <li>
+                          <a href={`/CourseCard/${level}/${semester}`} className="dropdown-item">
+                            Level {level} Sem {semester}
+                          </a>
+                        </li>
+                        <li></li>
+                      </>
+                    ));
+                  })}
+                </ul>
+              </li>
+            ))}
+            <hr />
+          </ul>
+            {/* <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/HODDashBoard">
                   Dashboard
@@ -310,7 +368,7 @@ export const NavebarHOD = ({ handleButtonClick }) => {
                   </li>
                 </ul>
               </li>
-            </ul>
+            </ul> */}
 
             
           </div>

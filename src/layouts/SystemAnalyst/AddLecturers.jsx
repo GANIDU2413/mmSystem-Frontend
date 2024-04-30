@@ -5,14 +5,25 @@ import { Link,Redirect } from 'react-router-dom';
 export default function AddLecturers() {
     const [redirect, setRedirect] = useState(false);
     const [user,setUser]=useState({
-    fname:"",
-    lname:"",
-    username:"",
+    user_id:"",
+    full_name:"",
+    name_with_initials:"",
+    user_name:"",
     email:"",
-    password:""
+    password:"",
+    registered_year:"",
+    role:"",
     });
 
-const{fname,lname,username,email,password}=user;
+const{user_id,full_name,name_with_initials,user_name,email,password,registered_year,role}=user;
+
+const fullNameConvertToInitial=(fullname)=>{
+    if(typeof fullname !== 'string' || fullname.trim() === '') return '';
+    const getfullname = fullname.split(' ');
+    if(getfullname.length === 0) return '';
+    const namewithinitials = getfullname.slice(0, -1).map(n => n[0].toUpperCase()).join('. ')+' '+getfullname[getfullname.length -1];
+    return namewithinitials;
+}
 
 const onInputChange = (e)=>{
     setUser({...user,[e.target.name]:e.target.value});
@@ -20,7 +31,8 @@ const onInputChange = (e)=>{
 
 const onSubmit=async (e)=>{
     e.preventDefault();
-    await axios.post("for add a lecturer API",user);
+    const updatedUSer = {...user,name_with_initials: fullNameConvertToInitial(full_name)}
+    await axios.post("http://localhost:9090/api/lecreg/savelecdetails",updatedUSer);
     setRedirect(true);
 }
 
@@ -34,31 +46,32 @@ if (redirect) {
             <div className='col-md-6 offset-md-3 border p-4 mt-2 shadow'>
                 <h2 className='text-center m-4'>Register Academics</h2>
                 <form onSubmit={(e)=>onSubmit(e)}>
+
                     <div className='mb-3'>
-                        <label htmlFor='fName' className='form-label'>
-                            First Name
+                        <label htmlFor='full_Name' className='form-label'>
+                            Lecturer ID
                         </label>
                         <input 
                         type={"text"}
                         className='form-control'
                         placeholder='Enter your First Name'
-                        name='fname' 
-                        value={fname}
-                        onChange={(e)=>onInputChange(e)}
+                        name='user_id' 
+                        value={user_id}
+                        onChange={(e)=> onInputChange(e)}                        
                         />
-                        
                     </div>
+
                     <div className='mb-3'>
-                        <label htmlFor='lName' className='form-label'>
-                            Last Name
+                        <label htmlFor='full_Name' className='form-label'>
+                            Full Name
                         </label>
                         <input 
                         type={"text"}
                         className='form-control'
-                        placeholder='Enter your Last Name'
-                        name='lname' 
-                        value={lname}
-                        onChange={(e)=>onInputChange(e)}
+                        placeholder='Enter your First Name'
+                        name='full_name' 
+                        value={full_name}
+                        onChange={(e)=>onInputChange(e)}                        
                         />
                         
                     </div>
@@ -71,13 +84,11 @@ if (redirect) {
                         type={"text"}
                         className='form-control'
                         placeholder='Enter your Username'
-                        name='username' 
-                        value={username}
+                        name='user_name' 
+                        value={user_name}
                         onChange={(e)=>onInputChange(e)}
                         />
                         
-
-
                     </div>
 
                     <div className='mb-3'>
@@ -103,6 +114,35 @@ if (redirect) {
                         className='form-control'
                         name='password' 
                         value={password}
+                        onChange={(e)=>onInputChange(e)}
+                        />
+                    </div>
+
+                    <div className='mb-3'>
+                        <label htmlFor='Email' className='form-label'>
+                            Registered Year
+                        </label>
+                        <input 
+                        type={"text"}
+                        className='form-control'
+                        name='registered_year' 
+                        value={registered_year}
+                        onChange={(e)=>onInputChange(e)}
+                        />
+                    </div>
+                    {/* add button */}
+                    
+
+
+                    <div className='mb-3'>
+                        <label htmlFor='Email' className='form-label'>
+                            User Role
+                        </label>
+                        <input 
+                        type={"text"}
+                        className='form-control'
+                        name='role' 
+                        value={role}
                         onChange={(e)=>onInputChange(e)}
                         />
                     </div>
