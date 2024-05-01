@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import './eStarListPage.css';
+import './abListPage.css';
 import BackButton from '../../Components/AR/BackButton/BackButton';
 import { Redirect, useHistory } from 'react-router-dom';
 import { NavebarAR } from '../../Components/AR/NavBarAR/NavebarAR';
 
-export default function EStarListPage() {
+export default function ABListPage() {
 
     const previousApprovalLevel='HOD';    //Approval level required to view the students having E* Grades
     const [courseList,setCourseList]=useState([]);    //Use state to store the courses and student details under AR approval
@@ -19,8 +19,8 @@ export default function EStarListPage() {
     const loadData = async() => {   //Function to load the student details havind E* from the backend
       
 
-        const result = await axios.get("http://localhost:9090/api/AssistantRegistrar/getEStarDetails");   //Get all the course and student details having E* from the backend
-      
+        const result = await axios.get("http://localhost:9090/api/AssistantRegistrar/getABDetails");   //Get all the course and student details having E* from the backend
+        console.log(result.data)
         await result.data.map((element)=>{    //Filter the courses and student details under AR approval
           if(element[7]===previousApprovalLevel){
             setCourseList(courseList=>[...courseList,element])  //Add the courses and student details under AR approval to the courseList state

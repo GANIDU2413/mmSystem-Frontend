@@ -43,7 +43,7 @@ export default function ViewMedicalPage() {
       }else{                        // if the selected value is not 'All Years'
 
         try{                    // get medical submissions by the selected year
-          
+          const encodedValue = encodeURIComponent(value);       // encode the selected value
           const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissionsByYear/${value}`);       // get medical submissions by the selected year
 
           if(response.data.length>0){       // if medical submissions are available

@@ -14,7 +14,7 @@ export default function HomePageAR() {
   
   return (
     <div>
-      
+      <NavebarAR />
       {/* horizontall cards*/ }
       <div className="container functionCardContainer" >
 
