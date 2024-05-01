@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect, useParams } from 'react-router-dom';
-import './updateEStarPage.css';
+import './updateABPage.css';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import BackButton from '../../Components/AR/BackButton/BackButton';
@@ -8,7 +8,7 @@ import { useOktaAuth } from '@okta/okta-react';
 import { ToastContainer, toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 
-export default function UpdateEStarPage() {
+export default function UpdateABPage() {
 
     const { authState } = useOktaAuth();
     const history = useHistory();
@@ -39,9 +39,11 @@ export default function UpdateEStarPage() {
         const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissionsByYear/${studentDetails.academic_year}`);   //Get all the medical submission details from the backend
         
         if(result.data.length>0){    //condition to check if the medical list is uploaded
+           
             setMedicalListUploaded(true);   //Set the medicalListUploaded state to true if the medical list is uploaded
+           
             const selectedStudentMedicalDetails = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentMedicalDetails/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/${studentDetails.exam_type}`);   //Get the selected student medical details from the backend
-
+            console.log(selectedStudentMedicalDetails.data)
             if(selectedStudentMedicalDetails.data.length>0){    //condition to check whether the selected student has submitted a medical or not
 
                 await selectedStudentMedicalDetails.data.map((element)=>{       //Map the selected student medical details

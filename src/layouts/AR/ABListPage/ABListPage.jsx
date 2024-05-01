@@ -20,7 +20,6 @@ export default function ABListPage() {
       
 
         const result = await axios.get("http://localhost:9090/api/AssistantRegistrar/getABDetails");   //Get all the course and student details having E* from the backend
-        console.log(result.data)
         await result.data.map((element)=>{    //Filter the courses and student details under AR approval
           if(element[7]===previousApprovalLevel){
             setCourseList(courseList=>[...courseList,element])  //Add the courses and student details under AR approval to the courseList state
@@ -78,7 +77,7 @@ export default function ABListPage() {
                 {courseList.map((element,index) => (
                   <tr className="clickable-row" key={index} onClick={()=>
                       {
-                        history.push(`/viewEStarUpdate/updateEStar/${element[2]}/${element[3]}/${element[4]}/${element[5]}/${element[6]}/${element[8]}`)
+                        history.push(`/viewABUpdate/updateAB/${element[2]}/${element[3]}/${element[4]}/${element[5]}/${element[6]}/${element[8]}`)
                       
                       }}>
                     <td>{element[0]}</td>
