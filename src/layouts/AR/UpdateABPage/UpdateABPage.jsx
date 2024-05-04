@@ -18,20 +18,52 @@ export default function UpdateABPage() {
     
 
     const studentDetails = useParams();     //Get the student details from the URL
+    const [newScore,setNewScore]=useState('');    //Use state to store the new score
     const [newGrade,setNewGrade]=useState('');    //Use state to store the new grade
     const [medicalListUploaded,setMedicalListUploaded]=useState(false);     //Use state to store whether the medical list is uploaded or not
     const [stateOfTheMedicalSubmission,setStateOfTheMedicalSubmission]=useState('');    //Use state to store the state of the medical submission
     const [stateOfTheMedicalSubmissionColor,setStateOfTheMedicalSubmissionColor]=useState('');    //Use state to store the color of the medical submission state
     
-    
+    let academicYearDetails = {
+        previous_academic_year:"",
+        current_academic_year:"",
+        current_semester:""
+    }
+
+    let perviousGradeDetails = {
+        id:"",
+        student_id:"",
+        course_id: "",
+        level:"",
+        semester:"",
+        total_ca_mark:"",
+        ca_eligibility:"",
+        total_final_mark:"",
+        total_rounded_mark:"",
+        grade:"",
+        gpv:"",
+
+
+    }
+
     let updateDataOject = {     //Object to store the updated data
         course_id: studentDetails.course_id,
         student_id: studentDetails.student_id,
-        new_grade: newGrade,
+        new_score: newScore,
         exam_type: studentDetails.exam_type,
-        academic_year: studentDetails.academic_year
+        academic_year: studentDetails.academic_year,
+        new_grade: newGrade,
+        ca_eligibility: perviousGradeDetails.ca_eligibility,
 
     };
+
+
+
+
+
+
+
+
 
 
     const loadAllMedicalSubmissions = async() => {   //Function to load the medical submission details from the backend
@@ -42,33 +74,51 @@ export default function UpdateABPage() {
            
             setMedicalListUploaded(true);   //Set the medicalListUploaded state to true if the medical list is uploaded
            
+            const selectedStudentGrade = await axios.get(`http://localhost:9090/api/AssistantRegistrar/findSelectedStudentGrade/${studentDetails.course_id}/${studentDetails.student_id}`);   //Get the selected student grade from the backend
+            
+            if(selectedStudentGrade.data.length>0){    //condition to check whether the selected student has a grade or not
+                perviousGradeDetails.id=selectedStudentGrade.data[0].id;
+                perviousGradeDetails.student_id=selectedStudentGrade.data[0].student_id;
+                perviousGradeDetails.course_id=selectedStudentGrade.data[0].course_id;
+                perviousGradeDetails.level= selectedStudentGrade.data[0].level;
+                perviousGradeDetails.semester = selectedStudentGrade.data[0].semester;
+                perviousGradeDetails.total_ca_mark = selectedStudentGrade.data[0].total_ca_mark;
+                perviousGradeDetails.ca_eligibility = selectedStudentGrade.data[0].ca_eligibility;
+                perviousGradeDetails.total_final_mark = selectedStudentGrade.data[0].total_final_mark;
+                perviousGradeDetails.total_rounded_mark = selectedStudentGrade.data[0].total_rounded_mark;
+                perviousGradeDetails.grade = selectedStudentGrade.data[0].grade;
+                perviousGradeDetails.gpv = selectedStudentGrade.data[0].gpv;
+            }
+
+        
+
             const selectedStudentMedicalDetails = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentMedicalDetails/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/${studentDetails.exam_type}`);   //Get the selected student medical details from the backend
-            console.log(selectedStudentMedicalDetails.data)
             if(selectedStudentMedicalDetails.data.length>0){    //condition to check whether the selected student has submitted a medical or not
 
                 await selectedStudentMedicalDetails.data.map((element)=>{       //Map the selected student medical details
                     
                     if (element['medical_state']==='Approved'){   //condition to check whether the medical submission is approved or not
-                        setNewGrade("MC");          //Set the new grade to MC if the medical submission is approved
+                        setNewScore("MC");          //Set the new score to MC if the medical submission is approved
+                        setNewGrade("WH");          //Set the new grade to WH if the medical submission is approved 
                         setStateOfTheMedicalSubmissionColor("green");     //Set the color of the medical submission state to green
                         setStateOfTheMedicalSubmission("Medical submission has approved.");    //Set the state of the medical submission
-                    }
-                    else{
-                        setNewGrade("F");          //Set the new grade to F if the medical submission is not approved
+                    }else{
+                        setNewScore("F");          //Set the new score to F if the medical submission is not approved
                         setStateOfTheMedicalSubmissionColor("red");    //Set the color of the medical submission state to red
                         setStateOfTheMedicalSubmission("Medical submission has rejected.");    //Set the state of the medical submission
                     }
                 })
             }
             else{
-                setNewGrade("F");                 //Set the new grade to F if the selected student has not submitted a medical
+                setNewScore("F");                 //Set the new score to F if the selected student has not submitted a medical
                 setStateOfTheMedicalSubmissionColor("red");    //Set the color of the medical submission state to red
                 setStateOfTheMedicalSubmission("Student has not submitted a medical.");    //Set the state of the medical submission
 
             }
 
         }else{
-            setMedicalListUploaded(false);   //Set the medicalListUploaded state to false if the medical list is not uploaded    
+            setMedicalListUploaded(false);   //Set the medicalListUploaded state to false if the medical list is not uploaded   
+            toast.error('Medical List is pending...',{autoClose:2000});    //Show a toast message 
     
         }
     };
@@ -82,29 +132,57 @@ export default function UpdateABPage() {
     const updateGrade = async()=>{
         updateDataOject.course_id = studentDetails.course_id;
         updateDataOject.student_id = studentDetails.student_id;
-        updateDataOject.new_grade = newGrade;
+        updateDataOject.new_score = newScore;
         updateDataOject.exam_type = studentDetails.exam_type;
         updateDataOject.academic_year = studentDetails.academic_year;
 
-        const result1 = await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentGrade" , updateDataOject);   //Update the student grade with the new grade
-        
-        if(result1.data<0){     //condition to check is there a error with updating the grade
-            alert("Error with updating grade"); 
-            toast.error('Error with updating grade'); 
-        }else{
-            toast.success('Grade updated successfully',{autoClose:2000});
+
+        try{
+            const update = await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentScore" , updateDataOject);   //Update the student AB exam score  with the new score (MC or F)
+            if(update.data<0){     //condition to check is there a error with updating the grade
+                alert("Error with updating grade"); 
+                toast.error('Error with updating grade',{autoClose:2000}); 
+            }else{
+                toast.success('Grade updated successfully',{autoClose:2000});
+            }
+        }
+        catch(error){
+            toast.error(error,{autoClose:2000});
         }
 
-        if(newGrade==="MC"){        //condition to check whether the new grade is MC
-            const result2= await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade" , updateDataOject);       //Update the student final grade with the WH grade
-            
-            if(result2.data<0){ 
-                toast.error('Error with updating final grade',{autoClose:2000});  
-            }else{
-                toast.success('Final grade updated successfully',{autoClose:2000});
+        
 
+        try{
+            const academicDetails = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`)
+            if(academicDetails.data.length>0){
+                console.log(academicDetails.data);
+            }else{
+                toast.error('Error with getting academic year details',{autoClose:2000});
+            
             }
-        };
+        }
+        catch(error){
+            toast.error(error,{autoClose:2000});
+        }
+
+        
+        
+
+        // if(newScore==="MC"){             //condition to check whether the new grade is MC
+        //     const result2= await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade" , updateDataOject);       //Update the student final grade with the WH grade
+            
+        //     if(result2.data<0){ 
+        //         toast.error('Error with updating final grade',{autoClose:2000});  
+        //     }else{
+        //         toast.success('Final grade updated successfully',{autoClose:2000});
+
+        //     }
+        // };
+
+        if(studentDetails.exam_type=="Mid theory exam" || studentDetails.exam_type=="Mid practical exam"){
+            
+        }
+
         setTimeout(() => {
             history.goBack();     //Back to the previous page
         }, 3000);
@@ -123,28 +201,28 @@ export default function UpdateABPage() {
                         <table className='dataTable'>
                             <tbody>
                                 <tr>
-                                    <td><label>Student ID: </label></td>
+                                    <td><label className="labelkey">Student ID: </label></td>
                                     <td> <label className='labelValue'>{studentDetails.student_id}</label> </td>
                                 </tr>
                                 <tr>
-                                    <td><label >Course ID: </label></td>
+                                    <td><label className="labelkey">Course ID: </label></td>
                                     <td> <label className='labelValue'>{studentDetails.course_id}</label> </td>
                                 </tr>
                                 <tr>
-                                    <td><label>Course name: </label></td>
+                                    <td><label className="labelkey">Course name: </label></td>
                                     <td> <label className='labelValue'>{studentDetails.course_name}</label> </td>
                                 </tr>
                                 <tr>
-                                    <td><label>Exam type: </label></td>
+                                    <td><label className="labelkey">Exam type: </label></td>
                                     <td> <label className='labelValue'>{studentDetails.exam_type}</label> </td>
                                 </tr>
                                 <tr>
-                                    <td><label>Current grade: </label></td>
+                                    <td><label className="labelkey">Current score: </label></td>
                                     <td> <label className='labelValue'>{studentDetails.grade}</label> </td>
                                 </tr>
                                 <tr>
-                                    <td><label>New grade: </label></td>
-                                    <td> <label className='labelValue'>{newGrade}</label> </td>
+                                    <td><label className="labelkey">New score: </label></td>
+                                    <td> <label className='labelValue'>{newScore}</label> </td>
                                 </tr>
                                 <tr>
                                     {stateOfTheMedicalSubmissionColor==="green" ? (

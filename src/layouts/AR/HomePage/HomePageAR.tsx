@@ -42,8 +42,8 @@ export default function HomePageAR() {
           <div className="col mb-4"> 
             <div className="card text-center functionCard">
               <div className="card-body">
-                <br/><h5 className="card-title">Update E* Grades </h5><br/>
-                <a href="/viewEStarList" className="btn btn-primary home-page-class-button">Update</a>
+                <br/><h5 className="card-title">Update grades for absentees </h5><br/>
+                <a href="/viewablist" className="btn btn-primary home-page-class-button">Update</a>
               </div>
             </div>
           </div>

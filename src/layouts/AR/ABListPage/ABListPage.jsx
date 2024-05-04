@@ -68,7 +68,7 @@ export default function ABListPage() {
                   <th scope="col">Course ID</th>
                   <th scope="col">Course Name</th>
                   <th scope="col">Student ID</th>
-                  <th scope="col">Grade</th>
+                  <th scope="col">Score</th>
                   <th scope="col">Exam type</th>
                 </tr>          
               </thead>

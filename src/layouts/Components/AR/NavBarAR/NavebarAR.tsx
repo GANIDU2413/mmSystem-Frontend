@@ -88,7 +88,7 @@ export const NavebarAR = () => {
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="/viewablist">
-                  Check Grades for absence students
+                Update grades for absentees
                 </a>
               </li>
 
