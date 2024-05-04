@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useHistory } from 'react-router-dom';
+import { green } from '@mui/material/colors';
+
 
 export default function MarksCheckingForm() {
   const history = useHistory();
@@ -13,14 +15,14 @@ export default function MarksCheckingForm() {
   const [marks, setMarks] = useState([
     {
       id: " ",
-      stu_id: " ",
-      c_id: " ",
+      student_id: " ",
+      course_id: " ",
       academic_year: " ",
       level: " ",
       semester: " ",
-      assignment_score: " ",
       assignment_name: " ",
-      assessment_type: " "
+      assignment_score: " ",
+      evaluation_criteria_id: " "
     }
   ]);
 
@@ -30,8 +32,12 @@ export default function MarksCheckingForm() {
     course_id: " ",
     level: " ",
     semester: " ",
-    overall_score: " ",
-    grade: " "
+    total_ca_mark:" ",
+    ca_eligibility:" ",
+    total_final_mark: " ",
+    total_rounded_mark: " ",
+    grade: " ",
+    gpv: " "
   });
 
   const [attendanceEligibility, setAttendenceEligibility] = useState({
@@ -47,22 +53,30 @@ export default function MarksCheckingForm() {
       id: "",
       student_id: "",
       course_id: "",
-      type: "",
       mark: "",
       percentage: "",
-      description: ""
+      academic_year: "",
+      evaluation_criteria_id: ""
     }
   ]);
 
-  console.log(calculations);
+  const [evaluationCriteria, setEvaluationCriteria] = useState([
+    {
+      evaluationcriteria_id: "",
+      course_id: "",
+      type: "",
+      assessment_type: "",
+      no_of_conducted: "",
+      no_of_taken: "",
+      percentage: "", 
+      description: ""
+    }
+  ]); 
 
-  const [evaluationCriteria, setEvaluationCriteria] = useState([]);
+const { student_id, course_id, course_name } = useParams();
 
-  const { student_id } = useParams();
-  const { course_id } = useParams();
 
-  console.log(course_id);
-  console.log(student_id);
+  
 
   useEffect(() => {
     result();
@@ -181,17 +195,17 @@ export default function MarksCheckingForm() {
                     if (evaluationCriteria.type == "CA") {
                       if (evaluationCriteria.no_of_conducted > 1) {
                         marks.map((ele, index) => {
-                          if (ele.assignment_name == evaluationCriteria.assessment_type) {
+                          if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
                             headers.push(
                               <tr key={`${index}`}>
-                                <td scope="col">{ele.assignment_type}</td>
+                                <td scope="col">{ele.assignment_name}</td>
                                 <td scope="col">{ele.assignment_score}</td>
                               </tr>
                             );
                           }
                         }).flat();
                         calculations.map((ele, index) => {
-                          if (ele.type == evaluationCriteria.assessment_type) {
+                          if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
                             headers.push(
                               <tr key={`${index}`}>
                                 <th scope="col">{evaluationCriteria.description}</th>
@@ -202,10 +216,10 @@ export default function MarksCheckingForm() {
                         });
                       } else {
                         marks.map((ele, index) => {
-                          if (ele.assignment_name == evaluationCriteria.assessment_type) {
+                          if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
                             headers.push(
                               <tr key={`${index}`}>
-                                <td scope="col">{ele.assignment_type}</td>
+                                <td scope="col">{ele.assignment_name}</td>
                                 <td scope="col">{ele.assignment_score}</td>
                               </tr>
                             );
@@ -213,10 +227,10 @@ export default function MarksCheckingForm() {
                         }).flat();
                       }
                       calculations.map((calculations, index) => {
-                        if (evaluationCriteria.assessment_type == calculations.type) {
+                        if (evaluationCriteria.evaluationcriteria_id == calculations.evaluation_criteria_id) {
                           headers.push(
                             <tr key={`${index}`}>
-                              <th scope="col">{calculations.description}</th>
+                              <th scope="col">{ evaluationCriteria.percentage}% from  {evaluationCriteria.assessment_type}</th>
                               <th scope="col">{calculations.percentage}</th>
                             </tr>
                           );
@@ -229,18 +243,18 @@ export default function MarksCheckingForm() {
                     let headers = [];
                     if (evaluationCriteria.type == "End") {
                       marks.map((ele, index) => {
-                        if (ele.assignment_name == evaluationCriteria.assessment_type) {
+                        if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
                           headers.push(
                             <tr key={`${index}`}>
-                              <td scope="col">{ele.assignment_type}</td>
+                              <td scope="col">{ele.assignment_name}</td>
                               <td scope="col">{ele.assignment_score}</td>
                             </tr>
                           );
                           calculations.map((calculations, index2) => {
-                            if (evaluationCriteria.assessment_type == calculations.type && ele.assignment_type !== "1st Marking" && ele.assignment_type !== "2nd Marking") {
+                            if (evaluationCriteria.evaluationcriteria_id == calculations.evaluation_criteria_id && ele.assignment_name !== "1st Marking" && ele.assignment_name !== "2nd Marking") {
                               headers.push(
                                 <tr key={`${index2}`}>
-                                  <th scope="col">{calculations.description}</th>
+                                  <th scope="col">{ evaluationCriteria.percentage}% from  {evaluationCriteria.assessment_type}</th>
                                   <th scope="col">{calculations.percentage}</th>
                                 </tr>
                               );
@@ -251,18 +265,14 @@ export default function MarksCheckingForm() {
                     }
                     return headers;
                   }).flat()}
-                  {calculations.map((ele, index) => {
-                    let headers = [];
-                    if (ele.type == "Final Marks") {
-                      headers.push(
-                        <tr key={`${index}`}>
-                          <td scope="col">{ele.description}</td>
-                          <td scope="col">{ele.mark}</td>
-                        </tr>
-                      );
-                    }
-                    return headers;
-                  }).flat()}
+                 
+                        {/* <tr >
+                          <td scope="col">{finalmarks.total_final_mark}</td>
+                          <td scope="col">{finalmarks.total_rounded_mark}</td>
+                          <td scope="col">{finalmarks.grade}</td>
+                          <td scope="col">{finalmarks.gpv}</td>
+                        </tr>    */}
+                 
                 </tbody>
               </table>
             </div>
@@ -279,18 +289,10 @@ export default function MarksCheckingForm() {
                   <tr>
                     <td>Total CA Marks</td>
                     <td>
-                      {calculations.map((ele, index) => {
-                        let headers = [];
-                        if (ele.type == "Total CA Mark") {
-                          headers.push(
-                            <input className=' mx-4' size="5" key={`${index}`} type='text' value={ele.percentage} disabled />
-                          );
-                        }
-                        return headers;
-                      }).flat()}
+                    <input className=' mx-4' size="5"  type='text' value={finalmarks.total_ca_mark} disabled />
                     </td>
                     <td>CA Eligibility</td>
-                    <td><input type='text' className=' mx-4' size="5" value="Eligible" disabled /></td>
+                    <td><input type='text' className=' mx-4' size="5" value={finalmarks.ca_eligibility} disabled /></td>
                   </tr>
                   <tr><th><br /></th></tr>
                   <tr>
@@ -309,7 +311,8 @@ export default function MarksCheckingForm() {
                   <tr>
                     <td>Eligibility</td>
                     <td>
-                      <input type='text' className=' mx-4' size="5" value={attendanceEligibility.eligibility} disabled />
+                      {(finalmarks.ca_eligibility == "Eligible" && attendanceEligibility.eligibility == "Eligible") ? <input type='text' className=' mx-4' size="5" value="Eligible" disabled /> : <input type='text' className=' mx-4' size="5" value="Not Eligible" disabled />}        
+                     
                     </td>
                   </tr>
                 </table>
@@ -317,7 +320,7 @@ export default function MarksCheckingForm() {
               <div>
                 <div className="py-4 px-5" class="col shadow mt-4 p-4">
                   <label>Final Marks </label>
-                  <input type='text' className=' mx-3' value={finalmarks.overall_score} disabled />
+                  <input type='text' className=' mx-3' value={finalmarks.total_rounded_mark} disabled />
                   <label>Grade </label>
                   <input type='text' className=' mx-3' value={finalmarks.grade} disabled />
                 </div>
