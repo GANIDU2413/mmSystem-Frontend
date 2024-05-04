@@ -24,13 +24,13 @@ export default function UpdateABPage() {
     const [stateOfTheMedicalSubmission,setStateOfTheMedicalSubmission]=useState('');    //Use state to store the state of the medical submission
     const [stateOfTheMedicalSubmissionColor,setStateOfTheMedicalSubmissionColor]=useState('');    //Use state to store the color of the medical submission state
     
-    let academicYearDetails = {
+    let academicYearDetails = {             //Object to store the academic year details
         previous_academic_year:"",
         current_academic_year:"",
         current_semester:""
     }
 
-    let perviousGradeDetails = {
+    let existingGrade = {                    //Object to store the pervious grade details of the student
         id:"",
         student_id:"",
         course_id: "",
@@ -46,14 +46,12 @@ export default function UpdateABPage() {
 
     }
 
-    let updateDataOject = {     //Object to store the updated data
-        course_id: studentDetails.course_id,
-        student_id: studentDetails.student_id,
-        new_score: newScore,
-        exam_type: studentDetails.exam_type,
-        academic_year: studentDetails.academic_year,
-        new_grade: newGrade,
-        ca_eligibility: perviousGradeDetails.ca_eligibility,
+    let updateDataOject = {     //Object to store the updated marks data
+        course_id: studentDetails.course_id,                        //Set the course id ininially
+        student_id: studentDetails.student_id,                      //Set the student id initially
+        new_score: newScore,                                        //Set the new score initially
+        exam_type: studentDetails.exam_type,                        //Set the exam type initially  
+        academic_year: studentDetails.academic_year,                //Set the academic year initially
 
     };
 
@@ -74,24 +72,7 @@ export default function UpdateABPage() {
            
             setMedicalListUploaded(true);   //Set the medicalListUploaded state to true if the medical list is uploaded
            
-            const selectedStudentGrade = await axios.get(`http://localhost:9090/api/AssistantRegistrar/findSelectedStudentGrade/${studentDetails.course_id}/${studentDetails.student_id}`);   //Get the selected student grade from the backend
             
-            if(selectedStudentGrade.data.length>0){    //condition to check whether the selected student has a grade or not
-                perviousGradeDetails.id=selectedStudentGrade.data[0].id;
-                perviousGradeDetails.student_id=selectedStudentGrade.data[0].student_id;
-                perviousGradeDetails.course_id=selectedStudentGrade.data[0].course_id;
-                perviousGradeDetails.level= selectedStudentGrade.data[0].level;
-                perviousGradeDetails.semester = selectedStudentGrade.data[0].semester;
-                perviousGradeDetails.total_ca_mark = selectedStudentGrade.data[0].total_ca_mark;
-                perviousGradeDetails.ca_eligibility = selectedStudentGrade.data[0].ca_eligibility;
-                perviousGradeDetails.total_final_mark = selectedStudentGrade.data[0].total_final_mark;
-                perviousGradeDetails.total_rounded_mark = selectedStudentGrade.data[0].total_rounded_mark;
-                perviousGradeDetails.grade = selectedStudentGrade.data[0].grade;
-                perviousGradeDetails.gpv = selectedStudentGrade.data[0].gpv;
-            }
-
-        
-
             const selectedStudentMedicalDetails = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentMedicalDetails/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/${studentDetails.exam_type}`);   //Get the selected student medical details from the backend
             if(selectedStudentMedicalDetails.data.length>0){    //condition to check whether the selected student has submitted a medical or not
 
@@ -99,7 +80,6 @@ export default function UpdateABPage() {
                     
                     if (element['medical_state']==='Approved'){   //condition to check whether the medical submission is approved or not
                         setNewScore("MC");          //Set the new score to MC if the medical submission is approved
-                        setNewGrade("WH");          //Set the new grade to WH if the medical submission is approved 
                         setStateOfTheMedicalSubmissionColor("green");     //Set the color of the medical submission state to green
                         setStateOfTheMedicalSubmission("Medical submission has approved.");    //Set the state of the medical submission
                     }else{
@@ -129,36 +109,170 @@ export default function UpdateABPage() {
     },[]);
 
 
-    const updateGrade = async()=>{
-        updateDataOject.course_id = studentDetails.course_id;
-        updateDataOject.student_id = studentDetails.student_id;
-        updateDataOject.new_score = newScore;
-        updateDataOject.exam_type = studentDetails.exam_type;
-        updateDataOject.academic_year = studentDetails.academic_year;
+    const updateGrade = async()=>{              //Function to update the student grade
+
+        updateDataOject.course_id = studentDetails.course_id;           //Set the course id update in marks
+        updateDataOject.student_id = studentDetails.student_id;         //Set the student id update in marks
+        updateDataOject.new_score = newScore;                           //Set the new score update in marks
+        updateDataOject.exam_type = studentDetails.exam_type;           //Set the exam type update in marks
+        updateDataOject.academic_year = studentDetails.academic_year;   //Set the academic year update in marks
+
+        
 
 
         try{
             const update = await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentScore" , updateDataOject);   //Update the student AB exam score  with the new score (MC or F)
             if(update.data<0){     //condition to check is there a error with updating the grade
-                alert("Error with updating grade"); 
-                toast.error('Error with updating grade',{autoClose:2000}); 
+                alert("Error with updating AB score with new score"); 
+                toast.error('Error with updating AB score with new score',{autoClose:2000}); 
             }else{
-                toast.success('Grade updated successfully',{autoClose:2000});
+                toast.success('New score updated successfully',{autoClose:2000});
             }
         }
         catch(error){
             toast.error(error,{autoClose:2000});
         }
 
-        
+
+        const selectedStudentGrade = await axios.get(`http://localhost:9090/api/AssistantRegistrar/findSelectedStudentGrade/${studentDetails.course_id}/${studentDetails.student_id}`);   //Get the selected student grade from the backend
+            
+            if(selectedStudentGrade.data.length>0){    //condition to check whether the selected student has a grade or not (Grade should be there )
+                existingGrade.id=selectedStudentGrade.data[0].id;                                            //Set existing id in the grade table
+                existingGrade.student_id=selectedStudentGrade.data[0].student_id;                            //Set existing student id in the grade table
+                existingGrade.course_id=selectedStudentGrade.data[0].course_id;                              //Set existing course id in the grade table
+                existingGrade.level= selectedStudentGrade.data[0].level;                                     //Set existing level in the grade table
+                existingGrade.semester = selectedStudentGrade.data[0].semester;                              //Set existing semester in the grade table
+                existingGrade.total_ca_mark = selectedStudentGrade.data[0].total_ca_mark;                    //Set existing total ca mark in the grade table
+                existingGrade.ca_eligibility = selectedStudentGrade.data[0].ca_eligibility;                  //Set existing ca eligibility in the grade table
+                existingGrade.total_final_mark = selectedStudentGrade.data[0].total_final_mark;              //Set existing total final mark in the grade table
+                existingGrade.total_rounded_mark = selectedStudentGrade.data[0].total_rounded_mark;          //Set existing total rounded mark in the grade table
+                existingGrade.grade = selectedStudentGrade.data[0].grade;                                    //Set existing grade in the grade table
+                existingGrade.gpv = selectedStudentGrade.data[0].gpv;                                        //Set existing gpv in the grade table
+            }
+
+
+
 
         try{
-            const academicDetails = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`)
-            if(academicDetails.data.length>0){
-                console.log(academicDetails.data);
+            const academicDetails = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`)              //Get academic year details to find current and previous academic year
+            if(academicDetails.data.length>0){                                                                                    //condition to check whether the academic year details are available
+                academicYearDetails.previous_academic_year = academicDetails.data[0].previous_academic_year;                //Set the previous academic year
+                academicYearDetails.current_academic_year = academicDetails.data[0].current_academic_year;                  //Set the current academic year
+                academicYearDetails.current_semester = academicDetails.data[0].current_semester;                            //Set the current semester
+
             }else{
-                toast.error('Error with getting academic year details',{autoClose:2000});
+                toast.error('Error with getting academic year details',{autoClose:2000});                         //if academicy year details are not available show a toast message
+            }
+        }
+        catch(error){
+            toast.error(error,{autoClose:2000});             //if there is a error with getting academic year details show a toast message
+        }
+
+
+
+
+        try{
+            const marksList =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.previous_academic_year}/${studentDetails.exam_type}`);   //Get the selected student marks by selected course in previous academic year (to check whether the student is a propper student or not)
             
+            if(marksList.data.length==0){    //condition to check whether the selected student dont have marks in previous academic year (meanse the student is a propper student)
+
+            
+                /*---------------------------------------------------------------------Scenario for a propper student---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+                    
+                if (studentDetails.exam_type=="Mid theory exam" || studentDetails.exam_type=="Mid practical exam"){                   //Condition to check whether the exam is a mid exam
+                        
+                    if(newScore==="F"){             //condition to check whether the new grade is F
+                            existingGrade.ca_eligibility="Not eligible";     //Set the ca eligibility to not eligible
+                            existingGrade.grade="F";     //Set the grade to F
+                    }
+
+                    else if(newScore==="MC"){           //condition to check whether the new grade is MC
+
+                        existingGrade.grade="WH";        //Set the grade to MC
+
+                        if(existingGrade.ca_eligibility==="Pending"){            //condition to check whether the ca eligibility is pending
+                            existingGrade.ca_eligibility="Eligible";                 //Set the ca eligibility to eligible
+                        }
+                    }
+
+                    try{
+                        const updateGradeResult= await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);   //Update the  grade of a propper student with the new grade and other details in Mid exam scenario 
+                        toast.success('Final grade updated successfully',{autoClose:2000});     //Show a toast message
+                    }
+                    catch(error){
+                        toast.error(error,{autoClose:2000});        //Show a toast message
+                    }
+
+                    
+                } else if(studentDetails.exam_type=="End theory exam" || studentDetails.exam_type=="End practical exam"){           //Condition to check whether the exam is a end exam
+                    
+                    if(studentDetails.exam_type=="End theory exam"){            //Condition to check whether the exam is a theory exam
+                        
+                        const previousMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.current_academic_year}/Mid theory exam`);   //Get the mid therory exam results of the student in the current academic year
+                        
+                        if (previousMarksList.data[0].assignment_score !="F" && updateDataOject.new_score==="MC"){      //Condition to check whether the student has passed the mid exam and have MC for end exam
+                            
+                            existingGrade.grade="WH";                   //Set the grade to WH
+                        }
+                        
+                    } else if(studentDetails.exam_type=="End practical exam"){      //Condition to check whether the exam is a practical exam
+                        const previousMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.current_academic_year}/Mid practical exam`);   //Get the mid practical exam results of the student in the current academic year
+                        if (previousMarksList.data[0].assignment_score !="F" && updateDataOject.new_score==="MC"){              //Condition to check whether the student has passed the mid exam and have MC for end exam
+                            existingGrade.grade="WH"                   //Set the grade to WH   
+                        }
+                        
+                    }
+
+                    try{
+                        const updateGradeResult= await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);         //Update the  grade of a propper student with the new grade and other details in End exam scenario
+                        toast.success('Final grade updated successfully',{autoClose:2000});             //Show a toast message
+                    }
+                    catch(error){
+                        toast.error(error,{autoClose:2000});        //Show a toast message
+                    }
+                }
+            
+            }else if(marksList.data.length>0){                                           //condition to check whether the selected student has marks in previous academic year (meanse the student is a repeated student or a student who has a WH grade)
+
+            /*---------------------------------------------------------------------Scenario for a repeated or WH student---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+                
+            if((studentDetails.exam_type=="Mid theory exam" || studentDetails.exam_type=="End theory exam")){           //Condtition to ensure the exam is a theory exam
+                
+                const previousMidExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.previous_academic_year}/Mid theory exam`);   //Get the selected student previous mid exam marks in theory exam 
+                if(previousMidExamResult.data[0].assignment_score=="MC" && existingGrade.grade=="WH" && newScore=="F"){       //Condition to check whether the student has a WH grade and the new grade is F
+                    existingGrade.grade="F";        //Set the grade to F
+                    existingGrade.ca_eligibility="Not eligible";    //Set the ca eligibility to not eligible
+
+                    try{
+                        const updateGradeResult= await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);         //Update the  grade of a repeated or WH student with the new grade and other details in theory exam scenario
+                        toast.success('Final grade updated successfully',{autoClose:2000});             //Show a toast message
+
+                    }
+                    catch(error){
+                        toast.error(error,{autoClose:2000});        //Show a toast message
+                    }
+                }
+
+            } else if((studentDetails.exam_type=="Mid practical exam" || studentDetails.exam_type=="End practical exam")){           //Condtition to ensure the exam is a practical exam
+                
+                const previousMidExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.previous_academic_year}/Mid practical exam`);   //Get the selected student previous mid exam marks in practical exam
+                if(previousMidExamResult.data[0].assignment_score=="MC" && existingGrade.grade=="WH" && newScore=="F"){       //Condition to check whether the student has a WH grade and the new grade is F
+                    existingGrade.grade="F";        //Set the grade to F
+                    existingGrade.ca_eligibility="Not eligible";    //Set the ca eligibility to not eligible
+
+                    try{
+                        const updateGradeResult= await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);         //Update the  grade of a repeated or WH student with the new grade and other details in theory exam scenario
+                        toast.success('Final grade updated successfully',{autoClose:2000});             //Show a toast message
+
+                    }
+                    catch(error){
+                        toast.error(error,{autoClose:2000});        //Show a toast message
+                    }
+                }
+            }
+
+            
+
             }
         }
         catch(error){
@@ -168,20 +282,7 @@ export default function UpdateABPage() {
         
         
 
-        // if(newScore==="MC"){             //condition to check whether the new grade is MC
-        //     const result2= await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade" , updateDataOject);       //Update the student final grade with the WH grade
-            
-        //     if(result2.data<0){ 
-        //         toast.error('Error with updating final grade',{autoClose:2000});  
-        //     }else{
-        //         toast.success('Final grade updated successfully',{autoClose:2000});
 
-        //     }
-        // };
-
-        if(studentDetails.exam_type=="Mid theory exam" || studentDetails.exam_type=="Mid practical exam"){
-            
-        }
 
         setTimeout(() => {
             history.goBack();     //Back to the previous page

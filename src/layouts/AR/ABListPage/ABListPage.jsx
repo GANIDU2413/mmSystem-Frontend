@@ -7,7 +7,7 @@ import { NavebarAR } from '../../Components/AR/NavBarAR/NavebarAR';
 
 export default function ABListPage() {
 
-    const previousApprovalLevel='HOD';    //Approval level required to view the students having E* Grades
+    const previousApprovalLevel='HOD';    //Approval level required to view the students having AB grades
     const [courseList,setCourseList]=useState([]);    //Use state to store the courses and student details under AR approval
     const history = useHistory(); // Initialize useHistory hook to navigate to different pages
 
@@ -19,7 +19,7 @@ export default function ABListPage() {
     const loadData = async() => {   //Function to load the student details havind E* from the backend
       
 
-        const result = await axios.get("http://localhost:9090/api/AssistantRegistrar/getABDetails");   //Get all the course and student details having E* from the backend
+        const result = await axios.get("http://localhost:9090/api/AssistantRegistrar/getABDetails");   //Get all the course and student details having AB from the backend
         await result.data.map((element)=>{    //Filter the courses and student details under AR approval
           if(element[7]===previousApprovalLevel){
             setCourseList(courseList=>[...courseList,element])  //Add the courses and student details under AR approval to the courseList state
@@ -45,13 +45,13 @@ export default function ABListPage() {
         
         
 
-        {courseList.length===0 ?(   //If there are no students having E* Grades under AR approval, display the following message
+        {courseList.length===0 ?(   //If there are no absent students under AR approval, display the following message
 
           <div className="alert alert-danger" role="alert" style={{marginTop:'100px',textAlign:'center',width:'80%',marginLeft:'auto',marginRight:'auto'}}>
-            <h5>There are no students having E* Grades under your approval</h5>
+            <h5>There are no absent students for exams under your approval</h5>
           </div>
 
-        ):(   //If there are students having E* Grades under AR approval, display the following table
+        ):(   //If there are absent students under AR approval, display the following table
 
           <div style={{marginLeft:"auto",marginRight:"auto",marginTop:"65px",alignContent:'center'}}>
             <table className="table table-striped">
