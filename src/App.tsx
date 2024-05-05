@@ -198,7 +198,7 @@ export const App = () => {
           </Route>
 
           <Route path="/HODMarksReturnSheet/:course_id/:course_name">
-          <HODMarksReturnSheet />
+          <HODMarksReturnSheet approved_level={"course_coordinator"}/>
         </Route>
 
           <Route path="/sysandashboard">

@@ -102,7 +102,7 @@ const { student_id, course_id, course_name } = useParams();
     try {
       const finalMarkList = await axios.get(`http://localhost:9090/api/studentMarks/getStudentMarksbySC/${course_id},${student_id}`);
       setfinalMarks(finalMarkList.data.content);
-      console.log(finalMarkList.data);
+      console.log(finalMarkList.data.content);
     } catch (error) {
       console.error('Axios request failed:', error);
     }

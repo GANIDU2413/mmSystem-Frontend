@@ -334,7 +334,7 @@ export default function HODMarksReturnSheet(props) {
                                 <td>Coordinator/ Examinar :</td>
                                 <td></td>
                                 <td>Sign:</td>
-                                <td></td>
+                                <td><button className='imgsUpload'></button></td>
                                 <td>Date:</td>
                                 <td></td>
                             </tr>
