@@ -42,7 +42,7 @@ export default function EStarListPage() {
 
 
   return (
-    <div>
+    <div style={{width:"96%",marginLeft:"auto",marginRight:"auto"}}>
         
         
 
@@ -54,10 +54,10 @@ export default function EStarListPage() {
 
         ):(   //If there are students having E* Grades under AR approval, display the following table
 
-          <div style={{width:"98%",marginLeft:"auto",marginRight:"auto",marginTop:"65px",alignContent:'center'}}>
+          <div style={{marginLeft:"auto",marginRight:"auto",marginTop:"65px",alignContent:'center'}}>
             <table className="table table-striped">
 
-              <thead>
+              <thead className='tableHead'>
                 <tr>
                   <th colSpan={100} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>
                     Update students grades with medical submissions <br/>
@@ -94,13 +94,13 @@ export default function EStarListPage() {
               
             </table>
 
-            <div className='right-aligned-div'>
-              <BackButton/> <br/>&nbsp;
-            </div>
+            
           </div>
 
         )}
-        
+        <div className='right-aligned-div back-button-div'>
+            <BackButton/> <br/>&nbsp;
+          </div>
 
     </div>
   )

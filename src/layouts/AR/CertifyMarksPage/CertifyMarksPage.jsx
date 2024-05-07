@@ -60,23 +60,23 @@ export default function CertifyMarksPage(props) {
 
                         
 
-                        <div className="d-grid gap-3" style={{marginTop:"50px",marginRight:"30px"}}>
-                            <label className="semesterLabel" >Semester 1</label>                                                                        {/* semester 1 buttons for eaach levels */}
-                            <button className="btn btn-primary" type="button" onClick={()=>{ checkCertifyAvailability(1,1) }}>Level 1</button>
-                            <button className="btn btn-primary" type="button" onClick={()=>{ checkCertifyAvailability(2,1) }}>Level 2</button>
-                            <button className="btn btn-primary" type="button" onClick={()=>{ checkCertifyAvailability(3,1) }}>Level 3</button>
-                            <button className="btn btn-primary" type="button" onClick={()=>{ checkCertifyAvailability(4,1) }}>Level 4</button>
+                        <div className="d-grid gap-3 level-set" style={{marginTop:"50px",marginRight:"30px"}}>
+                            <label className="semesterLabel " >Semester 1</label>                                                                        {/* semester 1 buttons for eaach levels */}
+                            <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(1,1) }}>Level 1</button>
+                            <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(2,1) }}>Level 2</button>
+                            <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(3,1) }}>Level 3</button>
+                            <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(4,1) }}>Level 4</button>
                             
                         </div>
                     </div>
 
                     <div className="col-sm">
-                        <div className="d-grid gap-3" style={{marginTop:"50px",marginLeft:"30px"}}>
+                        <div className="d-grid gap-3 level-set" style={{marginTop:"50px",marginLeft:"30px"}}>
                             <label className="semesterLabel">Semester 2</label>                                                                     {/* semester 2 buttons for eaach levels */}
-                            <button className="btn btn-primary" type="button" onClick={()=>{ checkCertifyAvailability(1,2) }}>Level 1</button>
-                            <button className="btn btn-primary" type="button" onClick={()=>{ checkCertifyAvailability(2,2) }}>Level 2</button>
-                            <button className="btn btn-primary" type="button" onClick={()=>{ checkCertifyAvailability(3,2) }}>Level 3</button>
-                            <button className="btn btn-primary" type="button" onClick={()=>{ checkCertifyAvailability(4,2) }}>Level 4</button>
+                            <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(1,2) }}>Level 1</button>
+                            <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(2,2) }}>Level 2</button>
+                            <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(3,2) }}>Level 3</button>
+                            <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(4,2) }}>Level 4</button>
                         </div>
                     </div>
                 </div>

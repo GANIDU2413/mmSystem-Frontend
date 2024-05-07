@@ -22,10 +22,10 @@ export default function LevelSelection(props:any) {
     <div className="shadow" style={{marginTop:75,marginLeft:20,marginRight:20,}}>
         <nav >
             <div className="nav nav-tabs" id="level-selection-tab" role="tablist" style={{backgroundColor:"rgba(0, 0, 0, 0.1)"}}>
-                <button className="nav-link active" id="nav-level1-tab" data-bs-toggle="tab" data-bs-target="#nav-level1" type="button" role="tab" aria-controls="nav-level1" aria-selected="true" onClick={() => callSemester(1)}>LEVEL 1</button>
-                <button className="nav-link " id="nav-level2-tab" data-bs-toggle="tab" data-bs-target="#nav-level2" type="button" role="tab" aria-controls="nav-level2" aria-selected="false" onClick={() => callSemester(2)}>LEVEL 2</button>
-                <button className="nav-link " id="nav-level3-tab" data-bs-toggle="tab" data-bs-target="#nav-level3" type="button" role="tab" aria-controls="nav-level3" aria-selected="false" onClick={() => callSemester(3)}>LEVEL 3</button>
-                <button className="nav-link " id="nav-level4-tab" data-bs-toggle="tab" data-bs-target="#nav-level4" type="button" role="tab" aria-controls="nav-level3" aria-selected="false" onClick={() => callSemester(4)}>LEVEL 4</button>
+                <button className="nav-link levels active" id="nav-level1-tab" data-bs-toggle="tab" data-bs-target="#nav-level1" type="button" role="tab" aria-controls="nav-level1" aria-selected="true" onClick={() => callSemester(1)}>LEVEL 1</button>
+                <button className="nav-link levels " id="nav-level2-tab" data-bs-toggle="tab" data-bs-target="#nav-level2" type="button" role="tab" aria-controls="nav-level2" aria-selected="false" onClick={() => callSemester(2)}>LEVEL 2</button>
+                <button className="nav-link levels " id="nav-level3-tab" data-bs-toggle="tab" data-bs-target="#nav-level3" type="button" role="tab" aria-controls="nav-level3" aria-selected="false" onClick={() => callSemester(3)}>LEVEL 3</button>
+                <button className="nav-link levels " id="nav-level4-tab" data-bs-toggle="tab" data-bs-target="#nav-level4" type="button" role="tab" aria-controls="nav-level3" aria-selected="false" onClick={() => callSemester(4)}>LEVEL 4</button>
                     <label style={{paddingTop:"7px",paddingLeft:"300px",fontSize:"18px"}}><b>{level_selection_tpe}  - Department of {department_id}</b></label>
             </div>
 

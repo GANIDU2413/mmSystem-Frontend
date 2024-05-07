@@ -118,7 +118,7 @@ export default function UpdateEStarPage() {
             {
                 medicalListUploaded ? (
                     <form>
-                        <table>
+                        <table className='dataTable'>
                             <tbody>
                                 <tr>
                                     <td><label>Student ID: </label></td>
