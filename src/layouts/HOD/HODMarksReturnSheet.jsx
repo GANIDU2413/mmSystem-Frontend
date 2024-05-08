@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { NavebarHOD } from './NavebarHOD';
+import SignatureCanvas from 'react-signature-canvas';
 
 export default function HODMarksReturnSheet(props) {
     const [marks, setMarks] = useState([]);
@@ -15,6 +16,8 @@ export default function HODMarksReturnSheet(props) {
     const { course_id, course_name } = useParams();
     const [approval_level, setApprovalLevel] = useState('');
     const history = useHistory();
+    const [sign,setSign] = useState()
+    const [url,setUrl] = useState()
 
     let CAAvailable = false;
 
@@ -90,7 +93,15 @@ export default function HODMarksReturnSheet(props) {
         history.goBack(); // Navigate back
     };
 
-    
+    const handleClear= () =>{
+        sign.clear()
+        setUrl('')
+    }
+    const handleGenerate= () =>{
+        setUrl(sign.getTrimmedCanvas().toDataURL('image/png'))
+    }
+    console.log(url);
+  
 
 
     return (
@@ -99,6 +110,18 @@ export default function HODMarksReturnSheet(props) {
             <div className=' container' style={{marginTop:"70px"}}>
           
             <div>
+                <div >
+                    <form onSubmit={handleReturn}>
+                    <input
+                        type='submit'
+                        value="Marks Return"
+                        className="btn shadow btn-outline-success btn-sm float-end my-4"
+                        id="submitbtn"
+                        style={{ float: 'right', width: '130px'}}
+                    />
+
+                    </form>
+                </div>
                 <table>
                     <tr>
                         <td class="text-decoration-underline font-italic"><p>Mark Return Sheet:</p></td>
@@ -314,20 +337,10 @@ export default function HODMarksReturnSheet(props) {
                     }
                 </tbody>
             </table>
-            <div >
-                <form onSubmit={handleReturn}>
-                <input
-                    type='submit'
-                    value="Return"
-                    className="btn shadow btn-outline-success btn-sm w-25 float-end my-4"
-                    id="submitbtn"
-                    style={{ float: 'right', width: '10px'}}
-                />
-
-                </form>
-            </div>
             
-
+            
+                <div style={{float:"left"}}>
+                    
                     <div>
                         <table>
                             <tr>
@@ -359,12 +372,42 @@ export default function HODMarksReturnSheet(props) {
 
 
                     <form onSubmit={handleSubmit}>
-                        <input to={``} type="submit" value="Send" className="btn btn-outline-success btn-sm"  id="submitbtn" style={{ width: '150px'}}/> <br /><br />
+                        <input to={``} type="submit" value="Send" className="btn btn-outline-success btn-sm"  id="submitbtn" style={{ width: '100px'}}/> <br /><br />
                     </form>
+                </div>
+
+                <div style={{float:"right"}} >
+
+                    <div  style={{float:"left"}}>
+                        <div style={{border:"2px solid black",width: 500, height: 200}}>
+                            <SignatureCanvas 
+                                canvasProps={{width: 500, height: 200, className: 'sigCanvas'}}
+                                ref={data=>setSign(data)}
+                            />
+                        </div>
+
+                        <br></br>
+                        <button className='btn btn-outline-success btn-sm '  style={{width:"100px"}} onClick={handleGenerate}>Save</button>
+                        <button className='btn btn-danger btn-sm mx-3' style={{width:"100px"}} onClick={handleClear}>Clear</button>
+                        
+
+                        <br/><br/>
+                        <img src={url} />
+
+                    </div>
+                    <div>
+                    <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                        <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio1" autocomplete="off" checked/>
+                        <label class="btn btn-outline-danger" for="vbtn-radio1">Digital Signature</label>
+                        <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio2" autocomplete="off"/>
+                        <label class="btn btn-outline-danger" for="vbtn-radio2">Upload a Signature</label>
+                        </div>
+                    </div>
+
+                </div>
+
 
             </div>
-
-
                
         </>
     )
