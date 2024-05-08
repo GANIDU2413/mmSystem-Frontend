@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import './viewMarksTable.css';
 import BackButton from '../BackButton/BackButton';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function ViewMarksTable() {
   
@@ -170,6 +171,7 @@ export default function ViewMarksTable() {
           
           )
         }
+        <ToastContainer/>
         <div className='right-aligned-div back-button-div'>   {/* back button */} 
           <BackButton/> &nbsp;&nbsp;&nbsp;
         </div><br/>

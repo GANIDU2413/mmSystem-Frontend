@@ -27,6 +27,10 @@ td {
     padding-bottom: 10px;
 }
 
+.labelkey {
+    font-weight: bold;
+}
+
 .labelValue {
     width: 100%;
     margin-left: auto;
