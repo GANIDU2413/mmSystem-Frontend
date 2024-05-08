@@ -87,8 +87,8 @@ export const NavebarAR = () => {
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/viewEStarList">
-                  Update E* Grades With Medicals
+                <a className="nav-link" href="/viewablist">
+                Update grades for absentees
                 </a>
               </li>
 
