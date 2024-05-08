@@ -13,6 +13,7 @@ import EvaluationCriteriaModel from "../../../models/EvaluationCriteriaModel";
 import EvaluationCriteriaNameModel from "../../../models/EvaluationCriteriaNameModel";
 import { stat } from "fs";
 import axios from "axios";
+import EvaluationCriteriaDetailsModel from "../../../models/EvaluationCriteriaDetailsModel";
 
 export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // to handle okta authentication
@@ -46,7 +47,12 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   const [evaluationData, setEvaluationData] = useState<
     EvaluationCriteriaNameModel[]
   >([]);
-  const [evaluationNameData, setEvaluationNameData] = useState("");
+  const [evaluationIdsData, setEvaluationIdsData] = useState<
+    EvaluationCriteriaDetailsModel[]
+  >([]);
+
+  
+
   // Empty dependency array to ensure this effect runs only once on mount
   // fetct courses' IDs related user's state.
   useEffect(() => {
@@ -153,12 +159,46 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
 
       const responseData: EvaluationCriteriaNameModel[] =
         responseJeson._embedded.evaluationCriteriaNames.map(
-          (item: any) => new EvaluationCriteriaNameModel(item.assignmentName)
+          (item: any) =>
+            new EvaluationCriteriaNameModel(
+              item.assignmentName,
+              item.evaluationCriteriaId
+            )
         );
 
       setEvaluationData(responseData);
     } catch (error: any) {
       toastr.error("Network Error" + " " + error.messages, "Error!");
+    }
+  };
+
+  const fetchEvalutionCriteriaDetails = async (
+    courseId: string,
+    assignmentType: string
+  ) => {
+    try {
+      const criteriaUrl = `http://localhost:9090/api/evaluationCriteriaLectures/search/findEvaluationCriteriaByByCourseIdAndAndAssignmentType?courseId=${courseId}&assignmentType=${assignmentType}`;
+
+      const response = await fetch(criteriaUrl);
+
+      if (!response.ok) {
+        toastr.error("Network Error", "Error" + " " + response.status);
+      }
+
+      const responseJeson = await response.json();
+
+      const responseData: EvaluationCriteriaDetailsModel[] =
+        responseJeson._embedded.evaluationCriteriaLectures.map(
+          (item: any) =>
+            new EvaluationCriteriaDetailsModel(item.evaluationCriteriaId)
+        );
+
+      setEvaluationIdsData(responseData);
+    } catch (error: any) {
+      toastr.error(
+        "Network Error with fetch evaluation criteria." + " " + error.messages,
+        "Error!"
+      );
     }
   };
   // to handle state of the course acordantly user's input.
@@ -178,10 +218,11 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   // to handle assignmment type acordantly user's input.
   const handleAssignmentType = (setAssignmentType: string): void => {
     setassignmentType(setAssignmentType);
-    // to get assignment name
-    const evaluationNameString = setAssignmentType;
-    const evaluationName = evaluationNameString.replace(/\d+/g, "");
-    setEvaluationNameData(evaluationName);
+    // wite new solution here.
+    fetchEvalutionCriteriaDetails(
+      courseID,
+      setAssignmentType.replace(/[0-9]/g, "")
+    );
     fetchStudentDetails(courseID, setAssignmentType);
   };
 
@@ -242,7 +283,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
           year !== "" &&
           level !== "" &&
           semester !== "" &&
-          evaluationNameData !== ""
+          evaluationIdsData.map((item) => item.evaluationCriteriaId)[0] !== ""
         ) {
           // to store data temporary
           const score: AddScoreRequest = new AddScoreRequest(
@@ -253,7 +294,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
             assignmentScore,
             level,
             semester,
-            evaluationNameData // Quize , Asssignment
+            evaluationIdsData.map((item) => item.evaluationCriteriaId)[0] // Quize , Asssignment
           );
 
           // to handle the behaviors of data that can be passed into backend.
@@ -404,11 +445,8 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
     }
   };
 
- 
-  // // Download CSV file with headers only
-  // downloadCSVWithHeaders(headers, 'headers.csv')
   // to ensure the authentication.
-  if (authState?.accessToken?.claims.userType === undefined) {
+  if (authState?.accessToken?.claims.userType !== "lecture") {
     return <Redirect to="/home" />;
   }
   // to desplay score feeding form
@@ -490,6 +528,17 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
                     name="author"
                     required
                     value={semester}
+                    disabled={true}
+                  />
+                </div>
+                <div className="col-md-3 mb-3">
+                  <label className="form-label">Criteria ID</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="author"
+                    required
+                    value={evaluationIdsData.map((item) => item.evaluationCriteriaId)[0]}
                     disabled={true}
                   />
                 </div>
