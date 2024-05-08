@@ -49,6 +49,7 @@ import CertifyMarksPage from "./layouts/AR/CertifyMarksPage/CertifyMarksPage";
 import ViewMedicalPage from "./layouts/AR/ViewMedicalTablePage/ViewMedicalPage";
 import CertifyError from "./layouts/Components/AR/CertifyError/CertifyError";
 import CourseCard from "./layouts/Components/HOD/CourseCard";
+import StudentRegCourses from "./layouts/SystemAnalyst/StudentCourseReg/StudentRegCourses";
 
 
 // to configure okta authentication
@@ -246,6 +247,10 @@ export const App = () => {
           <Route path="/sysanicoursemodule">
             <ManageCourseModule/>
           </Route>
+
+          <Route path="/screg">
+            <StudentRegCourses/>
+          </Route>
           
             <Route path="/addscore">
               <AddScore option={true} />
@@ -280,6 +285,8 @@ export const App = () => {
             <SecureRoute path={"/system_analysis"}>
               <DashBoardSA/>
             </SecureRoute>
+
+
 
 
           </Switch>

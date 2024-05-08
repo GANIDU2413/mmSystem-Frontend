@@ -106,6 +106,12 @@ export const NavebarSA = () => {
                   Courses for Lecturers
                 </a>
               </li>
+
+              <li className="nav-item">
+                <a className="nav-link active" aria-current="page" href="/screg">
+                Students Courses Registration
+                </a>
+              </li>
               
               <hr></hr>
             </ul>

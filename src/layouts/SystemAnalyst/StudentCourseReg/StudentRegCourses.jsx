@@ -57,8 +57,8 @@ export default function StudentRegCourses() {
     const wb = XLSX.utils.book_new();
     // Create a new worksheet with the specified column headers
     const ws = XLSX.utils.json_to_sheet([
-      { student_id: "", course_id: "", academic_year: "", exam_type: "",medical_state: "" }
-    ], { header: ["student_id", "course_id", "academic_year", "exam_type", "medical_state"], skipHeader: false });
+      { student_id: "", course_id: "", academic_year: "" }
+    ], { header: ["student_id", "course_id", "academic_year"], skipHeader: false });
     // Add the worksheet to the workbook
     XLSX.utils.book_append_sheet(wb, ws, "Medical Template");
     // Write the workbook to a file and download it
