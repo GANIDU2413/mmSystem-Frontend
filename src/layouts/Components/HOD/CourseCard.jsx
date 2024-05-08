@@ -25,9 +25,9 @@ export default function CourseCard(props) {
         try {
             const list = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level}/${semester}/${approved_level}`);
             console.log(list.data);
-            setCidN(list.data);
+            setCidN(list.data.content);
             console.log(cidN);
-            seterrorMsg("");
+            seterrorMsg(list.data.message);
         } catch (error) {
             if (error.response && error.response.status === 404) {
                 console.error('No data found for the given level and semester');
@@ -38,7 +38,7 @@ export default function CourseCard(props) {
 
             } else {
                 // Handle other types of errors
-                console.error('An error occurred:', error);
+                console.error('An error occurred:', error.response.data.message);
                 seterrorMsg('An error occurred:', error);
             }
         }
