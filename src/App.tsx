@@ -190,7 +190,7 @@ export const App = () => {
             <CAMarkTable/>
           </Route>
 
-          <Route path="/MarksCheckingForm/:student_id/:course_id">
+          <Route path="/MarksCheckingForm/:student_id/:course_id/:course_name">
             <MarksCheckingForm/>
           </Route>
  
@@ -199,8 +199,8 @@ export const App = () => {
           </Route>
 
           <Route path="/HODMarksReturnSheet/:course_id/:course_name">
-            <HODMarksReturnSheet/>
-          </Route>
+          <HODMarksReturnSheet approved_level={"course_coordinator"}/>
+        </Route>
 
           <Route path="/sysandashboard">
             <SystemAnalystDashBoard/>

@@ -10,11 +10,18 @@ export default function HODMarksReturnSheet(props) {
     const [evaluationCriteria, setEvaluationCriteria] = useState([]);
     const [calculations, setCalculations] = useState([]);
     const [studentList, setStudentList] = useState([]);
+    const[grade, setGrade] = useState([]);
     const [noData, setNoData] = useState(false); // State to indicate if there is no data to display
     const { course_id, course_name } = useParams();
     const [approval_level, setApprovalLevel] = useState('');
     const history = useHistory();
-    const [isChecked, setIsChecked] = useState(false);
+
+    let CAAvailable = false;
+
+
+    let headersData = [];
+    let headerValue= [];
+
 
     useEffect(() => {
         result();
@@ -32,9 +39,17 @@ export default function HODMarksReturnSheet(props) {
 
             const list2 = await axios.get(`http://localhost:9090/api/StudentAssessment/get/scoreByCourseId/${course_id}`);
             setMarks(list2.data);
+            console.log(marks)
 
             const list3 = await axios.get(`http://localhost:9090/api/marksCalculations/getMarksCalculation/${course_id}`);
             setCalculations(list3.data);
+           console.log(calculations)
+
+
+            //getting data from grade table
+            const list4 = await axios.get(`http://localhost:9090/api/studentMarks/getStudentMarksbyCourse/${course_id}`);
+            setGrade(list4.data.content);
+            console.log(grade)
 
         } catch (error) {
             console.error(error);
@@ -75,110 +90,118 @@ export default function HODMarksReturnSheet(props) {
         history.goBack(); // Navigate back
     };
 
+    
+
+
     return (
         <>
             <NavebarHOD />
             <div className=' container' style={{marginTop:"70px"}}>
+          
+            <div>
+                <table>
+                    <tr>
+                        <td class="text-decoration-underline font-italic"><p>Mark Return Sheet:</p></td>
+                    </tr>
+                    <tr>
+                        <td><p>Marks Obtained by the Candidate for:</p></td>
+                    </tr>
+                    <tr>
+                        <td>Academic Year:</td>
+                        <td></td>
+                        <td>Degree:</td>
+                        <td></td>
+                        <td>2nd Semsester Examination: December 2023</td>
+                    </tr>
+                </table>
+                <h4>Course code and Title : {course_name} - {course_id}</h4>
+            </div>
+
             
-            <h2>{course_name} - {course_id}</h2>
             <table className="table shadow table-bordered" style={{ marginTop: "30px", width: '100%' }}>
                 <thead>
                     <tr>
                         <th scope="col">Student_ID</th>
                         {
+                            
                             evaluationCriteria.map((evaluationCriteria, index) => {
                                 let headers = [];
+                                
                                 if (evaluationCriteria.type == "CA") {
+                                    CAAvailable = true;
                                     if (evaluationCriteria.no_of_conducted > 1) {
                                         marks.map((ele, index) => {
-                                            if (ele.assignment_name == evaluationCriteria.assessment_type) {
-                                                const existsInHeaders = headers.some(header => header.props.children == ele.assignment_type);
-
-                                                // If the assignment_name does not exist in the headers array, push the new element
-                                                if (!existsInHeaders) {
-                                                    headers.push(<th key={`${index}`} scope="col">{ele.assignment_type}</th>);
-                                                }
+                                            if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
+                                               
+                                                    headers.push(<th key={`${index}`} scope="col">{ele.assignment_name}</th>);
+                                                    headersData.push(ele.assignment_name)
+                                                
                                             }
                                         });
-                                        calculations.map((ele, index) => {
-                                            const existsInHeaders = headers.some(header => header.props.children == evaluationCriteria.description);
-
-                                            // If the assignment_name does not exist in the headers array, push the new element
-                                            if (!existsInHeaders) {
-                                                if (ele.type == evaluationCriteria.assessment_type) {
-                                                    headers.push(<th key={`${index}`} scope="col">{evaluationCriteria.description}</th>);
-                                                }
-                                            }
-                                        });
+                                        // calculations.map((ele, index) => {
+                                           
+                                            headers.push(<th key={`${index}`} scope="col">{evaluationCriteria.description}</th>);
+                                            headersData.push(evaluationCriteria.description)
+                                            headers.push(<th scope="col">{ evaluationCriteria.percentage}% from  {evaluationCriteria.description}</th>);
+                                            headersData.push(`${evaluationCriteria.percentage}% from  ${evaluationCriteria.description}`)
+                                            
+                                        // });
                                     } else {
-                                        marks.map((ele, index) => {
-                                            if (ele.assignment_name == evaluationCriteria.assessment_type) {
-                                                const existsInHeaders = headers.some(header => header.props.children == ele.assignment_type);
-
-                                                // If the assignment_name does not exist in the headers array, push the new element
-                                                if (!existsInHeaders) {
-                                                    headers.push(<th key={`${index}`} scope="col">{ele.assignment_type}</th>);
-                                                }
+                                        marks?.map((ele, index) => {
+                                            if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
+                                               
+                                                    headers.push(<th key={`${index}`} scope="col">{ele.assignment_name}</th>);
+                                                    headersData.push(ele.assignment_name)
+                                                
                                             }
                                         });
-                                    }
 
-                                    calculations.map((calculations, index2) => {
-                                        if (evaluationCriteria.assessment_type == calculations.type) {
-                                            const existsInHeaders = headers.some(header => header.props.children == calculations.description);
-                                            if (!existsInHeaders) {
-                                                headers.push(<th key={`${index2}`} scope="col">{calculations.description}</th>);
-                                            }
-                                        }
-                                    });
+                                        headers.push(<th scope="col">{ evaluationCriteria.percentage}% from  {evaluationCriteria.assessment_type}</th>);
+                                        headersData.push(`${evaluationCriteria.percentage}% from  ${evaluationCriteria.assessment_type}`)
+
+                                    }   
                                 }
                                 return headers;
                             }).flat()
                         }
-                        {
-                            calculations.map((ele, index) => {
-                                let headers = [];
-                                if (ele.type == "Total CA Mark") {
-                                    headers.push(<th key={`${index}`} scope="col">{ele.description}</th>);
-                                }
-                                return headers;
-                            }).flat()
-                        }
+
+                        
+                        {CAAvailable ? <th scope="col">Total CA Marks</th> : null}
+                        
+
                         {
                             evaluationCriteria.map((evaluationCriteria, index) => {
                                 let headers = [];
                                 if (evaluationCriteria.type == "End") {
                                     marks.map((ele, index) => {
-                                        if (ele.assignment_name == evaluationCriteria.assessment_type) {
-                                            const existsInHeaders = headers.some(header => header.props.children == ele.assignment_type);
+                                        if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
+                                            
+                                                headers.push(<th key={`${index}`} scope="col">{ele.assignment_name}</th>);
+                                                headersData.push(ele.assignment_name)
 
-                                            // If the assignment_name does not exist in the headers array, push the new element
-                                            if (!existsInHeaders) {
-                                                headers.push(<th key={`${index}`} scope="col">{ele.assignment_type}</th>);
-                                            }
-
-                                            calculations.map((calculations, index2) => {
-                                                if (evaluationCriteria.assessment_type == calculations.type && ele.assignment_type !== "1st Marking" && ele.assignment_type !== "2nd Marking") {
-                                                    headers.push(<th key={`${index2}`} scope="col">{calculations.description}</th>);
+                                           
+                                                if ( ele.assignment_name !== "1st Marking" && ele.assignment_name !== "2nd Marking") {
+                                                    headers.push(<th scope="col">{evaluationCriteria.percentage}% from {evaluationCriteria.assessment_type}</th>);
+                                                    headersData.push(`${evaluationCriteria.percentage}% from ${evaluationCriteria.assessment_type}`)
                                                 }
-                                            });
+                                        
                                         }
                                     }).flat();
                                 }
+                               
                                 return headers;
                             }).flat()
                         }
-                        {
-                            calculations.map((ele, index) => {
-                                let headers = [];
-                                if (ele.type == "Final Marks") {
-                                    headers.push(<th key={`${index}`} scope="col">{ele.description}</th>);
-                                }
-                                return headers;
-                            }).flat()
-                        }
+                       
+                        <th scope="col">Total Final Marks</th>  
+                        <th scope="col">Total Rounded Marks</th>
+                        <th scope="col">Results/Grades</th>
+                        <th scope="col">GPV</th>
+                                    
+                        <th>Remarks,Continuous Assessment Pass/Fail</th>
                         <th>View</th>
                     </tr>
+                    {console.log(headersData)}
                 </thead>
                 <tbody>
                     {
@@ -192,31 +215,35 @@ export default function HODMarksReturnSheet(props) {
                                             if (evaluationCriteria.no_of_conducted > 1) {
                                                 marks.map((mark, index) => {
                                                     if (mark.student_id == ele) {
-                                                        if (evaluationCriteria.assessment_type == mark.assignment_name) {
-                                                            headers.push(<td key={`${index}`} scope="col">{mark.assignment_score}</td>);
+                                                        if (evaluationCriteria.evaluationcriteria_id == mark.evaluation_criteria_id) {
+                                                            headers.push(<td key={`${index}`} scope="col">{mark.assignment_score ? mark.assignment_score: "-"}</td>);
+                                                            headerValue.push(mark.assignment_score ? mark.assignment_score: "-")
                                                         }
                                                     }
                                                 });
                                                 calculations.map((cal, index) => {
                                                     if (ele == cal.student_id) {
-                                                        if (cal.type == evaluationCriteria.assessment_type) {
-                                                            headers.push(<td key={`${index}`} scope="col">{cal.mark}</td>);
+                                                        if (cal.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
+                                                            headers.push(<td key={`${index}`} scope="col">{cal.mark? cal.mark: "-"}</td>);
+                                                            headerValue.push(cal.mark? cal.mark: "-")
                                                         }
                                                     }
                                                 });
                                             } else {
-                                                marks.map((mark, index) => {
-                                                    if (mark.student_id == ele) {
-                                                        if (evaluationCriteria.assessment_type == mark.assignment_name) {
-                                                            headers.push(<td key={`${index}`} scope="col">{mark.assignment_score}</td>);
+                                                marks.map((marks, index) => {
+                                                    if (ele == marks.student_id) {
+                                                        if (marks.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
+                                                            headers.push(<td key={`${index}`} scope="col">{marks.assignment_score? marks.assignment_score: "-"}</td>);
+                                                            headerValue.push(marks.assignment_score? marks.assignment_score: "-")
                                                         }
                                                     }
                                                 });
                                             }
                                             calculations.map((cal, index) => {
                                                 if (ele == cal.student_id) {
-                                                    if (cal.type == evaluationCriteria.assessment_type) {
-                                                        headers.push(<td key={`${index}`} scope="col">{cal.percentage}</td>);
+                                                    if (cal.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
+                                                        headers.push(<td key={`${index}`} scope="col">{cal.percentage? cal.percentage: "-"}</td>);
+                                                        headerValue.push(cal.percentage? cal.percentage: "-")
                                                     }
                                                 }
                                             });
@@ -225,28 +252,32 @@ export default function HODMarksReturnSheet(props) {
                                     }).flat()
                                 }
                                 {
-                                    calculations.map((cal, index) => {
+                                    grade?.map((grade, index) => {
                                         let headers = [];
-                                        if (cal.student_id == ele) {
-                                            if (cal.type == "Total CA Mark") {
-                                                headers.push(<td key={`${index}`} scope="col">{cal.percentage}</td>);
-                                            }
+                                        if (grade.student_id == ele) {
+                                           
+                                                headers.push(<td key={`${index}`} scope="col">{grade.total_ca_mark? grade.total_ca_mark: "-"}</td>);
+                                                headerValue.push(grade.total_ca_mark? grade.total_ca_mark: "-")
+                                               
                                         }
                                         return headers;
                                     }).flat()
                                 }
+                               
                                 {
                                     evaluationCriteria.map((evaluationCriteria, index) => {
                                         let headers = [];
                                         if (evaluationCriteria.type == "End") {
                                             marks.map((mark, index) => {
                                                 if (mark.student_id == ele) {
-                                                    if (mark.assignment_name == evaluationCriteria.assessment_type) {
-                                                        headers.push(<td key={`${index}`} scope="col">{mark.assignment_score}</td>);
+                                                    if (mark.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
+                                                        headers.push(<td key={`${index}`} scope="col">{mark.assignment_score? mark.assignment_score: "-"}</td>);
+                                                        headerValue.push(mark.assignment_score? mark.assignment_score: "-")
                                                         calculations.map((calculations, index2) => {
                                                             if (calculations.student_id == ele) {
-                                                                if (evaluationCriteria.assessment_type == calculations.type && mark.assignment_type !== "1st Marking" && mark.assignment_type !== "2nd Marking") {
-                                                                    headers.push(<td key={`${index2}`} scope="col">{calculations.percentage}</td>);
+                                                                if (evaluationCriteria.evaluationcriteria_id == calculations.evaluation_criteria_id && mark.assignment_name !== "1st Marking" && mark.assignment_name !== "2nd Marking") {
+                                                                    headers.push(<td key={`${index2}`} scope="col">{calculations.percentage? calculations.percentage: "-"}</td>);
+                                                                    headerValue.push(calculations.percentage? calculations.percentage: "-")
                                                                 }
                                                             }
                                                         });
@@ -258,17 +289,26 @@ export default function HODMarksReturnSheet(props) {
                                     }).flat()
                                 }
                                 {
-                                    calculations.map((calc, index) => {
-                                        if (calc.student_id == ele) {
+                                    grade?.map((grade, index) => {
+                                        if (grade.student_id == ele) {
                                             let headers = [];
-                                            if (calc.type == "Final Marks") {
-                                                headers.push(<td key={`${index}`} scope="col">{calc.mark}</td>);
-                                            }
+                                            headers.push(<td key={`${index}`} scope="col">{grade.total_final_mark? grade.total_final_mark: "-"}</td>);
+                                            headerValue.push(grade.total_final_mark? grade.total_final_mark: "-")
+                                            headers.push(<td key={`${index}`} scope="col">{grade.total_rounded_mark? grade.total_rounded_mark: "-"}</td>);
+                                            headerValue.push(grade.total_rounded_mark? grade.total_rounded_mark: "-")
+                                            headers.push(<td key={`${index}`} scope="col">{grade.grade? grade.grade: "-"}</td>);
+                                            headerValue.push(grade.grade? grade.grade: "-")
+                                            headers.push(<td key={`${index}`} scope="col">{grade.gpv? grade.gpv :  "-"}</td>);
+                                            headerValue.push(grade.gpv? grade.gpv :  "-")
+                                            headers.push(<td key={`${index}`} scope="col">{grade.ca_eligibility?  grade.ca_eligibility:"-"}</td>);
+                                            headerValue.push(grade.ca_eligibility?  grade.ca_eligibility:"-" )
                                             return headers;
                                         }
                                     }).flat()
                                 }
-                                <td><Link className=' btn btn-primary mx-3 btn-sm' to={`/MarksCheckingForm/${ele}/${course_id}`}>View</Link> </td>
+                                <td>
+                                <Link className=" btn btn-primary mx-3 btn-sm" to={`/MarksCheckingForm/${ele}/${course_id}/${course_name}`}>View</Link>
+                                </td>
                             </tr>
                         ))
                     }
@@ -287,24 +327,45 @@ export default function HODMarksReturnSheet(props) {
                 </form>
             </div>
             
-           
 
-            <form onSubmit={handleSubmit}>
-                <div className="mb-3 form-check">
-                    <input
-                        type="checkbox"
-                        className="form-check-input"
-                        id="check"
-                        checked={isChecked}
-                        onChange={() => setIsChecked(!isChecked)}
-                    />
-                    <label className="form-check-label" htmlFor="check">
-                        I affirm that I have checked the results and confirm the accuracy for approval.
-                    </label>
-                </div>
-                <input to={``} type="submit" value="Request Certify" className="btn btn-outline-success btn-sm"  id="submitbtn" disabled={!isChecked} style={{ width: '150px'}}/> <br /><br />
-            </form>
+                    <div>
+                        <table>
+                            <tr>
+                                <td>Coordinator/ Examinar :</td>
+                                <td></td>
+                                <td>Sign:</td>
+                                <td><button className='imgsUpload'></button></td>
+                                <td>Date:</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Checked by :</td>
+                                <td></td>
+                                <td>Sign:</td>
+                                <td></td>
+                                <td>Date:</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Head of the Department : </td>
+                                <td></td>
+                                <td>Sign:</td>
+                                <td></td>
+                                <td>Date:</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+                    <form onSubmit={handleSubmit}>
+                        <input to={``} type="submit" value="Send" className="btn btn-outline-success btn-sm"  id="submitbtn" style={{ width: '150px'}}/> <br /><br />
+                    </form>
+
             </div>
+
+
+               
         </>
     )
 }
