@@ -39,8 +39,6 @@ import LecturersManagement from "./layouts/SystemAnalyst/UserManagement/Lecturer
 import AssignLecturerCourse from "./layouts/SystemAnalyst/AssignLecturer/AssignLecturerCourse";
 import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
 import DeanDashBoard from "./layouts/Dean/DeanDashBoard";
-import EStarListPage from "./layouts/AR/EStarListPage/EStarListPage";
-import UpdateEStarPage from "./layouts/AR/UpdateEStarPage/UpdateEStarPage";
 import ViewMarksTable from "./layouts/Components/AR/DataTable/ViewMarksTable";
 import MainNavbar from "./layouts/NavbarAndFooter/MainNavebar";
 import DashBoardSA from "./layouts/SystemAnalyst/DashBoardSA/DashBoardSA";
@@ -52,6 +50,8 @@ import CertifyMarksPage from "./layouts/AR/CertifyMarksPage/CertifyMarksPage";
 import ViewMedicalPage from "./layouts/AR/ViewMedicalTablePage/ViewMedicalPage";
 import CertifyError from "./layouts/Components/AR/CertifyError/CertifyError";
 import CourseCard from "./layouts/Components/HOD/CourseCard";
+import ABListPage from "./layouts/AR/ABListPage/ABListPage";
+import UpdateABPage from "./layouts/AR/UpdateABPage/UpdateABPage";
 
 
 // to configure okta authentication
@@ -95,12 +95,12 @@ export const App = () => {
             <HomePageAR/>
           </Route>
 
-          <Route path="/viewEStarList">  {/* Link to view E* student list page */}
-            <EStarListPage/>
+          <Route path="/viewablist">  {/* Link to view E* student list page */}
+            <ABListPage/>
           </Route>
 
-          <Route path="/viewEStarUpdate/updateEStar/:course_id/:course_name/:student_id/:grade/:exam_type/:academic_year">  {/* Link to E* grade update form */}
-            <UpdateEStarPage/>
+          <Route path="/viewABUpdate/updateAB/:course_id/:course_name/:student_id/:grade/:exam_type/:academic_year">  {/* Link to E* grade update form */}
+            <UpdateABPage/>
           </Route>
 
           <Route path="/arviewictmarks">  {/* Link to view ICT marks page */}
