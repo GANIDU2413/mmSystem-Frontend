@@ -1,4 +1,6 @@
 import React from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function EditUserModal({ user, onSubmit, onClose }) {
     const [userDetails, setUserDetails] = React.useState(user);
@@ -8,9 +10,16 @@ function EditUserModal({ user, onSubmit, onClose }) {
     };
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        onSubmit(userDetails);
-        onClose();
+        try{
+            e.preventDefault();
+            onSubmit(userDetails);
+            toast.success('User updated successfully');
+            onClose();
+        }
+        catch(e){
+            toast.error('Error updating user');
+        }
+        
     };
 
     return (
@@ -70,7 +79,6 @@ function EditUserModal({ user, onSubmit, onClose }) {
                     </div>
                     <button className='btn btn-outline-success btn-sm mt-3 mx-3' type="submit">Save</button>
                     <button className='btn btn-outline-danger btn-sm mt-3' type="button" onClick={onClose}>Cancel</button>
-
                 </form>
             </div>
         </div>

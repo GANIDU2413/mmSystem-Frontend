@@ -21,7 +21,6 @@ export default function LecturersManagement() {
         role: "",
     });
 
-    const { id } = useParams();
     const [refreshKey, setRefreshKey] = useState(Date.now());
 
     useEffect(() => {
@@ -35,7 +34,8 @@ export default function LecturersManagement() {
     };
 
     const deleteUser = async (id) => {
-        await axios.delete(`http://localhost:9090/api/lecreg/deletelecturer/${id}`);
+        await axios.delete(`http://localhost:9090/api/lecreg/delete/deleteById/${id}`);
+        toast.success("User deleted successfully!");
         loadUsers();
     };
 
@@ -92,10 +92,9 @@ export default function LecturersManagement() {
     };
 
     const handleEditSubmit = async (updatedUser) => {
-        // Update the user in your backend
-        await axios.put(`http://localhost:9090/api/lecreg/updatelecturer/${updatedUser.user_id}`, updatedUser);
-        // Refresh the users list
-        loadUsers();
+
+            await axios.put(`http://localhost:9090/api/lecreg/edit/alecdetails`, updatedUser);
+
     };
 
     
@@ -175,7 +174,7 @@ export default function LecturersManagement() {
                                         </tr>
                                     </thead>
                                     <tbody >
-                                        {users.map((user, index) => (
+                                        {users?.map((user, index) => (
                                             <tr key={index}>
                                                 <th scope="row">{index + 1}</th>
                                                 <td>{user.user_id}</td>

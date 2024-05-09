@@ -50,6 +50,8 @@ import CourseCard from "./layouts/Components/HOD/CourseCard";
 import StudentRegCourses from "./layouts/SystemAnalyst/StudentCourseReg/StudentRegCourses";
 import ABListPage from "./layouts/AR/ABListPage/ABListPage";
 import UpdateABPage from "./layouts/AR/UpdateABPage/UpdateABPage";
+import CCDashBoard from "./layouts/CourseCoordinator/CCDashBoard";
+import CCMarksApproval from "./layouts/CourseCoordinator/CCMarksApproval";
 
 
 
@@ -252,6 +254,11 @@ export const App = () => {
           <Route path="/screg">
             <StudentRegCourses/>
           </Route>
+
+          <Route path="/ccmarksapproval">
+            <CCMarksApproval/>
+          </Route>
+          
           
             <Route path="/addscore">
               <AddScore option={true} />
@@ -287,7 +294,9 @@ export const App = () => {
               <DashBoardSA/>
             </SecureRoute>
 
-
+            <SecureRoute path={"/course_cordinator"}>
+              <CCDashBoard/>
+            </SecureRoute>
 
 
           </Switch>
