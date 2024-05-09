@@ -1,5 +1,6 @@
 // import { useOktaAuth } from '@okta/okta-react';
 // import { useState } from 'react';
+import { Navebar } from "../../NavbarAndFooter/Navebar";
 import { AddScore } from "../AddScore";
 
 export const ManageAddScore = () => {
@@ -9,7 +10,8 @@ export const ManageAddScore = () => {
   // const [messagesClick, setMessagesClick] = useState(false);
 
   return (
-    <div className="container">
+    <div className="container mt-4" >
+      <Navebar />
       <div className="mt-5">
         <h3>Manage Score</h3>
         <nav>

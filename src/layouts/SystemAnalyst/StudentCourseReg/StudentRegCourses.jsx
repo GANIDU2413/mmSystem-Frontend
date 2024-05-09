@@ -5,25 +5,25 @@ import { NavebarSA } from '../NavebarSA';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+export default function StudentRegCourses() {
 
-export default function MedicalsEligibiltyManage() {
- const [data, setData] = useState([]);
- const [medicalData, setMedicalData] = useState([]);
+  const [data, setData] = useState([]);
+  const [medicalData, setMedicalData] = useState([]);
 
- useEffect(() => {
-  fetchData();
-}, [])
+  useEffect(() => {
+    fetchData();
+  }, [])
 
-const fetchData = async () => {
-  try {
-    const response = await axios.get("http://localhost:9090/api/medicalmng/getallmedicals");
-    setMedicalData(response.data.content);
-  } catch (error) {
-    console.error("Error fetching data from API:", error);
-  }
-};
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:9090/api/medicalmng/getallmedicals");
+      setMedicalData(response.data.content);
+    } catch (error) {
+      console.error("Error fetching data from API:", error);
+    }
+  };
 
- const handleFileUpload = (e) => {
+  const handleFileUpload = (e) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const data = e.target.result;
@@ -38,9 +38,9 @@ const fetchData = async () => {
       console.error("Error reading file:", error);
     };
     reader.readAsArrayBuffer(e.target.files[0]);
- };
+  };
 
- const onSubmit = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post("http://localhost:9090/api/medicalmng/insertbulkmedical", data);
@@ -50,26 +50,26 @@ const fetchData = async () => {
       console.error("Error submitting data:", error);
       toast.error("Error submitting data. Please try again.");
     }
- };
+  };
 
- const downloadTemplate = () => {
-  // Create a new workbook
-  const wb = XLSX.utils.book_new();
-  // Create a new worksheet with the specified column headers
-  const ws = XLSX.utils.json_to_sheet([
-    { student_id: "", course_id: "", academic_year: "", exam_type: "",medical_state: "" }
-  ], { header: ["student_id", "course_id", "academic_year", "exam_type", "medical_state"], skipHeader: false });
-  // Add the worksheet to the workbook
-  XLSX.utils.book_append_sheet(wb, ws, "Medical Template");
-  // Write the workbook to a file and download it
-  XLSX.writeFile(wb, "Medical_Template.xlsx");
-};
+  const downloadTemplate = () => {
+    // Create a new workbook
+    const wb = XLSX.utils.book_new();
+    // Create a new worksheet with the specified column headers
+    const ws = XLSX.utils.json_to_sheet([
+      { student_id: "", course_id: "", academic_year: "" }
+    ], { header: ["student_id", "course_id", "academic_year"], skipHeader: false });
+    // Add the worksheet to the workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Medical Template");
+    // Write the workbook to a file and download it
+    XLSX.writeFile(wb, "Medical_Template.xlsx");
+  };
 
- return (
+  return (
     <div className='container'>
       <NavebarSA />
       <div className='py-4'>
-        <div className="h2 mt-lg-5">Medicals</div>
+        <div className="h2 mt-lg-5">Students Courses Registration</div>
         <div className=' my-2' style={{float:"right"}}>
           <button onClick={downloadTemplate} className='btn btn-success mt-3'>Download Template</button>
         </div>
@@ -102,29 +102,28 @@ const fetchData = async () => {
       </div>
       <ToastContainer />
       <div>
-      <div className="h2 mt-lg-5">Medicals Data</div>
-          {medicalData.length > 0 && (
-            <table className='table'>
-              <thead>
-                <tr>
-                  {Object.keys(medicalData[0]).map((key, index) => (
-                    <th key={index}>{key}</th>
+        <div className="h2 mt-lg-5">Students Courses Registered Details</div>
+        {medicalData.length > 0 && (
+          <table className='table'>
+            <thead>
+              <tr>
+                {Object.keys(medicalData[0]).map((key, index) => (
+                  <th key={index}>{key}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {medicalData.map((row, index) => (
+                <tr key={index}>
+                  {Object.values(row).map((value, index) => (
+                    <td key={index}>{value}</td>
                   ))}
                 </tr>
-              </thead>
-              <tbody>
-                {medicalData.map((row, index) => (
-                  <tr key={index}>
-                    {Object.values(row).map((value, index) => (
-                      <td key={index}>{value}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
- );
+  );
 }
-

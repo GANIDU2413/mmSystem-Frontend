@@ -26,15 +26,12 @@ import CAMarkTable from "./layouts/HOD/CAMarkTable";
 import MarksCheckingForm from "./layouts/HOD/MarksCheckingForm";
 import SystemAnalystDashBoard from "./layouts/SystemAnalyst/SystemAnalystDashBoard";
 import SAUserReg from "./layouts/SystemAnalyst/SAUserReg";
-import ViewAllLecturers from "./layouts/SystemAnalyst/ViewAllLecturers";
 import AddLecturers from "./layouts/SystemAnalyst/AddLecturers";
 import EditLecturers from "./layouts/SystemAnalyst/EditLecturers";
 import EditUser from "./layouts/SystemAnalyst/EditUser";
 import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
-
 import { VcManagment } from "./VC/layouts/VcManagment";
-
 import LecturersManagement from "./layouts/SystemAnalyst/UserManagement/LecturersManagement";
 import AssignLecturerCourse from "./layouts/SystemAnalyst/AssignLecturer/AssignLecturerCourse";
 import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
@@ -50,8 +47,12 @@ import CertifyMarksPage from "./layouts/AR/CertifyMarksPage/CertifyMarksPage";
 import ViewMedicalPage from "./layouts/AR/ViewMedicalTablePage/ViewMedicalPage";
 import CertifyError from "./layouts/Components/AR/CertifyError/CertifyError";
 import CourseCard from "./layouts/Components/HOD/CourseCard";
+import StudentRegCourses from "./layouts/SystemAnalyst/StudentCourseReg/StudentRegCourses";
 import ABListPage from "./layouts/AR/ABListPage/ABListPage";
 import UpdateABPage from "./layouts/AR/UpdateABPage/UpdateABPage";
+import CCDashBoard from "./layouts/CourseCoordinator/CCDashBoard";
+import CCMarksApproval from "./layouts/CourseCoordinator/CCMarksApproval";
+
 
 
 // to configure okta authentication
@@ -202,6 +203,11 @@ export const App = () => {
           <HODMarksReturnSheet approved_level={"course_coordinator"}/>
         </Route>
 
+        <Route path="/ccMarksReturnSheet/:course_id/:course_name">
+          <HODMarksReturnSheet approved_level={"lecturer"}/>
+        </Route>
+
+
           <Route path="/sysandashboard">
             <SystemAnalystDashBoard/>
           </Route>
@@ -249,8 +255,16 @@ export const App = () => {
           <Route path="/sysanicoursemodule">
             <ManageCourseModule/>
           </Route>
+
+          <Route path="/screg">
+            <StudentRegCourses/>
+          </Route>
+
+          <Route path="/ccmarksapproval">
+            <CCMarksApproval/>
+          </Route>
           
-           
+          
             <Route path="/addscore">
               <AddScore option={true} />
             </Route>
@@ -283,6 +297,10 @@ export const App = () => {
 
             <SecureRoute path={"/system_analysis"}>
               <DashBoardSA/>
+            </SecureRoute>
+
+            <SecureRoute path={"/course_cordinator"}>
+              <CCDashBoard/>
             </SecureRoute>
 
 

@@ -25,6 +25,7 @@ export default function CourseCard(props) {
         try {
             const list = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level}/${semester}/${approved_level}`);
             console.log(list.data);
+            console.log(level,semester);
             setCidN(list.data.content);
             console.log(cidN);
             seterrorMsg(list.data.message);
