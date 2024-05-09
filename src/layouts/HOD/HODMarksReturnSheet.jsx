@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { NavebarHOD } from './NavebarHOD';
 import SignatureCanvas from 'react-signature-canvas';
+import { useDropzone } from 'react-dropzone';
 
 export default function HODMarksReturnSheet(props) {
     const [marks, setMarks] = useState([]);
@@ -18,6 +19,24 @@ export default function HODMarksReturnSheet(props) {
     const history = useHistory();
     const [sign,setSign] = useState()
     const [url,setUrl] = useState()
+    const [radioSelection, setRadioSelection] = useState('digitalSignature');
+    const [showSignatureSection, setShowSignatureSection] = useState(false);
+    const [showUploadSection, setShowUploadSection] = useState(false);
+    const [files, setFiles] = useState([]);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [showSaveClearButtons, setShowSaveClearButtons] = useState(false);
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        accept: 'image/*',
+        onDrop: acceptedFiles => {
+        setFiles(acceptedFiles.map(file => Object.assign(file, {
+            preview: URL.createObjectURL(file)
+        })));
+        setSelectedImage(acceptedFiles[0].preview);
+        setShowSaveClearButtons(true);
+        }
+    });
+
 
     let CAAvailable = false;
 
@@ -102,6 +121,24 @@ export default function HODMarksReturnSheet(props) {
     }
     console.log(url);
   
+
+    const images = files.map(file => (
+        <div key={file.name}>
+            <img src={file.preview} alt={file.name} style={{ width: '100%', height: 'auto' }} />
+        </div>
+    ));
+
+    const handleSave = () => {
+        // Logic to save the image
+        console.log("Save button clicked");
+        // You can add your save logic here
+      };
+    
+      const handlClear = () => {
+        // Logic to clear the selected image
+        setSelectedImage(null);
+        setShowSaveClearButtons(false);
+      };
 
 
     return (
@@ -376,39 +413,64 @@ export default function HODMarksReturnSheet(props) {
                     </form>
                 </div>
 
-                <div style={{float:"right"}} >
 
-                    <div  style={{float:"left"}}>
-                        <div style={{border:"2px solid black",width: 500, height: 200}}>
-                            <SignatureCanvas 
-                                canvasProps={{width: 500, height: 200, className: 'sigCanvas'}}
-                                ref={data=>setSign(data)}
+                <div style={{ display: 'flex', marginLeft: "200px", float: "left" }}>
+                    <div style={{ float: "right" }}>
+                        {radioSelection === 'digitalSignature' && (
+                        <div style={{ border: "2px solid black", width: 500, height: 200 }}>
+                            <SignatureCanvas
+                            canvasProps={{ width: 500, height: 200, className: 'sigCanvas' }}
+                            ref={data => setSign(data)}
                             />
+                            <br />
+                            <button className='btn btn-outline-success btn-sm' style={{ width: "100px" }} onClick={handleGenerate}>Save</button>
+                            <button className='btn btn-danger btn-sm mx-3' style={{ width: "100px" }} onClick={handleClear}>Clear</button>
+                            <br />
+                            <img src={url} />
                         </div>
-
-                        <br></br>
-                        <button className='btn btn-outline-success btn-sm '  style={{width:"100px"}} onClick={handleGenerate}>Save</button>
-                        <button className='btn btn-danger btn-sm mx-3' style={{width:"100px"}} onClick={handleClear}>Clear</button>
-                        
-
-                        <br/><br/>
-                        <img src={url} />
-
+                        )}
+                        {radioSelection === 'uploadSignature' && (
+                        <div style={{ border: '2px solid black', width: '500px', height: '200px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                            <div {...getRootProps()} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                            <input {...getInputProps()} />
+                            {isDragActive? <p>Drop the files here...</p> : <p>Drag 'n' drop some files here, or click to select files</p>}
+                            </div>
+                            {files.map(file => (
+                            <div key={file.name}>
+                                <img src={file.preview} alt={file.name} style={{ width: '100%', height: 'auto' }} />
+                            </div>
+                            ))}
+                            {showSaveClearButtons && (
+                            <div>
+                                <button className='btn btn-outline-success btn-sm' onClick={handleSave} style={{ marginRight: '10px' }}>Save</button>
+                                <button className='btn btn-danger btn-sm mx-3' onClick={handleClear}>Clear</button>
+                            </div>
+                            )}
+                            {selectedImage && (
+                            <div style={{ width: '200px', height: '100px', border: '1px solid black', overflow: 'hidden' }}>
+                                <img src={selectedImage} alt="Selected" style={{ width: '100%', height: 'auto' }} />
+                                
+                            </div>
+                            
+                            )}
+                        </div>
+                        )}
                     </div>
                     <div>
-                    <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
-                        <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio1" autocomplete="off" checked/>
-                        <label class="btn btn-outline-danger" for="vbtn-radio1">Digital Signature</label>
-                        <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio2" autocomplete="off"/>
-                        <label class="btn btn-outline-danger" for="vbtn-radio2">Upload a Signature</label>
+                        <div className="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                        <input type="radio" className="btn-check" name="vbtn-radio" id="vbtn-radio1" autoComplete="off" checked={radioSelection === 'digitalSignature'} onChange={() => setRadioSelection('digitalSignature')} />
+                        <label className="btn btn-outline-danger" htmlFor="vbtn-radio1">Digital Signature</label>
+                        <input type="radio" className="btn-check" name="vbtn-radio" id="vbtn-radio2" autoComplete="off" checked={radioSelection === 'uploadSignature'} onChange={() => setRadioSelection('uploadSignature')} />
+                        <label className="btn btn-outline-danger" htmlFor="vbtn-radio2">Upload a Signature</label>
                         </div>
                     </div>
-
                 </div>
 
 
+
             </div>
-               
+
         </>
     )
+    
 }

@@ -203,6 +203,11 @@ export const App = () => {
           <HODMarksReturnSheet approved_level={"course_coordinator"}/>
         </Route>
 
+        <Route path="/ccMarksReturnSheet/:course_id/:course_name">
+          <HODMarksReturnSheet approved_level={"lecturer"}/>
+        </Route>
+
+
           <Route path="/sysandashboard">
             <SystemAnalystDashBoard/>
           </Route>
