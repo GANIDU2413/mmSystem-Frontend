@@ -120,6 +120,10 @@ export const App = () => {
             <ViewMarks department_id={"Multi_Disciplinary"}/>
           </Route>
 
+          <Route path="/ARMarksReturnSheet/:course_id/:course_name">
+            <HODMarksReturnSheet approved_level={"HOD"}/>
+          </Route>
+
           <Route path="/arcerfityictmarks">  {/* Link to certify ICT marks page */}
             <CertifyMarksPage department_id={"ICT"}/>
           </Route>
