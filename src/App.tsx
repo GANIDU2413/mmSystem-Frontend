@@ -180,7 +180,7 @@ export const App = () => {
           </Route>
 
           <Route path="/CourseCard/:level/:semester/:department">
-            <CourseCard approved_level={"course_coordinator"}/>
+            <CourseCard approved_level={"lecturer"}/>
           </Route>
 
           <Route path="/HODmarkstable">
@@ -200,12 +200,12 @@ export const App = () => {
           </Route>
 
           <Route path="/HODMarksReturnSheet/:course_id/:course_name/:department">
-          <HODMarksReturnSheet approved_level={"lecturer"}/>
+          <HODMarksReturnSheet/>
         </Route>
 
-        <Route path="/ccMarksReturnSheet/:course_id/:course_name">
+        {/* <Route path="/ccMarksReturnSheet/:course_id/:course_name">
           <HODMarksReturnSheet approved_level={"lecturer"}/>
-        </Route>
+        </Route>  */}
 
 
           <Route path="/sysandashboard">
