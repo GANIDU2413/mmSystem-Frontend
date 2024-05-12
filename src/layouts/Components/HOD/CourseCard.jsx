@@ -15,15 +15,15 @@ export default function CourseCard(props) {
     const history = useHistory();
 
     const[errorMsg,seterrorMsg]=useState('');
-    const{level,semester}=useParams();
+    const{level,semester,department}=useParams();
     const{approved_level}=props;
    
-    console.log(level,semester)
+    console.log(level,semester,department,approved_level)
     
 
     const result = async () => {
         try {
-            const list = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level}/${semester}/${approved_level}`);
+            const list = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level}/${semester}/${department}/${approved_level}`);
             console.log(list.data);
             console.log(level,semester);
             setCidN(list.data.content);
@@ -49,7 +49,7 @@ export default function CourseCard(props) {
         result();
 
         
-       }, [level, semester]); // This effect runs whenever level or semester changes
+       }, [level, semester,department,approved_level]); // This effect runs whenever level or semester changes
        
 
        
@@ -72,7 +72,7 @@ export default function CourseCard(props) {
                      className="card border-primary mb-3 mx-lg-3 shadow"
                      style={{ maxWidth: '18rem', cursor: 'pointer' }}
                      key={index}
-                     onClick={() => history.push(`/HODMarksReturnSheet/${courseInfo.course_id}/${courseInfo.course_name}`)}
+                     onClick={() => history.push(`/HODMarksReturnSheet/${courseInfo.course_id}/${courseInfo.course_name}/${department}`)}
                    >
                      <div className="card-header">Course code : {courseInfo.course_id}</div>
                      <div className="card-body">

@@ -179,7 +179,7 @@ export const App = () => {
             <HODDashBoard/>
           </Route>
 
-          <Route path="/CourseCard/:level/:semester">
+          <Route path="/CourseCard/:level/:semester/:department">
             <CourseCard approved_level={"course_coordinator"}/>
           </Route>
 
@@ -199,8 +199,8 @@ export const App = () => {
             <HODMarksEditForm/>
           </Route>
 
-          <Route path="/HODMarksReturnSheet/:course_id/:course_name">
-          <HODMarksReturnSheet approved_level={"course_coordinator"}/>
+          <Route path="/HODMarksReturnSheet/:course_id/:course_name/:department">
+          <HODMarksReturnSheet approved_level={"lecturer"}/>
         </Route>
 
         <Route path="/ccMarksReturnSheet/:course_id/:course_name">

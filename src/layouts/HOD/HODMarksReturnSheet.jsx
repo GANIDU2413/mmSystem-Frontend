@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { NavebarHOD } from './NavebarHOD';
 import SignatureCanvas from 'react-signature-canvas';
 import { useDropzone } from 'react-dropzone';
+import { useOktaAuth } from "@okta/okta-react";
 
 export default function HODMarksReturnSheet(props) {
     const [marks, setMarks] = useState([]);
@@ -14,8 +15,8 @@ export default function HODMarksReturnSheet(props) {
     const [studentList, setStudentList] = useState([]);
     const[grade, setGrade] = useState([]);
     const [noData, setNoData] = useState(false); // State to indicate if there is no data to display
-    const { course_id, course_name } = useParams();
-    const [approval_level, setApprovalLevel] = useState('');
+    const { course_id, course_name,department } = useParams();
+    const {approved_level}=props;
     const history = useHistory();
     const [sign,setSign] = useState()
     const [url,setUrl] = useState()
@@ -25,6 +26,17 @@ export default function HODMarksReturnSheet(props) {
     const [files, setFiles] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [showSaveClearButtons, setShowSaveClearButtons] = useState(false);
+    const { oktaAuth, authState } = useOktaAuth();
+    // const [digisignature, setDigisignature] = useState();
+    const saveDigitalSignature = url;
+    console.log(saveDigitalSignature)
+    // console.log(digisignature)
+    const academic_year=2023;
+
+   
+
+    const userNameAuth = authState?.idToken?.claims.preferred_username;
+    
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         accept: 'image/*',
@@ -37,6 +49,18 @@ export default function HODMarksReturnSheet(props) {
         }
     });
 
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setUrl(reader.result); // Set the base64 string to your state
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    
+
 
     let CAAvailable = false;
 
@@ -44,7 +68,25 @@ export default function HODMarksReturnSheet(props) {
     let headersData = [];
     let headerValue= [];
 
+    let nextApprovedlevel = "";
+         if (approved_level === "course_coordinator") {
+           nextApprovedlevel = "lecturer";
+         } else if (approved_level === "lecturer") {
+           nextApprovedlevel = "HOD";
+         }
+    
 
+    const approval={
+        "course_id": course_id,
+        "approved_user_id":userNameAuth,
+        "approval_level":nextApprovedlevel,
+        "academic_year":academic_year,
+        "date_time":new Date(),
+        "department_id":department,
+        "signature":saveDigitalSignature
+    }
+
+    console.log(saveDigitalSignature)
     useEffect(() => {
         result();
     }, [course_id]);
@@ -95,8 +137,8 @@ export default function HODMarksReturnSheet(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            setApprovalLevel("HOD");
-            const response = await axios.put(`http://localhost:9090/api/approvalLevel/updateApprovalLevel/${course_id}/${new Date().getFullYear()}/${approval_level}`);
+            setApproval();
+            const response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevel`,approval);
             if (response.status === 200) {
                 console.log("Approval level updated successfully");
             } else {
@@ -118,9 +160,10 @@ export default function HODMarksReturnSheet(props) {
     }
     const handleGenerate= () =>{
         setUrl(sign.getTrimmedCanvas().toDataURL('image/png'))
+        
     }
     console.log(url);
-  
+    
 
     const images = files.map(file => (
         <div key={file.name}>
@@ -128,18 +171,66 @@ export default function HODMarksReturnSheet(props) {
         </div>
     ));
 
-    const handleSave = () => {
-        // Logic to save the image
-        console.log("Save button clicked");
-        // You can add your save logic here
+    const handleSave = async () => {
+        if (files.length > 0) {
+            const imageUrl = await convertBlobToDataURL(files[0]);
+            setUrl(imageUrl);
+        }
+        setSelectedImage(null);
+        setShowSaveClearButtons(false);
+        setFiles([]);
       };
     
-      const handlClear = () => {
+      const imagehandlClear = () => {
         // Logic to clear the selected image
         setSelectedImage(null);
         setShowSaveClearButtons(false);
+        setFiles([]);
       };
 
+      const convertBlobToDataURL = (blob) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                resolve(reader.result);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    };
+
+
+
+    const fetchCCSignature = async () => {
+        try {
+            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/"course_coordinator"/${academic_year}`);
+            
+        } catch (error) {
+            console.error('Error fetching signature data:', error);
+        }
+    };
+
+    const fetchcheckedbySignature = async () => {
+        try {
+            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/"lecturer"/${academic_year}`);
+           
+        } catch (error) {
+            console.error('Error fetching signature data:', error);
+        }
+    };
+
+    const fetchHODSignature = async () => {
+        try {
+            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/"HOD"/${academic_year}`);
+            
+        } catch (error) {
+            console.error('Error fetching signature data:', error);
+        }
+    };
+    
+   
+      
+console.log(approved_level);
 
     return (
         <>
@@ -376,15 +467,18 @@ export default function HODMarksReturnSheet(props) {
             </table>
             
             
-                <div style={{float:"left"}}>
+                <div style={{float:"left",marginTop:"50px"}}>
                     
                     <div>
                         <table>
                             <tr>
-                                <td>Coordinator/ Examinar :</td>
+                                <td >Coordinator/ Examinar :</td>
                                 <td></td>
                                 <td>Sign:</td>
-                                <td><button className='imgsUpload'></button></td>
+                                <td>
+                                    {nextApprovedlevel == "course_coordinator" ? <img src={url} style={{ width: '100px', height: '50px' }} /> : null}
+
+                                </td>
                                 <td>Date:</td>
                                 <td></td>
                             </tr>
@@ -392,7 +486,10 @@ export default function HODMarksReturnSheet(props) {
                                 <td>Checked by :</td>
                                 <td></td>
                                 <td>Sign:</td>
-                                <td></td>
+                                <td>
+                                    {nextApprovedlevel == "lecturer" ? <img src={url} style={{ width: '100px', height: '50px' }} /> : null}
+                                    
+                                </td>
                                 <td>Date:</td>
                                 <td></td>
                             </tr>
@@ -400,7 +497,9 @@ export default function HODMarksReturnSheet(props) {
                                 <td>Head of the Department : </td>
                                 <td></td>
                                 <td>Sign:</td>
-                                <td></td>
+                                <td>
+                                    {nextApprovedlevel == "HOD" ? <img src={url} style={{ width: '100px', height: '50px' }} /> : null}
+                                </td>
                                 <td>Date:</td>
                                 <td></td>
                             </tr>
@@ -414,7 +513,7 @@ export default function HODMarksReturnSheet(props) {
                 </div>
 
 
-                <div style={{ display: 'flex', marginLeft: "200px", float: "left" }}>
+                <div style={{ display: 'flex', marginLeft: "200px", float: "left",marginBottom:"80px",marginTop:"50px",marginRight:"120px" }}>
                     <div style={{ float: "right" }}>
                         {radioSelection === 'digitalSignature' && (
                         <div style={{ border: "2px solid black", width: 500, height: 200 }}>
@@ -423,10 +522,10 @@ export default function HODMarksReturnSheet(props) {
                             ref={data => setSign(data)}
                             />
                             <br />
-                            <button className='btn btn-outline-success btn-sm' style={{ width: "100px" }} onClick={handleGenerate}>Save</button>
+                            <button className='btn btn-outline-success btn-sm' style={{ width: "100px" }} onClick={handleGenerate} >Save</button>
                             <button className='btn btn-danger btn-sm mx-3' style={{ width: "100px" }} onClick={handleClear}>Clear</button>
                             <br />
-                            <img src={url} />
+                            {/* <img src={url} /> */}
                         </div>
                         )}
                         {radioSelection === 'uploadSignature' && (
@@ -437,31 +536,31 @@ export default function HODMarksReturnSheet(props) {
                             </div>
                             {files.map(file => (
                             <div key={file.name}>
-                                <img src={file.preview} alt={file.name} style={{ width: '100%', height: 'auto' }} />
+                                <img src={file.preview} alt={file.name} style={{ width: '480px', height: '180px' }} />
                             </div>
                             ))}
                             {showSaveClearButtons && (
-                            <div>
-                                <button className='btn btn-outline-success btn-sm' onClick={handleSave} style={{ marginRight: '10px' }}>Save</button>
-                                <button className='btn btn-danger btn-sm mx-3' onClick={handleClear}>Clear</button>
-                            </div>
+                                <div>
+                                    <button className='btn btn-outline-success btn-sm' onClick={handleSave} style={{ marginRight: '10px' }}>Save</button>
+                                    <button className='btn btn-danger btn-sm mx-3' onClick={imagehandlClear}>Clear</button>
+                                </div>
                             )}
                             {selectedImage && (
-                            <div style={{ width: '200px', height: '100px', border: '1px solid black', overflow: 'hidden' }}>
-                                <img src={selectedImage} alt="Selected" style={{ width: '100%', height: 'auto' }} />
-                                
-                            </div>
-                            
+                                <div style={{ width: '200px', height: '100px', border: '1px solid black', overflow: 'hidden' }}>
+                                    <img src={selectedImage} alt="Selected" style={{ width: '100%', height: 'auto' }} />
+                                </div>
                             )}
+                           
+
                         </div>
                         )}
                     </div>
-                    <div>
+                    <div className=' mx-2'>
                         <div className="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
                         <input type="radio" className="btn-check" name="vbtn-radio" id="vbtn-radio1" autoComplete="off" checked={radioSelection === 'digitalSignature'} onChange={() => setRadioSelection('digitalSignature')} />
-                        <label className="btn btn-outline-danger" htmlFor="vbtn-radio1">Digital Signature</label>
+                        <label className="btn btn-outline-primary" htmlFor="vbtn-radio1">Digital Signature</label>
                         <input type="radio" className="btn-check" name="vbtn-radio" id="vbtn-radio2" autoComplete="off" checked={radioSelection === 'uploadSignature'} onChange={() => setRadioSelection('uploadSignature')} />
-                        <label className="btn btn-outline-danger" htmlFor="vbtn-radio2">Upload a Signature</label>
+                        <label className="btn btn-outline-primary" htmlFor="vbtn-radio2">Upload a Signature</label>
                         </div>
                     </div>
                 </div>
