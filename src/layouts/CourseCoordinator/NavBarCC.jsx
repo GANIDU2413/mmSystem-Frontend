@@ -11,6 +11,7 @@ export default function NavBarCC() {
   }
 
   const handleLogout = async () => oktaAuth.signOut();
+  console.log(authState?.idToken?.claims.userType)
 
     return (
         <nav className="navbar bg-primary fixed-top">
@@ -78,7 +79,7 @@ export default function NavBarCC() {
                                 </a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="/managestaff">
+                                <a className="nav-link" href="/viewcaeli">
                                     View CA Eligibility
                                 </a>
                             </li>

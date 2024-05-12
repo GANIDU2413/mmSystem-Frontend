@@ -6,6 +6,7 @@ import NavBarCC from './NavBarCC';
 
 export default function CCDashBoard() {
     const { authState } = useOktaAuth();
+    console.log(authState?.idToken?.claims.name)
 
     // if (authState?.accessToken?.claims.userType != "course_cordinator") {
     //     return <Redirect to="/" />;
@@ -38,7 +39,7 @@ export default function CCDashBoard() {
                                 <div className="card-body ">
                                     <h5 className="card-title py-2">View CA Eligibility</h5>
                                     {/* <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> */}
-                                    <a href="/managestaff"  className="btn btn-primary btn-sm mt-2">Go somewhere</a>
+                                    <a href="/viewcaeli"  className="btn btn-primary btn-sm mt-2">Go somewhere</a>
                                 </div>
                             </div>
                             <div className="card shadow m-4" style={{width: "18rem"}}>

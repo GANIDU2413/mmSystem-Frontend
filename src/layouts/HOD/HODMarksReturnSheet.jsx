@@ -6,6 +6,10 @@ import { useHistory } from 'react-router-dom';
 import { NavebarHOD } from './NavebarHOD';
 import SignatureCanvas from 'react-signature-canvas';
 import { useDropzone } from 'react-dropzone';
+import { NavebarAR } from '../Components/AR/NavBarAR/NavebarAR';
+import { useOktaAuth } from "@okta/okta-react";
+import { NavebarDean } from '../Dean/NavebarDean';
+import NavBarCC from '../CourseCoordinator/NavBarCC';
 
 export default function HODMarksReturnSheet(props) {
     const [marks, setMarks] = useState([]);
@@ -25,6 +29,7 @@ export default function HODMarksReturnSheet(props) {
     const [files, setFiles] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [showSaveClearButtons, setShowSaveClearButtons] = useState(false);
+    const { authState } = useOktaAuth();
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         accept: 'image/*',
@@ -140,10 +145,15 @@ export default function HODMarksReturnSheet(props) {
         setShowSaveClearButtons(false);
       };
 
-
+      console.log(authState?.accessToken?.claims.userType);
     return (
-        <>
-            <NavebarHOD />
+        <>{
+            authState?.accessToken?.claims.userType == "hod" ? <NavebarHOD/> : 
+            authState?.accessToken?.claims.userType == "course_coordinator" ? <NavBarCC/> :
+            authState?.accessToken?.claims.userType == "dean" ? <NavebarDean/>:
+            authState?.accessToken?.claims.userType == "ar" ? <NavebarAR/> : null
+        }
+        
             <div className=' container' style={{marginTop:"70px"}}>
           
             <div>
@@ -192,14 +202,14 @@ export default function HODMarksReturnSheet(props) {
                                     if (evaluationCriteria.no_of_conducted > 1) {
                                         marks.map((ele, index) => {
                                             if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
-                                               
+                                                
                                                     headers.push(<th key={`${index}`} scope="col">{ele.assignment_name}</th>);
                                                     headersData.push(ele.assignment_name)
                                                 
                                             }
                                         });
                                         // calculations.map((ele, index) => {
-                                           
+                                            
                                             headers.push(<th key={`${index}`} scope="col">{evaluationCriteria.description}</th>);
                                             headersData.push(evaluationCriteria.description)
                                             headers.push(<th scope="col">{ evaluationCriteria.percentage}% from  {evaluationCriteria.description}</th>);
@@ -209,7 +219,7 @@ export default function HODMarksReturnSheet(props) {
                                     } else {
                                         marks?.map((ele, index) => {
                                             if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
-                                               
+                                                
                                                     headers.push(<th key={`${index}`} scope="col">{ele.assignment_name}</th>);
                                                     headersData.push(ele.assignment_name)
                                                 
