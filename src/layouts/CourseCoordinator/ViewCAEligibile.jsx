@@ -9,6 +9,7 @@ export default function ViewCAEligibile() {
     const { authState } = useOktaAuth();
     const history = useHistory();
 
+    console.log(courses)
     const usernameofcc = authState?.idToken?.claims.preferred_username;
     // authState?.idToken?.claims.preferred_username;
     console.log(usernameofcc);
@@ -45,7 +46,8 @@ export default function ViewCAEligibile() {
                             <div className="card-body">
                                 <h5 className="card-title py-2">{course.course_id}</h5> 
                                 <h6 className='card-title py-1'>{course.course_name}</h6> 
-                                <a className="btn btn-primary btn-sm mt-2" onClick={`/caeli/${course.course_id}/${course.course_name}`}>To CA Eligibility</a>
+                               {console.log(course.course_id,course.course_name)} 
+                                <a className="btn btn-primary btn-sm mt-2" onClick={ ()=> history.push(`/caeli/${course.course_id}/${course.course_name}`)}>To CA Eligibility</a>
                             </div>
                         </div>
                     ))}

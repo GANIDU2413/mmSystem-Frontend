@@ -83,13 +83,13 @@ export default function NavBarCC() {
                                     View CA Eligibility
                                 </a>
                             </li>
-                            <li className="nav-item">
+                            {/* <li className="nav-item">
                                 <a className="nav-link active" aria-current="page" href="/attendencesysan">
                                     View FA Eligibility
                                 </a>
-                            </li>
+                            </li> */}
                             <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="/medicalsysan">
+                                <a className="nav-link active" aria-current="page" href="/cccbycc">
                                     Course Criteria
                                 </a>
                             </li>

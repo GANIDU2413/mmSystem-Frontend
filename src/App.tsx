@@ -52,6 +52,7 @@ import CCDashBoard from "./layouts/CourseCoordinator/CCDashBoard";
 import CCMarksApproval from "./layouts/CourseCoordinator/CCMarksApproval";
 import ViewCAEligibile from "./layouts/CourseCoordinator/ViewCAEligibile";
 import CAEligibility from "./layouts/CourseCoordinator/CAEligibility";
+import CourseCriteriaByCC from "./layouts/CourseCoordinator/CourseCriteriaByCC";
 
 
 
@@ -271,6 +272,10 @@ export const App = () => {
             <Route path="/caeli/:course_id/:course_name">
               <CAEligibility/>
             </Route>
+
+          <Route path="/cccbycc">
+            <CourseCriteriaByCC/>
+          </Route>
           
           
             <Route path="/addscore">
