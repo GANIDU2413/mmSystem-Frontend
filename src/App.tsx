@@ -173,7 +173,7 @@ export const App = () => {
             <StudentCourseEditLayout/>
           </Route>
 
-          <Route path="/deanFinalMarkSheet/:level/:semester">
+          <Route path="/deanFinalMarkSheet/:level/:semester/:dept">
             <DeanFinalMarkSheet approved_level={"AR"}/>
           </Route>
 
@@ -189,8 +189,8 @@ export const App = () => {
             <HODDashBoard/>
           </Route>
 
-          <Route path="/CourseCard/:level/:semester">
-            <CourseCard approved_level={"course_coordinator"}/>
+          <Route path="/CourseCard/:level/:semester/:department">
+            <CourseCard approved_level={"lecturer"}/>
           </Route>
 
           <Route path="/HODmarkstable">
@@ -209,14 +209,15 @@ export const App = () => {
             <HODMarksEditForm/>
           </Route>
 
-          <Route path="/HODMarksReturnSheet/:course_id/:course_name">
-          <HODMarksReturnSheet approved_level={"course_coordinator"}/>
-        </Route>
-
-        <Route path="/ccMarksReturnSheet/:course_id/:course_name">
+          <Route path="/HODMarksReturnSheet/:course_id/:course_name/:department">
           <HODMarksReturnSheet approved_level={"lecturer"}/>
         </Route>
 
+        <Route path="/ccMarksReturnSheet/:course_id/:course_name">
+          <HODMarksReturnSheet approved_level={"finalized"}/>
+        </Route>
+
+        
 
           <Route path="/sysandashboard">
             <SystemAnalystDashBoard/>

@@ -2,24 +2,38 @@ import { Link } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
 import { SpinerLoading } from "../Utils/SpinerLoading";
 import { IoMenuSharp } from "react-icons/io5";
+import { useEffect, useState } from "react";
 
 export const NavebarHOD = () => {
   const { oktaAuth, authState } = useOktaAuth();
+ // const[department,setDepartment]=useState('');
 
   if (!authState) {
     return <SpinerLoading />;
   }
 
+  
+
   const handleLogout = async () => oktaAuth.signOut();
 
   console.log(authState);
+  console.log(authState.idToken?.claims.name);
 
+  const department= authState?.accessToken?.claims.department;
+       console.log(department)
+  
+
+  
 
   //const levels=["I","II","III","IV"];
   const levels =[1,2,3,4]
   //const semesters=["I","II"];
   const semesters=[1,2]
-  const department=["ICT","ET","BST"];
+
+  
+  
+  
+
 
   return (
     <nav className="navbar bg-primary fixed-top">
@@ -85,31 +99,19 @@ export const NavebarHOD = () => {
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/hod">
-                    Approvel of Marks
-                </a>
-              </li>
-              <hr />  
-
-            {department.map((dept, index) => (
-
-                <li className="nav-item dropdown mx-5">
-                <a
-                  className="nav-link dropdown-toggle"
+                <a className="nav-link dropdown-toggle"
                   href="#"
                   role="button"
                   data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  
-                >
-                  Department of {dept}
+                  aria-expanded="false">
+                    Approvel of Marks
                 </a>
                 <ul className="dropdown-menu">
                   {levels.map((level, index) => {
                     return semesters.map((semester, index) => (    
                       <>
                         <li>
-                          <a href={`/CourseCard/${level}/${semester}`} className="dropdown-item">
+                          <a href={`/CourseCard/${level}/${semester}/${department}`} className="dropdown-item">
                             Level {level} Sem {semester}
                           </a>
                         </li>
@@ -119,7 +121,7 @@ export const NavebarHOD = () => {
                   })}
                 </ul>
               </li>
-            ))}
+              <hr /> 
             <hr />
           </ul>
             {/* <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
