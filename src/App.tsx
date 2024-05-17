@@ -52,6 +52,7 @@ import ABListPage from "./layouts/AR/ABListPage/ABListPage";
 import UpdateABPage from "./layouts/AR/UpdateABPage/UpdateABPage";
 import CCDashBoard from "./layouts/CourseCoordinator/CCDashBoard";
 import CCMarksApproval from "./layouts/CourseCoordinator/CCMarksApproval";
+import ViewMarksTableValidations from "./layouts/Components/AR/DataTable/ViewMarksTableValidations";
 
 
 
@@ -120,6 +121,10 @@ export const App = () => {
             <ViewMarks department_id={"Multi_Disciplinary"}/>
           </Route>
 
+          <Route path="/ARMarksReturnSheet/:course_id/:course_name">
+            <HODMarksReturnSheet approved_level={"HOD"}/>
+          </Route>
+
           <Route path="/arcerfityictmarks">  {/* Link to certify ICT marks page */}
             <CertifyMarksPage department_id={"ICT"}/>
           </Route>
@@ -133,7 +138,12 @@ export const App = () => {
           </Route>
           
           <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}
-            <ViewMarksTable/>
+            {/* <ViewMarksTable/> */}
+            <ViewMarksTableValidations/>
+          </Route>
+
+          <Route path="/ARMarksReturnSheet/:course_id/:course_name">          {/*LInk to view marks return sheet page by AR*/}
+            <HODMarksReturnSheet approved_level={"HOD"}/>
           </Route>
 
           <Route path="/arFinalMarkSheet/:level/:semester">   {/* Link to view marks remaining to certify page */}
