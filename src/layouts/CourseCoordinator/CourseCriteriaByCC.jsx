@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react'
 import NavBarCC from './NavBarCC'
 import axios from 'axios';
 import { useOktaAuth } from "@okta/okta-react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function CourseCriteriaByCC() {
   const [cids,setCids] = useState([]);
@@ -106,6 +108,31 @@ export default function CourseCriteriaByCC() {
     document.querySelectorAll('input').forEach(input => input.value = '');
   };
 
+  const saveData = async () => {
+    try {
+      
+  
+      // Call the first API to insert criteria-name data
+      const criteriaNameResponse = await axios.post("http://localhost:9090/api/evaluationCriteriaName/insertcriterianame", criteria_name);
+      console.log(criteriaNameResponse.data.content); // Handle the response as needed
+    
+      // Now, call the second API to insert criteria data
+      const criteriaResponse = await axios.post("http://localhost:9090/api/evaluationCriteria/insertcriteria", criteriaData);
+      console.log(criteriaResponse.data.content); // Handle the response as needed
+
+      setCriteriaData([]);
+      setCriteria_name([]);
+      setSelectedAssessmentType('');
+
+      document.querySelector('input[name="no_of_conducted"]').value = '';
+      document.querySelector('input[name="no_of_taken"]').value = '';
+
+      toast.success("Data submitted successfully!");
+    } catch (error) {
+      console.error("Error saving data:", error);
+      toast.error("Error submitting data. Please try again.");
+    }
+  };
 
   return (
     <div>
@@ -182,11 +209,12 @@ export default function CourseCriteriaByCC() {
                 </table>
                 
               </div>
-              <button className=' btn btn-primary sm m-4'>Create The Criteria</button>
+              <button className=' btn btn-primary sm m-4' onClick={saveData}>Create The Criteria</button>
             </div>
           </div>
 
       </div>
+      <ToastContainer />
     </div>
   )
 
