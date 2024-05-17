@@ -163,7 +163,7 @@ export const App = () => {
             <StudentCourseEditLayout/>
           </Route>
 
-          <Route path="/deanFinalMarkSheet/:level/:semester">
+          <Route path="/deanFinalMarkSheet/:level/:semester/:dept">
             <DeanFinalMarkSheet approved_level={"AR"}/>
           </Route>
 
@@ -200,13 +200,14 @@ export const App = () => {
           </Route>
 
           <Route path="/HODMarksReturnSheet/:course_id/:course_name/:department">
-          <HODMarksReturnSheet/>
+          <HODMarksReturnSheet approved_level={"lecturer"}/>
         </Route>
 
-        {/* <Route path="/ccMarksReturnSheet/:course_id/:course_name">
-          <HODMarksReturnSheet approved_level={"lecturer"}/>
-        </Route>  */}
+        <Route path="/ccMarksReturnSheet/:course_id/:course_name">
+          <HODMarksReturnSheet approved_level={"finalized"}/>
+        </Route>
 
+        
 
           <Route path="/sysandashboard">
             <SystemAnalystDashBoard/>

@@ -250,7 +250,7 @@ export const NavebarDean = () => {
                     return semesters.map((semester, index) => (    
                       <>
                         <li className="nav-item">
-                          <a href={`/deanFinalMarkSheet/${level}/${semester}`} className="dropdown-item">
+                          <a href={`/deanFinalMarkSheet/${level}/${semester}/${dept}`} className="dropdown-item">
                             Level {level} Sem {semester}
                           </a>
                         </li>

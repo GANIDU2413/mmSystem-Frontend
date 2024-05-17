@@ -99,22 +99,12 @@ export const NavebarHOD = () => {
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/hod">
-                    Approvel of Marks
-                </a>
-              </li>
-              <hr />  
-
-                <li className="nav-item dropdown mx-5">
-                <a
-                  className="nav-link dropdown-toggle"
+                <a className="nav-link dropdown-toggle"
                   href="#"
                   role="button"
                   data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  
-                >
-                  Department of {department}
+                  aria-expanded="false">
+                    Approvel of Marks
                 </a>
                 <ul className="dropdown-menu">
                   {levels.map((level, index) => {
@@ -131,6 +121,7 @@ export const NavebarHOD = () => {
                   })}
                 </ul>
               </li>
+              <hr /> 
             <hr />
           </ul>
             {/* <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
