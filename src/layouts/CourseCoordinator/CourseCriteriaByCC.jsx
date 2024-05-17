@@ -42,12 +42,13 @@ export default function CourseCriteriaByCC() {
       // Function to handle form submission
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
-    const noOfTake = parseInt(document.querySelector('input[name="noOfTake"]').value);
-    const noOfConduct = parseInt(document.querySelector('input[name="noOfConduct"]').value);
+    const no_of_taken = parseInt(document.querySelector('input[name="no_of_taken"]').value);
+    //no_of_conducted
+    const no_of_conducted = parseInt(document.querySelector('input[name="no_of_conducted"]').value);
 
     let description = '';
-    if (noOfTake > 1) {
-      description = `Best 0${noOfTake} Average`; // Adjusted to use the variable noOfTake
+    if (no_of_taken > 1) {
+      description = `Best 0${no_of_taken} Average`; // Adjusted to use the variable no_of_taken
     } else {
       description = null;
     } 
@@ -65,12 +66,12 @@ export default function CourseCriteriaByCC() {
       evaluationcriteria_id += endSequence;
     }
 
-    // For demonstration, we'll just add it to our local state
+    // For demonstration, we'll just add it to our local state 
     const newCriterion = {
       type: asmntTypeRef.current.value,
-      assessmentType: selectedAssessmentType, // Use the ref to access the value
-      noOfConduct,
-      noOfTake,
+      assessment_type: selectedAssessmentType, // Use the ref to access the value
+      no_of_conducted,
+      no_of_taken,
       percentage: parseFloat(document.querySelector('input[name="percentage"]').value),
       description,
       course_id,
@@ -79,9 +80,9 @@ export default function CourseCriteriaByCC() {
     setCriteriaData([...criteriaData, newCriterion]);
 
     // Add the evaluation criteria name to the criteria_name state
-    if (typeof noOfConduct === "number") {
-      if (noOfConduct!== 1) {
-        for (let i = 1; i <= noOfConduct; i++) {
+    if (typeof no_of_conducted === "number") {
+      if (no_of_conducted!== 1) {
+        for (let i = 1; i <= no_of_conducted; i++) {
           const assignment_name = `${selectedAssessmentType}${i}`; // Corrected string concatenation
           const newCriterion_name = {
             evaluationcriteria_id,
@@ -90,7 +91,7 @@ export default function CourseCriteriaByCC() {
           };
           setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name]); // Using functional update for state
         }
-      } else if (noOfConduct === 1) {
+      } else if (no_of_conducted === 1) {
         const assignment_name = `${selectedAssessmentType}`;
         const newCriterion_name = {
           evaluationcriteria_id,
@@ -131,8 +132,8 @@ export default function CourseCriteriaByCC() {
                   <select className=' form-select m-2' value={selectedAssessmentType} onChange={handleAssessmentTypeChange}>
                     <option selected>Select Assessment Type</option>
                     {
-                      assessmentTypeList.map((assessmentType, index) => (
-                        <option key={`assessmentType-${index}`} value={assessmentType}>{assessmentType}</option>
+                      assessmentTypeList.map((assessment_type, index) => (
+                        <option key={`assessment_type-${index}`} value={assessment_type}>{assessment_type}</option>
                       ))
                     }
 
@@ -140,8 +141,8 @@ export default function CourseCriteriaByCC() {
                 </div>
                 <div className=' col-5' style={{display:"flex",width:"auto"}}>
                   
-                  <input name="noOfConduct" type={"number"} className='form-control m-2' placeholder='Select No of Conduct' required/>
-                  <input name="noOfTake" type={"number"} className='form-control m-2' placeholder='Select No of Take' required/>
+                  <input name="no_of_conducted" type={"number"} className='form-control m-2' placeholder='Select No of Conduct' required/>
+                  <input name="no_of_taken" type={"number"} className='form-control m-2' placeholder='Select No of Take' required/>
                   
                 </div>
                 <div className=' col-5' style={{display:"flex",width:"auto"}}>
@@ -169,9 +170,9 @@ export default function CourseCriteriaByCC() {
                     {criteriaData.map((criterion, index) => (
                       <tr key={index}>
                         {/* <td>{criterion.type}</td> */}
-                        <td>{criterion.assessmentType}</td>
-                        <td>{criterion.noOfConduct}</td>
-                        <td>{criterion.noOfTake}</td>
+                        <td>{criterion.assessment_type}</td>
+                        <td>{criterion.no_of_conducted}</td>
+                        <td>{criterion.no_of_taken}</td>
                         <td>{criterion.percentage}</td>
                         <td>{criterion.description}</td>
                         <td><button className='btn btn-danger btn-sm'>Delete</button></td>
