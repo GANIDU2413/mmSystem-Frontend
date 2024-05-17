@@ -1,8 +1,8 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import HODMarksReturnSheet from '../../HOD/HODMarksReturnSheet';
 import { NavebarHOD } from '../../HOD/NavebarHOD';
+import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../AcademicYearManagerSingleton';
 
 export default function CourseCard(props) {
 
@@ -17,13 +17,15 @@ export default function CourseCard(props) {
     const[errorMsg,seterrorMsg]=useState('');
     const{level,semester,department}=useParams();
     const{approved_level}=props;
+    const [academicYear, setAcademicYear] = useState(loadAcademicYearFromLocal);
    
-    console.log(level,semester,department,approved_level)
+    console.log(level,semester,department,approved_level,academicYear)
     
 
     const result = async () => {
         try {
-            const list = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level}/${semester}/${department}/${approved_level}`);
+            console.log(academicYear)
+            const list = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level}/${semester}/${department}/${approved_level}/${academicYear}`);
             console.log(list.data);
             console.log(level,semester);
             setCidN(list.data.content);
@@ -51,7 +53,17 @@ export default function CourseCard(props) {
         
        }, [level, semester,department,approved_level]); // This effect runs whenever level or semester changes
        
-
+       useEffect(() => {
+        const fetchAndSaveYear = async () => {
+          const year = await fetchAcademicYear();
+          if (year) {
+            saveAcademicYearToLocal(year);
+            setAcademicYear(year);
+          }
+        };
+    
+        fetchAndSaveYear();
+      }, []);
        
       
        

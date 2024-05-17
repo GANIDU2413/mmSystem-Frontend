@@ -6,6 +6,8 @@ import { useHistory } from 'react-router-dom';
 import { NavebarHOD } from './NavebarHOD';
 import { useOktaAuth } from "@okta/okta-react";
 import SignatureForApproval from '../Components/SignatureForApproval';
+import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../AcademicYearManagerSingleton';
+
 
 export default function HODMarksReturnSheet(props) {
     const [marks, setMarks] = useState([]);
@@ -20,8 +22,11 @@ export default function HODMarksReturnSheet(props) {
     const [url,setUrl] = useState()
     const[newSignature, setNewSignature] = useState("");
     const[loading,setLoading]=useState(false);
+    const [academicYear, setAcademicYear] = useState(loadAcademicYearFromLocal);
     // const [showSignatureSection, setShowSignatureSection] = useState(false);
     // const [showUploadSection, setShowUploadSection] = useState(false);
+    
+    console.log(academicYear)
     const [isCClevel,setISCClevel]=useState({
         id: "",
         course_id: "",
@@ -55,11 +60,6 @@ export default function HODMarksReturnSheet(props) {
     ;
 
     const { oktaAuth, authState } = useOktaAuth();
-  
-    const academic_year=2024;
-
- 
-
     const userNameAuth = authState?.idToken?.claims.preferred_username;
     
     const saveDigitalSignature = (url) => {
@@ -97,7 +97,7 @@ console.log(newSignature)
         "course_id": course_id,
         "approved_user_id":userNameAuth,
         "approval_level":nextApprovedlevel,
-        "academic_year":academic_year,
+        "academic_year":academicYear,
         "date_time":new Date(),
         "department_id":department,
         "signature":newSignature
@@ -171,7 +171,7 @@ useEffect(() => {
 
     const fetchCCSignature = async () => {
         try {
-            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/course_coordinator/${academic_year}`);
+            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/course_coordinator/${academicYear}`);
             setISCClevel(response.data.content);
             console.log(response.data.content);
             
@@ -182,7 +182,7 @@ useEffect(() => {
 
     const fetchcheckedbySignature = async () => {
         try {
-            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/lecturer/${academic_year}`);
+            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/lecturer/${academicYear}`);
             setISLeclevel(response.data.content);
             console.log(response.data.content);
 
@@ -194,7 +194,7 @@ useEffect(() => {
 
     const fetchHODSignature = async () => {
         try {
-            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/HOD/${academic_year}`);
+            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/HOD/${academicYear}`);
             setISHODlevel(response.data.content);
             console.log(response.data.content);
 
@@ -202,6 +202,19 @@ useEffect(() => {
             console.error('Error fetching signature data:', error);
         }
     };
+
+    useEffect(() => {
+        const fetchAndSaveYear = async () => {
+          const year = await fetchAcademicYear();
+          if (year) {
+            saveAcademicYearToLocal(year);
+            setAcademicYear(year);
+            console.log(year)
+          }
+        };
+    
+        fetchAndSaveYear();
+      }, []);
 
     useEffect(() => {
         // if (nextApprovedlevel === "course_coordinator") {
@@ -217,7 +230,7 @@ useEffect(() => {
         fetchCCSignature();
         fetchcheckedbySignature();
         fetchHODSignature();
-    }, [course_id,academic_year]);
+    }, [course_id,academicYear]);
     
    
       
