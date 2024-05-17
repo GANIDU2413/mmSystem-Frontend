@@ -8,11 +8,16 @@ export default function CourseCriteriaByCC() {
   const { authState } = useOktaAuth();
   const [selectedAssessmentType, setSelectedAssessmentType] = useState('');
   const [criteriaData, setCriteriaData] = useState([]); // State to hold the criteria data
+  const [criteria_name, setCriteria_name] = useState(''); // State to hold the evaluation criteria name
   const asmntTypeRef = useRef(null); // Create a ref for the assessment type select element
   const usernameofcc = authState?.idToken?.claims.preferred_username;
   const assessmentTypeList = ['Assignment', 'Quiz', 'Mid theory exam', 'Mid practical exam', 'End theory exam', 'End practical exam','Mini Project','Lab Report','Optional'];
+  const [sequence, setSequence] = useState(1); // Initialize sequence in state
+  const [endSequence, setEndSequence] = useState(1); // Initialize endSequence in state
 
   console.log(criteriaData);
+
+  console.log(criteria_name);
 
   useEffect(() => {
     getCids();
@@ -38,6 +43,8 @@ export default function CourseCriteriaByCC() {
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     const noOfTake = parseInt(document.querySelector('input[name="noOfTake"]').value);
+    const noOfConduct = parseInt(document.querySelector('input[name="noOfConduct"]').value);
+
     let description = '';
     if (noOfTake > 1) {
       description = `Best 0${noOfTake} Average`; // Adjusted to use the variable noOfTake
@@ -45,16 +52,55 @@ export default function CourseCriteriaByCC() {
       description = null;
     } 
 
+    const course_id = document.querySelector('select[name="courseCode"]').value;
+    let evaluationcriteria_id = `${course_id}`;
+    if (asmntTypeRef.current.value === 'CA') {
+      setSequence(prevSequence => prevSequence + 1);
+      evaluationcriteria_id += 'CA';
+      evaluationcriteria_id += sequence;
+    }
+    if (asmntTypeRef.current.value === 'End') {
+      setEndSequence(prevEndSequence => prevEndSequence + 1);
+      evaluationcriteria_id += 'EN';
+      evaluationcriteria_id += endSequence;
+    }
+
     // For demonstration, we'll just add it to our local state
     const newCriterion = {
-      type: selectedAssessmentType,
-      assessmentType: asmntTypeRef.current.value, // Use the ref to access the value
-      noOfConduct: parseInt(document.querySelector('input[name="noOfConduct"]').value),
+      type: asmntTypeRef.current.value,
+      assessmentType: selectedAssessmentType, // Use the ref to access the value
+      noOfConduct,
       noOfTake,
       percentage: parseFloat(document.querySelector('input[name="percentage"]').value),
       description,
+      course_id,
+      evaluationcriteria_id,
     };
     setCriteriaData([...criteriaData, newCriterion]);
+
+    // Add the evaluation criteria name to the criteria_name state
+    if (typeof noOfConduct === "number") {
+      if (noOfConduct!== 1) {
+        for (let i = 1; i <= noOfConduct; i++) {
+          const assignment_name = `${selectedAssessmentType}${i}`; // Corrected string concatenation
+          const newCriterion_name = {
+            evaluationcriteria_id,
+            assignment_name,
+            course_id,
+          };
+          setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name]); // Using functional update for state
+        }
+      } else if (noOfConduct === 1) {
+        const assignment_name = `${selectedAssessmentType}`;
+        const newCriterion_name = {
+          evaluationcriteria_id,
+          assignment_name,
+          course_id,
+        };
+        setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name]); // Using functional update for state
+      }
+    }
+
     // Clear the form after submission
     document.querySelectorAll('input').forEach(input => input.value = '');
   };
@@ -68,7 +114,7 @@ export default function CourseCriteriaByCC() {
           <div style={{display:"flex"}}>
             <div className=' col-1 mt-5' style={{float:"left",width:"43%"}}>
               <form onSubmit={handleSubmit} >
-                <select className=' form-select'>
+                <select className=' form-select' name="courseCode">
                   <option selected>Select Course Code</option>
                   {
                     cids.map((cid,index) => (
@@ -110,7 +156,7 @@ export default function CourseCriteriaByCC() {
                 <table className=' table'>
                   <thead>
                     <tr>
-                      <th>Type</th>
+                      {/* <th>Type</th> */}
                       <th>Assessment Type</th>
                       <th>No of Conduct</th>
                       <th>No of Take</th>
@@ -122,7 +168,7 @@ export default function CourseCriteriaByCC() {
                   <tbody>
                     {criteriaData.map((criterion, index) => (
                       <tr key={index}>
-                        <td>{criterion.type}</td>
+                        {/* <td>{criterion.type}</td> */}
                         <td>{criterion.assessmentType}</td>
                         <td>{criterion.noOfConduct}</td>
                         <td>{criterion.noOfTake}</td>
