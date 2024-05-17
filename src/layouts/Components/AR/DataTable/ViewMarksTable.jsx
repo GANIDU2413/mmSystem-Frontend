@@ -38,9 +38,8 @@ export default function ViewMarksTable() {
       if(value==='All students'){     // check whether the selected value is 'All students'
         
         try {
-          const response = await axios.get(
-            `http://localhost:9090/api/AssistantRegistrar/findAllStudentsGrade/${course_variables.course_id}`   // get all the students grades for the course
-          );
+          const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/findAllStudentsGrade/${course_variables.course_id}`);   // get all the students grades for the course
+          
 
           if(response.data.length>0){     // check whether there are students
 
