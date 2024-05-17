@@ -95,7 +95,7 @@ export default function ViewMarksTableValidations() {
 
     useEffect(()=>{
         fetchData();
-    },[interrupt])
+    },[])
 
 
 
