@@ -110,13 +110,7 @@ export default function HomePageAR() {
               </div>
             </div>
           </div>
-
           
-
-          
-          
-
-
         </div>
 
       </div>
