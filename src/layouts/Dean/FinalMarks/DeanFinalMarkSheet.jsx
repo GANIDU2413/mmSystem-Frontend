@@ -18,13 +18,48 @@ export default function DeanFinalMarkSheet(props ) {
     const[nextApprovedlevel,setNextApprovedlevel]=useState("");
     const { oktaAuth, authState } = useOktaAuth();
     const userNameAuth = authState?.idToken?.claims.preferred_username;
+
+    const academic_year = 2024;
+
+    const[ARSign,setARSign]=useState(
+      {
+        "level": "",
+      "semester":"",
+      "approved_user_id":"",
+      "approval_level":"",
+      "academic_year":"",
+      "date_time":"",
+      "department_id":"",
+      "signature":""
+      }
+    );
+    const[DeanSign,setDeanSign]=useState({
+      "level": "",
+    "semester":"",
+    "approved_user_id":"",
+    "approval_level":"",
+    "academic_year":"",
+    "date_time":"",
+    "department_id":"",
+    "signature":""
+    });
+    const[VCSign,setVCSign]=useState({
+      "level": "",
+    "semester":"",
+    "approved_user_id":"",
+    "approval_level":"",
+    "academic_year":"",
+    "date_time":"",
+    "department_id":"",
+    "signature":""
+    });
     
     const approval={
       "level": level,
       "semester":semester,
       "approved_user_id":userNameAuth,
-      "approval_level":approved_level,
-      "academic_year":2024,
+      "approval_level":nextApprovedlevel,
+      "academic_year":academic_year,
       "date_time":new Date(),
       "department_id":dept,
       "signature":newSignature
@@ -61,7 +96,6 @@ export default function DeanFinalMarkSheet(props ) {
                         grade: curr.grade,
                     });
                 } else {
-                  
                     acc.push({
                         student_id: curr.student_id,
                         courses: [{
@@ -71,8 +105,6 @@ export default function DeanFinalMarkSheet(props ) {
                         }]
                         
                     });
-
-
                 }
                 return acc;
             }, []);
@@ -137,7 +169,34 @@ export default function DeanFinalMarkSheet(props ) {
   
       console.log(newSignature)
      
+      const fetchSignature = async () => {
+        try {
+            const ARSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
+            const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
+            const VCSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
+            setARSign(ARSign.data.content);
+            setDeanSign(DeanSign.data.content);
+            setVCSign(VCSign.data.content);
 
+            console.log(ARSign.data.content)
+            console.log(DeanSign.data.content)
+            console.log(VCSign.data.content)
+            
+            
+            
+        } catch (error) {
+          console.error('Error fetching signature data:', error.response || error.message);
+        }
+    };
+    
+    useEffect(() => {
+      fetchSignature();
+  }, [level,semester,dept,approved_level,academic_year]);
+
+            console.log(ARSign.signature)
+            console.log(DeanSign.signature)
+            console.log(VCSign.signature)
+    
     return (
       <div className="container">
       {finalResults.length !== 0 ? (
@@ -268,20 +327,20 @@ export default function DeanFinalMarkSheet(props ) {
             {console.log(nextApprovedlevel)}
           <p>Certified Correct,
             <br/>
-            {nextApprovedlevel == "AR" && newSignature && (
-            <img src={newSignature} alt="" />
-          )}
+          {nextApprovedlevel == "AR" ? <img src={newSignature} style={{ width: '80px', height: '40px' }} /> : 
+           ARSign.signature != null ? <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} /> : null}
             <p>Ms H.H Kaumadi Dharmasiri</p>
             <p>Assisstant Registrar</p>
             <p>Faculty of Technology</p>
 
 
-            {nextApprovedlevel == "Dean" && newSignature ? <img src={newSignature} style={{ width: '80px', height: '40px' }}/>: null}
+            {nextApprovedlevel == "Dean" ? <img src={newSignature} style={{ width: '80px', height: '40px' }} /> : 
+           DeanSign.signature != null ? <img src={DeanSign.signature} style={{ width: '80px', height: '40px' }} /> : null}
             <p>Prof. P.K.S.C Jayasinghe</p>
             <p>Dean/Faculty of Technology</p>
 
-            {nextApprovedlevel == "VC" && newSignature && (
-            <img src={newSignature} alt="" />)}
+            {nextApprovedlevel == "VC" ? <img src={newSignature} style={{ width: '80px', height: '40px' }} /> : 
+           VCSign.signature != null ? <img src={VCSign.signature} style={{ width: '80px', height: '40px' }} /> : null}
             <p>Snr Prof.Sujeewa Amarasena</p>
             <p>Vice Chancellor</p>
             <p>Faculty of Technology</p>
