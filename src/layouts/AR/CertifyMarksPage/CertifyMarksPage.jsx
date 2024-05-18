@@ -16,20 +16,30 @@ export default function CertifyMarksPage(props) {
 
     const checkCertifyAvailability = async (level,semester) => {          // check whether HOD approved all courses for the given level and semester
        let approvedYear = new Date().getFullYear();                       // get current year
-       
-      try{                                                                // get 'not approved courses' by level, semester, approved level and year     
-        const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getNotApprovedCoursesByLevelSemester/${level}/${semester}/HOD/${approvedYear}`);
-        
-        if(response.data.length>0){                                       // if 'not approved courses' are available
-          toast.error("HOD have not approved all courses for this level and semester",{autoClose:3000});      // show error message
+
+       try{
+          const academicYearDetails= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`);    // get academic year details
           
-        }else{                                                // if 'not approved courses' are not available
-          history.push(`/arFinalMarkSheet/${level}/${semester}`);       // redirect to final mark sheet page
-        }
-      }
-      catch(e){
-        console.log(e);     // log error
-      }
+          try{                                                                // get 'not approved courses' by level, semester, approved level and year     
+            const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getNotApprovedCoursesByLevelSemester/${level}/${semester}/HOD/${academicYearDetails.data[0]["current_academic_year"]}`);
+            
+            if(response.data.length>0){                                       // if 'not approved courses' are available
+              toast.error("HOD have not approved all courses for this level and semester",{autoClose:3000});      // show error message
+              
+            }else{                                                // if 'not approved courses' are not available
+              history.push(`/arFinalMarkSheet/${level}/${semester}`);       // redirect to final mark sheet page
+            }
+          }
+          catch(e){
+            
+            toast.error("Error with getting not approved course details",{autoClose:3000});      // show error message
+          }
+       }
+       catch(e){
+          toast.error("Could not find academic year details",{autoClose:3000});      // show error message
+       }
+       
+      
       
     };
 
