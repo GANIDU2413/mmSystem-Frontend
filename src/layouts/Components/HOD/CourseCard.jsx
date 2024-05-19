@@ -14,51 +14,67 @@ export default function CourseCard(props) {
     ])
     const history = useHistory();
 
-    const[errorMsg,seterrorMsg]=useState('');
+    const[errorMsg,seterrorMsg]=useState("");
     const{level,semester,department}=useParams();
     const{approved_level}=props;
-    const [academicYear, setAcademicYear] = useState(loadAcademicYearFromLocal);
-   
-    console.log(level,semester,department,approved_level,academicYear)
-    
-
+    const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
+    const[academicYear,setAcademicYear]=useState("")
+  
     const result = async () => {
-        try {
-            console.log(academicYear)
-            const list = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level}/${semester}/${department}/${approved_level}/${academicYear}`);
-            console.log(list.data);
-            console.log(level,semester);
-            setCidN(list.data.content);
-            console.log(cidN);
-            seterrorMsg(list.data.message);
-        } catch (error) {
-            if (error.response && error.response.status === 404) {
-                console.error('No data found for the given level and semester');
-                console.log(error.response.data.message);
-                seterrorMsg(error.response.data.message);
-              
-                setCidN([]); // Set an empty array or any default state
-
-            } else {
-                // Handle other types of errors
-                console.error('An error occurred:', error.response.data.message);
-                seterrorMsg('An error occurred:', error);
-            }
-        }
-    };
+      try {
+          const response = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level}/${semester}/${department}/${approved_level}/${academicYear}`);
+          const list = response.data; 
+          setCidN(list.content);
+          seterrorMsg(list.message);
+      } catch (error) {
+          if (error.response && error.response.status === 404) {
+              seterrorMsg(error.response.data.message);
+              setCidN([]); // Set an empty array or any default state
+  
+          } else {
+             seterrorMsg('An error occurred:', error);
+          }
+      }
+  };
+  
     
     useEffect(() => {
         result();
+       }, [level,semester,department,approved_level,academicYear]); // This effect runs whenever level or semester changes
 
-        
-       }, [level, semester,department,approved_level]); // This effect runs whenever level or semester changes
+       useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level}/${semester}/${department}/${approved_level}/${academicYear}`);
+                const data = response.data;
+                if (data && data.content) {
+                    setCidN(data.content);
+                    seterrorMsg(data.message);
+                } else {
+                    seterrorMsg('No data available.');
+                    setCidN([]);
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    seterrorMsg(error.response.data.message);
+                    setCidN([]);
+                } else {
+                    seterrorMsg('An error occurred:', error);
+                }
+            }
+        };
+
+        fetchData();
+    }, [level, semester, department, approved_level, academicYear]);
+      
        
        useEffect(() => {
         const fetchAndSaveYear = async () => {
-          const year = await fetchAcademicYear();
-          if (year) {
-            saveAcademicYearToLocal(year);
-            setAcademicYear(year);
+          const details = await fetchAcademicYear();
+          if (details) {
+            saveAcademicYearToLocal(details);
+            setAcademicDetails(details);
+            setAcademicYear(details.current_academic_year)
           }
         };
     

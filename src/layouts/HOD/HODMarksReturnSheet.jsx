@@ -7,6 +7,9 @@ import { NavebarHOD } from './NavebarHOD';
 import { useOktaAuth } from "@okta/okta-react";
 import SignatureForApproval from '../Components/SignatureForApproval';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../AcademicYearManagerSingleton';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+
 
 
 export default function HODMarksReturnSheet(props) {
@@ -22,11 +25,18 @@ export default function HODMarksReturnSheet(props) {
     const [url,setUrl] = useState()
     const[newSignature, setNewSignature] = useState("");
     const[loading,setLoading]=useState(false);
-    const [academicYear, setAcademicYear] = useState(loadAcademicYearFromLocal);
-    // const [showSignatureSection, setShowSignatureSection] = useState(false);
-    // const [showUploadSection, setShowUploadSection] = useState(false);
+    const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
+    const[academicYear,setAcademicYear]=useState("")
+    const[approval_level,setApprovalLevel]=useState(approved_level);
+    const[marksSheet,setMarksSheet]=useState([])
+    const [data, setData] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
+
     
-    console.log(academicYear)
+    let forCA = 1;
+    let forFA = 0;
+    
     const [isCClevel,setISCClevel]=useState({
         id: "",
         course_id: "",
@@ -61,17 +71,26 @@ export default function HODMarksReturnSheet(props) {
 
     const { oktaAuth, authState } = useOktaAuth();
     const userNameAuth = authState?.idToken?.claims.preferred_username;
+
+    useEffect(() => {
+        const fetchAndSaveYear = async () => {
+          const details = await fetchAcademicYear();
+          if (details) {
+            saveAcademicYearToLocal(details);
+            setAcademicDetails(details);
+            setAcademicYear(details.current_academic_year)
+          }
+        };
+    
+        fetchAndSaveYear();
+      }, []);
     
     const saveDigitalSignature = (url) => {
         setNewSignature(url); 
         setUrl(url);    
     };
     
-    
-    
-console.log(newSignature)
-    
-    
+   
 
 
     let CAAvailable = false;
@@ -81,17 +100,16 @@ console.log(newSignature)
     let headerValue= [];
 
     let nextApprovedlevel = "";
-         if(approved_level==="finalized") {
+         if(approval_level==="finalized") {
             nextApprovedlevel="course_coordinator";
-         } else if (approved_level === "course_coordinator") {
+         } else if (approval_level === "course_coordinator") {
            nextApprovedlevel = "lecturer";
-         } else if (approved_level === "lecturer") {
+         } else if (approval_level === "lecturer") {
            nextApprovedlevel = "HOD";
          }
-
-         console.log(approved_level,nextApprovedlevel)
-        
-    
+         else if (approval_level === "HOD") {
+            nextApprovedlevel = "AR";
+          }
 
     const approval={
         "course_id": course_id,
@@ -103,59 +121,87 @@ console.log(newSignature)
         "signature":newSignature
     }
 
-    console.log(saveDigitalSignature)
-   
-  
-
 // Modify your useEffect to set loading to false only after all Axios calls are completed
 useEffect(() => {
-    const fetchData = async () => {
-        try {
-            const listPromises = [
-                axios.get(`http://localhost:9090/api/evaluationCriteria/getCriteria/${course_id}`),
-                axios.get(`http://localhost:9090/api/StudentAssessment/get/scoreByCourseId/${course_id}`),
-                axios.get(`http://localhost:9090/api/marksCalculations/getMarksCalculation/${course_id}`),
-                axios.get(`http://localhost:9090/api/studentMarks/getStudentMarksbyCourse/${course_id}`),
-                axios.get(`http://localhost:9090/api/studentRegCourses/getStudentsByCourse/${course_id}`)
-            ];
-
-            const [criteria, marks, calculations, grade, studentList] = await Promise.all(listPromises);
-
-            setEvaluationCriteria(criteria.data || []);
-            setMarks(marks.data || []);
-            setCalculations(calculations.data || []);
-            setGrade(grade.data?.content || []);
-            setStudentList(studentList.data || []);
-
-            setLoading(false); // Set loading to false after all data is fetched
-        } catch (error) {
-            console.error(error);
-            setNoData(true); // Set noData to true if there is an error
-        }
-    };
-
     fetchData();
 }, [course_id]);
 
+
+    const fetchData = async () => {
+        
+        try {
+
+            const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}`);
+            setMarksSheet(response.data);
+            console.log(marksSheet)
+            // const listPromises = [
+            //     axios.get(`http://localhost:9090/api/evaluationCriteria/getCriteria/${course_id}`),
+            //     axios.get(`http://localhost:9090/api/StudentAssessment/get/scoreByCourseId/${course_id}`),
+            //     axios.get(`http://localhost:9090/api/marksCalculations/getMarksCalculation/${course_id}`),
+            //     axios.get(`http://localhost:9090/api/studentMarks/getStudentMarksbyCourse/${course_id}`),
+            //     axios.get(`http://localhost:9090/api/studentRegCourses/getStudentsByCourse/${course_id}`)
+            // ];
+
+            // const [criteria, marks, calculations, grade, studentList] = await Promise.all(listPromises);
+
+            // setEvaluationCriteria(criteria.data || []);
+            // setMarks(marks.data || []);
+            // setCalculations(calculations.data || []);
+            // setGrade(grade.data?.content || []);
+            // setStudentList(studentList.data || []);
+
+            setLoading(false); // Set loading to false after all data is fetched
+        } catch (error) {
+            setNoData(true); // Set noData to true if there is an error
+        }
+
+    };
+
+
     useEffect(() => {
-        const result1 = async () => {
+        SigFunc();
+    },[course_id,academicYear]);
+
+    const SigFunc = async () => {
             try {
-                const list = await axios.get(`http://localhost:9090/api/studentRegCourses/getStudentsByCourse/${course_id}`);
-                setStudentList(list.data);
+                const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/course_coordinator/${academicYear}`);
+                setISCClevel(response.data.content);
+
+                const response1 = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/lecturer/${academicYear}`);
+                setISLeclevel(response1.data.content);
+
+                const response2 = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/HOD/${academicYear}`);
+                setISHODlevel(response2.data.content);
             } catch (error) {
-                console.error(error);
-                setNoData(true); // Set noData to true if there is an error
+                console.error('Error fetching signature data:', error);
             }
-        };
-        result1();
-    }, [course_id]);
+       
+    }
+
+
+    
+
+
+
+    console.log(marksSheet)
+
+    // useEffect(() => {
+    //     fetchCCSignature();
+    //     fetchcheckedbySignature();
+    //     fetchHODSignature();
+    // }, [course_id,academicYear]);
+    
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            
             const response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevel`,approval);
             if (response.status === 200) {
                 console.log("Approval level updated successfully");
+                setApprovalLevel(nextApprovedlevel)
+                console.log(approval_level)
             } else {
                 console.error("Failed to update approval level");
             }
@@ -164,128 +210,116 @@ useEffect(() => {
         }
     };
 
+
+
     const handleReturn = (event) => {
         event.preventDefault(); // Prevent the default form submission behavior
         history.goBack(); // Navigate back
     };
+    
 
-    const fetchCCSignature = async () => {
-        try {
-            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/course_coordinator/${academicYear}`);
-            setISCClevel(response.data.content);
-            console.log(response.data.content);
-            
-        } catch (error) {
-            console.error('Error fetching signature data:', error);
-        }
+    const downloadPDF = () => {
+        const input = document.getElementById('marks-return-sheet');
+        html2canvas(input)
+            .then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF();
+                pdf.addImage(imgData, 'PNG', 10, 10);
+                pdf.save(`${course_name}-${course_id}-Marks-Return-Sheet.pdf`);
+            })
+            .catch(error => {
+                console.error('Error generating PDF: ', error);
+            });
     };
+    
+    marksSheet.map((ele, index) => (
+        ele.ca.map((caScore, idx) => (
+            forCA++
+        ))
+    ))
 
-    const fetchcheckedbySignature = async () => {
-        try {
-            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/lecturer/${academicYear}`);
-            setISLeclevel(response.data.content);
-            console.log(response.data.content);
-
-
-        } catch (error) {
-            console.error('Error fetching signature data:', error);
-        }
-    };
-
-    const fetchHODSignature = async () => {
-        try {
-            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/HOD/${academicYear}`);
-            setISHODlevel(response.data.content);
-            console.log(response.data.content);
-
-        } catch (error) {
-            console.error('Error fetching signature data:', error);
-        }
-    };
+    marksSheet.map((ele, index) => (
+        ele.end.map((endScore, idx) => (
+            forFA++
+        ))
+    ))
 
     useEffect(() => {
-        const fetchAndSaveYear = async () => {
-          const year = await fetchAcademicYear();
-          if (year) {
-            saveAcademicYearToLocal(year);
-            setAcademicYear(year);
-            console.log(year)
+        const fetchData = async () => {
+          try {
+            const result = await axios.get('http://localhost:9090/api/lecreg/get/alllecturersdetails');
+            setData(result.data);
+            console.log(data)
+            setFilteredData(result.data); // Initially, all data is considered as filtered
+          } catch (error) {
+            console.error("Error fetching data:", error);
           }
         };
     
-        fetchAndSaveYear();
+        fetchData();
       }, []);
 
-    useEffect(() => {
-        // if (nextApprovedlevel === "course_coordinator") {
-        //     fetchCCSignature();
-            
-        // }
-        // if (nextApprovedlevel === "lecturer") {
-        //     fetchcheckedbySignature();
-        // }
-        // if (nextApprovedlevel === "HOD") {
-        //     fetchHODSignature();
-        // }
-        fetchCCSignature();
-        fetchcheckedbySignature();
-        fetchHODSignature();
-    }, [course_id,academicYear]);
-    
-   
-      
-console.log(nextApprovedlevel);
+      const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+        const filtered = data.filter(item =>
+            item.user_id.toString().toLowerCase().includes(event.target.value.toLowerCase())
+          );
+        setFilteredData(filtered);
+      };
 
-
-    console.log(newSignature)
-   
+      const handleClick = (userId) => {
+        setSearchTerm(userId);
+      }
 
     return (
         <>
             <NavebarHOD />
-            {loading? (
+            {loading ? (
                 <div>Loading...</div> // Display a loading message or spinner here
             ) : (
                 <>
-                    <div className=' container' style={{marginTop:"70px"}}>
-          
-          <div>
-              <div >
-                  <form onSubmit={handleReturn}>
-                  <input
-                      type='submit'
-                      value="Return Mark Sheet"
-                      className="btn shadow btn-outline-success btn-sm float-end my-4"
-                      id="submitbtn"
-                      style={{ float: 'right', width: '130px'}}
-                  />
+                <div id="marks-return-sheet" style={{ marginTop: "70px",width:"95%",marginLeft:"40px",marginRight:"40px",}}>
+                        <div >
 
-                  </form>
-              </div>
-              <table>
-                  <tr>
-                      <td class="text-decoration-underline font-italic"><p>Mark Return Sheet:</p></td>
-                  </tr>
-                  <tr>
-                      <td><p>Marks Obtained by the Candidate for:</p></td>
-                  </tr>
-                  <tr>
-                      <td>Academic Year:</td>
-                      <td></td>
-                      <td>Degree:</td>
-                      <td></td>
-                      <td>2nd Semsester Examination: December 2023</td>
-                  </tr>
-              </table>
-              <h4>Course code and Title : {course_name} - {course_id}</h4>
-          </div>
+                        <div>
+                            <div >
+                                <form onSubmit={handleReturn}>
+                                    <input
+                                        type='submit'
+                                        value="Return Mark Sheet"
+                                        className="btn shadow btn-outline-success btn-sm float-end my-4"
+                                        id="submitbtn"
+                                        style={{ float: 'right', width: '130px' }}
+                                    />
+
+                                </form>
+                            </div>
+                            <div>
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <td class="text-decoration-underline font-italic"><h2><i>Mark Return Sheet:</i></h2></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><b>Marks Obtained by the Candidate for:</b></p></td>
+                                        </tr>
+                                    </table>
+                                        <div style={{display:"flex"}}>
+                                            <p><b>Academic Year: {academicYear}</b></p>
+                                            <p className=' mx-5'><b>Degree: Bachelor of Information and Communication Technology Honours Degree </b> </p>
+                                            <p className=' mx-2'><b>{academicDetails.current_semester === "1" ? "1st" : "2nd"} Semester Examination: December 2023 </b> </p>  
+                                        </div>
+                                       
+                                    
+                    <h4>Course code and Title : {course_name} - {course_id}</h4>
+                    </div>
 
 
-          <div style={{overflow:"auto",width:"100%",height:"500px"}}>
-          
-          <table className="table shadow table-bordered" style={{ marginTop: "30px", width: '100%' }}>
-              <thead>
-                  <tr>
+                    <div className=''>
+                        {/*  style={{overflow:"auto",width:"100%",height:"500px"}} */}
+                    <table className="table shadow table-bordered" style={{ marginTop: "30px", width: '80%' }}>
+                    {/* <thead>
+                    <tr>
                       <th scope="col">Student_ID</th>
                       {
                           
@@ -366,9 +400,63 @@ console.log(nextApprovedlevel);
                       <th>Remarks,Continuous Assessment Pass/Fail</th>
                       <th>View</th>
                   </tr>
-                  {console.log(headersData)}
-              </thead>
-              <tbody>
+                  
+                 </thead> */}
+                    <thead>
+                        
+                            <tr>
+                            
+                                <th rowSpan='2'>Student_ID</th>
+                                <th colSpan={forCA}>Continuous Assessment</th>
+                                <th colSpan={forFA}>Semester End Exam</th>
+                                <th colSpan='4'>Final Marks</th>
+                            </tr>
+                            <tr>
+                                {marksSheet.map((ele, index) => (
+                                    ele.ca.map((caScore, idx) => (
+                                        <th  key={`ca-${idx}`}>{caScore.key}</th>
+                                    ))
+                                ))}
+                                <th>Total CA Marks</th>
+                                {marksSheet.map((ele, index) => (
+                                    ele.end.map((endScore, idx) => (
+                                        <th key={`end-${idx}`}>{endScore.key}</th>
+                                    ))
+                                ))}
+                             
+                                <th>Total Final Marks</th>
+                                <th>Total Rounded Marks</th>
+                                <th>Results/Grades</th>
+                                <th>GPV</th>
+                                <th>CA Eligibility</th>
+                                <th>View</th>
+                           
+                                 {/* {console.log(ele.student_id,ele.total_ca_mark,ele.total_final_mark,ele.total_rounded_mark,ele.grade,ele.gpv,ele.ca_eligibility)} */}
+                            </tr>
+                    </thead>
+                    
+
+                      <tbody>
+                      {marksSheet.map((ele, index) => (
+                        <tr key={index}>
+                            <td>{ele.student_id}</td>
+                            {ele.ca.map((caScore, idx) => (
+                                <td key={`ca-${idx}`}>{caScore.value}</td>
+                            ))}
+                            {ele.end.map((endScore, idx) => (
+                                <td key={`end-${idx}`}>{endScore.value}</td>
+                            ))}
+                            <td>{ele.total_ca_mark}</td>
+                            <td>{ele.total_final_mark}</td>
+                            <td>{ele.total_rounded_mark}</td>
+                            <td>{ele.grade}</td>
+                            <td>{ele.gpv}</td>
+                            <td>{ele.ca_eligibility}</td>
+                            <td><Link className=" btn btn-primary mx-3 btn-sm" to={`/MarksCheckingForm/${ele}/${course_id}/${course_name}`}>View</Link></td>
+                            {console.log(ele.student_id,ele.total_ca_mark,ele.total_final_mark,ele.total_rounded_mark,ele.grade,ele.gpv,ele.ca_eligibility)}
+                        </tr>))}
+                      </tbody>
+                    {/* <tbody>
                   {
                       studentList.map((ele, index) => (
                           <tr>
@@ -382,7 +470,6 @@ console.log(nextApprovedlevel);
                                                   if (mark.student_id == ele) {
                                                       if (evaluationCriteria.evaluationcriteria_id == mark.evaluation_criteria_id) {
                                                           headers.push(<td key={`${index}`} scope="col">{mark.assignment_score ? mark.assignment_score: "-"}</td>);
-                                                          headerValue.push(mark.assignment_score ? mark.assignment_score: "-")
                                                       }
                                                   }
                                               });
@@ -390,7 +477,6 @@ console.log(nextApprovedlevel);
                                                   if (ele == cal.student_id) {
                                                       if (cal.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
                                                           headers.push(<td key={`${index}`} scope="col">{cal.mark? cal.mark: "-"}</td>);
-                                                          headerValue.push(cal.mark? cal.mark: "-")
                                                       }
                                                   }
                                               });
@@ -399,7 +485,6 @@ console.log(nextApprovedlevel);
                                                   if (ele == marks.student_id) {
                                                       if (marks.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
                                                           headers.push(<td key={`${index}`} scope="col">{marks.assignment_score? marks.assignment_score: "-"}</td>);
-                                                          headerValue.push(marks.assignment_score? marks.assignment_score: "-")
                                                       }
                                                   }
                                               });
@@ -408,7 +493,6 @@ console.log(nextApprovedlevel);
                                               if (ele == cal.student_id) {
                                                   if (cal.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
                                                       headers.push(<td key={`${index}`} scope="col">{cal.percentage? cal.percentage: "-"}</td>);
-                                                      headerValue.push(cal.percentage? cal.percentage: "-")
                                                   }
                                               }
                                           });
@@ -422,8 +506,6 @@ console.log(nextApprovedlevel);
                                       if (grade.student_id == ele) {
                                          
                                               headers.push(<td key={`${index}`} scope="col">{grade.total_ca_mark? grade.total_ca_mark: "-"}</td>);
-                                              headerValue.push(grade.total_ca_mark? grade.total_ca_mark: "-")
-                                             
                                       }
                                       return headers;
                                   }).flat()
@@ -442,7 +524,6 @@ console.log(nextApprovedlevel);
                                                           if (calculations.student_id == ele) {
                                                               if (evaluationCriteria.evaluationcriteria_id == calculations.evaluation_criteria_id && mark.assignment_name !== "1st Marking" && mark.assignment_name !== "2nd Marking") {
                                                                   headers.push(<td key={`${index2}`} scope="col">{calculations.percentage? calculations.percentage: "-"}</td>);
-                                                                  headerValue.push(calculations.percentage? calculations.percentage: "-")
                                                               }
                                                           }
                                                       });
@@ -458,15 +539,10 @@ console.log(nextApprovedlevel);
                                       if (grade.student_id == ele) {
                                           let headers = [];
                                           headers.push(<td key={`${index}`} scope="col">{grade.total_final_mark? grade.total_final_mark: "-"}</td>);
-                                          headerValue.push(grade.total_final_mark? grade.total_final_mark: "-")
                                           headers.push(<td key={`${index}`} scope="col">{grade.total_rounded_mark? grade.total_rounded_mark: "-"}</td>);
-                                          headerValue.push(grade.total_rounded_mark? grade.total_rounded_mark: "-")
                                           headers.push(<td key={`${index}`} scope="col">{grade.grade? grade.grade: "-"}</td>);
-                                          headerValue.push(grade.grade? grade.grade: "-")
                                           headers.push(<td key={`${index}`} scope="col">{grade.gpv? grade.gpv :  "-"}</td>);
-                                          headerValue.push(grade.gpv? grade.gpv :  "-")
                                           headers.push(<td key={`${index}`} scope="col">{grade.ca_eligibility?  grade.ca_eligibility:"-"}</td>);
-                                          headerValue.push(grade.ca_eligibility?  grade.ca_eligibility:"-" )
                                           return headers;
                                       }
                                   }).flat()
@@ -477,9 +553,9 @@ console.log(nextApprovedlevel);
                           </tr>
                       ))
                   }
-              </tbody>
-          </table>
-          </div>
+                      </tbody> */}
+                 </table>
+                     </div>
           
           
               <div style={{float:"left",marginTop:"50px"}}>
@@ -526,16 +602,81 @@ console.log(nextApprovedlevel);
                               <td>{isHODlevel.date_time != null ? isHODlevel.date_time:null}</td>
                           </tr>
                       </table>
-                  </div>
+                    </div>
+                    
+                    {
+                        nextApprovedlevel === "course_coordinator" ? 
+                        <div>
+                            <hr />
+                            <div>
+                                <input
+                                    className='form-control'
+                                    type="text"
+                                    placeholder="Search by Lecturer ID..."
+                                    value={searchTerm}
+                                    onChange={handleSearchChange}
+                                />
+                                
+                                    
+                                <div className='list-group'>
+                                {filteredData.length > 0? (
+                                    filteredData.map((item, index) => (
+                                        searchTerm == ''?
+                                        null
+                                        : <button  key={index} type="button" className="list-group-item list-group-item-action"  onClick={() => handleClick(item.user_id)}>{item.user_id} - {item.name_with_initials}</button >
+                                    ))
+                                    ) : (
+                                        <button  type="button" className="list-group-item list-group-item-action">No results found.</button >
+                                )}
+                                </div>
+                            </div>
+                        </div>
+                        :
+                        null
+                            
+                    }
+                  <hr />
+                    <div style={{marginTop:"10px",float:"right"}}>
+                        
+                        <form onSubmit={handleSubmit}>
+                            <input to={``} type="submit" value="Send" className="btn btn-outline-success btn-sm"  id="submitbtn" style={{ width: '100px'}}/> <br /><br />
+                        </form>
 
 
-                  <form onSubmit={handleSubmit}>
-                      <input to={``} type="submit" value="Send" className="btn btn-outline-success btn-sm"  id="submitbtn" style={{ width: '100px'}}/> <br /><br />
-                  </form>
+                    </div>
+
               </div>
-              <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
+              <div style={{float:"right",marginTop:"50px"}}>
+                {
+                    approval_level === "finalized" ||
+                    approval_level === "course_coordinator" ||
+                    approval_level === "lecturer" ? (
+                        <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
+                    ) : null}
+            </div>
+            
+
 
           </div>
+              
+            </div>
+            
+                   
+
+                    
+              </div>
+
+                
+              
+
+          </div>
+                    
+
+                    {approval_level === "HOD" ? (
+                        <button onClick={downloadPDF} className="btn btn-primary mt-3">
+                            Download Marks Return Sheet
+                        </button>
+                    ):null}
 
                 </>
             )}

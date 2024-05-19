@@ -18,8 +18,10 @@ export default function DeanFinalMarkSheet(props ) {
     const[nextApprovedlevel,setNextApprovedlevel]=useState("");
     const { oktaAuth, authState } = useOktaAuth();
     const userNameAuth = authState?.idToken?.claims.preferred_username;
-    const [academicYear, setAcademicYear] = useState(loadAcademicYearFromLocal);
+    const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
+    const[academicYear,setAcademicYear]=useState("")
 
+    
     
     const[ARSign,setARSign]=useState(
       {
@@ -67,10 +69,11 @@ export default function DeanFinalMarkSheet(props ) {
 
   useEffect(() => {
     const fetchAndSaveYear = async () => {
-      const year = await fetchAcademicYear();
-      if (year) {
-        saveAcademicYearToLocal(year);
-        setAcademicYear(year);
+      const details = await fetchAcademicYear();
+      if (details) {
+        saveAcademicYearToLocal(details);
+        setAcademicDetails(details);
+        setAcademicYear(details.current_academic_year)
       }
     };
 

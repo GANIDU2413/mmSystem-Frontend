@@ -72,7 +72,7 @@ export default function SignatureForApproval({ saveDigitalSignature }) {
 
     return (
         <div>
-            <div className='container' style={{ display: 'flex', marginLeft: "200px", float: "left", marginBottom: "80px", marginTop: "50px", marginRight: "120px" }}>
+            <div className='container' style={{ display: 'flex', marginLeft: "200px", marginBottom: "80px"}}>
                 <div style={{ float: "right" }}>
                     {radioSelection === 'digitalSignature' && (
                         <div style={{ border: "2px solid black", width: 500, height: 200 }}>
