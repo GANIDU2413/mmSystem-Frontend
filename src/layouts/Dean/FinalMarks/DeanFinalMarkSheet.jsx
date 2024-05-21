@@ -86,6 +86,8 @@ export default function DeanFinalMarkSheet(props ) {
             setNextApprovedlevel("AR");
           } else if (approved_level == "AR") {
             setNextApprovedlevel("Dean");
+          }else if (approved_level == "Dean") {
+            setNextApprovedlevel("VC");
           }
           console.log(approved_level,nextApprovedlevel);
       
