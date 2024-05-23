@@ -1,41 +1,56 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import NavBarCC from './NavBarCC'
 import axios from 'axios';
 import { useOktaAuth } from "@okta/okta-react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import CustomPopup from './CustomPopup';
+
+
 
 export default function CourseCriteriaByCC() {
-  const [cids,setCids] = useState([]);
   const { authState } = useOktaAuth();
   const [selectedAssessmentType, setSelectedAssessmentType] = useState('');
   const [criteriaData, setCriteriaData] = useState([]); // State to hold the criteria data
   const [criteria_name, setCriteria_name] = useState(''); // State to hold the evaluation criteria name
   const asmntTypeRef = useRef(null); // Create a ref for the assessment type select element
   const usernameofcc = authState?.idToken?.claims.preferred_username;
-  const assessmentTypeList = ['Assignment', 'Quiz', 'Mid theory exam', 'Mid practical exam', 'End theory exam', 'End practical exam','Mini Project','Lab Report','Optional'];
+  const [newAssessmentType, setNewAssessmentType] = useState({
+    assessment_type_name: '',
+  }); // State to hold the new assessment type
+
+  const [showButton, setShowButton] = useState(false);
+  const [reloadButton, setReloadButton] = useState(false);
+  
+  const [assessmentTypesData, setAssessmentTypesData] = useState([]);
+  const [cidsData, setCidsData] = useState([]);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [sequence, setSequence] = useState(1); // Initialize sequence in state
   const [endSequence, setEndSequence] = useState(1); // Initialize endSequence in state
 
-  console.log(criteriaData);
+  console.log(newAssessmentType)
 
-  console.log(criteria_name);
+    const fetchData = async ()=>{
 
-  useEffect(() => {
-    getCids();
-  },[usernameofcc]);
-
-  const getCids = async () =>{
-    try {
-      const response = await axios.get(`http://localhost:9090/api/ccmanage/getAllCidToCourseCriteria/${usernameofcc}`);
-      console.log(response.data.content);
-      setCids(response.data.content);
-    } catch (error) {
-      console.log(error);
+      try{
+        const result1  = await axios.get(`http://localhost:9090/api/astylist/get/allassessmenttypes`)
+        // console.log(result1.data.content);
+        setAssessmentTypesData(result1.data.content);
+  
+        const result2  = await axios.get(`http://localhost:9090/api/ccmanage/getAllCidToCourseCriteria/${usernameofcc}`);
+        // console.log(result2.data.content);
+        setCidsData(result2.data.content);
+      }catch(error){
+        console.log(error);
+      }
+      
     }
-    
-  }
 
+
+    useEffect(() => {
+      fetchData();
+    }, [usernameofcc,showButton,reloadButton])
+  
     // Function to handle Assessment Type selection
     const handleAssessmentTypeChange = (event) => {
       setSelectedAssessmentType(event.target.value);
@@ -113,12 +128,9 @@ export default function CourseCriteriaByCC() {
       
   
       // Call the first API to insert criteria-name data
-      const criteriaNameResponse = await axios.post("http://localhost:9090/api/evaluationCriteriaName/insertcriterianame", criteria_name);
-      console.log(criteriaNameResponse.data.content); // Handle the response as needed
-    
+      await axios.post("http://localhost:9090/api/evaluationCriteriaName/insertcriterianame", criteria_name);
       // Now, call the second API to insert criteria data
-      const criteriaResponse = await axios.post("http://localhost:9090/api/evaluationCriteria/insertcriteria", criteriaData);
-      console.log(criteriaResponse.data.content); // Handle the response as needed
+      await axios.post("http://localhost:9090/api/evaluationCriteria/insertcriteria", criteriaData);
 
       setCriteriaData([]);
       setCriteria_name([]);
@@ -128,11 +140,31 @@ export default function CourseCriteriaByCC() {
       document.querySelector('input[name="no_of_taken"]').value = '';
 
       toast.success("Data submitted successfully!");
+
+      setShowButton(!showButton);
+
     } catch (error) {
       console.error("Error saving data:", error);
       toast.error("Error submitting data. Please try again.");
     }
   };
+
+  const onSave = async (newValue) => {
+    try {
+      setNewAssessmentType({ assessment_type_name: newValue });
+      await axios.post("http://localhost:9090/api/astylist/savenewasty", { assessment_type_name: newValue } );
+      toast.success("New assessment type saved successfully!");
+      setReloadButton(prevState =>!prevState);
+      setSelectedAssessmentType(newValue);
+      // Handle successful save here, e.g., update state or show success message
+      setIsPopupVisible(false);
+
+    } catch (error) {
+      console.error("Error saving new assessment type:", error);
+      toast.error("Error saving new assessment type. Please try again.");
+      // Handle error, e.g., show error message
+    }
+  }
 
   return (
     <div>
@@ -145,7 +177,7 @@ export default function CourseCriteriaByCC() {
                 <select className=' form-select' name="courseCode">
                   <option selected>Select Course Code</option>
                   {
-                    cids.map((cid,index) => (
+                    cidsData.map((cid,index) => (
                       <option key={`cid-${index}`} value={cid.course_id}>{cid.course_id}</option>
                     ))
                   }
@@ -156,15 +188,28 @@ export default function CourseCriteriaByCC() {
                     <option value='CA' name="asmntType">Continuous Assessment</option>
                     <option value='End' name="asmntType">Final Assessment</option>
                   </select>
-                  <select className=' form-select m-2' value={selectedAssessmentType} onChange={handleAssessmentTypeChange}>
+                  <select className=' form-select m-2' value={selectedAssessmentType} onChange={(e) => {
+                      handleAssessmentTypeChange(e);
+                      if (e.target.value === 'Option') {
+                        setIsPopupVisible(true);
+                      }
+                    }} >
                     <option selected>Select Assessment Type</option>
                     {
-                      assessmentTypeList.map((assessment_type, index) => (
-                        <option key={`assessment_type-${index}`} value={assessment_type}>{assessment_type}</option>
+                      assessmentTypesData.map((assessmentType, index) => (
+                        <option key={index} value={assessmentType.assessment_type_name}>{assessmentType.assessment_type_name}</option>
                       ))
                     }
-
+                    <option value="Option">Option</option>
                   </select>
+                  <CustomPopup
+                    isVisible={isPopupVisible}
+                    onClose={() => setIsPopupVisible(false)}
+                    onSave={onSave}
+
+                    
+                  />
+                  
                 </div>
                 <div className=' col-5' style={{display:"flex",width:"auto"}}>
                   
@@ -209,7 +254,7 @@ export default function CourseCriteriaByCC() {
                 </table>
                 
               </div>
-              <button className=' btn btn-primary sm m-4' onClick={saveData}>Create The Criteria</button>
+              <button className=' btn btn-primary sm m-4' id='ctc' onClick={saveData}>Create The Criteria</button>
             </div>
           </div>
 

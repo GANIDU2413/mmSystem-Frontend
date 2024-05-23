@@ -274,7 +274,7 @@ export const App = () => {
             </Route>
 
           <Route path="/cccbycc">
-            <CourseCriteriaByCC/>
+            <CourseCriteriaByCC />
           </Route>
           
           
