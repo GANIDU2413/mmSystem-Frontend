@@ -53,6 +53,7 @@ import CCMarksApproval from "./layouts/CourseCoordinator/CCMarksApproval";
 import ViewCAEligibile from "./layouts/CourseCoordinator/ViewCAEligibile";
 import CAEligibility from "./layouts/CourseCoordinator/CAEligibility";
 import CourseCriteriaByCC from "./layouts/CourseCoordinator/CourseCriteriaByCC";
+import ViewMarksTableValidations from "./layouts/Components/AR/DataTable/ViewMarksTableValidations";
 
 
 
@@ -121,6 +122,10 @@ export const App = () => {
             <ViewMarks department_id={"Multi_Disciplinary"}/>
           </Route>
 
+          <Route path="/ARMarksReturnSheet/:course_id/:course_name">
+            <HODMarksReturnSheet approved_level={"HOD"}/>
+          </Route>
+
           <Route path="/arcerfityictmarks">  {/* Link to certify ICT marks page */}
             <CertifyMarksPage department_id={"ICT"}/>
           </Route>
@@ -134,7 +139,12 @@ export const App = () => {
           </Route>
           
           <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}
-            <ViewMarksTable/>
+            {/* <ViewMarksTable/> */}
+            <ViewMarksTableValidations/>
+          </Route>
+
+          <Route path="/ARMarksReturnSheet/:course_id/:course_name">          {/*LInk to view marks return sheet page by AR*/}
+            <HODMarksReturnSheet approved_level={"HOD"}/>
           </Route>
 
           <Route path="/arFinalMarkSheet/:level/:semester">   {/* Link to view marks remaining to certify page */}
@@ -164,7 +174,7 @@ export const App = () => {
             <StudentCourseEditLayout/>
           </Route>
 
-          <Route path="/deanFinalMarkSheet/:level/:semester">
+          <Route path="/deanFinalMarkSheet/:level/:semester/:dept">
             <DeanFinalMarkSheet approved_level={"AR"}/>
           </Route>
 
@@ -180,8 +190,8 @@ export const App = () => {
             <HODDashBoard/>
           </Route>
 
-          <Route path="/CourseCard/:level/:semester">
-            <CourseCard approved_level={"course_coordinator"}/>
+          <Route path="/CourseCard/:level/:semester/:department">
+            <CourseCard approved_level={"lecturer"}/>
           </Route>
 
           <Route path="/HODmarkstable">
@@ -200,14 +210,15 @@ export const App = () => {
             <HODMarksEditForm/>
           </Route>
 
-          <Route path="/HODMarksReturnSheet/:course_id/:course_name">
-          <HODMarksReturnSheet approved_level={"course_coordinator"}/>
-        </Route>
-
-        <Route path="/ccMarksReturnSheet/:course_id/:course_name">
+          <Route path="/HODMarksReturnSheet/:course_id/:course_name/:department">
           <HODMarksReturnSheet approved_level={"lecturer"}/>
         </Route>
 
+        <Route path="/ccMarksReturnSheet/:course_id/:course_name">
+          <HODMarksReturnSheet approved_level={"finalized"}/>
+        </Route>
+
+        
 
           <Route path="/sysandashboard">
             <SystemAnalystDashBoard/>

@@ -10,7 +10,7 @@ export default function CourseSelection(props) {
 
     const { level, semester, department_id } = props;       // Destructuring props
     const [courseData, setCourseData] = useState([]);   // State to store course data
-    const [coursesAvailability, setCoursesAvailability] = useState([]);   // State to store courses availability
+    const [coursesAvailability, setCoursesAvailability] = useState(true);   // State to store courses availability
     const previousRole = "HOD";     // Role of the previous user
 
     const loadCourseData = async()=>{       // Function to fetch course data

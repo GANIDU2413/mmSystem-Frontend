@@ -2,28 +2,96 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { useHistory, useParams } from 'react-router-dom'
-
+import SignatureForApproval from '../../Components/SignatureForApproval';
+import { useOktaAuth } from '@okta/okta-react';
+import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../AcademicYearManagerSingleton';
 export default function DeanFinalMarkSheet(props ) {
     const [finalResults, setFinalResults] = useState([]);
     const [courses, setCourses] = useState([]);
     const [students, setStudents] = useState([]);
-    const { level,semester } = useParams();
+    const { level,semester,dept} = useParams();
     const[studentGPA, setStudentGPA] = useState([{}]);
     const history =useHistory();
-
-
     const[error, setError] = useState("");
-
     const {approved_level}=props
-
-    const [isChecked, setIsChecked] = useState(false);
+    const [newSignature, setNewSignature] = useState(""); 
+    const[nextApprovedlevel,setNextApprovedlevel]=useState("");
+    const { oktaAuth, authState } = useOktaAuth();
+    const userNameAuth = authState?.idToken?.claims.preferred_username;
+    const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
+    const[academicYear,setAcademicYear]=useState("")
 
     
-
     
+    const[ARSign,setARSign]=useState(
+      {
+        "level": "",
+      "semester":"",
+      "approved_user_id":"",
+      "approval_level":"",
+      "academic_year":"",
+      "date_time":"",
+      "department_id":"",
+      "signature":""
+      }
+    );
+    const[DeanSign,setDeanSign]=useState({
+      "level": "",
+    "semester":"",
+    "approved_user_id":"",
+    "approval_level":"",
+    "academic_year":"",
+    "date_time":"",
+    "department_id":"",
+    "signature":""
+    });
+    const[VCSign,setVCSign]=useState({
+      "level": "",
+    "semester":"",
+    "approved_user_id":"",
+    "approval_level":"",
+    "academic_year":"",
+    "date_time":"",
+    "department_id":"",
+    "signature":""
+    });
+    
+    const approval={
+      "level": level,
+      "semester":semester,
+      "approved_user_id":userNameAuth,
+      "approval_level":nextApprovedlevel,
+      "academic_year":academicYear,
+      "date_time":new Date(),
+      "department_id":dept,
+      "signature":newSignature
+  }
+
+  useEffect(() => {
+    const fetchAndSaveYear = async () => {
+      const details = await fetchAcademicYear();
+      if (details) {
+        saveAcademicYearToLocal(details);
+        setAcademicDetails(details);
+        setAcademicYear(details.current_academic_year)
+      }
+    };
+
+    fetchAndSaveYear();
+  }, []);
     const resultSheet = async () => {
         try {
-            const result = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}`);
+
+          if (approved_level == "HOD") {
+            setNextApprovedlevel("AR");
+          } else if (approved_level == "AR") {
+            setNextApprovedlevel("Dean");
+          }else if (approved_level == "Dean") {
+            setNextApprovedlevel("VC");
+          }
+          console.log(approved_level,nextApprovedlevel);
+      
+            const result = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}`);
             const data = result.data.content;
 
             
@@ -39,22 +107,19 @@ export default function DeanFinalMarkSheet(props ) {
                 if (existingStudent) {
                     existingStudent.courses.push({
                         course_id: curr.course_id,
-                        overall_score: curr.overall_score,
+                        overall_score: curr.total_rounded_mark,
                         grade: curr.grade,
                     });
                 } else {
-                  
                     acc.push({
                         student_id: curr.student_id,
                         courses: [{
                             course_id: curr.course_id,
-                            overall_score: curr.overall_score,
+                            overall_score: curr.total_rounded_mark,
                             grade: curr.grade,
                         }]
                         
                     });
-
-
                 }
                 return acc;
             }, []);
@@ -72,11 +137,7 @@ export default function DeanFinalMarkSheet(props ) {
             setCourses(Array.from(courseIdsSet));
 
             setStudents(processedData.map(student => student.student_id));
-            
-            
-            
           
-            
 
         } catch (error) {
             console.error(error);
@@ -94,16 +155,9 @@ export default function DeanFinalMarkSheet(props ) {
       let response = null;
       e.preventDefault();
       try {
-         let nextApprovedlevel = "";
-         if (approved_level === "HOD") {
-           nextApprovedlevel = "AR";
-         } else if (approved_level === "AR") {
-           nextApprovedlevel = "Dean";
-         }
-         console.log(nextApprovedlevel);
-     
+        console.log(approval.academic_year,approval.approval_level,approval.approved_user_id,approval.date_time,approval.department_id,approval.level,approval.semester,approval.signature);
          // Use the nextApprovedlevel variable directly in the network request
-         response = await axios.put(`http://localhost:9090/api/approvalLevel/updateApprovalLevelByDean/${level}/${semester}/${new Date().getFullYear()}/${nextApprovedlevel}`);
+         response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevelByDean`,approval);
      
          toast.success("Approval level updated successfully");
        
@@ -122,12 +176,124 @@ export default function DeanFinalMarkSheet(props ) {
          }
       }
      };
-     
 
+     const saveDigitalSignature = (url) => {
+      setNewSignature(url); 
+        
+  };
+  
+      console.log(newSignature)
+     
+      const fetchSignature = async () => {
+        try {
+            const ARSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
+            const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
+            const VCSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
+            setARSign(ARSign.data.content);
+            setDeanSign(DeanSign.data.content);
+            setVCSign(VCSign.data.content);
+
+            console.log(ARSign.data.content)
+            console.log(DeanSign.data.content)
+            console.log(VCSign.data.content)
+            
+            
+            
+        } catch (error) {
+          console.error('Error fetching signature data:', error.response || error.message);
+        }
+    };
+    
+    useEffect(() => {
+      fetchSignature();
+  }, [level,semester,dept,approved_level,academicYear]);
+
+            console.log(ARSign.signature)
+            console.log(DeanSign.signature)
+            console.log(VCSign.signature)
+            console.log(academicYear)
+    
     return (
       <div className="container">
       {finalResults.length !== 0 ? (
         <>
+        <div>
+          <h2>University of Ruhuna</h2>
+          <h2>Faculty of Technology</h2>
+          <h2>Bachelor of Information and Communication Technology Honours Degree</h2>
+          <h2>Level {level} Semester {semester}-Nov/Dec 2023 (Academic year 2021/2022)</h2>
+          <h4>Provisional results subject to confirmation by the Senate</h4>
+        </div>
+
+
+        <div>
+          <p>Key to Grading</p>
+          <table>
+            <tbody>
+              <tr>
+                <td>A+</td>
+                <td>4.00</td>
+
+                <td>A</td>
+                <td>4.00</td>
+              </tr>
+              <tr>
+                <td>A-</td>
+                <td>3.70</td>
+
+                <td>B+</td> 
+                <td>3.30</td>
+              </tr>
+              <tr>    
+                <td>B</td>
+                <td>3.00</td>
+              
+                <td>B-</td> 
+                <td>2.70</td> 
+                </tr>
+
+                <tr>
+                <td>C+</td>
+                <td>2.30</td>
+
+                <td>C</td>  
+                <td>2.00</td>
+              </tr>
+              <tr>
+                <td>C-</td>
+                <td>1.70</td>
+                </tr>
+                <tr>
+                <td>D+</td> 
+                <td>1.30</td> 
+
+                <td>D</td>
+                <td>1.00</td>
+
+                </tr>
+                <tr>
+                <td>E</td>
+                <td>0.00</td>
+                </tr>
+
+                <tr>
+                <td>F</td>
+                <td>CA Fail</td>
+                </tr>
+                
+                <tr><td>MC</td><td>Accepted Medical Certificate</td></tr>
+                <tr><td>AC</td><td>Accepted Academice Concession(Acceptable reason by the Senate other than the Medical)</td></tr>
+                <tr><td>WH</td><td>Results Withheld</td></tr>
+                <tr><td>E*</td><td>Not Eligible/Not Applied/Absent without Medical</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <table>
+            
+          </table>
+        </div>
         <div className="py-4" style={{ marginTop: "70px" }}>
           <table className="overflow-x-scroll table border shadow" style={{ marginTop: "60px" }}>
           <thead>
@@ -172,27 +338,43 @@ export default function DeanFinalMarkSheet(props ) {
           </table>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3 form-check">
-          <input
-            type="checkbox"
-            className="form-check-input"
-            id="check"
-            checked={isChecked}
-            onChange={() => setIsChecked(!isChecked)}
-          />
-          <label className="form-check-label" htmlFor="check">
-            I affirm that I have checked the results and confirm the accuracy for approval.
-          </label>
-          </div>
+        <div>
 
+            {console.log(nextApprovedlevel)}
+          <p>Certified Correct,
+            <br/>
+          {nextApprovedlevel == "AR" ? <img src={newSignature} style={{ width: '80px', height: '40px' }} /> : 
+           ARSign.signature != null ? <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} /> : null}
+            <p>Ms H.H Kaumadi Dharmasiri</p>
+            <p>Assisstant Registrar</p>
+            <p>Faculty of Technology</p>
+
+
+            {nextApprovedlevel == "Dean" ? <img src={newSignature} style={{ width: '80px', height: '40px' }} /> : 
+           DeanSign.signature != null ? <img src={DeanSign.signature} style={{ width: '80px', height: '40px' }} /> : null}
+            <p>Prof. P.K.S.C Jayasinghe</p>
+            <p>Dean/Faculty of Technology</p>
+
+            {nextApprovedlevel == "VC" ? <img src={newSignature} style={{ width: '80px', height: '40px' }} /> : 
+           VCSign.signature != null ? <img src={VCSign.signature} style={{ width: '80px', height: '40px' }} /> : null}
+            <p>Snr Prof.Sujeewa Amarasena</p>
+            <p>Vice Chancellor</p>
+            <p>Faculty of Technology</p>
+          </p>
+        </div>
+
+      
+        <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
+
+
+        <form onSubmit={handleSubmit}>
           <input
           to={``}
           type="submit"
           value="Request Certify"
           className="btn btn-outline-success btn-sm"
           id="submitbtn"
-          disabled={!isChecked}
+          // disabled={}
           style={{
             width: "10%",
           }} />

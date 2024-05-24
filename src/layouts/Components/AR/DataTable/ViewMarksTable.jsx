@@ -13,7 +13,7 @@ export default function ViewMarksTable() {
   const course_variables = useParams();   // get the course variables from the url
   const [studentGrades, setStudentGrades] = useState([]);     // state to store the student grades 
   const [uniqueStudentIds, setUniqueStudentIds] = useState([]);     // state to store the unique student ids
-  const [eStarStudentsAvailability, setEStarStudentsAvailability] = useState(false);      // state to store the availability of students  having E* grades
+  const [abStudentsAvailability, setABStudentsAvailability] = useState(false);      // state to store the availability of students  having E* grades
   const [studentsAvailability, setStudentsAvailability] = useState(true);      // state to store the availability of students
   const selectedOption = "All students";   // default selected option
 
@@ -24,23 +24,22 @@ export default function ViewMarksTable() {
 
   const fetchData = async (value)=>{      // function to fetch the data from the backend
 
-    const EStarStudents = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getEStarDetailsByCourseId/${course_variables.course_id}`);    // get the students having E* grades for the course
+    const EStarStudents = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getABDetailsByCourseId/${course_variables.course_id}`);    // get the students having AB for relevent exams
     
     if(EStarStudents.data.length>0){      // check whether there are students having E* grades
        
-      setEStarStudentsAvailability(true);   // set the EStarStudentsAvailability state to true if there are students having E* grades
+      setABStudentsAvailability(true);   // set the abStudentsAvailability state to true if there are students having E* grades
 
     }else{
 
 
-      setEStarStudentsAvailability(false);    // set the EStarStudentsAvailability state to false if there are no students having E* grades
+      setABStudentsAvailability(false);    // set the abStudentsAvailability state to false if there are no students having E* grades
       
       if(value==='All students'){     // check whether the selected value is 'All students'
         
         try {
-          const response = await axios.get(
-            `http://localhost:9090/api/AssistantRegistrar/findAllStudentsGrade/${course_variables.course_id}`   // get all the students grades for the course
-          );
+          const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/findAllStudentsGrade/${course_variables.course_id}`);   // get all the students grades for the course
+          
 
           if(response.data.length>0){     // check whether there are students
 
@@ -108,7 +107,7 @@ export default function ViewMarksTable() {
         
         <div style={{width:"97%",marginLeft:"auto",marginRight:"auto",marginTop:"65px"}}>
         {
-          eStarStudentsAvailability ?     // check whether there are students having E* grades
+          abStudentsAvailability ?     // check whether there are students having E* grades
           (      
 
             <div className="alert alert-danger" role="alert" style={{marginTop:'100px',textAlign:'center',width:'80%',marginLeft:'auto',marginRight:'auto'}}>
