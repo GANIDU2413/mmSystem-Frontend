@@ -10,7 +10,6 @@ import { NavebarAR } from '../Components/AR/NavBarAR/NavebarAR';
 import { useOktaAuth } from "@okta/okta-react";
 import { NavebarDean } from '../Dean/NavebarDean';
 import NavBarCC from '../CourseCoordinator/NavBarCC';
-import { useOktaAuth } from "@okta/okta-react";
 import SignatureForApproval from '../Components/SignatureForApproval';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../AcademicYearManagerSingleton';
 import html2canvas from 'html2canvas';
