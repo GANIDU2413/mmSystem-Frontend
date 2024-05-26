@@ -53,6 +53,7 @@ import UpdateABPage from "./layouts/AR/UpdateABPage/UpdateABPage";
 import CCDashBoard from "./layouts/CourseCoordinator/CCDashBoard";
 import CCMarksApproval from "./layouts/CourseCoordinator/CCMarksApproval";
 import ViewMarksTableValidations from "./layouts/Components/AR/DataTable/ViewMarksTableValidations";
+import CreateResultBoard from "./layouts/AR/CreateResultBoard/CreateResultBoard";
 
 
 
@@ -146,7 +147,7 @@ export const App = () => {
             <CertifyMarksPage department_id={"BST"}/>
           </Route>
         
-          <Route path="/arFinalMarkSheet/:level/:semester">   {/* Link to view marks remaining to certify page */}
+          <Route path="/arFinalMarkSheet/:level/:semester/:dept">   {/* Link to view marks remaining to certify page */}
             <DeanFinalMarkSheet approved_level={"HOD"}/>
           </Route>
 
@@ -156,6 +157,11 @@ export const App = () => {
           <Route path="/viewMedicals">   {/* Link to view medical page */}
             <ViewMedicalPage/>
           </Route>
+
+          <Route path="/createResultsBoard">   {/* Link to create results board page */}
+            <CreateResultBoard/>
+          </Route>
+
           {/* AR navigations ends here ---------------------------------------------*/}
 
           <Route path="/markstable">

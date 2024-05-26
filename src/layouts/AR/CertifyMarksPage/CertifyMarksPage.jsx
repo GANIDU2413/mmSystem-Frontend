@@ -27,7 +27,7 @@ export default function CertifyMarksPage(props) {
               toast.error("HOD have not approved all courses for this level and semester",{autoClose:3000});      // show error message
               
             }else{                                                // if 'not approved courses' are not available
-              history.push(`/arFinalMarkSheet/${level}/${semester}`);       // redirect to final mark sheet page
+              history.push(`/arFinalMarkSheet/${level}/${semester}/${department_id}`);       // redirect to final mark sheet page
             }
           }
           catch(e){

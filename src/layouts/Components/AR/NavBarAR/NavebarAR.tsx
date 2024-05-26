@@ -77,7 +77,7 @@ export const NavebarAR = () => {
               </li>
               
               <li className="nav-item">
-                <a className="nav-link" href="#">
+                <a className="nav-link" href="/createResultsBoard">
                   Create Results Board
                 </a>
               </li>
