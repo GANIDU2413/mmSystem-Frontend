@@ -15,8 +15,6 @@ import SignatureForApproval from '../Components/SignatureForApproval';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../AcademicYearManagerSingleton';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import NavBarCC from '../CourseCoordinator/NavBarCC';
-import { NavebarDean } from '../Dean/NavebarDean';
 
 
 
@@ -311,6 +309,7 @@ console.log(authState?.accessToken?.claims.userType);
                 authState?.accessToken?.claims.userType == "dean" ? <NavebarDean/>:
                 authState?.accessToken?.claims.userType == "ar" ? <NavebarAR/> : null
             }
+            
             
             {loading ? (
                 <div>Loading...</div> // Display a loading message or spinner here
