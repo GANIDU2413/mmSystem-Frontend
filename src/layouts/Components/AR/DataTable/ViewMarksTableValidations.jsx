@@ -8,8 +8,9 @@ import "./viewMarksTableValidations.css";
 
 export default function ViewMarksTableValidations() {
     const course_variables = useParams();   // get the course variables from the url
-    const [interrupt, setInterrupt] = useState("");      // state to store the interrupt status
+    const [interrupt, setInterrupt] = useState(false);      // state to store the interrupt status
     const history = useHistory();    // get the history object
+    const requiredApprovedLevel = "HOD";
     
 
     const fetchData = async ()=>{
@@ -28,7 +29,7 @@ export default function ViewMarksTableValidations() {
 
             setInterrupt(false);   // set the interrupt state to false
 
-            if(approvedLevel.data[0]["approval_level"]==="HOD"){
+            if(approvedLevel.data[0]["approval_level"]===requiredApprovedLevel){    // check whether the course is under the approval level HOD
 
               setInterrupt(false);   // set the interrupt state to false
 
@@ -71,12 +72,12 @@ export default function ViewMarksTableValidations() {
             
             }
             else{
-              setInterrupt("This course in not under your approval");  // set the interrupt state to "This course in not under your approval"
+              setInterrupt("This mark sheet is not submitted for Assistant Registrar");  // set the interrupt state to "This course in not under your approval"
             }
 
           }
           else{
-            setInterrupt("No approval level related to this course");   // set the interrupt state to "No approval level related to this course"
+            setInterrupt("No approval level found related to this course");   // set the interrupt state to "No approval level related to this course"
           }
         }
         catch{

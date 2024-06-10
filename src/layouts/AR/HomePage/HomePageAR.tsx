@@ -25,7 +25,7 @@ export default function HomePageAR() {
             <div className="card text-center functionCard">
               <div className="card-body">
                   <br/><h5 className="card-title">Create Result Board</h5><br/>
-                <a href="#" className="btn btn-primary home-page-class-button">Create</a>
+                <a href="/createResultsBoard" className="btn btn-primary home-page-class-button">Create</a>
               </div>
             </div>
           </div>
@@ -110,13 +110,7 @@ export default function HomePageAR() {
               </div>
             </div>
           </div>
-
           
-
-          
-          
-
-
         </div>
 
       </div>
