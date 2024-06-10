@@ -62,7 +62,7 @@ export default function DeanFinalMarkSheet(props ) {
       "approved_user_id":userNameAuth,
       "approval_level":nextApprovedlevel,
       "academic_year":academicYear,
-      "date_time":new Date(),
+      "date_time":new Date().getDate,
       "department_id":dept,
       "signature":newSignature
   }
@@ -123,6 +123,12 @@ export default function DeanFinalMarkSheet(props ) {
                 }
                 return acc;
             }, []);
+
+            try{
+
+            }catch(error){
+              console.error('Error fetching GPA data:', error.response || error.message);
+            }
 
             
 
@@ -226,7 +232,7 @@ export default function DeanFinalMarkSheet(props ) {
         </div>
 
 
-        <div>
+        <div className="description" style={{ fontSize: '11px', padding: '1px', margin:'10px' }}>
           <p>Key to Grading</p>
           <table>
             <tbody>
@@ -386,9 +392,9 @@ export default function DeanFinalMarkSheet(props ) {
       ) : (
         <div className=" container" style={{ marginTop: "150px" }}>
         <div className="alert alert-primary" role="alert">
-          {`No data found for  level ${level} and semester ${semester} to Approve`}
+          {`No Result sheets found for  level ${level} and semester ${semester} to Approve`}
           <br />
-          {error}
+         
         </div>
         </div>
       )}
