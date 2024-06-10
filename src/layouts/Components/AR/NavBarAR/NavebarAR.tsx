@@ -101,7 +101,7 @@ export const NavebarAR = () => {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  View marks
+                  View marks return sheets
                 </a>
                 <ul className="dropdown-menu">
                   <li>
