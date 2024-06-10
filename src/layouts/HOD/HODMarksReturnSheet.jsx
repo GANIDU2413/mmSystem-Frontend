@@ -4,11 +4,15 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { NavebarHOD } from './NavebarHOD';
+
 import { useOktaAuth } from "@okta/okta-react";
 import SignatureForApproval from '../Components/SignatureForApproval';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../AcademicYearManagerSingleton';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import NavBarCC from '../CourseCoordinator/NavBarCC';
+import { NavebarDean } from '../Dean/NavebarDean';
+import { NavebarAR } from '../Components/AR/NavBarAR/NavebarAR';
 
 
 
@@ -29,12 +33,18 @@ export default function HODMarksReturnSheet(props) {
     const[academicYear,setAcademicYear]=useState("")
     const[approval_level,setApprovalLevel]=useState(approved_level);
     const[marksSheet,setMarksSheet]=useState([])
+    console.log(marksSheet)
     const [data, setData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredData, setFilteredData] = useState([]);
 
+    const seenKeys = new Set();
+    const seenKeysFA = new Set();
+    const seenKeysForTHFA = new Set();
+    const seenKeysForTHCA = new Set();
+
     
-    let forCA = 1;
+    let forCA = 0;
     let forFA = 0;
     
     const [isCClevel,setISCClevel]=useState({
@@ -232,16 +242,30 @@ useEffect(() => {
             });
     };
     
-    marksSheet.map((ele, index) => (
-        ele.ca.map((caScore, idx) => (
-            forCA++
-        ))
-    ))
+    
 
     marksSheet.map((ele, index) => (
-        ele.end.map((endScore, idx) => (
-            forFA++
-        ))
+        ele.ca.map((caScore, idx) => {
+            if (!seenKeysForTHCA.has(caScore.key)) {
+                console.log(caScore.key);
+                forCA++
+                seenKeysForTHCA.add(caScore.key); // Mark this key as seen
+            }
+            
+        })
+    ))
+
+    
+
+    marksSheet.map((ele, index) => (
+        ele.end.map((endScore, idx) => {
+            if (!seenKeysForTHFA.has(endScore.key)) {
+                console.log(endScore.key);
+                forFA++
+                seenKeysForTHFA.add(endScore.key); // Mark this key as seen
+            }
+            
+        })
     ))
 
     useEffect(() => {
@@ -249,7 +273,7 @@ useEffect(() => {
           try {
             const result = await axios.get('http://localhost:9090/api/lecreg/get/alllecturersdetails');
             setData(result.data);
-            console.log(data)
+            console.log(result.data)
             setFilteredData(result.data); // Initially, all data is considered as filtered
           } catch (error) {
             console.error("Error fetching data:", error);
@@ -271,9 +295,19 @@ useEffect(() => {
         setSearchTerm(userId);
       }
 
+
+console.log(authState?.accessToken?.claims.userType);
+
     return (
         <>
-            <NavebarHOD />
+            {/* <NavebarHOD /> */}
+            {
+                authState?.accessToken?.claims.userType == "HOD" ? <NavebarHOD/> : 
+                authState?.accessToken?.claims.userType == "course_cordinator" ? <NavBarCC/> :
+                authState?.accessToken?.claims.userType == "dean" ? <NavebarDean/>:
+                authState?.accessToken?.claims.userType == "ar" ? <NavebarAR/> : null
+            }
+            
             {loading ? (
                 <div>Loading...</div> // Display a loading message or spinner here
             ) : (
@@ -410,26 +444,59 @@ useEffect(() => {
                                 <th colSpan={forCA}>Continuous Assessment</th>
                                 <th colSpan={forFA}>Semester End Exam</th>
                                 <th colSpan='4'>Final Marks</th>
+                                <th rowSpan='2'>CA Eligibility</th>
+                                <th rowSpan='2'>View</th>
                             </tr>
                             <tr>
-                                {marksSheet.map((ele, index) => (
+                            {marksSheet.map((ele, index) =>
+                                ele.ca.map((caScore, idx) => {
+                                    // Check if the key has already been seen
+                                    if (!seenKeys.has(caScore.key)) {
+                                    // Log the key to the console
+                                    console.log(caScore.key);
+
+                                    // Add the key to seenKeys to mark it as seen
+                                    seenKeys.add(caScore.key);
+
+                                    // Return the JSX only if the condition is met
+                                    return <th key={`ca-${idx}`}>{caScore.key}</th>;
+                                    }
+
+                                    // If the condition is not met, return null or an alternative JSX
+                                    // Returning null effectively skips rendering for this iteration
+                                    return null;
+                                })
+                                )}
+
+                                {/* {marksSheet.map((ele, index) => (
                                     ele.ca.map((caScore, idx) => (
-                                        <th  key={`ca-${idx}`}>{caScore.key}</th>
+                                        
+                                        <th  key={`ca-${idx}`}>{caScore.key}{console.log(caScore.key)}</th>
+                                        
+                                        
                                     ))
-                                ))}
-                                <th>Total CA Marks</th>
+                                ))} */}
+                                
                                 {marksSheet.map((ele, index) => (
-                                    ele.end.map((endScore, idx) => (
-                                        <th key={`end-${idx}`}>{endScore.key}</th>
-                                    ))
+                                    ele.end.map((endScore, idx) => {
+                                        // Check if the key has already been seen
+                                        if (!seenKeysFA.has(endScore.key)) {
+                                        // Log the key to the console
+                                        console.log(endScore.key);
+
+                                        // Add the key to seenKeys to mark it as seen
+                                        seenKeysFA.add(endScore.key);
+
+                                        return <th key={`end-${idx}`}>{endScore.key} </th>
+                                        }
+                                    })
                                 ))}
                              
                                 <th>Total Final Marks</th>
                                 <th>Total Rounded Marks</th>
                                 <th>Results/Grades</th>
                                 <th>GPV</th>
-                                <th>CA Eligibility</th>
-                                <th>View</th>
+                                
                            
                                  {/* {console.log(ele.student_id,ele.total_ca_mark,ele.total_final_mark,ele.total_rounded_mark,ele.grade,ele.gpv,ele.ca_eligibility)} */}
                             </tr>
@@ -446,7 +513,7 @@ useEffect(() => {
                             {ele.end.map((endScore, idx) => (
                                 <td key={`end-${idx}`}>{endScore.value}</td>
                             ))}
-                            <td>{ele.total_ca_mark}</td>
+                            
                             <td>{ele.total_final_mark}</td>
                             <td>{ele.total_rounded_mark}</td>
                             <td>{ele.grade}</td>
