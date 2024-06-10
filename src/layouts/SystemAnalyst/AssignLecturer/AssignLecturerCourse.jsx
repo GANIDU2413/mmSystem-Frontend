@@ -1,13 +1,13 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { Redirect } from "react-router-dom";
-import { useOktaAuth } from "@okta/okta-react";
+import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../AcademicYearManagerSingleton';
 
 export default function AssignLecturerCourse() {
     const [cids, setCids] = useState([]);
     const [cCoordinatorids, setCCoordinatorids] = useState([]);
+    const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
+    const[academicYear,setAcademicYear]=useState("")
     const [selectedLecturerIds, setSelectedLecturerIds] = useState([]);
-    const { authState } = useOktaAuth();
     const [newCourseCoordinator, setNewCourseCoordinator] = useState({
         user_id:'',
         course_id:'',
@@ -20,6 +20,20 @@ export default function AssignLecturerCourse() {
 
     useEffect(() => {
         loadCids();
+    }, []);
+
+    useEffect(() => {
+        const fetchAndSaveYear = async () => {
+            const details = await fetchAcademicYear();
+            if (details) {
+                saveAcademicYearToLocal(details);
+                setAcademicDetails(details);
+                setAcademicYear(details.current_academic_year)
+                console.log(details.current_academic_year)
+            }
+        };
+    
+        fetchAndSaveYear();
     }, []);
 
     const loadCids = async () => {
@@ -62,29 +76,22 @@ export default function AssignLecturerCourse() {
     };
 
     const handleSubmit = async () => {
-        const currentYear = new Date().getFullYear();
-        const courseId = cids[0];
-        const coordinatorId = cCoordinatorids[0];
+        const selectedCoordinatorId = cCoordinatorids.find(coordinatorId => coordinatorId === cCoordinatorids[0]);
+        const selectedCourseId = cids.find(cid => cid === cids[0]);
+
+        setNewCourseCoordinator({
+            user_id: selectedCoordinatorId,
+            course_id: selectedCourseId,
+            academic_year: academicYear
+        });
+
+        console.log(newCourseCoordinator);
 
         try {
-            await axios.post('api gave latter', {
-                user_id: coordinatorId,
-                course_id: courseId,
-                academicyear: currentYear
-            });
+            await axios.post('http://localhost:9090/api/ccmanage/insertacc', newCourseCoordinator);
             console.log("Course coordinator data inserted successfully.");
         } catch (error) {
             console.error("Error inserting course coordinator data:", error);
-        }
-
-        try {
-            await axios.post('api gave latter', {
-                user_id: coordinatorId,
-                course_id: courseId
-            });
-            console.log("LCR data inserted successfully.");
-        } catch (error) {
-            console.error("Error inserting LCR data:", error);
         }
     };
 
