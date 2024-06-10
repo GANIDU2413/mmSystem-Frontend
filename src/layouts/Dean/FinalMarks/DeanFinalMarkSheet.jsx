@@ -4,7 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useHistory, useParams } from 'react-router-dom'
 import SignatureForApproval from '../../Components/SignatureForApproval';
 import { useOktaAuth } from '@okta/okta-react';
-
+import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../AcademicYearManagerSingleton';
 export default function DeanFinalMarkSheet(props ) {
     const [finalResults, setFinalResults] = useState([]);
     const [courses, setCourses] = useState([]);
@@ -18,9 +18,11 @@ export default function DeanFinalMarkSheet(props ) {
     const[nextApprovedlevel,setNextApprovedlevel]=useState("");
     const { oktaAuth, authState } = useOktaAuth();
     const userNameAuth = authState?.idToken?.claims.preferred_username;
+    const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
+    const[academicYear,setAcademicYear]=useState("")
 
-    const academic_year = 2024;
-
+    
+    
     const[ARSign,setARSign]=useState(
       {
         "level": "",
@@ -59,13 +61,24 @@ export default function DeanFinalMarkSheet(props ) {
       "semester":semester,
       "approved_user_id":userNameAuth,
       "approval_level":nextApprovedlevel,
-      "academic_year":academic_year,
+      "academic_year":academicYear,
       "date_time":new Date(),
       "department_id":dept,
       "signature":newSignature
   }
 
-    
+  useEffect(() => {
+    const fetchAndSaveYear = async () => {
+      const details = await fetchAcademicYear();
+      if (details) {
+        saveAcademicYearToLocal(details);
+        setAcademicDetails(details);
+        setAcademicYear(details.current_academic_year)
+      }
+    };
+
+    fetchAndSaveYear();
+  }, []);
     const resultSheet = async () => {
         try {
 
@@ -73,6 +86,8 @@ export default function DeanFinalMarkSheet(props ) {
             setNextApprovedlevel("AR");
           } else if (approved_level == "AR") {
             setNextApprovedlevel("Dean");
+          }else if (approved_level == "Dean") {
+            setNextApprovedlevel("VC");
           }
           console.log(approved_level,nextApprovedlevel);
       
@@ -191,11 +206,12 @@ export default function DeanFinalMarkSheet(props ) {
     
     useEffect(() => {
       fetchSignature();
-  }, [level,semester,dept,approved_level,academic_year]);
+  }, [level,semester,dept,approved_level,academicYear]);
 
             console.log(ARSign.signature)
             console.log(DeanSign.signature)
             console.log(VCSign.signature)
+            console.log(academicYear)
     
     return (
       <div className="container">

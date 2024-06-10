@@ -1,4 +1,3 @@
-// import viteLogo from '/vite.svg'
 import "./App.css";
 import { Footer } from "./Lecture/layouts/NavbarAndFooter/Footer";
 import { Navebar } from "./Lecture/layouts/NavbarAndFooter/Navebar";
@@ -45,13 +44,15 @@ import StudentsManagement from "./layouts/SystemAnalyst/UserManagement/StudentsM
 import ManageCourseModule from "./layouts/SystemAnalyst/CourseModule/ManageCourseModule";
 import CertifyMarksPage from "./layouts/AR/CertifyMarksPage/CertifyMarksPage";
 import ViewMedicalPage from "./layouts/AR/ViewMedicalTablePage/ViewMedicalPage";
-import CertifyError from "./layouts/Components/AR/CertifyError/CertifyError";
 import CourseCard from "./layouts/Components/HOD/CourseCard";
 import StudentRegCourses from "./layouts/SystemAnalyst/StudentCourseReg/StudentRegCourses";
 import ABListPage from "./layouts/AR/ABListPage/ABListPage";
 import UpdateABPage from "./layouts/AR/UpdateABPage/UpdateABPage";
 import CCDashBoard from "./layouts/CourseCoordinator/CCDashBoard";
 import CCMarksApproval from "./layouts/CourseCoordinator/CCMarksApproval";
+import ViewCAEligibile from "./layouts/CourseCoordinator/ViewCAEligibile";
+import CAEligibility from "./layouts/CourseCoordinator/CAEligibility";
+import CourseCriteriaByCC from "./layouts/CourseCoordinator/CourseCriteriaByCC";
 import ViewMarksTableValidations from "./layouts/Components/AR/DataTable/ViewMarksTableValidations";
 import CreateResultBoard from "./layouts/AR/CreateResultBoard/CreateResultBoard";
 
@@ -222,7 +223,7 @@ export const App = () => {
           <HODMarksReturnSheet approved_level={"lecturer"}/>
         </Route>
 
-        <Route path="/ccMarksReturnSheet/:course_id/:course_name">
+        <Route path="/ccMarksReturnSheet/:course_id/:course_name/:department">
           <HODMarksReturnSheet approved_level={"finalized"}/>
         </Route>
 
@@ -282,6 +283,18 @@ export const App = () => {
 
           <Route path="/ccmarksapproval">
             <CCMarksApproval/>
+          </Route>
+
+          <Route path="/viewcaeli">
+            <ViewCAEligibile/>
+          </Route>
+          
+            <Route path="/caeli/:course_id/:course_name">
+              <CAEligibility/>
+            </Route>
+
+          <Route path="/cccbycc">
+            <CourseCriteriaByCC />
           </Route>
           
           
