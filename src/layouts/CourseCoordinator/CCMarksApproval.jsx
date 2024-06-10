@@ -51,7 +51,7 @@ export default function CCMarksApproval() {
                 <div className="card-body">
                   <h5 className="card-title py-2">{course.course_id}</h5> 
                   <h6 className='card-title py-1'>{course.course_name}</h6> 
-                  <a className="btn btn-primary btn-sm mt-2" onClick={() => history.push(`/ccMarksReturnSheet/${course.course_id}/${course.course_name}`)}>To Give Approvel</a>
+                  <a className="btn btn-primary btn-sm mt-2" onClick={() => history.push(`/ccMarksReturnSheet/${course.course_id}/${course.course_name}/ICT`)}>To Give Approvel</a>
                 </div>
               </div>
             ))}
