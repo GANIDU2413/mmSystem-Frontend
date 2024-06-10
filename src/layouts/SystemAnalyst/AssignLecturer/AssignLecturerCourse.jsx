@@ -8,6 +8,15 @@ export default function AssignLecturerCourse() {
     const [cCoordinatorids, setCCoordinatorids] = useState([]);
     const [selectedLecturerIds, setSelectedLecturerIds] = useState([]);
     const { authState } = useOktaAuth();
+    const [newCourseCoordinator, setNewCourseCoordinator] = useState({
+        user_id:'',
+        course_id:'',
+        academic_year:''
+    });
+    const [newLecturer, setNewLecturer] = useState([]);
+
+    console.log(cCoordinatorids);
+    console.log(selectedLecturerIds);
 
     useEffect(() => {
         loadCids();
@@ -48,6 +57,8 @@ export default function AssignLecturerCourse() {
             }
             return prevIds;
         });
+
+        console.log(selectedId);
     };
 
     const handleSubmit = async () => {
@@ -127,11 +138,11 @@ export default function AssignLecturerCourse() {
                     </div>
                 </div>
             </form>
-            <div className="mt-4">
-                <h3>Selected Lecturer IDs:</h3>
-                <ul>
+            <div className="mt-4 p-3">
+                <h5>Selected Lecturer IDs:</h5>
+                <ul className='list-group list-group-flush bg-transparent' style={{width:"300px"}}>
                     {selectedLecturerIds.map((id, index) => (
-                        <li key={`selected-${index}`}>{id}</li>
+                        <li key={`selected-${index}`}  className=' list-group-item bg-transparent' >{id}</li>
                     ))}
                 </ul>
             </div>
