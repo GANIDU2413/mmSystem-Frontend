@@ -305,7 +305,7 @@ console.log(authState?.accessToken?.claims.userType);
             {/* <NavebarHOD /> */}
             {
                 authState?.accessToken?.claims.userType == "HOD" ? <NavebarHOD/> : 
-                authState?.accessToken?.claims.userType == "course_cordinator" ? <NavBarCC/> :
+                authState?.accessToken?.claims.userType == "course_coordinator" ? <NavBarCC/> :
                 authState?.accessToken?.claims.userType == "dean" ? <NavebarDean/>:
                 authState?.accessToken?.claims.userType == "ar" ? <NavebarAR/> : null
             }
