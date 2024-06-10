@@ -54,6 +54,7 @@ import ViewCAEligibile from "./layouts/CourseCoordinator/ViewCAEligibile";
 import CAEligibility from "./layouts/CourseCoordinator/CAEligibility";
 import CourseCriteriaByCC from "./layouts/CourseCoordinator/CourseCriteriaByCC";
 import ViewMarksTableValidations from "./layouts/Components/AR/DataTable/ViewMarksTableValidations";
+import CreateResultBoard from "./layouts/AR/CreateResultBoard/CreateResultBoard";
 
 
 
@@ -98,33 +99,42 @@ export const App = () => {
             <HomePageAR/>
           </Route>
 
-          <Route path="/viewablist">  {/* Link to view E* student list page */}
+          <Route path="/viewablist">  {/* Link to view AB student list page */}
             <ABListPage/>
           </Route>
 
-          <Route path="/viewABUpdate/updateAB/:course_id/:course_name/:student_id/:grade/:exam_type/:academic_year">  {/* Link to E* grade update form */}
+          <Route path="/viewABUpdate/updateAB/:course_id/:course_name/:student_id/:grade/:exam_type/:academic_year">  {/* Link to AB status update form */}
             <UpdateABPage/>
           </Route>
 
-          <Route path="/arviewictmarks">  {/* Link to view ICT marks page */}
+
+
+          <Route path="/arviewictmarks">  {/* Link to view ICT marks page - Level selection */}
             <ViewMarks department_id={"ICT"}/>
           </Route>
 
-          <Route path="/arviewetmarks">  {/* Link to view ET marks page */}
+          <Route path="/arviewetmarks">  {/* Link to view ET marks page - Level selection */}
             <ViewMarks department_id={"ET"}/>
           </Route>
 
-          <Route path="/arviewbstmarks">  {/* Link to view BST marks page */}
+          <Route path="/arviewbstmarks">  {/* Link to view BST marks page - Level selection */}
             <ViewMarks department_id={"BST"}/>
           </Route>
 
-          <Route path="/arviewmtdmarks">    {/* Link to view Multi Disciplinary marks page */}
+          <Route path="/arviewmtdmarks">    {/* Link to view Multi Disciplinary marks page - Level selection */}
             <ViewMarks department_id={"Multi_Disciplinary"}/>
           </Route>
 
-          <Route path="/ARMarksReturnSheet/:course_id/:course_name">
+          <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}
+            {/* <ViewMarksTable/> */}
+            <ViewMarksTableValidations/>
+          </Route>
+
+          <Route path="/ARMarksReturnSheet/:course_id/:course_name">    {/* Link to view ar Marks return sheet*/}
             <HODMarksReturnSheet approved_level={"HOD"}/>
           </Route>
+
+
 
           <Route path="/arcerfityictmarks">  {/* Link to certify ICT marks page */}
             <CertifyMarksPage department_id={"ICT"}/>
@@ -137,23 +147,22 @@ export const App = () => {
           <Route path="/arcertifybstmarks">  {/* Link to certify BST marks page */}
             <CertifyMarksPage department_id={"BST"}/>
           </Route>
-          
-          <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}
-            {/* <ViewMarksTable/> */}
-            <ViewMarksTableValidations/>
-          </Route>
-
-          <Route path="/ARMarksReturnSheet/:course_id/:course_name">          {/*LInk to view marks return sheet page by AR*/}
-            <HODMarksReturnSheet approved_level={"HOD"}/>
-          </Route>
-
-          <Route path="/arFinalMarkSheet/:level/:semester">   {/* Link to view marks remaining to certify page */}
+        
+          <Route path="/arFinalMarkSheet/:level/:semester/:dept">   {/* Link to view marks remaining to certify page */}
             <DeanFinalMarkSheet approved_level={"HOD"}/>
           </Route>
+
+
+
 
           <Route path="/viewMedicals">   {/* Link to view medical page */}
             <ViewMedicalPage/>
           </Route>
+
+          <Route path="/createResultsBoard">   {/* Link to create results board page */}
+            <CreateResultBoard/>
+          </Route>
+
           {/* AR navigations ends here ---------------------------------------------*/}
 
           <Route path="/markstable">
