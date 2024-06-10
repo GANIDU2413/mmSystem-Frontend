@@ -1,7 +1,7 @@
 // Function to fetch academic year from an API
 async function fetchAcademicYear() {
   try {
-    const response = await fetch(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`); // Replace with your actual API endpoint
+    const response = await fetch(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -28,6 +28,6 @@ function loadAcademicYearFromLocal() {
   return null;
 }
   
-  // Exporting the functions so they can be used elsewhere in your app
+ 
   export { fetchAcademicYear, saveAcademicYearToLocal, loadAcademicYearFromLocal };
   
