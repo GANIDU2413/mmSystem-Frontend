@@ -4,15 +4,19 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { NavebarHOD } from './NavebarHOD';
+import SignatureCanvas from 'react-signature-canvas';
+import { useDropzone } from 'react-dropzone';
+import { NavebarAR } from '../Components/AR/NavBarAR/NavebarAR';
 
 import { useOktaAuth } from "@okta/okta-react";
+import { NavebarDean } from '../Dean/NavebarDean';
+import NavBarCC from '../CourseCoordinator/NavBarCC';
 import SignatureForApproval from '../Components/SignatureForApproval';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../AcademicYearManagerSingleton';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import NavBarCC from '../CourseCoordinator/NavBarCC';
 import { NavebarDean } from '../Dean/NavebarDean';
-import { NavebarAR } from '../Components/AR/NavBarAR/NavebarAR';
 
 
 
@@ -314,7 +318,6 @@ console.log(authState?.accessToken?.claims.userType);
                 <>
                 <div id="marks-return-sheet" style={{ marginTop: "70px",width:"95%",marginLeft:"40px",marginRight:"40px",}}>
                         <div >
-
                         <div>
                             <div >
                                 <form onSubmit={handleReturn}>
@@ -325,7 +328,6 @@ console.log(authState?.accessToken?.claims.userType);
                                         id="submitbtn"
                                         style={{ float: 'right', width: '130px' }}
                                     />
-
                                 </form>
                             </div>
                             <div>
