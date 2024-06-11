@@ -15,6 +15,8 @@ import SignatureForApproval from '../Components/SignatureForApproval';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../AcademicYearManagerSingleton';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ToastContainer } from 'react-toastify';
+import { wait } from '@testing-library/user-event/dist/utils';
 
 
 
@@ -123,17 +125,40 @@ export default function HODMarksReturnSheet(props) {
             nextApprovedlevel = "AR";
           }
 
+          let prevApprovedlevel = "";
+         if (approval_level === "course_coordinator") {
+            prevApprovedlevel = "finalized";
+          } else if (approval_level === "lecturer") {
+            prevApprovedlevel = "course_coordinator";
+          }
+          else if (approval_level === "HOD") {
+            prevApprovedlevel = "lecturer";
+           }
+
     const approval={
         "course_id": course_id,
         "approved_user_id":userNameAuth,
         "approval_level":nextApprovedlevel,
         "academic_year":academicYear,
-        "date_time":new Date(),
+        "date_time":new Date().getDate,
         "department_id":department,
         "signature":newSignature
     }
 
-// Modify your useEffect to set loading to false only after all Axios calls are completed
+    const Returnapproval={
+        "course_id": course_id,
+        "approved_user_id":userNameAuth,
+        "approval_level":prevApprovedlevel,
+        "academic_year":academicYear,
+        "date_time":new Date().getDate(),
+        "department_id":department,
+        "signature":newSignature
+    }
+
+   
+
+
+
 useEffect(() => {
     fetchData();
 }, [course_id]);
@@ -213,7 +238,10 @@ useEffect(() => {
             if (response.status === 200) {
                 console.log("Approval level updated successfully");
                 setApprovalLevel(nextApprovedlevel)
+                history.goBack();
                 console.log(approval_level)
+                toastr.success('Marks Sheet Sent successfully');
+               
             } else {
                 console.error("Failed to update approval level");
             }
@@ -224,9 +252,27 @@ useEffect(() => {
 
 
 
-    const handleReturn = (event) => {
+    const handleReturn = async (event) => {
         event.preventDefault(); // Prevent the default form submission behavior
-        history.goBack(); // Navigate back
+
+        
+        try {
+            
+            const response = await axios.post(`http://localhost:9090/api/approvalLevel/return`,Returnapproval);
+            if (response.status === 200) {
+                console.log("Marks Sheet Return successfully");
+                
+               
+                // toastr.success('Marks Sheet Return successfully');
+                // wait(1);
+                history.goBack();
+            } else {
+                console.error("Failed to update approval level");
+                toastr.error('Error Returning Marks Sheet');
+            }
+        } catch (error) {
+            console.error("Error updating approval level: ", error);
+        }
     };
     
 
@@ -302,6 +348,7 @@ console.log(authState?.accessToken?.claims.userType);
 
     return (
         <>
+           
             {/* <NavebarHOD /> */}
             {
                 authState?.accessToken?.claims.userType == "HOD" ? <NavebarHOD/> : 
@@ -319,6 +366,7 @@ console.log(authState?.accessToken?.claims.userType);
                         <div >
                         <div>
                             <div >
+                            <ToastContainer/>
                                 <form onSubmit={handleReturn}>
                                     <input
                                         type='submit'
@@ -451,41 +499,31 @@ console.log(authState?.accessToken?.claims.userType);
                             <tr>
                             {marksSheet.map((ele, index) =>
                                 ele.ca.map((caScore, idx) => {
-                                    // Check if the key has already been seen
+                               
                                     if (!seenKeys.has(caScore.key)) {
-                                    // Log the key to the console
+                               
                                     console.log(caScore.key);
 
-                                    // Add the key to seenKeys to mark it as seen
+                                   
                                     seenKeys.add(caScore.key);
 
-                                    // Return the JSX only if the condition is met
+                           
                                     return <th key={`ca-${idx}`}>{caScore.key}</th>;
                                     }
 
-                                    // If the condition is not met, return null or an alternative JSX
-                                    // Returning null effectively skips rendering for this iteration
                                     return null;
                                 })
                                 )}
 
-                                {/* {marksSheet.map((ele, index) => (
-                                    ele.ca.map((caScore, idx) => (
-                                        
-                                        <th  key={`ca-${idx}`}>{caScore.key}{console.log(caScore.key)}</th>
-                                        
-                                        
-                                    ))
-                                ))} */}
                                 
                                 {marksSheet.map((ele, index) => (
                                     ele.end.map((endScore, idx) => {
-                                        // Check if the key has already been seen
+                                      
                                         if (!seenKeysFA.has(endScore.key)) {
-                                        // Log the key to the console
+                                   
                                         console.log(endScore.key);
 
-                                        // Add the key to seenKeys to mark it as seen
+                                 
                                         seenKeysFA.add(endScore.key);
 
                                         return <th key={`end-${idx}`}>{endScore.key} </th>
@@ -499,7 +537,7 @@ console.log(authState?.accessToken?.claims.userType);
                                 <th>GPV</th>
                                 
                            
-                                 {/* {console.log(ele.student_id,ele.total_ca_mark,ele.total_final_mark,ele.total_rounded_mark,ele.grade,ele.gpv,ele.ca_eligibility)} */}
+                               
                             </tr>
                     </thead>
                     
@@ -705,10 +743,17 @@ console.log(authState?.accessToken?.claims.userType);
                     }
                   <hr />
                     <div style={{marginTop:"10px",float:"right"}}>
-                        
+
+                    {
+                    approval_level === "finalized" ||
+                    approval_level === "course_coordinator" ||
+                    approval_level === "lecturer" ? (
                         <form onSubmit={handleSubmit}>
-                            <input to={``} type="submit" value="Send" className="btn btn-outline-success btn-sm"  id="submitbtn" style={{ width: '100px'}}/> <br /><br />
+                             <input to={``} type="submit" value="Send" className="btn btn-outline-success btn-sm"  id="submitbtn" style={{ width: '100px'}}/> <br /><br />
                         </form>
+                    ) : null}
+                        
+                       
 
 
                     </div>
@@ -722,17 +767,9 @@ console.log(authState?.accessToken?.claims.userType);
                         <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
                     ) : null}
             </div>
-            
-
-
-          </div>
-              
+            </div>         
             </div>
-            
-                   
-
-                    
-              </div>
+             </div>
 
                 
               

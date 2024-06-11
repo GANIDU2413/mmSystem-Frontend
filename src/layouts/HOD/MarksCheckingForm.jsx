@@ -75,6 +75,7 @@ export default function MarksCheckingForm() {
   ]); 
 
 const { student_id, course_id, course_name } = useParams();
+console.log(student_id, course_id, course_name)
 
 
   
