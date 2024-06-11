@@ -320,9 +320,9 @@ useEffect(() => {
         const fetchData = async () => {
           try {
             const result = await axios.get('http://localhost:9090/api/lecreg/get/alllecturersdetails');
-            setData(result.data);
-            console.log(result.data)
-            setFilteredData(result.data); // Initially, all data is considered as filtered
+            setData(result.data.content);
+            console.log(result.data.content)
+            setFilteredData(result.data.content); // Initially, all data is considered as filtered
           } catch (error) {
             console.error("Error fetching data:", error);
           }
