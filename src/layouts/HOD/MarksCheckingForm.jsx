@@ -209,12 +209,12 @@ useEffect(() => {
       <ToastContainer />
       {
                 authState?.accessToken?.claims.userType == "HOD" ? <NavebarHOD/> : 
-                authState?.accessToken?.claims.userType == "course_cordinator" ? <NavBarCC/> :
+                authState?.accessToken?.claims.userType == "course_coordinator" ? <NavBarCC/> :
                 authState?.accessToken?.claims.userType == "dean" ? <NavebarDean/>:
                 authState?.accessToken?.claims.userType == "ar" ? <NavebarAR/> : null
             }
-      <div className=' bg-white'>
-      <h2>Student ID   :{student_id} </h2>
+      <div className=' bg-white' style={{marginTop:"70px"}}>
+      <h2 style={{marginLeft:"30px"}}>Student ID   :{student_id} </h2>
       
         <div class="container bg-transparent">
           <div class="row">
