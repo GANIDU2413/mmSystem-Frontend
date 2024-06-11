@@ -47,6 +47,7 @@ export default function HODMarksReturnSheet(props) {
     const seenKeysForTHFA = new Set();
     const seenKeysForTHCA = new Set();
 
+    console.log(course_id,course_name)
     
     let forCA = 0;
     let forFA = 0;
@@ -558,7 +559,7 @@ console.log(authState?.accessToken?.claims.userType);
                             <td>{ele.grade}</td>
                             <td>{ele.gpv}</td>
                             <td>{ele.ca_eligibility}</td>
-                            <td><Link className=" btn btn-primary mx-3 btn-sm" to={`/MarksCheckingForm/${ele}/${course_id}/${course_name}`}>View</Link></td>
+                            <td><Link className=" btn btn-primary mx-3 btn-sm" to={`/MarksCheckingForm/${ele.student_id}/${course_id}/${course_name}`}>View</Link></td>
                             {console.log(ele.student_id,ele.total_ca_mark,ele.total_final_mark,ele.total_rounded_mark,ele.grade,ele.gpv,ele.ca_eligibility)}
                         </tr>))}
                       </tbody>
