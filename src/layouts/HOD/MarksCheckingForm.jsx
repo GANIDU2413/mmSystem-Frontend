@@ -6,12 +6,19 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useHistory } from 'react-router-dom';
 import { green } from '@mui/material/colors';
+import { NavebarHOD } from './NavebarHOD';
+import NavBarCC from '../CourseCoordinator/NavBarCC';
+import { NavebarDean } from '../Dean/NavebarDean';
+import { NavebarAR } from '../Components/AR/NavBarAR/NavebarAR';
+import { useOktaAuth } from "@okta/okta-react";
 
 
 
 export default function MarksCheckingForm() {
   const history = useHistory();
   const [text, setText] = useState('');
+  const[noData,setNoData]=useState('')
+  const { oktaAuth, authState } = useOktaAuth();
 
   const [marks, setMarks] = useState([
     {
@@ -78,6 +85,26 @@ const { student_id, course_id, course_name } = useParams();
 console.log(student_id, course_id, course_name)
 
 
+
+useEffect(() => {
+  fetchData();
+}, [course_id]);
+
+
+  const fetchData = async () => {
+      
+      try {
+
+          const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}`);
+          setMarksSheet(response.data);
+          console.log(marksSheet)
+   
+          setLoading(false); // Set loading to false after all data is fetched
+      } catch (error) {
+          setNoData(true); // Set noData to true if there is an error
+      }
+
+  };
   
 
   useEffect(() => {
@@ -104,7 +131,7 @@ console.log(student_id, course_id, course_name)
     try {
       const finalMarkList = await axios.get(`http://localhost:9090/api/studentMarks/getStudentMarksbySC/${course_id},${student_id}`);
       setfinalMarks(finalMarkList.data.content);
-      console.log(finalMarkList.data.content);
+      console.log(finalmarks.data.content);
     } catch (error) {
       console.error('Axios request failed:', error);
     }
@@ -180,6 +207,12 @@ console.log(student_id, course_id, course_name)
   return (
     <>
       <ToastContainer />
+      {
+                authState?.accessToken?.claims.userType == "HOD" ? <NavebarHOD/> : 
+                authState?.accessToken?.claims.userType == "course_cordinator" ? <NavBarCC/> :
+                authState?.accessToken?.claims.userType == "dean" ? <NavebarDean/>:
+                authState?.accessToken?.claims.userType == "ar" ? <NavebarAR/> : null
+            }
       <div className=' bg-white'>
       <h2>Student ID   :{student_id} </h2>
       
