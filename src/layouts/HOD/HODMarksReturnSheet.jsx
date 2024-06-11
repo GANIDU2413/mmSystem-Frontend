@@ -553,8 +553,8 @@ console.log(authState?.accessToken?.claims.userType);
                                 <td key={`end-${idx}`}>{endScore.value}</td>
                             ))}
                             
-                            <td>{ele.total_final_mark}</td>
-                            <td>{ele.total_rounded_mark}</td>
+                            <td>{ele.total_final_marks}</td>
+                            <td>{ele.total_rounded_marks}</td>
                             <td>{ele.grade}</td>
                             <td>{ele.gpv}</td>
                             <td>{ele.ca_eligibility}</td>
