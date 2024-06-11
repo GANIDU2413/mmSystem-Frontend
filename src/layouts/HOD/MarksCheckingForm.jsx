@@ -6,6 +6,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useHistory } from 'react-router-dom';
 import { green } from '@mui/material/colors';
+import { NavebarHOD } from './NavebarHOD';
+import NavBarCC from '../CourseCoordinator/NavBarCC';
+import { NavebarDean } from '../Dean/NavebarDean';
+import { NavebarAR } from '../Components/AR/NavBarAR/NavebarAR';
+import { useOktaAuth } from "@okta/okta-react";
 
 
 
@@ -13,6 +18,7 @@ export default function MarksCheckingForm() {
   const history = useHistory();
   const [text, setText] = useState('');
   const[noData,setNoData]=useState('')
+  const { oktaAuth, authState } = useOktaAuth();
 
   const [marks, setMarks] = useState([
     {
@@ -201,6 +207,12 @@ useEffect(() => {
   return (
     <>
       <ToastContainer />
+      {
+                authState?.accessToken?.claims.userType == "HOD" ? <NavebarHOD/> : 
+                authState?.accessToken?.claims.userType == "course_cordinator" ? <NavBarCC/> :
+                authState?.accessToken?.claims.userType == "dean" ? <NavebarDean/>:
+                authState?.accessToken?.claims.userType == "ar" ? <NavebarAR/> : null
+            }
       <div className=' bg-white'>
       <h2>Student ID   :{student_id} </h2>
       
