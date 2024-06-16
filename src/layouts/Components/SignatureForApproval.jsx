@@ -32,17 +32,17 @@ export default function SignatureForApproval({ saveDigitalSignature }) {
         setFiles([]);
     };
 
-    const imageHandlClear = () => {
-        setSelectedImage(null);
-        setShowSaveClearButtons(false);
-        setFiles([]);
+    const imageHandlClear = async () => {
+        setUrl(null);
+        saveDigitalSignature(null);
     };
 
     const handleClear = () => {
         if (sign.current) { // Check if sign.current exists before calling clear
             sign.current.clear();
         }
-        setUrl('');
+       // setUrl(null);
+        saveDigitalSignature(null);
     };
 
     const handleGenerate = async () => {

@@ -51,7 +51,7 @@ export default function CourseCard(props) {
                     setCidN(data.content);
                     seterrorMsg(data.message);
                 } else {
-                    seterrorMsg('No data available.');
+                    seterrorMsg('No Marks Return Sheets For Approval');
                     setCidN([]);
                 }
             } catch (error) {
@@ -80,15 +80,7 @@ export default function CourseCard(props) {
     
         fetchAndSaveYear();
       }, []);
-       
-      
-       
-       
 
-
-  
-
-    
        return (
         <>
            <div className="row" style={{marginTop:"70px", padding:"2%"}}>

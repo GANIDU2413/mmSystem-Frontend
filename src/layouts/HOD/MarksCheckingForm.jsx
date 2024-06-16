@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -20,33 +20,8 @@ export default function MarksCheckingForm() {
   const[noData,setNoData]=useState('')
   const { oktaAuth, authState } = useOktaAuth();
 
-  const [marks, setMarks] = useState([
-    {
-      id: " ",
-      student_id: " ",
-      course_id: " ",
-      academic_year: " ",
-      level: " ",
-      semester: " ",
-      assignment_name: " ",
-      assignment_score: " ",
-      evaluation_criteria_id: " "
-    }
-  ]);
 
-  const [finalmarks, setfinalMarks] = useState({
-    id: " ",
-    student_id: " ",
-    course_id: " ",
-    level: " ",
-    semester: " ",
-    total_ca_mark:" ",
-    ca_eligibility:" ",
-    total_final_mark: " ",
-    total_rounded_mark: " ",
-    grade: " ",
-    gpv: " "
-  });
+
 
   const [attendanceEligibility, setAttendenceEligibility] = useState({
     id: "",
@@ -56,86 +31,33 @@ export default function MarksCheckingForm() {
     eligibility: ""
   });
 
-  const [calculations, setCalculations] = useState([
-    {
-      id: "",
-      student_id: "",
-      course_id: "",
-      mark: "",
-      percentage: "",
-      academic_year: "",
-      evaluation_criteria_id: ""
-    }
-  ]);
 
-  const [evaluationCriteria, setEvaluationCriteria] = useState([
-    {
-      evaluationcriteria_id: "",
-      course_id: "",
-      type: "",
-      assessment_type: "",
-      no_of_conducted: "",
-      no_of_taken: "",
-      percentage: "", 
-      description: ""
-    }
-  ]); 
+const location=useLocation()
 
-const { student_id, course_id, course_name } = useParams();
-console.log(student_id, course_id, course_name)
+const {course_id, course_name } = useParams();
+const{ele}=location.state;
+
+const student_id=ele.student_id
+
+console.log(ele)
 
 
 
-useEffect(() => {
-  fetchData();
-}, [course_id]);
 
 
-  const fetchData = async () => {
-      
-      try {
 
-          const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}`);
-          setMarksSheet(response.data);
-          console.log(marksSheet)
-   
-          setLoading(false); // Set loading to false after all data is fetched
-      } catch (error) {
-          setNoData(true); // Set noData to true if there is an error
-      }
 
-  };
   
 
   useEffect(() => {
-    result();
-    resultScoreGrade();
     Eligi();
   }, [course_id, student_id]);
 
-  useEffect(() => {
-    result1();
-  }, [course_id]);
 
-  const result = async () => {
-    try {
-      const List = await axios.get(`http://localhost:9090/api/StudentAssessment/get/scorebyStuIDCourseID/${course_id},${student_id}`);
-      setMarks(List.data);
-      console.log(List.data);
-    } catch (error) {
-      console.error('Axios request failed:', error);
-    }
-  };
 
-  const resultScoreGrade = async () => {
-    try {
-      const finalMarkList = await axios.get(`http://localhost:9090/api/studentMarks/getStudentMarksbySC/${course_id},${student_id}`);
-      setfinalMarks(finalMarkList.data.content);
-      console.log(finalmarks.data.content);
-    } catch (error) {
-      console.error('Axios request failed:', error);
-    }
-  };
+
+
+
 
   const Eligi = async () => {
     try {
@@ -154,15 +76,7 @@ useEffect(() => {
     }
   };
 
-  const result1 = async () => {
-    try {
-      const list = await axios.get(`http://localhost:9090/api/evaluationCriteria/getCriteria/${course_id}`);
-      setEvaluationCriteria(list.data);
-      console.log(list.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -212,9 +126,10 @@ useEffect(() => {
                 authState?.accessToken?.claims.userType == "course_coordinator" ? <NavBarCC/> :
                 authState?.accessToken?.claims.userType == "dean" ? <NavebarDean/>:
                 authState?.accessToken?.claims.userType == "ar" ? <NavebarAR/> : null
-            }
+      }
       <div className=' bg-white' style={{marginTop:"70px"}}>
-      <h2 style={{marginLeft:"30px"}}>Student ID   :{student_id} </h2>
+      <h2 style={{marginLeft:"30px"}}>{student_id} {ele.student_name}</h2>
+      <h3 style={{marginLeft:"30px"}}>{course_id} {course_name}</h3>
       
         <div class="container bg-transparent">
           <div class="row">
@@ -222,92 +137,39 @@ useEffect(() => {
               <table className="table shadow" style={{ marginTop: "50px" }}>
                 <tbody>
                   <tr>
-                    <th scope="col">Assessment Type</th>
+                    <th scope="col" >Assessment Type</th>
                     <th scope="col">Assessment Score</th>
                   </tr>
-                  {evaluationCriteria.map((evaluationCriteria, index) => {
-                    let headers = [];
-                    if (evaluationCriteria.type == "CA") {
-                      if (evaluationCriteria.no_of_conducted > 1) {
-                        marks.map((ele, index) => {
-                          if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
-                            headers.push(
-                              <tr key={`${index}`}>
-                                <td scope="col">{ele.assignment_name}</td>
-                                <td scope="col">{ele.assignment_score}</td>
-                              </tr>
-                            );
-                          }
-                        }).flat();
-                        calculations.map((ele, index) => {
-                          if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
-                            headers.push(
-                              <tr key={`${index}`}>
-                                <th scope="col">{evaluationCriteria.description}</th>
-                                <th scope="col">{ele.mark}</th>
-                              </tr>
-                            );
-                          }
-                        });
-                      } else {
-                        marks.map((ele, index) => {
-                          if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
-                            headers.push(
-                              <tr key={`${index}`}>
-                                <td scope="col">{ele.assignment_name}</td>
-                                <td scope="col">{ele.assignment_score}</td>
-                              </tr>
-                            );
-                          }
-                        }).flat();
+
+
+                  {
+                    ele.ca.map((e)=>
+                    (<tr>
+                      {
+                        console.log(e)
                       }
-                      calculations.map((calculations, index) => {
-                        if (evaluationCriteria.evaluationcriteria_id == calculations.evaluation_criteria_id) {
-                          headers.push(
-                            <tr key={`${index}`}>
-                              <th scope="col">{ evaluationCriteria.percentage}% from  {evaluationCriteria.assessment_type}</th>
-                              <th scope="col">{calculations.percentage}</th>
-                            </tr>
-                          );
-                        }
-                      }).flat();
-                    }
-                    return headers;
-                  }).flat()}
-                  {evaluationCriteria.map((evaluationCriteria, index) => {
-                    let headers = [];
-                    if (evaluationCriteria.type == "End") {
-                      marks.map((ele, index) => {
-                        if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
-                          headers.push(
-                            <tr key={`${index}`}>
-                              <td scope="col">{ele.assignment_name}</td>
-                              <td scope="col">{ele.assignment_score}</td>
-                            </tr>
-                          );
-                          calculations.map((calculations, index2) => {
-                            if (evaluationCriteria.evaluationcriteria_id == calculations.evaluation_criteria_id && ele.assignment_name !== "1st Marking" && ele.assignment_name !== "2nd Marking") {
-                              headers.push(
-                                <tr key={`${index2}`}>
-                                  <th scope="col">{ evaluationCriteria.percentage}% from  {evaluationCriteria.assessment_type}</th>
-                                  <th scope="col">{calculations.percentage}</th>
-                                </tr>
-                              );
-                            }
-                          });
-                        }
-                      }).flat();
-                    }
-                    return headers;
-                  }).flat()}
-                 
-                        {/* <tr >
-                          <td scope="col">{finalmarks.total_final_mark}</td>
-                          <td scope="col">{finalmarks.total_rounded_mark}</td>
-                          <td scope="col">{finalmarks.grade}</td>
-                          <td scope="col">{finalmarks.gpv}</td>
-                        </tr>    */}
-                 
+                      <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
+                      <td scope="col" style={{ textAlign: 'left',fontWeight:  e.description=="score"? 'normal' : 'bold'  }}>{e.value}</td>
+                      {
+                        console.log(e.description)
+                      }
+                    </tr>
+                      
+                    ))
+                  }
+
+                  {
+                    
+
+                    ele.end.map((e)=>
+                      (<tr>
+                        <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
+                        <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.value}</td>
+                      </tr>
+                        
+                      ))
+                  }
+
                 </tbody>
               </table>
             </div>
@@ -324,10 +186,10 @@ useEffect(() => {
                   <tr>
                     <td>Total CA Marks</td>
                     <td>
-                    <input className=' mx-4' size="5"  type='text' value={finalmarks.total_ca_mark} disabled />
+                    <input className=' mx-4' size="5"  type='text' value={ele.total_ca_mark} disabled />
                     </td>
                     <td>CA Eligibility</td>
-                    <td><input type='text' className=' mx-4' size="5" value={finalmarks.ca_eligibility} disabled /></td>
+                    <td><input type='text' className=' mx-4' size="5" value={ele.ca_eligibility} disabled /></td>
                   </tr>
                   <tr><th><br /></th></tr>
                   <tr>
@@ -346,7 +208,7 @@ useEffect(() => {
                   <tr>
                     <td>Eligibility</td>
                     <td>
-                      {(finalmarks.ca_eligibility == "Eligible" && attendanceEligibility.eligibility == "Eligible") ? <input type='text' className=' mx-4' size="5" value="Eligible" disabled /> : <input type='text' className=' mx-4' size="5" value="Not Eligible" disabled />}        
+                      {(ele.ca_eligibility == "Eligible" && attendanceEligibility.eligibility == "Eligible") ? <input type='text' className=' mx-4' size="5" value="Eligible" disabled /> : <input type='text' className=' mx-4' size="5" value="Not Eligible" disabled />}        
                      
                     </td>
                   </tr>
@@ -355,9 +217,9 @@ useEffect(() => {
               <div>
                 <div className="py-4 px-5" class="col shadow mt-4 p-4">
                   <label>Final Marks </label>
-                  <input type='text' className=' mx-3' value={finalmarks.total_rounded_mark} disabled />
+                  <input type='text' className=' mx-3' value={ele.total_rounded_marks} disabled />
                   <label>Grade </label>
-                  <input type='text' className=' mx-3' value={finalmarks.grade} disabled />
+                  <input type='text' className=' mx-3' value={ele.grade} disabled />
                 </div>
               </div>
               <div class="col mt-4 shadow p-4">
