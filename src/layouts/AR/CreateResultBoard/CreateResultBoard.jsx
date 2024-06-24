@@ -22,7 +22,9 @@ export default function CreateResultBoard() {
     const [academicYearList, setAcademicYearList] = useState([]);              //store all academic year list
 
     const [resultBoardAvailability, setResultBoardAvailability] = useState(false);    //store the result board availability status
+    const [buttonAvailability, setButtonAvailability] = useState(false);    //store the button availability status
     const [errorMessage, setErrorMessage] = useState('');    //store the error message
+
     
 
 
@@ -65,7 +67,9 @@ export default function CreateResultBoard() {
 
     const checkResultBoardAvailability = async (selectedDepartment,selectedLevel,selectedSemester,selectedAcademicYear) =>{
 
-        if(selectedDepartment !== 0 && selectedLevel !== 0 && selectedSemester !== 0 && selectedAcademicYear !== 0){
+        if(selectedDepartment == 0 || selectedLevel == 0 || selectedSemester == 0 || selectedAcademicYear == 0){
+            setButtonAvailability(false);
+            setErrorMessage("Select all the fields to create the result board");
 
         }
         else if (selectedDepartment !== 0 && selectedLevel !== 0 && selectedSemester !== 0 && selectedAcademicYear !== 0){
@@ -77,9 +81,11 @@ export default function CreateResultBoard() {
                 if(result.data){
                     toast.error("Selected Result Board is already created ",{autoClose:2000});   //Display error message if result board is already created
                     setErrorMessage("Selected Result Board is already created!");
+                    setButtonAvailability(false);
                 }
                 else{
                     setErrorMessage("");
+                    setButtonAvailability(true);
                 }
 
             }catch(e){
@@ -109,7 +115,7 @@ export default function CreateResultBoard() {
 
             
 
-
+            
             <div className='col-4 sub-div1'>
                 <div className="row justify-content-between">
                     <div className="col">
@@ -151,7 +157,7 @@ export default function CreateResultBoard() {
                 </div>
                 <div className='row justify-content-between'>
                     <div className="col">
-                        <button className='btn btn-primary' style={{width:"Auto",height:"Auto",marginTop:"10px"}} disabled={resultBoardAvailability}>Create Result Board</button>
+                        <button className='btn btn-primary' style={{width:"Auto",height:"Auto",marginTop:"10px"}} disabled={!buttonAvailability}>Create Result Board</button>
                         <ToastContainer/>
                         <label style={{color:"red",marginTop:"10px",minWidth:"100%"}}>{errorMessage}</label>
 
@@ -196,6 +202,8 @@ export default function CreateResultBoard() {
 
 
         </div>
+
+        
     </div>
   )
 }
