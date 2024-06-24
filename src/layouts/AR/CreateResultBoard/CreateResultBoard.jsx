@@ -111,61 +111,63 @@ export default function CreateResultBoard() {
 
   return (
     <div className='div-body container'>
+
         <div className='row justify-content-between'>
 
-            
-
-            
             <div className='col-4 sub-div1'>
-                <div className="row justify-content-between">
-                    <div className="col">
-                        <select className='selection' value={department} onChange={handleDepartment}>               {/* selection for department */}
-                            <option value='0' disabled>Select department</option>
-                            <option value='ICT'>ICT</option>
-                            <option value='ET'>ET</option>
-                            <option value='BST'>BST</option>
-                        </select>
-                    </div>
-                    <div className="col">
-                        <select className='selection' value={level} onChange={handleLevel}>                         {/* selection for level */}
-                            <option value='0' disabled>Select level</option>
-                            <option value='1'>Level 1</option>
-                            <option value='2'>Level 2</option>
-                            <option value='3'>Level 3</option>
-                            <option value='4'>Level 4</option>
-                        </select>
-                    </div>
-                    <div className="col">
-                        <select className='selection' value={semester} onChange={handleSemester}>                   {/* selection for semester */}
-                            <option value='0' disabled>Select Semester</option>
-                            <option value='1'>Semester 1</option>
-                            <option value='2'>Semester 2</option>
-                        </select>
-                    </div>
-                    <div className="col">
-                        <select className='selection' value={academicYear} onChange={handleAcademicYear}>                   {/* selection for semester */}
-                            <option value='0' disabled>Academic Year</option>
-                            {
-                                academicYearList.map((element,index)=>(
-                                    <option key={index} value={element}>{element}</option>
-                                ))
-                            }
-                        </select>
-                    </div>
-                    
-                    
-                </div>
-                <div className='row justify-content-between'>
-                    <div className="col">
-                        <button className='btn btn-primary' style={{width:"Auto",height:"Auto",marginTop:"10px"}} disabled={!buttonAvailability}>Create Result Board</button>
-                        <ToastContainer/>
-                        <label style={{color:"red",marginTop:"10px",minWidth:"100%"}}>{errorMessage}</label>
 
-                    </div>
+                        <div className="row justify-content-between">
+                            <div className="col">
+                                <select className='selection' value={department} onChange={handleDepartment}>               {/* selection for department */}
+                                    <option value='0' disabled>Select department</option>
+                                    <option value='ICT'>ICT</option>
+                                    <option value='ET'>ET</option>
+                                    <option value='BST'>BST</option>
+                                </select>
+                            </div>
+                            <div className="col">
+                                <select className='selection' value={level} onChange={handleLevel}>                         {/* selection for level */}
+                                    <option value='0' disabled>Select level</option>
+                                    <option value='1'>Level 1</option>
+                                    <option value='2'>Level 2</option>
+                                    <option value='3'>Level 3</option>
+                                    <option value='4'>Level 4</option>
+                                </select>
+                            </div>
+                            <div className="col">
+                                <select className='selection' value={semester} onChange={handleSemester}>                   {/* selection for semester */}
+                                    <option value='0' disabled>Select Semester</option>
+                                    <option value='1'>Semester 1</option>
+                                    <option value='2'>Semester 2</option>
+                                </select>
+                            </div>
+                            <div className="col">
+                                <select className='selection' value={academicYear} onChange={handleAcademicYear}>                   {/* selection for semester */}
+                                    <option value='0' disabled>Academic Year</option>
+                                    {
+                                        academicYearList.map((element,index)=>(
+                                            <option key={index} value={element}>{element}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
                     
-                </div>
+                    
+                        </div>
+                        <div className='row justify-content-between'>
+                            <div className="col">
+                                <button className='btn btn-primary' style={{width:"Auto",height:"Auto",marginTop:"10px"}} disabled={!buttonAvailability}>Create Result Board</button>
+                                <ToastContainer/>
+                                <label style={{color:"red",marginTop:"10px",minWidth:"100%"}}>{errorMessage}</label>
+
+                            </div>
+                            
+                        </div>
                 
             </div>
+
+            
+            
 
 
 
