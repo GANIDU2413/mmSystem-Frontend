@@ -3,95 +3,118 @@ import { useState } from 'react'
 import './createResultBoard.css'
 import axios from 'axios';
 import { useOktaAuth } from '@okta/okta-react';
+import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 export default function CreateResultBoard() {
 
     const {oktaAuth , authState} = useOktaAuth();
 
 
-    const [department, setDepartment] =useState('');            //store selected department
-    const [level, setLevel] = useState('0');                    //store selected level
-    const [semester, setSemester] =useState('0');               //store selected semester
-    const [hod, setHod] = useState('');                         //store selected HOD
-    const [courseCoordinator, setCourseCoordinator] = useState('');     //store selected course coordinator
+    const [department, setDepartment] =useState(0);            //store selected department
+    const [level, setLevel] = useState(0);                    //store selected level
+    const [semester, setSemester] =useState(0);               //store selected semester
+    const [academicYear, setAcademicYear] = useState(0);       //store selected academic year
 
-    const [HODList, setHODList] = useState(['0']);                      //store all HOD list
-    const [courseCoordinatorsList, setCourseCoordinatorsList] = useState(['0']);    //store all course coordinators list
-    const [academicYear, setAcademicYear] = useState('0');                          //store the current academic year
+    const [academicYearList, setAcademicYearList] = useState([]);              //store all academic year list
+
+    const [resultBoardAvailability, setResultBoardAvailability] = useState(false);    //store the result board availability status
+    const [errorMessage, setErrorMessage] = useState('');    //store the error message
     
 
 
     const handleDepartment = async (department) => {              // handle the department selection
         setDepartment(department.target.value);         // set the selected department
+        checkResultBoardAvailability(department.target.value,level,semester,academicYear);
+
         
-        loadCourseCoordinators(department.target.value,level,semester);         // load the course coordinators
+        
     }
 
     const handleLevel = async (level) => {                        // handle the level selection
         setLevel(level.target.value);                   // set the selected level
+        checkResultBoardAvailability(department,level.target.value,semester,academicYear);
 
-        loadCourseCoordinators(department,level.target.value,semester);         // load the course coordinators
+        
     }
 
     const handleSemester = async (semester) => {                  // handle the semester selection
         setSemester(semester.target.value);             // set the selected semester
+        checkResultBoardAvailability(department,level,semester.target.value,academicYear);
 
-        loadCourseCoordinators(department,level,semester.target.value);         // load the course coordinators
-    }
-
-    const handleHod = (hod)=>{                              // handle the HOD selection
-        setHod(hod.target.value);                       // set the selected HOD
-    }
-
-    const handleCourseCoordinator = (coordinator,key) => {        // handle the course coordinator selection
-        setCourseCoordinator(coordinator.target.value);  // set the selected course coordinator
         
     }
 
-    const loadCourseCoordinators = async (department,level,semester) => {                 // load the course coordinators
-        const coordinators= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllCourseCoordinatorsBySelectedAcademicYearDepartmentLevelSemester/${academicYear}/${department}/${level}/${semester}`);       // get all course coordinators by selected academic year, department, level and semester
-        console.log(coordinators.data);
-        setCourseCoordinatorsList(coordinators.data);       // set the course coordinators list
-    }
-
-    const loadCourses= async (department,level,semester)=>{
-        const coursesList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/GetAllCoursesBySelectedDepartmentLevelSemester/${department}/${level}/${semester}`);
-        /*
-        Call the api GetAllCoursesBySelectedDepartmentLevelSemester to get the courses by selected department, level and semester but need to modify tht to get only not used courses in resultboard table
-        */
+    const handleAcademicYear = async (academicYear) => {          // handle the academic year selection
+        setAcademicYear(academicYear.target.value);        // set the selected academic year
+        checkResultBoardAvailability(department,level,semester,academicYear.target.value);
+        
     }
 
 
     const loadAcademicYear = async () => {                  // load the current academic year
         const academicYearDetails =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`);      // get the academic year details
-        setAcademicYear(academicYearDetails.data[0].current_academic_year);                 // set the current academic year
+        setAcademicYearList([]);
+        setAcademicYearList(academicYearList=>[...academicYearList,academicYearDetails.data[0].previous_academic_year]);          // set the academic year details
+        setAcademicYearList(academicYearList=>[...academicYearList,academicYearDetails.data[0].current_academic_year]);        // set the academic year details
+    }   
+
+
+    const checkResultBoardAvailability = async (selectedDepartment,selectedLevel,selectedSemester,selectedAcademicYear) =>{
+
+        if(selectedDepartment !== 0 && selectedLevel !== 0 && selectedSemester !== 0 && selectedAcademicYear !== 0){
+
+        }
+        else if (selectedDepartment !== 0 && selectedLevel !== 0 && selectedSemester !== 0 && selectedAcademicYear !== 0){
+            
+
+            try{
+                const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/isResultBoardAvailable/${selectedDepartment}/${selectedLevel}/${selectedSemester}/${selectedAcademicYear}`)    //Call api to check the result board availability
+                setResultBoardAvailability(result.data);    //set the result board availability status
+                if(result.data){
+                    toast.error("Selected Result Board is already created ",{autoClose:2000});   //Display error message if result board is already created
+                    setErrorMessage("Selected Result Board is already created!");
+                }
+                else{
+                    setErrorMessage("");
+                }
+
+            }catch(e){
+                toast.error("Error in checking the result board availability",{autoClose:2000});   //Display error message if there is an error in checking the result board availability
+                setErrorMessage("Error in checking the result board availability");
+            }
+
+
+            
+        }
     }
 
-    const loadHODDetails = async () => {                     // load the HOD details
-         const hodDetails= await axios.get(`http://localhost:9090/api/AssistantRegistrar/findAllUserDetailsBySelectedRole/${"HOD"}`);           // get all HOD details
-         setHODList(hodDetails.data);                       // set the HOD list
-    }
 
 
 
 
 
     useEffect(()=>{
+        setAcademicYearList([]);
         loadAcademicYear();
-        loadHODDetails();
-    },[authState,department,level,semester,hod])
+        
+    },[authState,department,level,semester])
 
   return (
     <div className='div-body container'>
         <div className='row justify-content-between'>
 
+            
 
 
             <div className='col-4 sub-div1'>
                 <div className="row justify-content-between">
                     <div className="col">
                         <select className='selection' value={department} onChange={handleDepartment}>               {/* selection for department */}
-                            <option value='' disabled>Select department</option>
+                            <option value='0' disabled>Select department</option>
                             <option value='ICT'>ICT</option>
                             <option value='ET'>ET</option>
                             <option value='BST'>BST</option>
@@ -114,35 +137,25 @@ export default function CreateResultBoard() {
                         </select>
                     </div>
                     <div className="col">
-                        <select className='selection' style={{textAlign:'left'}} value={hod} onChange={handleHod}>   {/* selection for HOD */}
-                            <option value='' disabled>Select HOD</option>
+                        <select className='selection' value={academicYear} onChange={handleAcademicYear}>                   {/* selection for semester */}
+                            <option value='0' disabled>Academic Year</option>
                             {
-                                HODList.map((hod,index)=>(
-                                    <option key={index} value={hod.user_name}>{hod.name_with_initials} - {hod.user_name}</option>
-                                
+                                academicYearList.map((element,index)=>(
+                                    <option key={index} value={element}>{element}</option>
                                 ))
                             }
                         </select>
                     </div>
-                    <div className='col'>
-                        <select className='selection' style={{textAlign:'left'}} value={courseCoordinator} onChange={(event)=>{handleCourseCoordinator(event,event.target.selectedIndex-1)}}>           {/* selection for course coordinator */}
-                            <option value='' disabled>Select Course Coordinator</option>
-                            {
-                                courseCoordinatorsList.map((coordinator,index)=>(
-                                    <option key={index} value={coordinator.user_name}>{coordinator.name_with_initials} - {coordinator.user_name}</option>
-                                ))
-                            }
-                        </select>
-                    </div>
-                    <div className='col'>
-                        <select className='selection' style={{textAlign:'left'}} value={''}>
-                            <option value='' disabled>Select Course</option>
-                        
-                        </select>
-                    </div>
+                    
+                    
                 </div>
                 <div className='row justify-content-between'>
-                    
+                    <div className="col">
+                        <button className='btn btn-primary' style={{width:"Auto",height:"Auto",marginTop:"10px"}} disabled={resultBoardAvailability}>Create Result Board</button>
+                        <ToastContainer/>
+                        <label style={{color:"red",marginTop:"10px",minWidth:"100%"}}>{errorMessage}</label>
+
+                    </div>
                     
                 </div>
                 
@@ -157,7 +170,7 @@ export default function CreateResultBoard() {
                         <label className='label-key'>Academic Year : </label>
                     </div>
                     <div className="col">
-                        <label className='label-value'>{academicYear}</label>
+                        <label className='label-value'>{}</label>
                     </div>
                 </div>
 
@@ -175,7 +188,7 @@ export default function CreateResultBoard() {
                         <label className='label-key'>HOD : </label>
                     </div>
                     <div className="col">
-                        <label className='label-value'>{hod}</label>
+                        <label className='label-value'>{}</label>
                     </div>
                 </div>
             </div>

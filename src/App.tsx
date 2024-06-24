@@ -35,7 +35,6 @@ import LecturersManagement from "./layouts/SystemAnalyst/UserManagement/Lecturer
 import AssignLecturerCourse from "./layouts/SystemAnalyst/AssignLecturer/AssignLecturerCourse";
 import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
 import DeanDashBoard from "./layouts/Dean/DeanDashBoard";
-import ViewMarksTable from "./layouts/Components/AR/DataTable/ViewMarksTable";
 import MainNavbar from "./layouts/NavbarAndFooter/MainNavebar";
 import DashBoardSA from "./layouts/SystemAnalyst/DashBoardSA/DashBoardSA";
 import MedicalsEligibiltyManage from "./layouts/SystemAnalyst/Medicals/MedicalsEligibiltyManage";
