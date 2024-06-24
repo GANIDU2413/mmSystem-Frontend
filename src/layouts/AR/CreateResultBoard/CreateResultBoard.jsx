@@ -18,6 +18,7 @@ export default function CreateResultBoard() {
     const [level, setLevel] = useState(0);                    //store selected level
     const [semester, setSemester] =useState(0);               //store selected semester
     const [academicYear, setAcademicYear] = useState(0);       //store selected academic year
+    const [createdResultBoardList, setCreatedResultBoardList] = useState([]);    //store created result board list
 
     const [academicYearList, setAcademicYearList] = useState([]);              //store all academic year list
 
@@ -98,6 +99,16 @@ export default function CreateResultBoard() {
         }
     }
 
+    const loadCreatedResultBoardList = async () => {    //Load the created result board list
+        try{
+            const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCreatedResultBoardList`);    //Call api to get the created result board list
+            setCreatedResultBoardList(result.data);    //Set the created result board list
+        }
+        catch(e){
+            toast.error("Error in loading the created result board list",{autoClose:2000});    //Display error message if there is an error in loading the created result board list
+        }
+    }
+
 
 
 
@@ -106,6 +117,7 @@ export default function CreateResultBoard() {
     useEffect(()=>{
         setAcademicYearList([]);
         loadAcademicYear();
+        loadCreatedResultBoardList();
         
     },[authState,department,level,semester])
 
@@ -116,94 +128,92 @@ export default function CreateResultBoard() {
 
             <div className='col-4 sub-div1'>
 
-                        <div className="row justify-content-between">
-                            <div className="col">
-                                <select className='selection' value={department} onChange={handleDepartment}>               {/* selection for department */}
-                                    <option value='0' disabled>Select department</option>
-                                    <option value='ICT'>ICT</option>
-                                    <option value='ET'>ET</option>
-                                    <option value='BST'>BST</option>
-                                </select>
-                            </div>
-                            <div className="col">
-                                <select className='selection' value={level} onChange={handleLevel}>                         {/* selection for level */}
-                                    <option value='0' disabled>Select level</option>
-                                    <option value='1'>Level 1</option>
-                                    <option value='2'>Level 2</option>
-                                    <option value='3'>Level 3</option>
-                                    <option value='4'>Level 4</option>
-                                </select>
-                            </div>
-                            <div className="col">
-                                <select className='selection' value={semester} onChange={handleSemester}>                   {/* selection for semester */}
-                                    <option value='0' disabled>Select Semester</option>
-                                    <option value='1'>Semester 1</option>
-                                    <option value='2'>Semester 2</option>
-                                </select>
-                            </div>
-                            <div className="col">
-                                <select className='selection' value={academicYear} onChange={handleAcademicYear}>                   {/* selection for semester */}
-                                    <option value='0' disabled>Academic Year</option>
-                                    {
-                                        academicYearList.map((element,index)=>(
-                                            <option key={index} value={element}>{element}</option>
-                                        ))
-                                    }
-                                </select>
-                            </div>
-                    
-                    
-                        </div>
-                        <div className='row justify-content-between'>
-                            <div className="col">
-                                <button className='btn btn-primary' style={{width:"Auto",height:"Auto",marginTop:"10px"}} disabled={!buttonAvailability}>Create Result Board</button>
-                                <ToastContainer/>
-                                <label style={{color:"red",marginTop:"10px",minWidth:"100%"}}>{errorMessage}</label>
-
-                            </div>
-                            
-                        </div>
-                
-            </div>
-
+                <div className="row justify-content-between">
+                    <div className="col">
+                        <select className='selection' value={department} onChange={handleDepartment}>               {/* selection for department */}
+                            <option value='0' disabled>Select department</option>
+                            <option value='ICT'>ICT</option>
+                            <option value='ET'>ET</option>
+                            <option value='BST'>BST</option>
+                        </select>
+                    </div>
+                    <div className="col">
+                        <select className='selection' value={level} onChange={handleLevel}>                         {/* selection for level */}
+                            <option value='0' disabled>Select level</option>
+                            <option value='1'>Level 1</option>
+                            <option value='2'>Level 2</option>
+                            <option value='3'>Level 3</option>
+                            <option value='4'>Level 4</option>
+                        </select>
+                    </div>
+                    <div className="col">
+                        <select className='selection' value={semester} onChange={handleSemester}>                   {/* selection for semester */}
+                            <option value='0' disabled>Select Semester</option>
+                            <option value='1'>Semester 1</option>
+                            <option value='2'>Semester 2</option>
+                        </select>
+                    </div>
+                    <div className="col">
+                        <select className='selection' value={academicYear} onChange={handleAcademicYear}>                   {/* selection for semester */}
+                            <option value='0' disabled>Academic Year</option>
+                            {
+                                academicYearList.map((element,index)=>(
+                                    <option key={index} value={element}>{element}</option>
+                                ))
+                            }
+                        </select>
+                    </div>
+                    <div className="col">
+                        <button className='btn btn-primary' style={{width:"Auto",height:"Auto",marginTop:"10px"}} disabled={!buttonAvailability}>Create Result Board</button>
+                        <ToastContainer/>
+                    </div>
             
             
-
-
-
-
-            <div className='col-4 sub-div2'>
-                <div className="row justify-content-between">
-                    <div className="col-4">
-                        <label className='label-key'>Academic Year : </label>
-                    </div>
+                </div>
+                <div className='row justify-content-between'>
                     <div className="col">
-                        <label className='label-value'>{}</label>
+                        
+                        <label style={{color:"red",marginTop:"10px",minWidth:"100%"}}>{errorMessage}</label>
+
                     </div>
+                    
+                </div>
+                <hr style={{height:"3px", background:"blue"}}></hr>
+
+                <div style={{marginLeft:"auto",marginRight:"auto",alignContent:'center'}}>
+                    <table className="table table-striped">
+                        <thead className='tableHead'>
+                            <tr>
+                                <th colSpan={100} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>
+                                    Existing Result Boards <br/>
+                                </th>
+                            </tr>
+                            <tr>              
+                            <th scope="col">Academic Year</th>
+                            <th scope="col">Semester</th>
+                            <th scope="col">Level</th>
+                            <th scope="col">Department</th>
+                            <th scope="col">State</th>
+                            </tr>          
+                        </thead>
+                        <tbody>
+                            {createdResultBoardList.map((element) => (
+                                <tr className="clickable-row" key={element.id}>
+                                    <td>{element.academic_year}</td>
+                                    <td>{element.semester}</td>
+                                    <td>{element.level}</td>
+                                    <td>{element.department}</td>
+                                    <td>{element.status}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
 
-                <div className="row justify-content-between">
-                    <div className="col-4">
-                        <label className='label-key'>Department : </label>
-                    </div>
-                    <div className="col">
-                        <label className='label-value'>{department}</label>
-                    </div>
-                </div>
-
-                <div className="row justify-content-between">
-                    <div className="col-4">
-                        <label className='label-key'>HOD : </label>
-                    </div>
-                    <div className="col">
-                        <label className='label-value'>{}</label>
-                    </div>
-                </div>
             </div>
-
-
 
         </div>
+        
 
         
     </div>
