@@ -21,7 +21,7 @@ export default function CertifyMarksPage(props) {
           const academicYearDetails= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`);    // get academic year details
           
           try{                                                                // get 'not approved courses' by level, semester, approved level and year     
-            const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getNotApprovedCoursesByLevelSemester/${level}/${semester}/HOD/${academicYearDetails.data[0]["current_academic_year"]}`);
+            const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getNotApprovedCoursesByLevelSemester/${level}/${semester}/HOD/${academicYearDetails.data[0]["current_academic_year"]}/${department_id}`);
             
             if(response.data.length>0){                                       // if 'not approved courses' are available
               toast.error("HOD have not approved all courses for this level and semester",{autoClose:3000});      // show error message

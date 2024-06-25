@@ -151,15 +151,16 @@ export const App = () => {
             <DeanFinalMarkSheet approved_level={"HOD"}/>
           </Route>
 
-
-
-
           <Route path="/viewMedicals">   {/* Link to view medical page */}
             <ViewMedicalPage/>
           </Route>
 
           <Route path="/createResultsBoard">   {/* Link to create results board page */}
             <CreateResultBoard/>
+          </Route>
+
+          <Route path="/arViewResultsBoard/:resultboardId">  {/* Link to view results board page */}
+          
           </Route>
 
           {/* AR navigations ends here ---------------------------------------------*/}
