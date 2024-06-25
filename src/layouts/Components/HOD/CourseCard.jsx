@@ -12,6 +12,7 @@ export default function CourseCard(props) {
             course_name: ''
         }
     ])
+    
     const history = useHistory();
 
     const[errorMsg,seterrorMsg]=useState("");
@@ -19,6 +20,8 @@ export default function CourseCard(props) {
     const{approved_level}=props;
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
     const[academicYear,setAcademicYear]=useState("")
+
+   
   
     const result = async () => {
       try {
@@ -41,6 +44,8 @@ export default function CourseCard(props) {
     useEffect(() => {
         result();
        }, [level,semester,department,approved_level,academicYear]); // This effect runs whenever level or semester changes
+
+       console.log(level,semester,department,approved_level,academicYear)
 
        useEffect(() => {
         const fetchData = async () => {

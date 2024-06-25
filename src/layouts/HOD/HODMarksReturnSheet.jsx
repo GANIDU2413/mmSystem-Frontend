@@ -333,6 +333,24 @@ const imageHandlClear = () => {
     setISHODlevel(signature = null)
 };
 
+
+  // Adding the beforeunload event listener
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (newSignature) {
+        e.preventDefault();
+        e.returnValue = ''; // Chrome requires returnValue to be set
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [newSignature]);
+
     return (
         <>
            
@@ -415,11 +433,8 @@ const imageHandlClear = () => {
                                             let percentage=parseInt(caScore.key.slice(0, 2))
                                             console.log(percentage)
                                             ca_percentage=ca_percentage+percentage;
-                                            
                                         }
                                    
-                                    
-                           
                                     return <th key={`ca-${idx}`}>{caScore.key}</th>;
                                     }
 
@@ -430,7 +445,7 @@ const imageHandlClear = () => {
                                 }
 
                                 
-                                    <th> {ca_percentage+"% From Final Continuous Assignment Marks"}</th>
+                                <th> {ca_percentage+"% From Final Continuous Assignment Marks"}</th>
                                 
 
 
@@ -466,13 +481,27 @@ const imageHandlClear = () => {
                       {marksSheet.map((ele, index) => (
                         <tr key={index}>
                             <td>{ele.student_id}</td>
-                            {ele.ca.map((caScore, idx) => (
-                                <td key={`ca-${idx}`}>{caScore.value}</td>
-                            ))}
-                                <td>{ele.total_ca_mark}</td>
-                            {ele.end.map((endScore, idx) => (
-                                <td key={`end-${idx}`}>{endScore.value}</td>
-                            ))}
+
+
+                            {
+                               Array.from(seenKeysForTHCA).map((c, idx) => {
+                                    let caValue = ele.ca.find(ca => ca.key === c);
+                                    return <td key={`ca-${idx}`}>{caValue!=null ? caValue.value : ''}</td>;
+                                }
+                                )
+                            }
+
+                            <td>{ele.total_ca_mark}</td>
+                                
+                            {
+                                Array.from(seenKeysForTHFA).map((c, idx) => {
+                                    let endValue = ele.end.find(end => end.key === c);
+                                    return <td key={`end-${idx}`}>{endValue!=null ? endValue.value : ''}</td>;
+                                }
+                                )
+                            }
+                            
+                           
                             
                             <td>{ele.total_final_marks}</td>
                             <td>{ele.total_rounded_marks}</td>
@@ -505,7 +534,7 @@ const imageHandlClear = () => {
                               <td></td>
                               <td>Sign:</td>
                               <td>
-                                  {nextApprovedlevel == "course_coordinator" ? <img src={url} style={{ width: '80px', height: '40px' }} /> : 
+                                  {nextApprovedlevel == "course_coordinator" &&
                                   isCClevel.signature != null ? <img src={isCClevel.signature} style={{ width: '80px', height: '40px' }} /> : null
                                   }
 
@@ -518,7 +547,7 @@ const imageHandlClear = () => {
                               <td></td>
                               <td>Sign:</td>
                               <td>
-                                  {nextApprovedlevel == "lecturer" ? <img src={url} style={{ width: '80px', height: '40px' }} /> :
+                                  {nextApprovedlevel == "lecturer" &&
                                    isLeclevel.signature != null ? <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> : null
                                   }
                                   
@@ -531,7 +560,7 @@ const imageHandlClear = () => {
                               <td></td>
                               <td>Sign:</td>
                               <td>
-                                  {nextApprovedlevel == "HOD" ? <img src={url} style={{ width: '80px', height: '40px' }} /> : 
+                                  {nextApprovedlevel == "HOD" &&
                                   isHODlevel.signature != null ? <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> : null
                               }
                               </td>

@@ -23,14 +23,21 @@ export default function SignatureForApproval({ saveDigitalSignature }) {
     });
 
     const handleSave = async () => {
-        if (files.length > 0) {
-            const imageUrl = await convertBlobToDataURL(files[0]);
+    if (files.length > 0) {
+        const file = files[0];
+        if (file instanceof Blob) {
+            const imageUrl = await convertBlobToDataURL(file);
             setUrl(imageUrl);
+        } else {
+            console.error("File is not a Blob:", file);
+            // Handle this case according to your application logic
         }
-        setSelectedImage(null);
-        setShowSaveClearButtons(false);
-        setFiles([]);
-    };
+    }
+    setSelectedImage(null);
+    setShowSaveClearButtons(false);
+    setFiles([]);
+};
+
 
     const imageHandlClear = async () => {
         setUrl(null);
