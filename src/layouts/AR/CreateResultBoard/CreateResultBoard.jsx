@@ -7,13 +7,14 @@ import { ToastContainer } from 'react-toastify';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BackButton from '../../Components/AR/BackButton/BackButton';
+import { useHistory } from 'react-router-dom';
 
 
 
 export default function CreateResultBoard() {
 
     const {oktaAuth , authState} = useOktaAuth();
-
+    const history = useHistory();
 
     const [department, setDepartment] =useState(0);            //store selected department
     const [level, setLevel] = useState(0);                    //store selected level
@@ -288,11 +289,11 @@ export default function CreateResultBoard() {
                             <th scope="col">Level</th>
                             <th scope="col">Department</th>
                             <th scope="col">State</th>
-                            </tr>          
+                            </tr>
                         </thead>
                         <tbody>
                             {createdResultBoardList.map((element) => (
-                                <tr className="clickable-row" key={element.id}>
+                                <tr className="clickable-row" key={element.id} onClick={()=>{ history.push(`/arViewResultsBoard/${element.id}`) }} >
                                     <td>{element.academic_year}</td>
                                     <td>{element.semester}</td>
                                     <td>{element.level}</td>
