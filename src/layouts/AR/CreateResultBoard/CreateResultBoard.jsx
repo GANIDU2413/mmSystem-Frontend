@@ -293,7 +293,13 @@ export default function CreateResultBoard() {
                         </thead>
                         <tbody>
                             {createdResultBoardList.map((element) => (
-                                <tr className="clickable-row" key={element.id} onClick={()=>{ history.push(`/arViewResultsBoard/${element.id}`) }} >
+                                <tr className="clickable-row" key={element.id} onClick={()=>{ 
+                                    if(element.status=="End"){                                          {/*Check whether the result board ended*/}
+                                        toast.error("This result board is finished");
+                                    }else{
+                                        history.push(`/arViewResultsBoard/${element.level}/${element.semester}/${element.department}/${element.id}`) }}      //Else direct to view result board page
+                                    }
+                                >
                                     <td>{element.academic_year}</td>
                                     <td>{element.semester}</td>
                                     <td>{element.level}</td>
