@@ -12,6 +12,7 @@ export default function CourseCard(props) {
             course_name: ''
         }
     ])
+    
     const history = useHistory();
 
     const[errorMsg,seterrorMsg]=useState("");
@@ -19,6 +20,8 @@ export default function CourseCard(props) {
     const{approved_level}=props;
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
     const[academicYear,setAcademicYear]=useState("")
+
+   
   
     const result = async () => {
       try {
@@ -42,6 +45,8 @@ export default function CourseCard(props) {
         result();
        }, [level,semester,department,approved_level,academicYear]); // This effect runs whenever level or semester changes
 
+       console.log(level,semester,department,approved_level,academicYear)
+
        useEffect(() => {
         const fetchData = async () => {
             try {
@@ -51,7 +56,7 @@ export default function CourseCard(props) {
                     setCidN(data.content);
                     seterrorMsg(data.message);
                 } else {
-                    seterrorMsg('No data available.');
+                    seterrorMsg('No Marks Return Sheets For Approval');
                     setCidN([]);
                 }
             } catch (error) {
@@ -80,15 +85,7 @@ export default function CourseCard(props) {
     
         fetchAndSaveYear();
       }, []);
-       
-      
-       
-       
 
-
-  
-
-    
        return (
         <>
            <div className="row" style={{marginTop:"70px", padding:"2%"}}>
