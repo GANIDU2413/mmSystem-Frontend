@@ -95,9 +95,9 @@ export default function CreateResultBoard() {
                 const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/isResultBoardAvailable/${selectedDepartment}/${selectedLevel}/${selectedSemester}/${selectedAcademicYear}`)    //Call api to check the result board availability
                 
                 if(result.data){
-                    toast.error("Selected Result Board is already created ",{autoClose:2000});   //Display error message if result board is already created
+                    toast.error("Selected Result Board is existing! ",{autoClose:2000});   //Display error message if result board is already created
                     setErrorMessageColor('red');                                                //set the error message color to red
-                    setErrorMessage("Selected Result Board is already created!");               //set error message to notify if the result board is already created
+                    setErrorMessage("Selected Result Board is existing!");               //set error message to notify if the result board is already created
                     setButtonAvailability(false);                                               //Disable the button
                     setButtonColour('gray');                                                    //Set the button colour to gray
                 }

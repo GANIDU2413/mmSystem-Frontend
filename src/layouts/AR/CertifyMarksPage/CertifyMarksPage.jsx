@@ -21,13 +21,30 @@ export default function CertifyMarksPage(props) {
           const academicYearDetails= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`);    // get academic year details
           
           try{                                                                // get 'not approved courses' by level, semester, approved level and year     
-            const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getNotApprovedCoursesByLevelSemester/${level}/${semester}/HOD/${academicYearDetails.data[0]["current_academic_year"]}/${department_id}`);
+            const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getNotApprovedCoursesByLevelSemester/${level}/${semester}/${approvedLevel}/${academicYearDetails.data[0]["current_academic_year"]}/${department_id}`);     // get not approved courses by level, semester, approved level and year
             
             if(response.data.length>0){                                       // if 'not approved courses' are available
               toast.error("HOD have not approved all courses for this level and semester",{autoClose:3000});      // show error message
               
             }else{                                                // if 'not approved courses' are not available
-              history.push(`/arFinalMarkSheet/${level}/${semester}/${department_id}`);       // redirect to final mark sheet page
+
+              try{                                                // check whether there are students who were absent for the exams
+                const abList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/isABStudentAvailable/${academicYearDetails.data[0]["current_academic_year"]}/${semester}/${level}/${department_id}`);    //Call api to check the AB student availability
+
+                if(abList.data){
+
+                  toast.error("There are students who were absent for the exams, please check the medicals and update their states",{autoClose:6000});    //Display error message if there are students who were absent for the exams
+                
+                }else{
+
+                  history.push(`/arFinalMarkSheet/${level}/${semester}/${department_id}`);       // redirect to final mark sheet page
+
+                }
+
+              }catch(e){
+                toast.error("Error with getting absent student details",{autoClose:3000});      // show error message
+              }
+
             }
           }
           catch(e){
