@@ -14,14 +14,7 @@ export default function ResultBoardMarksSheetAssign() {
 
     const location = useLocation(); //Get the location details from the URL
 
-    const selectedResultBoard = {                //Object to store the object that is passed with the URL to this page
-        id: location.state.id,
-        department: location.state.department,
-        level: location.state.level,
-        semester: location.state.semester,
-        academic_year: location.state.academic_year,
-        status: location.state.status
-    }
+    
 
 
     const [availableCourseList, setAvailableCourseList] = useState([]); //State to store the course list that can be added to the result board
@@ -34,6 +27,22 @@ export default function ResultBoardMarksSheetAssign() {
     const [assignButtenClicked, setAssignButtonClicked] = useState(false); //State to store the status of the assign button [clicked or not clicked
 
 
+    const selectedResultBoard = {                //Object to store the object that is passed with the URL to this page
+        id: location.state.id,
+        department: location.state.department,
+        level: location.state.level,
+        semester: location.state.semester,
+        academic_year: location.state.academic_year,
+        status: location.state.status
+    }
+
+    const assignmentObject = {                              //Object to store the details of the new assignment
+        course_coordinator_id: selectedExaminer,
+        course_id: selectedCourse,
+        result_board_id: location.state.id,
+        assigned_date_time:''
+
+    }
 
 
 
@@ -89,26 +98,56 @@ export default function ResultBoardMarksSheetAssign() {
         }else{
 
             //Api to assign the marksheet to the selected examiner
-            toast.success('Marksheet assigned successfully'); //Display the success message
-            setMessageColor('green'); //Set the color of the message
-            setMessage('Marksheet assigned successfully'); //Set the message
-            setSelectedCourse('0'); //Clear the selected course
-            setSelectedExaminer('0'); //Clear the selected coordinator
+             
+
+            const currentDateAndTime = new Date();  //Get the current date and time
+            const formattedDateTime = String(currentDateAndTime.getFullYear() + '-' + currentDateAndTime.getMonth() + '-' + currentDateAndTime.getDate() +' ' +  currentDateAndTime.getHours()+ ':'+ currentDateAndTime.getMinutes() +':' + currentDateAndTime.getSeconds()); //Format the date and time
+            assignmentObject.assigned_date_time = formattedDateTime; //Set the formatted date and time to the assignment object
+
+            try{
+                 const saveResult = await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoardMember', assignmentObject);
+                if(saveResult.data===true){
+                    toast.success('Marksheet assigned successfully'); //Display the success message
+                    setMessageColor('green'); //Set the color of the message
+                    setMessage('Marksheet assigned successfully'); //Set the message
+                    setSelectedCourse('0'); //Clear the selected course
+                    setSelectedExaminer('0'); //Clear the selected coordinator
+
+                }else if(saveResult.data===false){
+                    toast.error('Selected marks sheet is already assigned!'); //Display the error message
+                    setMessageColor('red'); //Set the color of the message
+                    setMessage('Selected marks sheet is already assigned!'); //Set the message
+                }else{
+                    toast.error('Error with assigning marks sheet'); //Display the error message
+                    setMessageColor('red'); //Set the color of the message
+                    setMessage('Error with assigning marks sheet'); //Set the message
+                }
+
+             }catch(err){
+                 toast.error(err.response.data.errorMessage); //Display the error message if an error occurs
+             }
+
+
+
+
+
+            
 
         }
 
         setAssignButtonClicked(true); //Set the assign button clicked status to true
 
-        
+
     }
 
 
 
     useEffect(() => {
-        setAvailableCourseList([]); //Clear the course list that can be added to the result board
+        setAssignButtonClicked(false); //Set the assign button clicked status to false
+        setAvailableCourseList([""]); //Clear the course list that can be added to the result board
         getAvailableCourses();
-        setAvailableExaminerList([]); //Clear the course coordinator list
-        getAvailableExaminers();
+        setAvailableExaminerList([""]); //Clear the course coordinator list
+        getAvailableExaminers();    
 
     }, [assignButtenClicked])
 
@@ -116,9 +155,7 @@ export default function ResultBoardMarksSheetAssign() {
 
     return (
         <div className='marksheet-assign-body container'>
-            {
-                console.log(availableExaminerList)
-            }
+            
             <div className='row justify-content-between'>
 
 
@@ -162,13 +199,11 @@ export default function ResultBoardMarksSheetAssign() {
                         <div className='col button-col' >
 
                             <button className='btn btn-primary btn-sm assign-button' onClick={assignMarksheet}>Assign Markshet</button>
-                            <label style={{color:messageColor}}>{message}</label>
+                            <label style={{color:messageColor}}> &nbsp;&nbsp;&nbsp;&nbsp; {message}</label>
 
                         </div>
 
-                        <div className='col button-col' >
-
-                        </div>
+                        
 
 
                     </div>
