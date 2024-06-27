@@ -197,6 +197,15 @@ export default function ResultBoardMarksSheetAssign() {
 
     }
 
+    const viewResultBoard = async () => {     //Function to view the result board
+        try{
+            const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getResultBoardDetailsByID/${selectedResultBoard.id}`); //Start the result board
+            
+        }catch(err){
+            toast.error(err.response.data.errorMessage); //Display the error message if an error occurs
+        }
+    }
+
 
 
 
@@ -305,11 +314,11 @@ export default function ResultBoardMarksSheetAssign() {
                                 {
                                     selectedResultBoard.status === "Not started"? (
 
-                                        <button className='btn btn-primary btn-sm start-result-board-button' style={{backgroundColor:startResultBoardButtonColor,borderColor:startResultBoardButtonColor}} disabled={!startResultBoardButtonAvailability}>Start Result Board</button>
+                                        <button className='btn btn-primary btn-sm start-result-board-button' style={{backgroundColor:startResultBoardButtonColor,borderColor:startResultBoardButtonColor}} disabled={!startResultBoardButtonAvailability} onClick={viewResultBoard}>Start Result Board</button>
 
                                     ): selectedResultBoard.status === "Started"? (
 
-                                        <button className='btn btn-primary btn-sm start-result-board-button' style={{backgroundColor:startResultBoardButtonColor,borderColor:startResultBoardButtonColor}} disabled={!startResultBoardButtonAvailability}>Join To Result Board</button>
+                                        <button className='btn btn-primary btn-sm start-result-board-button' style={{backgroundColor:startResultBoardButtonColor,borderColor:startResultBoardButtonColor}} disabled={!startResultBoardButtonAvailability} onClick={viewResultBoard}>Join To Result Board</button>
 
                                     ) : (
 
