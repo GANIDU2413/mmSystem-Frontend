@@ -38,16 +38,8 @@ export default function CreateResultBoard() {
         level:level,
         semester:semester,
         academic_year:academicYear,
-        status:"Created"
-    }
-
-    let myResultboard = {                  // Object to store the selected result board details
-        id:"",
-        department:"",
-        level:"",
-        semester:"",
-        academic_year:"",
-        status:""
+        status:"Created",
+        created_date_time:""
     }
 
     const selectedResultBoard ={                //Object to store the selected result board details
@@ -56,7 +48,8 @@ export default function CreateResultBoard() {
         level:"",
         semester:"",
         academic_year:"",
-        status:""
+        status:"",
+        created_date_time:""
     }
 
     
@@ -180,6 +173,10 @@ export default function CreateResultBoard() {
                     else{
 
                         try{
+
+                            const currentDateAndTime = new Date();  //Get the current date and time
+                            const formattedDateTime = String(currentDateAndTime.getFullYear() + '-' + currentDateAndTime.getMonth() + '-' + currentDateAndTime.getDate() +' ' +  currentDateAndTime.getHours()+ ':'+ currentDateAndTime.getMinutes() +':' + currentDateAndTime.getSeconds()); //Format the date and time
+                            newResultBoard.created_date_time = formattedDateTime;    //Set the formatted date and time to the new result board object
 
                             await axios.post(`http://localhost:9090/api/AssistantRegistrar/saveResultBoard`,newResultBoard);    //Call api to create the result board
                             toast.success("Result board is created successfully");    //Display success message if the result board is created successfully
@@ -317,11 +314,12 @@ export default function CreateResultBoard() {
                                         toast.error("This result board is finished");
                                     }else{
                                         selectedResultBoard.id = element.id;
-                                        selectedResultBoard.status = element.status;
-                                        selectedResultBoard.academic_year = element.academic_year;
                                         selectedResultBoard.department = element.department;
                                         selectedResultBoard.level = element.level;
                                         selectedResultBoard.semester = element.semester;
+                                        selectedResultBoard.academic_year = element.academic_year;
+                                        selectedResultBoard.status = element.status;
+                                        selectedResultBoard.created_date_time = element.created_date_time;
                                         history.push({pathname:`/arViewResultsBoard`,state:selectedResultBoard}) }}      //Else direct to view result board page
                                     }
                                 >
