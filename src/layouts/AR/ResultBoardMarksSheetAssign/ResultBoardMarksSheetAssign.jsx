@@ -19,12 +19,15 @@ export default function ResultBoardMarksSheetAssign() {
 
     const [availableCourseList, setAvailableCourseList] = useState([]); //State to store the course list that can be added to the result board
     const [availableExaminerList, setAvailableExaminerList] = useState([]); //State to store the available coordinators
+    const [assignedMarksSheetList, setAssignedMarksSheetList] = useState([]); //State to store the assigned marks sheet list
     const [message, setMessage] = useState(''); //State to store the message to be displayed
     const [messageColor, setMessageColor] = useState(''); //State to store the color of the message
 
     const [selectedCourse, setSelectedCourse] = useState('0'); //State to store the selected course
     const [selectedExaminer, setSelectedExaminer] = useState('0'); //State to store the selected coordinator
     const [assignButtenClicked, setAssignButtonClicked] = useState(false); //State to store the status of the assign button [clicked or not clicked
+
+
 
 
     const selectedResultBoard = {                //Object to store the object that is passed with the URL to this page
@@ -37,6 +40,8 @@ export default function ResultBoardMarksSheetAssign() {
         created_date_time: location.state.created_date_time
     }
 
+
+
     const assignmentObject = {                              //Object to store the details of the new assignment
         course_coordinator_id: selectedExaminer,
         course_id: selectedCourse,
@@ -47,11 +52,19 @@ export default function ResultBoardMarksSheetAssign() {
 
 
 
+
+
+
+
     const handleExaminerSelection = (selectedExaminer) => {       //Function to handle the coordinator selection
         setSelectedExaminer(selectedExaminer.target.value); //Set the selected coordinator
         setMessage(''); //Clear the message
         setMessageColor(''); //Clear the message color
     }
+
+
+
+
 
     const handleCourseSelection = (selectedCourse) => {       //Function to handle the course selection 
 
@@ -60,6 +73,11 @@ export default function ResultBoardMarksSheetAssign() {
         setMessageColor(''); //Clear the message color
 
     }
+
+
+    
+
+
 
 
 
@@ -76,6 +94,10 @@ export default function ResultBoardMarksSheetAssign() {
 
     }
 
+
+
+
+
     const getAvailableExaminers = async () => {     //Get the result board details from the database
 
         try {
@@ -88,13 +110,29 @@ export default function ResultBoardMarksSheetAssign() {
     }
 
 
-    const assignMarksheet = async () => {     //Get the result board details from the database
+
+
+    const getAssignegMarkSheetDetails = async ()=>{         //Function to get assigned marksheet details 
+        try{
+            const list = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAssignedMarksSheetsByResultBoardID/${selectedResultBoard.id}`); //Get the assigned marksheet details from the database
+            setAssignedMarksSheetList(list.data); //Set the assigned marksheet details
+            console.log(list.data);
+        }catch(err){
+            toast.error(err.response.data.errorMessage); //Display the error message if an error occurs
+        }
+    }
+
+
+
+
+
+    const assignMarksSheet = async () => {     //Get the result board details from the database
 
         if (selectedCourse==0 || selectedExaminer==0) { //Check if the course and the coordinator is selected
             
-            toast.error('Both examiner and marksheet should be selected'); //Display the error message
+            toast.error('Both examiner and marks sheet should be selected'); //Display the error message
             setMessageColor('red'); //Set the color of the message
-            setMessage('Both examiner and marksheet should be selected'); //Set the message
+            setMessage('Both examiner and marks sheet should be selected'); //Set the message
 
         }else{
 
@@ -110,7 +148,7 @@ export default function ResultBoardMarksSheetAssign() {
                 if(saveResult.data===true){
                     toast.success('Marksheet assigned successfully'); //Display the success message
                     setMessageColor('green'); //Set the color of the message
-                    setMessage('Marksheet assigned successfully'); //Set the message
+                    setMessage('Marks sheet assigned successfully'); //Set the message
                     setSelectedCourse('0'); //Clear the selected course
                     setSelectedExaminer('0'); //Clear the selected coordinator
 
@@ -143,14 +181,29 @@ export default function ResultBoardMarksSheetAssign() {
 
 
 
+
+
+
     useEffect(() => {
         setAssignButtonClicked(false); //Set the assign button clicked status to false
-        setAvailableCourseList([""]); //Clear the course list that can be added to the result board
+
+        setAvailableCourseList([]); //Clear the course list that can be added to the result board
         getAvailableCourses();
-        setAvailableExaminerList([""]); //Clear the course coordinator list
-        getAvailableExaminers();    
+
+        setAvailableExaminerList([]); //Clear the course coordinator list
+        getAvailableExaminers();
+
+        setAssignedMarksSheetList([]); //Clear the assigned marksheet list
+        getAssignegMarkSheetDetails();
 
     }, [assignButtenClicked])
+
+
+
+
+
+
+
 
 
 
@@ -172,7 +225,7 @@ export default function ResultBoardMarksSheetAssign() {
                                 <option value='0' disabled> Select an examiner</option>
                                 {
                                     availableExaminerList.map((examiner, index) => (
-                                        <option key={index} value={examiner.user_id}>{examiner.user_id} - {examiner.user_name}</option>
+                                        <option key={index} value={examiner.user_id}>{examiner.user_id} - {examiner.name_with_initials}</option>
                                     ))
                                 }
                             </select>
@@ -185,7 +238,7 @@ export default function ResultBoardMarksSheetAssign() {
                                 <option value='0' disabled> Select a marksheet</option>
                                 {
                                     availableCourseList.map((course, index) => (
-                                        <option key={index} value={course.course_id}>{course.course_id} - {course.course_name} - {index}</option>
+                                        <option key={index} value={course.course_id}>{course.course_id} - {course.course_name}</option>
                                     ))
                                 }
                             </select>
@@ -199,7 +252,7 @@ export default function ResultBoardMarksSheetAssign() {
 
                         <div className='col button-col' >
 
-                            <button className='btn btn-primary btn-sm assign-button' onClick={assignMarksheet}>Assign Markshet</button>
+                            <button className='btn btn-primary btn-sm assign-button' onClick={assignMarksSheet}>Assign Markshet</button>
                             <label style={{color:messageColor}}> &nbsp;&nbsp;&nbsp;&nbsp; {message}</label>
 
                         </div>
@@ -215,7 +268,43 @@ export default function ResultBoardMarksSheetAssign() {
 
 
                 <div className='col-4 div2'>
-                    Hello
+                    
+
+                    {/* <div className='row justify-content-between'>
+                        <div className='col-4 assigned-marks-sheet-title-div'>
+                            <lable className="assigned-marks-sheet-title-lable" >Assigned Marks Sheets</lable>
+                        </div>
+                    </div> */}
+
+
+
+                    <div className='row justify-content-between'>
+                        <div className='col-4 assigned-marks-sheet-list-div'>
+                            <table className='table assigned-marks-sheet-table'>
+                                <thead >
+                                    <tr >
+                                        <td colSpan='2' style={{textAlign:"center",backgroundColor:"rgb(44, 120, 235)",color:"white",borderRadius:"0px 0px 15px 15px"}}>Assigned Marks Sheets</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Examiner</th>
+                                        <th>Mark sheet </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        assignedMarksSheetList.map((markSheet, index) => (
+                                            <tr key={index}>
+                                                <td>{markSheet[1]}</td>
+                                                <td>{markSheet[4]}</td>
+                                                
+                                            </tr>
+                                        ))
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
 
 
