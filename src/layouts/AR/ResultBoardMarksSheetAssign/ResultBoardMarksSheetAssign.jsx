@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
+import BackButton from '../../Components/AR/BackButton/BackButton';
 
 
 export default function ResultBoardMarksSheetAssign() {
@@ -28,7 +29,8 @@ export default function ResultBoardMarksSheetAssign() {
     const [selectedCourse, setSelectedCourse] = useState('0'); //State to store the selected course
     const [selectedExaminer, setSelectedExaminer] = useState('0'); //State to store the selected coordinator
     const [assignButtenClicked, setAssignButtonClicked] = useState(false); //State to store the status of the assign button [clicked or not clicked
-
+    const [startResultBoardButtonAvailability, setStartResultBoardButtonAvailability] = useState(false); //State to store the availability of the start result board button [true or false
+    const [startResultBoardButtonColor, setStartResultBoardButtonColor] = useState("gray"); //State to store the color of the start result board button [green or red
 
 
 
@@ -39,7 +41,8 @@ export default function ResultBoardMarksSheetAssign() {
         semester: location.state.semester,
         academic_year: location.state.academic_year,
         status: location.state.status,
-        created_date_time: location.state.created_date_time
+        created_date_time: location.state.created_date_time,
+        conducted_date_time: location.state.conducted_date_time
     }
 
 
@@ -93,9 +96,15 @@ export default function ResultBoardMarksSheetAssign() {
             if(courseList.data.length>0){
                 setStartResultBoardDivMessageColor('red')
                 setStartResultBoardDivMessage('You can not continue to the result board until all the marks sheets are assigned to the examiners!'); //Set the message to be displayed in the start result board div
+
+                setStartResultBoardButtonAvailability(false); //Set the availability of the start result board button to false
+                setStartResultBoardButtonColor('gray'); //Set the color of the start result board button to red
             }else{
                 setStartResultBoardDivMessageColor('green')
                 setStartResultBoardDivMessage('All marks sheets are assigned to the examiners. Now you can continue to the result board'); //Set the message to be displayed in the start result board div
+
+                setStartResultBoardButtonAvailability(true); //Set the availability of the start result board button to true
+                setStartResultBoardButtonColor(); //reset the color of the start result board button
             }
         } catch (err) {
             toast.error(err.response.data.errorMessage); //Display the error message if an error occurs
@@ -126,7 +135,6 @@ export default function ResultBoardMarksSheetAssign() {
         try{
             const list = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAssignedMarksSheetsByResultBoardID/${selectedResultBoard.id}`); //Get the assigned marksheet details from the database
             setAssignedMarksSheetList(list.data); //Set the assigned marksheet details
-            console.log(list.data);
         }catch(err){
             toast.error(err.response.data.errorMessage); //Display the error message if an error occurs
         }
@@ -225,9 +233,9 @@ export default function ResultBoardMarksSheetAssign() {
 
                 <div className='col-4 main-left-column'>
                     
-                    <div className='row justify-content-between'>
+                    <div className='row justify-content-between'>                                       {/*Assign Marks Sheet Section*/}
 
-                        <div className='col-4 div1'> 
+                        <div className='col-4 div1'>
 
                             <div className="row-4 justify-content-between assign-mark-sheet-title-div">   {/*Row for title*/}
                                 <label className='assign-mark-sheet-title-lable' >Assign Marks Sheets</label>
@@ -269,7 +277,7 @@ export default function ResultBoardMarksSheetAssign() {
 
                                 <div className='col button-col' >
 
-                                    <button className='btn btn-primary btn-sm assign-button' onClick={assignMarksSheet}>Assign Markshet</button>
+                                    <button className='btn btn-primary btn-sm assign-button' onClick={assignMarksSheet} disabled={startResultBoardButtonAvailability}>Assign Markshet</button>
                                     <label style={{color:messageColor}}> &nbsp;&nbsp;&nbsp;&nbsp; {message}</label>
 
                                 </div>
@@ -284,12 +292,32 @@ export default function ResultBoardMarksSheetAssign() {
                     </div>
 
 
-                    <div className='row justify-content-between'>
+                    <div className='row justify-content-between'>                                                   {/*Start Result Board Section*/}
 
-                        <div className='col-4 div1' style={{height:"210px",paddingTop:"10px"}}>
+                        <div className='col-4 div1' style={{height:"210px",paddingTop:"20px"}}>
 
                             <div className='row justify-content-between' >
                                     <label style={{color:startResultBoardDivMessageColor}}>{startResultBoardDivMessage}</label>
+                            </div>
+
+
+                            <div className='row-4 justify-content-between' style={{paddingTop:"30px"}}>
+                                {
+                                    selectedResultBoard.status === "Not started"? (
+
+                                        <button className='btn btn-primary btn-sm start-result-board-button' style={{backgroundColor:startResultBoardButtonColor,borderColor:startResultBoardButtonColor}} disabled={!startResultBoardButtonAvailability}>Start Result Board</button>
+
+                                    ): selectedResultBoard.status === "Started"? (
+
+                                        <button className='btn btn-primary btn-sm start-result-board-button' style={{backgroundColor:startResultBoardButtonColor,borderColor:startResultBoardButtonColor}} disabled={!startResultBoardButtonAvailability}>Join To Result Board</button>
+
+                                    ) : (
+
+                                        null
+
+                                    )
+                                }
+                                &nbsp;&nbsp;&nbsp;&nbsp;<BackButton/>
                             </div>
 
 
@@ -298,9 +326,9 @@ export default function ResultBoardMarksSheetAssign() {
                     </div>
                 </div>
 
+                                        
 
-
-                <div className='col-4 div2'>
+                <div className='col-4 div2'>            {/* Assigned Marks  Sheets Section */}
                     
 
                     <div className='row justify-content-between'>

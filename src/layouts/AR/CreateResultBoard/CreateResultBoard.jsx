@@ -38,8 +38,9 @@ export default function CreateResultBoard() {
         level:level,
         semester:semester,
         academic_year:academicYear,
-        status:"Created",
-        created_date_time:""
+        status:"Not started",
+        created_date_time:null,
+        conducted_date_time:null
     }
 
     const selectedResultBoard ={                //Object to store the selected result board details
@@ -49,7 +50,8 @@ export default function CreateResultBoard() {
         semester:"",
         academic_year:"",
         status:"",
-        created_date_time:""
+        created_date_time:null,
+        conducted_date_time:null
     }
 
     
@@ -310,7 +312,7 @@ export default function CreateResultBoard() {
                         <tbody>
                             {createdResultBoardList.map((element) => (
                                 <tr className="clickable-row" key={element.id} onClick={()=>{ 
-                                    if(element.status=="End"){                                          {/*Check whether the result board ended*/}
+                                    if(element.status=="Ended"){                                          {/*Check whether the result board ended*/}
                                         toast.error("This result board is finished");
                                     }else{
                                         selectedResultBoard.id = element.id;
@@ -320,6 +322,7 @@ export default function CreateResultBoard() {
                                         selectedResultBoard.academic_year = element.academic_year;
                                         selectedResultBoard.status = element.status;
                                         selectedResultBoard.created_date_time = element.created_date_time;
+                                        selectedResultBoard.conducted_date_time = element.conducted_date_time;
                                         history.push({pathname:`/arViewResultsBoard`,state:selectedResultBoard}) }}      //Else direct to view result board page
                                     }
                                 >

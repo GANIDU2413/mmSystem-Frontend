@@ -103,3 +103,9 @@
     top: 0px;
     z-index: 1;
 }
+
+
+.start-result-board-button{
+  width: auto;
+  height: auto;
+}
