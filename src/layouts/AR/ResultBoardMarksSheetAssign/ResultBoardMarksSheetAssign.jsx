@@ -22,6 +22,8 @@ export default function ResultBoardMarksSheetAssign() {
     const [assignedMarksSheetList, setAssignedMarksSheetList] = useState([]); //State to store the assigned marks sheet list
     const [message, setMessage] = useState(''); //State to store the message to be displayed
     const [messageColor, setMessageColor] = useState(''); //State to store the color of the message
+    const [startResultBoardDivMessage, setStartResultBoardDivMessage] = useState(''); //State to store the message to be displayed in the start result board div
+    const [startResultBoardDivMessageColor, setStartResultBoardDivMessageColor] = useState(''); //State to store the color of the message to be displayed in the start result board div
 
     const [selectedCourse, setSelectedCourse] = useState('0'); //State to store the selected course
     const [selectedExaminer, setSelectedExaminer] = useState('0'); //State to store the selected coordinator
@@ -87,6 +89,14 @@ export default function ResultBoardMarksSheetAssign() {
         try {
             const courseList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCourseListRemainingToAddToResultBoard/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.id}`); //Get the course list that can be added to the result board from the database
             setAvailableCourseList(courseList.data); //Set the course list that can be added to the result board
+
+            if(courseList.data.length>0){
+                setStartResultBoardDivMessageColor('red')
+                setStartResultBoardDivMessage('You can not continue to the result board until all the marks sheets are assigned to the examiners!'); //Set the message to be displayed in the start result board div
+            }else{
+                setStartResultBoardDivMessageColor('green')
+                setStartResultBoardDivMessage('All marks sheets are assigned to the examiners. Now you can continue to the result board'); //Set the message to be displayed in the start result board div
+            }
         } catch (err) {
             toast.error(err.response.data.errorMessage); //Display the error message if an error occurs
         }
@@ -213,60 +223,79 @@ export default function ResultBoardMarksSheetAssign() {
             <div className='row justify-content-between'>
 
 
+                <div className='col-4 main-left-column'>
+                    
+                    <div className='row justify-content-between'>
 
-                <div className='col-4 div1'>        {/*Left div*/}
+                        <div className='col-4 div1'> 
 
-                    <div className="row justify-content-between assign-mark-sheet-title-div">   {/*Row for title*/}
-                        <label className='assign-mark-sheet-title-lable' >Assign Marks Sheets</label>
+                            <div className="row-4 justify-content-between assign-mark-sheet-title-div">   {/*Row for title*/}
+                                <label className='assign-mark-sheet-title-lable' >Assign Marks Sheets</label>
+                            </div>
+
+
+                            <div className="row justify-content-between">      {/*Row for examiner and course selection*/}
+
+                                <div className='col selection-box-col' >            {/*Scolumn for examiner selection*/}
+
+                                    <select className='examiner-select' value={selectedExaminer} onChange={handleExaminerSelection}>
+                                        <option value='0' disabled> Select an examiner</option>
+                                        {
+                                            availableExaminerList.map((examiner, index) => (
+                                                <option key={index} value={examiner.user_id}>{examiner.user_id} - {examiner.name_with_initials}</option>
+                                            ))
+                                        }
+                                    </select>
+
+                                </div>
+
+                                <div className='col selection-box-col' >        {/*Column for course selection*/}
+
+                                    <select className='marksheet-select' value={selectedCourse} onChange={handleCourseSelection}>
+                                        <option value='0' disabled> Select a marksheet</option>
+                                        {
+                                            availableCourseList.map((course, index) => (
+                                                <option key={index} value={course.course_id}>{course.course_id} - {course.course_name}</option>
+                                            ))
+                                        }
+                                    </select>
+
+                                </div>
+
+
+                            </div>
+
+                            <div className="row justify-content-between">
+
+                                <div className='col button-col' >
+
+                                    <button className='btn btn-primary btn-sm assign-button' onClick={assignMarksSheet}>Assign Markshet</button>
+                                    <label style={{color:messageColor}}> &nbsp;&nbsp;&nbsp;&nbsp; {message}</label>
+
+                                </div>
+
+                                
+
+
+                            </div>
+
+
+                        </div>
                     </div>
 
 
-                    <div className="row justify-content-between">      {/*Row for examiner and course selection*/}
+                    <div className='row justify-content-between'>
 
-                        <div className='col selection-box-col' >            {/*Scolumn for examiner selection*/}
+                        <div className='col-4 div1' style={{height:"210px",paddingTop:"10px"}}>
 
-                            <select className='examiner-select' value={selectedExaminer} onChange={handleExaminerSelection}>
-                                <option value='0' disabled> Select an examiner</option>
-                                {
-                                    availableExaminerList.map((examiner, index) => (
-                                        <option key={index} value={examiner.user_id}>{examiner.user_id} - {examiner.name_with_initials}</option>
-                                    ))
-                                }
-                            </select>
+                            <div className='row justify-content-between' >
+                                    <label style={{color:startResultBoardDivMessageColor}}>{startResultBoardDivMessage}</label>
+                            </div>
+
+
 
                         </div>
-
-                        <div className='col selection-box-col' >        {/*Column for course selection*/}
-
-                            <select className='marksheet-select' value={selectedCourse} onChange={handleCourseSelection}>
-                                <option value='0' disabled> Select a marksheet</option>
-                                {
-                                    availableCourseList.map((course, index) => (
-                                        <option key={index} value={course.course_id}>{course.course_id} - {course.course_name}</option>
-                                    ))
-                                }
-                            </select>
-
-                        </div>
-
-
                     </div>
-
-                    <div className="row justify-content-between">
-
-                        <div className='col button-col' >
-
-                            <button className='btn btn-primary btn-sm assign-button' onClick={assignMarksSheet}>Assign Markshet</button>
-                            <label style={{color:messageColor}}> &nbsp;&nbsp;&nbsp;&nbsp; {message}</label>
-
-                        </div>
-
-                        
-
-
-                    </div>
-
-
                 </div>
 
 
