@@ -1,5 +1,5 @@
 .marksheet-assign-body {
-    margin-top: 75px;
+    margin-top: 85px;
     min-width: 100%;
     /*height: 30%;*/
     padding-right: 50px;
@@ -16,7 +16,7 @@
 
 .div1 {
   width:45%;
-  max-height: 150px;
+  max-height: 190px;
   min-width: 450px;
   min-height: 80px;
   border-radius: 5px;
@@ -55,7 +55,7 @@
   border-radius: 5px;
   font-size: 15px;
   line-height: 50px;
-  margin-top: 20px;
+  margin-top: 5px;
   
 }
 
@@ -68,23 +68,31 @@
 
 
 
-.assigned-marks-sheet-title-div{
-  margin-top: 10px;
+.assign-mark-sheet-title-div {
   text-align: center;
   width: 100%;
-  color: blue;
+  margin-top: 10px;
+
 }
 
 .assigned-marks-sheet-list-div {
   width: 100%;
 }
 
-.assigned-marks-sheet-title-lable{
-  font-weight: 700;
-  font-size: 18px;
-}
 
+.assign-mark-sheet-title-lable {
+  font-weight: bold;
+  color: #3320db;
+  margin-bottom: 10px;
+}
 .assigned-marks-sheet-table {
   width: 100%;
 }
 
+
+.assigned-marks-sheet-table-head {
+  background-color: #ffffff;
+    position: sticky;
+    top: 0px;
+    z-index: 1;
+}

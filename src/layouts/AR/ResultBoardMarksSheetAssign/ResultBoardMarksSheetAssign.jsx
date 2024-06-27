@@ -216,8 +216,12 @@ export default function ResultBoardMarksSheetAssign() {
 
                 <div className='col-4 div1'>        {/*Left div*/}
 
+                    <div className="row justify-content-between assign-mark-sheet-title-div">   {/*Row for title*/}
+                        <label className='assign-mark-sheet-title-lable' >Assign Marks Sheets</label>
+                    </div>
 
-                    <div className="row justify-content-between">       {/* 1st row of left div*/}
+
+                    <div className="row justify-content-between">      {/*Row for examiner and course selection*/}
 
                         <div className='col selection-box-col' >            {/*Scolumn for examiner selection*/}
 
@@ -270,18 +274,10 @@ export default function ResultBoardMarksSheetAssign() {
                 <div className='col-4 div2'>
                     
 
-                    {/* <div className='row justify-content-between'>
-                        <div className='col-4 assigned-marks-sheet-title-div'>
-                            <lable className="assigned-marks-sheet-title-lable" >Assigned Marks Sheets</lable>
-                        </div>
-                    </div> */}
-
-
-
                     <div className='row justify-content-between'>
                         <div className='col-4 assigned-marks-sheet-list-div'>
                             <table className='table assigned-marks-sheet-table'>
-                                <thead >
+                                <thead className='assigned-marks-sheet-table-head'>
                                     <tr >
                                         <td colSpan='2' style={{textAlign:"center",backgroundColor:"rgb(44, 120, 235)",color:"white",borderRadius:"0px 0px 15px 15px"}}>Assigned Marks Sheets</td>
                                     </tr>
