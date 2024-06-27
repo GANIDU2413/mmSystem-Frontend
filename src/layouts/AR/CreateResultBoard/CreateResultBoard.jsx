@@ -50,6 +50,15 @@ export default function CreateResultBoard() {
         status:""
     }
 
+    const selectedResultBoard ={                //Object to store the selected result board details
+        id:"",
+        department:"",
+        level:"",
+        semester:"",
+        academic_year:"",
+        status:""
+    }
+
     
 
 
@@ -307,13 +316,13 @@ export default function CreateResultBoard() {
                                     if(element.status=="End"){                                          {/*Check whether the result board ended*/}
                                         toast.error("This result board is finished");
                                     }else{
-                                        myResultboard.id = element.id;
-                                        myResultboard.status = element.status;
-                                        myResultboard.academic_year = element.academic_year;
-                                        myResultboard.department = element.department;
-                                        myResultboard.level = element.level;
-                                        myResultboard.semester = element.semester;
-                                        history.push({pathname:`/arViewResultsBoard`,state:myResultboard}) }}      //Else direct to view result board page
+                                        selectedResultBoard.id = element.id;
+                                        selectedResultBoard.status = element.status;
+                                        selectedResultBoard.academic_year = element.academic_year;
+                                        selectedResultBoard.department = element.department;
+                                        selectedResultBoard.level = element.level;
+                                        selectedResultBoard.semester = element.semester;
+                                        history.push({pathname:`/arViewResultsBoard`,state:selectedResultBoard}) }}      //Else direct to view result board page
                                     }
                                 >
                                     <td>{element.academic_year}</td>

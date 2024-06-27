@@ -54,7 +54,8 @@ import CAEligibility from "./layouts/CourseCoordinator/CAEligibility";
 import CourseCriteriaByCC from "./layouts/CourseCoordinator/CourseCriteriaByCC";
 import ViewMarksTableValidations from "./layouts/Components/AR/DataTable/ViewMarksTableValidations";
 import CreateResultBoard from "./layouts/AR/CreateResultBoard/CreateResultBoard";
-import ViewResultBoard from "./layouts/AR/ViewResultBoard/ViewResultBoard";
+import ResultBoardMarksSheetAssign from "./layouts/AR/ResultBoardMarksSheetAssign/ResultBoardMarksSheetAssign";
+
 
 
 
@@ -161,7 +162,7 @@ export const App = () => {
           </Route>
 
           <Route path="/arViewResultsBoard">  {/* Link to view results board page */}
-            <ViewResultBoard/>
+            <ResultBoardMarksSheetAssign/>
           </Route>
 
           {/* AR navigations ends here ---------------------------------------------*/}
