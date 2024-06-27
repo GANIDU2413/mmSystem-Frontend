@@ -160,7 +160,7 @@ export const App = () => {
             <CreateResultBoard/>
           </Route>
 
-          <Route path="/arViewResultsBoard/:level/:semester/:department/:id">  {/* Link to view results board page */}
+          <Route path="/arViewResultsBoard">  {/* Link to view results board page */}
             <ViewResultBoard/>
           </Route>
 

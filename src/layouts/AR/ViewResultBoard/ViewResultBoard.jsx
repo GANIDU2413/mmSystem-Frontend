@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import './viewResultBoard.css'
 import axios from 'axios';
 import { useState } from 'react';
@@ -12,21 +12,30 @@ export default function ViewResultBoard() {
 
     
 
-    const selectedResultBoard = useParams(); //Get the selected result board details from the URL
+    const location = useLocation(); //Get the location details from the URL
+
+    const selectedResultBoard ={                //Object to store the object that is passed with the URL to this page
+        id:location.state.id,
+        department:location.state.department,
+        level:location.state.level,
+        semester:location.state.semester,
+        academic_year:location.state.academic_year,
+        status:location.state.status
+    }
     
 
     const [availableCourseList, setAvailableCourseList] = useState([]); //State to store the course list that can be added to the result board
-    const [availablCoordinators, setAvailableCoordinators] = useState([]); //State to store the available coordinators 
+    const [availableExaminerList, setAvailableExaminerList] = useState([]); //State to store the available coordinators 
 
     const [selectedCourse, setSelectedCourse] = useState('0'); //State to store the selected course
-    const [selectedCoordinator, setSelectedCoordinator] = useState('0'); //State to store the selected coordinator
+    const [selectedExaminer, setSelectedExaminer] = useState('0'); //State to store the selected coordinator
 
 
 
 
 
-    const handleCoordinatorSelection = (selectedCoordinator)=>{       //Function to handle the coordinator selection
-        selectedCoordinator(selectedCoordinator.target.value); //Set the selected coordinator
+    const handleExaminerSelection = (selectedExaminer)=>{       //Function to handle the coordinator selection
+        setSelectedExaminer(selectedExaminer.target.value); //Set the selected coordinator
     }
     
     const handleCourseSelection = (selectedCourse)=>{       //Function to handle the course selection 
@@ -50,11 +59,24 @@ export default function ViewResultBoard() {
         
     }
 
+    const getAvailableExaminers = async ()=>{     //Get the result board details from the database
+    
+        try{
+            const examinerList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllCourseCoordinatorsBySelectedAcademicYearDepartmentLevelSemester/${selectedResultBoard.academic_year}/${selectedResultBoard.department}/${selectedResultBoard.level}/${selectedResultBoard.semester}`); //Get the course coordinator list from the database
+            setAvailableExaminerList(examinerList.data); //Set the course coordinator list
+        }catch(err){
+            toast.error(err.response.data.errorMessage); //Display the error message if an error occurs
+        }
+        
+    }
+
 
 
     useEffect(() => {
         setAvailableCourseList([]); //Clear the course list that can be added to the result board
         getAvailableCourses();
+        setAvailableExaminerList([]); //Clear the course coordinator list
+        getAvailableExaminers();
 
     }, [])
 
@@ -62,7 +84,9 @@ export default function ViewResultBoard() {
 
   return (
     <div className='view-result-board-body container'>
-
+        {
+            console.log(availableExaminerList)
+        }
         <div className='row justify-content-between'>
 
 
@@ -72,19 +96,23 @@ export default function ViewResultBoard() {
                 
                 <div className="row justify-content-between">       {/* 1st row of left div*/}
                     
-                    <div className='col selection-box-col' >
+                    <div className='col selection-box-col' >            {/*Scolumn for examiner selection*/}
 
-                        <select className='coordinator-select' value ={selectedCoordinator} onChange={handleCoordinatorSelection}>
-                            <option value='0' disabled> Select a coordinator</option>
-                        
+                        <select className='examiner-select' value ={selectedExaminer} onChange={handleExaminerSelection}>
+                            <option value='0' disabled> Select an examiner</option>
+                            {
+                                availableExaminerList.map((examiner,index)=>(
+                                    <option key ={index} value={examiner.user_id}>{examiner.user_id} - {examiner.user_name}</option>
+                                ))
+                            }
                         </select>
 
                     </div>
 
-                    <div className='col selection-box-col' >
+                    <div className='col selection-box-col' >        {/*Column for course selection*/}
 
-                        <select className='course-select' value ={selectedCourse} onChange={handleCourseSelection}>
-                            <option value='0' disabled> Select a course</option>
+                        <select className='marksheet-select' value ={selectedCourse} onChange={handleCourseSelection}>
+                            <option value='0' disabled> Select a marksheet</option>
                             {
                                 availableCourseList.map((course,index)=>(
                                     <option key={index} value={course.course_id}>{course.course_id} - {course.course_name} - {index}</option>
@@ -94,6 +122,21 @@ export default function ViewResultBoard() {
 
                     </div>
 
+
+                </div>
+
+                <div className="row justify-content-between">
+                    
+                    <div className='col button-col' >
+                            
+                        <button className='btn btn-primary btn-sm assign-button'>Assign Markshet</button>
+
+                    </div>
+
+                    <div className='col button-col' >
+                            
+                    </div>
+                    
 
                 </div>
 

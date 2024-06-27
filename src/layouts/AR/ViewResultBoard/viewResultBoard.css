@@ -34,13 +34,20 @@
 
 }
 
-.selection-box-col {
-  text-align: center;
 
+
+
+
+.assign-button {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  height: auto;
+  width: auto;
 }
 
-.coordinator-select , .course-select {
-  width: 200px;
+.examiner-select , .marksheet-select {
+  width: 100%;
+  height: 30px;
   border-radius: 5px;
   font-size: 15px;
   line-height: 50px;

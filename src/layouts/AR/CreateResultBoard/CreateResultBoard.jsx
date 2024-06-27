@@ -41,6 +41,15 @@ export default function CreateResultBoard() {
         status:"Created"
     }
 
+    let myResultboard = {                  // Object to store the selected result board details
+        id:"",
+        department:"",
+        level:"",
+        semester:"",
+        academic_year:"",
+        status:""
+    }
+
     
 
 
@@ -298,7 +307,13 @@ export default function CreateResultBoard() {
                                     if(element.status=="End"){                                          {/*Check whether the result board ended*/}
                                         toast.error("This result board is finished");
                                     }else{
-                                        history.push(`/arViewResultsBoard/${element.level}/${element.semester}/${element.department}/${element.id}`) }}      //Else direct to view result board page
+                                        myResultboard.id = element.id;
+                                        myResultboard.status = element.status;
+                                        myResultboard.academic_year = element.academic_year;
+                                        myResultboard.department = element.department;
+                                        myResultboard.level = element.level;
+                                        myResultboard.semester = element.semester;
+                                        history.push({pathname:`/arViewResultsBoard`,state:myResultboard}) }}      //Else direct to view result board page
                                     }
                                 >
                                     <td>{element.academic_year}</td>
