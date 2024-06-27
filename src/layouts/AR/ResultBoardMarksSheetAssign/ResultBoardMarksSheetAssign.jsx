@@ -33,7 +33,8 @@ export default function ResultBoardMarksSheetAssign() {
         level: location.state.level,
         semester: location.state.semester,
         academic_year: location.state.academic_year,
-        status: location.state.status
+        status: location.state.status,
+        created_date_time: location.state.created_date_time
     }
 
     const assignmentObject = {                              //Object to store the details of the new assignment
