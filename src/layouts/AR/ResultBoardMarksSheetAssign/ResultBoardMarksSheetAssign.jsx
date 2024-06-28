@@ -21,9 +21,11 @@ export default function ResultBoardMarksSheetAssign() {
     const [availableCourseList, setAvailableCourseList] = useState([]); //State to store the course list that can be added to the result board
     const [availableExaminerList, setAvailableExaminerList] = useState([]); //State to store the available coordinators
     const [assignedMarksSheetList, setAssignedMarksSheetList] = useState([]); //State to store the assigned marks sheet list
+
     const [message, setMessage] = useState(''); //State to store the message to be displayed
     const [messageColor, setMessageColor] = useState(''); //State to store the color of the message
-    const [startResultBoardDivMessage, setStartResultBoardDivMessage] = useState(''); //State to store the message to be displayed in the start result board div
+
+    const [startResultBoardDivMessage, setStartResultBoardDivMessage] = useState(); //State to store the message to be displayed in the start result board div
     const [startResultBoardDivMessageColor, setStartResultBoardDivMessageColor] = useState(''); //State to store the color of the message to be displayed in the start result board div
 
     const [selectedCourse, setSelectedCourse] = useState('0'); //State to store the selected course
@@ -304,6 +306,8 @@ export default function ResultBoardMarksSheetAssign() {
         setAssignedMarksSheetList([]); //Clear the assigned marksheet list
         getAssignegMarkSheetDetails();
 
+        
+
     }, [assignButtenClicked])
 
 
@@ -386,9 +390,17 @@ export default function ResultBoardMarksSheetAssign() {
 
                         <div className='col-4 div1' style={{height:"210px",paddingTop:"20px"}}>
 
-                            <div className='row justify-content-between' >
-                                    <label style={{color:startResultBoardDivMessageColor}}>{startResultBoardDivMessage}</label>
-                            </div>
+                            {
+                                selectedResultBoard.status === "Ended"? (
+                                    <div className='row justify-content-between' >
+                                        <label style={{color:"red"}}>This result board is ended. You can not view it</label>
+                                    </div>
+                                ):(
+                                    <div className='row justify-content-between' >
+                                        <label style={{color:startResultBoardDivMessageColor}}>{startResultBoardDivMessage}</label>
+                                    </div>
+                                )
+                            }
 
 
                             <div className='row-4 justify-content-between' style={{paddingTop:"30px"}}>
@@ -454,7 +466,13 @@ export default function ResultBoardMarksSheetAssign() {
                                             <tr key={index}>
                                                 <td>{markSheet[2]}</td>
                                                 <td>{markSheet[5]}</td>
-                                                <td> <button className='btn btn-danger btn-sm' onClick={()=>{removeAssignedMarksSheet(markSheet[0])}}>Remove</button></td>
+                                                {
+                                                    selectedResultBoard.status === "Not started"? (
+                                                        <td> <button className='btn btn-danger btn-sm' onClick={()=>{removeAssignedMarksSheet(markSheet[0])}}>Remove</button></td>
+                                                    ):(
+                                                        null
+                                                    )
+                                                }
                                             </tr>
                                         ))
                                     }

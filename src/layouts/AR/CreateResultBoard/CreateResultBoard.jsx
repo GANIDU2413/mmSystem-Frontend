@@ -307,14 +307,15 @@ export default function CreateResultBoard() {
                             <th scope="col">Level</th>
                             <th scope="col">Department</th>
                             <th scope="col">State</th>
+                            <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             {createdResultBoardList.map((element) => (
                                 <tr className="clickable-row" key={element.id} onClick={()=>{ 
-                                    if(element.status=="Ended"){                                          {/*Check whether the result board ended*/}
-                                        toast.error("This result board is finished");
-                                    }else{
+                                    // if(element.status=="Ended"){                                          {/*Check whether the result board ended*/}
+                                    //     toast.error("This result board is finished");
+                                    // }else{
                                         selectedResultBoard.id = element.id;
                                         selectedResultBoard.department = element.department;
                                         selectedResultBoard.level = element.level;
@@ -324,13 +325,23 @@ export default function CreateResultBoard() {
                                         selectedResultBoard.created_date_time = element.created_date_time;
                                         selectedResultBoard.conducted_date_time = element.conducted_date_time;
                                         history.push({pathname:`/arViewResultsBoard`,state:selectedResultBoard}) }}      //Else direct to view result board page
-                                    }
+                                    // }
                                 >
                                     <td>{element.academic_year}</td>
                                     <td>{element.semester}</td>
                                     <td>{element.level}</td>
                                     <td>{element.department}</td>
                                     <td>{element.status}</td>
+                                    {
+                                        element.status=="Not started"? (
+                                            <td><button className="btn btn-danger btn-sm" disabled={false}>Delete</button></td>
+                                        )
+                                        :
+                                        (
+                                            null
+                                        )
+                                    
+                                    }
                                 </tr>
                             ))}
                         </tbody>
