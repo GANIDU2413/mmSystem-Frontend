@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 import BackButton from '../../Components/AR/BackButton/BackButton';
+import { useHistory } from 'react-router-dom';
 
 
 export default function ResultBoardMarksSheetAssign() {
@@ -14,6 +15,7 @@ export default function ResultBoardMarksSheetAssign() {
 
 
     const location = useLocation(); //Get the location details from the URL
+    const history = useHistory(); //Get the history details from the URL
 
     
 
@@ -97,6 +99,15 @@ export default function ResultBoardMarksSheetAssign() {
     }
 
 
+    const getSelectedResultBoard = async () => {     //Get the result board details from the database
+        try{
+            const resultBoard = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getResultBoardDetailsByID/${selectedResultBoard.id}`); //Get the result board details from the database
+            setSelectedResultBoard(resultBoard.data); //Set the result board details
+        }catch(err){
+            toast.error(err.response.data.errorMessage,{autoClose:3000}); //Display the error message if an error occurs
+        }
+    }
+
 
 
     const getAvailableCourses = async () => {     //Get the result board details from the database
@@ -119,13 +130,11 @@ export default function ResultBoardMarksSheetAssign() {
                 setStartResultBoardButtonColor(); //reset the color of the start result board button
             }
         } catch (err) {
-            toast.error(err.response.data.errorMessage); //Display the error message if an error occurs
+            toast.error(err.response.data.errorMessage,{autoClose:3000}); //Display the error message if an error occurs
         }
 
 
     }
-
-
 
 
 
@@ -136,7 +145,7 @@ export default function ResultBoardMarksSheetAssign() {
             const examinerList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllCourseCoordinatorsBySelectedAcademicYearDepartmentLevelSemester/${selectedResultBoard.academic_year}/${selectedResultBoard.department}/${selectedResultBoard.level}/${selectedResultBoard.semester}`); //Get the course coordinator list from the database
             setAvailableExaminerList(examinerList.data); //Set the course coordinator list
         } catch (err) {
-            toast.error(err.response.data.errorMessage); //Display the error message if an error occurs
+            toast.error(err.response.data.errorMessage,{autoClose:3000}); //Display the error message if an error occurs
         }
 
     }
@@ -149,10 +158,9 @@ export default function ResultBoardMarksSheetAssign() {
             const list = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAssignedMarksSheetsByResultBoardID/${selectedResultBoard.id}`); //Get the assigned marksheet details from the database
             setAssignedMarksSheetList(list.data); //Set the assigned marksheet details
         }catch(err){
-            toast.error(err.response.data.errorMessage); //Display the error message if an error occurs
+            toast.error(err.response.data.errorMessage,{autoClose:3000}); //Display the error message if an error occurs
         }
     }
-
 
 
 
@@ -161,7 +169,7 @@ export default function ResultBoardMarksSheetAssign() {
 
         if (selectedCourse==0 || selectedExaminer==0) { //Check if the course and the coordinator is selected
             
-            toast.error('Both examiner and marks sheet should be selected'); //Display the error message
+            toast.error('Both examiner and marks sheet should be selected',{autoClose:3000}); //Display the error message
             setMessageColor('red'); //Set the color of the message
             setMessage('Both examiner and marks sheet should be selected'); //Set the message
 
@@ -177,31 +185,27 @@ export default function ResultBoardMarksSheetAssign() {
             try{
                  const saveResult = await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoardMember', assignmentObject);
                 if(saveResult.data===true){
-                    toast.success('Marksheet assigned successfully'); //Display the success message
+                    toast.success('Marksheet assigned successfully',{autoClose:3000}); //Display the success message
                     setMessageColor('green'); //Set the color of the message
                     setMessage('Marks sheet assigned successfully'); //Set the message
                     setSelectedCourse('0'); //Clear the selected course
                     setSelectedExaminer('0'); //Clear the selected coordinator
 
                 }else if(saveResult.data===false){
-                    toast.error('Selected marks sheet is already assigned!'); //Display the error message
+                    toast.error('Selected marks sheet is already assigned!',{autoClose:3000}); //Display the error message
                     setMessageColor('red'); //Set the color of the message
                     setMessage('Selected marks sheet is already assigned!'); //Set the message
                 }else{
-                    toast.error('Error with assigning marks sheet'); //Display the error message
+                    toast.error('Error with assigning marks sheet',{autoClose:3000}); //Display the error message
                     setMessageColor('red'); //Set the color of the message
                     setMessage('Error with assigning marks sheet'); //Set the message
                 }
 
              }catch(err){
-                 toast.error(err.response.data.errorMessage); //Display the error message if an error occurs
+                 toast.error(err.response.data.errorMessage,{autoClose:3000}); //Display the error message if an error occurs
              }
 
 
-
-
-
-            
 
         }
 
@@ -216,12 +220,12 @@ export default function ResultBoardMarksSheetAssign() {
         try{
             const isDeleted = await axios.delete(`http://localhost:9090/api/AssistantRegistrar/deleteResultBoardMemberById/${id}`); //Delete the assigned marksheet from the database
             if(isDeleted.data===true){
-                toast.success('Removed successfully'); //Display the success message
+                toast.success('Removed successfully',{autoClose:3000}); //Display the success message
             }else{
-                toast.error('This mark sheet  is already removed!'); //Display the error message
+                toast.error('This mark sheet  is already removed!',{autoClose:3000}); //Display the error message
             }
         }catch(err){
-            toast.error("Error with removing mark sheet assignment"); //Display the error message if an error occurs
+            toast.error("Error with removing mark sheet assignment",{autoClose:3000}); //Display the error message if an error occurs
         }
 
         setAssignButtonClicked(true); //Set the assign button clicked status to true
@@ -245,7 +249,7 @@ export default function ResultBoardMarksSheetAssign() {
                 await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
                 //API call to just view result board
             }catch(err){
-                toast.error("There is a error with starting the result board"); //Display the error message if an error occurs
+                toast.error("There is a error with starting the result board",{autoClose:3000}); //Display the error message if an error occurs
             }
 
         }else if(selectedResultBoard.status === "Started"){ //Check if the result board is started
@@ -253,7 +257,7 @@ export default function ResultBoardMarksSheetAssign() {
                 //Api call to just view result board
 
         }else{
-            toast.error('Result board is Ended!'); //Display the error message
+            toast.error('Result board is Ended!',{autoClose:3000}); //Display the error message
         }
 
         setAssignButtonClicked(true); //Set the assign button clicked status to true
@@ -266,11 +270,11 @@ export default function ResultBoardMarksSheetAssign() {
         if(selectedResultBoard.status === "Started"){ //Check if the result board is started
             selectedResultBoard.status = "Ended"; //Set the status of the result board to ended
             await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
-            toast.success('Result board ended successfully!'); //Display the success message
+            toast.success('Result board ended successfully!',{autoClose:3000}); //Display the success message
             setStartResultBoardDivMessageColor('green')
             setStartResultBoardDivMessage('Result board ended successfully!');
         }else{
-            toast.error('Result board is not started!'); //Display the error message
+            toast.error('Result board is not started!',{autoClose:3000}); //Display the error message
 
         }
 
@@ -279,14 +283,38 @@ export default function ResultBoardMarksSheetAssign() {
 
 
 
-    const getSelectedResultBoard = async () => {     //Get the result board details from the database
+
+
+    const deleteResultBoard = async () => {     //Function to delete the result board
+
         try{
-            const resultBoard = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getResultBoardDetailsByID/${selectedResultBoard.id}`); //Get the result board details from the database
-            setSelectedResultBoard(resultBoard.data); //Set the result board details
+            
+            await axios.delete(`http://localhost:9090/api/AssistantRegistrar/deleteAssignedMarksSheetsByResultBoardID/${selectedResultBoard.id}`) //Delete the assigned marksheet details from the database
+            
+            const deletedResultBoardCount = await axios.delete(`http://localhost:9090/api/AssistantRegistrar/deleteNotStartedResultBoard/${selectedResultBoard.id}`)
+
+            if(deletedResultBoardCount.data>0){
+
+                toast.success('Result board deleted successfully!',{autoClose:2000}); //Display the success message
+                
+                setTimeout(() => {      //wait for 3 seconds
+                    history.goBack(); //Go back to the previous page
+                }, 2000);
+                
+            
+            }
+
+            setAssignButtonClicked(true); //Set the assign button clicked status to true
+
+            
         }catch(err){
-            toast.error(err.response.data.errorMessage); //Display the error message if an error occurs
+            toast.error(err.response.data.errorMessage,{autoClose:3000}); //Display the error message if an error occurs
         }
     }
+
+
+
+    
 
 
 
@@ -404,10 +432,12 @@ export default function ResultBoardMarksSheetAssign() {
 
 
                             <div className='row-4 justify-content-between' style={{paddingTop:"30px"}}>
-                                {
+                                {                                       //  Turnary operator to decide display the start result board button or join result board button 
                                     selectedResultBoard.status === "Not started"? (
-
-                                        <button className='btn btn-success btn-sm start-result-board-button' style={{backgroundColor:startResultBoardButtonColor,borderColor:startResultBoardButtonColor}} disabled={!startResultBoardButtonAvailability} onClick={viewResultBoard}>Start Result Board</button>
+                                        <>
+                                            <button className='btn btn-success btn-sm start-result-board-button' style={{backgroundColor:startResultBoardButtonColor,borderColor:startResultBoardButtonColor}} disabled={!startResultBoardButtonAvailability} onClick={viewResultBoard}>Start Result Board</button>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;<button className='btn btn-danger btn-sm end-result-board-button' onClick={deleteResultBoard}>Delete Result Board</button>
+                                        </>
 
                                     ): selectedResultBoard.status === "Started"? (
 
@@ -415,12 +445,14 @@ export default function ResultBoardMarksSheetAssign() {
 
                                     ) : (
 
-                                        null
+                                        null        //If the result board is ended, do not display any button
 
                                     )
                                 }
 
-                                {
+                                
+
+                                {                    //  Turnary operator to decide display the end result board button or hide it
                                     selectedResultBoard.status === "Started"? (
 
                                         <>
@@ -433,7 +465,7 @@ export default function ResultBoardMarksSheetAssign() {
                                     )
                                 }
                                 
-                                &nbsp;&nbsp;&nbsp;&nbsp;<BackButton/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<BackButton/>           {/*Back Button*/}
                             </div>
 
 

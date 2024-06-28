@@ -219,6 +219,7 @@ export default function CreateResultBoard() {
 
 
     useEffect(()=>{
+        setButtonClicked(false);
         setAcademicYearList([]);
         setCreatedResultBoardList([]);
         setButtonAvailability(false);
