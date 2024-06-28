@@ -81,6 +81,9 @@ export default function ResultBoardMarksSheetAssign() {
 
 
     const handleExaminerSelection = (selectedExaminer) => {       //Function to handle the coordinator selection
+
+        getSelectedExaminerAssignedMarkSheetDetails(selectedExaminer.target.value); //Get the assigned marksheet details for the selected coordinator
+        
         setSelectedExaminer(selectedExaminer.target.value); //Set the selected coordinator
         setMessage(''); //Clear the message
         setMessageColor(''); //Clear the message color
@@ -91,7 +94,6 @@ export default function ResultBoardMarksSheetAssign() {
 
 
     const handleCourseSelection = (selectedCourse) => {       //Function to handle the course selection 
-
         setSelectedCourse(selectedCourse.target.value); //Set the selected course
         setMessage(''); //Clear the message
         setMessageColor(''); //Clear the message color
@@ -153,13 +155,25 @@ export default function ResultBoardMarksSheetAssign() {
 
 
 
-    const getAssignegMarkSheetDetails = async ()=>{         //Function to get assigned marksheet details 
+    const getAssignMarkSheetDetails = async ()=>{         //Function to get assigned marksheet details 
         try{
             const list = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAssignedMarksSheetsByResultBoardID/${selectedResultBoard.id}`); //Get the assigned marksheet details from the database
             setAssignedMarksSheetList(list.data); //Set the assigned marksheet details
         }catch(err){
             toast.error(err.response.data.errorMessage,{autoClose:3000}); //Display the error message if an error occurs
         }
+    }
+
+    const getSelectedExaminerAssignedMarkSheetDetails = async (examinerID) => {     //Get the result board details from the database
+
+        try{
+            const list = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAssignedMarksSheetsByExaminerIdAndResultBoardID/${selectedResultBoard.id}/${examinerID}`); //Get the assigned marksheet details from the database
+            setAssignedMarksSheetList(list.data); //Set the assigned marksheet details
+
+        }catch(err){
+            toast.error("Failed to load assigned marks sheets for selected examiner",{autoClose:3000}); //Display the error message if an error occurs
+        }
+
     }
 
 
@@ -332,7 +346,7 @@ export default function ResultBoardMarksSheetAssign() {
         getAvailableExaminers();
 
         setAssignedMarksSheetList([]); //Clear the assigned marksheet list
-        getAssignegMarkSheetDetails();
+        getAssignMarkSheetDetails();
 
         
 
