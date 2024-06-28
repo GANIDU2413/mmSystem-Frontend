@@ -105,7 +105,7 @@
 }
 
 
-.start-result-board-button{
+.start-result-board-button , .end-result-board-button{
   width: auto;
   height: auto;
 }

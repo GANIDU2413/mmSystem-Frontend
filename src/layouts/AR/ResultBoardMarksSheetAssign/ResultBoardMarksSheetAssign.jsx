@@ -34,7 +34,23 @@ export default function ResultBoardMarksSheetAssign() {
 
 
 
-    const selectedResultBoard = {                //Object to store the object that is passed with the URL to this page
+    // const selectedResultBoard = {                //Object to store the object that is passed with the URL to this page
+    //     id: location.state.id,
+    //     department: location.state.department,
+    //     level: location.state.level,
+    //     semester: location.state.semester,
+    //     academic_year: location.state.academic_year,
+    //     status: location.state.status,
+    //     created_date_time: location.state.created_date_time,
+    //     conducted_date_time: location.state.conducted_date_time
+    // }    
+
+    /* 
+        Above object is replaces with following useState. If you need to revete this, Just un comment 
+        above "selectedResultBoard" object and comment below useState
+    */
+
+    const [selectedResultBoard, setSelectedResultBoard] = useState({
         id: location.state.id,
         department: location.state.department,
         level: location.state.level,
@@ -43,7 +59,7 @@ export default function ResultBoardMarksSheetAssign() {
         status: location.state.status,
         created_date_time: location.state.created_date_time,
         conducted_date_time: location.state.conducted_date_time
-    }
+    }); //State to store the object that is passed with the URL to this page
 
 
 
@@ -54,7 +70,6 @@ export default function ResultBoardMarksSheetAssign() {
         assigned_date_time:''
 
     }
-
 
 
 
@@ -78,11 +93,6 @@ export default function ResultBoardMarksSheetAssign() {
         setMessageColor(''); //Clear the message color
 
     }
-
-
-    
-
-
 
 
 
@@ -118,6 +128,7 @@ export default function ResultBoardMarksSheetAssign() {
 
 
     const getAvailableExaminers = async () => {     //Get the result board details from the database
+
 
         try {
             const examinerList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllCourseCoordinatorsBySelectedAcademicYearDepartmentLevelSemester/${selectedResultBoard.academic_year}/${selectedResultBoard.department}/${selectedResultBoard.level}/${selectedResultBoard.semester}`); //Get the course coordinator list from the database
@@ -197,10 +208,79 @@ export default function ResultBoardMarksSheetAssign() {
 
     }
 
-    const viewResultBoard = async () => {     //Function to view the result board
+
+
+    const removeAssignedMarksSheet = async (id) => {     //Function to remove the assigned marksheet
         try{
-            const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getResultBoardDetailsByID/${selectedResultBoard.id}`); //Start the result board
-            
+            const isDeleted = await axios.delete(`http://localhost:9090/api/AssistantRegistrar/deleteResultBoardMemberById/${id}`); //Delete the assigned marksheet from the database
+            if(isDeleted.data===true){
+                toast.success('Removed successfully'); //Display the success message
+            }else{
+                toast.error('This mark sheet  is already removed!'); //Display the error message
+            }
+        }catch(err){
+            toast.error("Error with removing mark sheet assignment"); //Display the error message if an error occurs
+        }
+
+        setAssignButtonClicked(true); //Set the assign button clicked status to true
+    }
+
+
+
+
+
+    const viewResultBoard = async () => {     //Function to view the result board
+        
+        if(selectedResultBoard.status === "Not started"){ //Check if the result board is not started
+
+            const currentDateAndTime = new Date();  //Get the current date and time
+            const formattedDateTime = String(currentDateAndTime.getFullYear() + '-' + currentDateAndTime.getMonth() + '-' + currentDateAndTime.getDate() +' ' +  currentDateAndTime.getHours()+ ':'+ currentDateAndTime.getMinutes() +':' + currentDateAndTime.getSeconds()); //Format the date and time
+        
+            selectedResultBoard.status = "Started"; //Set the status of the result board to started
+            selectedResultBoard.conducted_date_time = formattedDateTime; //Set the conducted date and time
+
+            try{
+                await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
+                //API call to just view result board
+            }catch(err){
+                toast.error("There is a error with starting the result board"); //Display the error message if an error occurs
+            }
+
+        }else if(selectedResultBoard.status === "Started"){ //Check if the result board is started
+
+                //Api call to just view result board
+
+        }else{
+            toast.error('Result board is Ended!'); //Display the error message
+        }
+
+        setAssignButtonClicked(true); //Set the assign button clicked status to true
+    }
+
+
+
+
+    const endReultBoard = async () => {     //Function to end the result board
+        if(selectedResultBoard.status === "Started"){ //Check if the result board is started
+            selectedResultBoard.status = "Ended"; //Set the status of the result board to ended
+            await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
+            toast.success('Result board ended successfully!'); //Display the success message
+            setStartResultBoardDivMessageColor('green')
+            setStartResultBoardDivMessage('Result board ended successfully!');
+        }else{
+            toast.error('Result board is not started!'); //Display the error message
+
+        }
+
+        setAssignButtonClicked(true); //Set the assign button clicked status to true
+    }
+
+
+
+    const getSelectedResultBoard = async () => {     //Get the result board details from the database
+        try{
+            const resultBoard = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getResultBoardDetailsByID/${selectedResultBoard.id}`); //Get the result board details from the database
+            setSelectedResultBoard(resultBoard.data); //Set the result board details
         }catch(err){
             toast.error(err.response.data.errorMessage); //Display the error message if an error occurs
         }
@@ -209,10 +289,11 @@ export default function ResultBoardMarksSheetAssign() {
 
 
 
-
-
     useEffect(() => {
+
         setAssignButtonClicked(false); //Set the assign button clicked status to false
+
+        getSelectedResultBoard(); //Get the selected result board details
 
         setAvailableCourseList([]); //Clear the course list that can be added to the result board
         getAvailableCourses();
@@ -314,11 +395,11 @@ export default function ResultBoardMarksSheetAssign() {
                                 {
                                     selectedResultBoard.status === "Not started"? (
 
-                                        <button className='btn btn-primary btn-sm start-result-board-button' style={{backgroundColor:startResultBoardButtonColor,borderColor:startResultBoardButtonColor}} disabled={!startResultBoardButtonAvailability} onClick={viewResultBoard}>Start Result Board</button>
+                                        <button className='btn btn-success btn-sm start-result-board-button' style={{backgroundColor:startResultBoardButtonColor,borderColor:startResultBoardButtonColor}} disabled={!startResultBoardButtonAvailability} onClick={viewResultBoard}>Start Result Board</button>
 
                                     ): selectedResultBoard.status === "Started"? (
 
-                                        <button className='btn btn-primary btn-sm start-result-board-button' style={{backgroundColor:startResultBoardButtonColor,borderColor:startResultBoardButtonColor}} disabled={!startResultBoardButtonAvailability} onClick={viewResultBoard}>Join To Result Board</button>
+                                        <button className='btn btn-success btn-sm start-result-board-button' style={{backgroundColor:startResultBoardButtonColor,borderColor:startResultBoardButtonColor}} disabled={!startResultBoardButtonAvailability} onClick={viewResultBoard}>Join Result Board</button>
 
                                     ) : (
 
@@ -326,6 +407,20 @@ export default function ResultBoardMarksSheetAssign() {
 
                                     )
                                 }
+
+                                {
+                                    selectedResultBoard.status === "Started"? (
+
+                                        <>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;<button className='btn btn-danger btn-sm end-result-board-button' onClick={endReultBoard}>End Result Board</button>
+                                        </>
+                                    ) : (
+
+                                        null
+
+                                    )
+                                }
+                                
                                 &nbsp;&nbsp;&nbsp;&nbsp;<BackButton/>
                             </div>
 
@@ -345,20 +440,21 @@ export default function ResultBoardMarksSheetAssign() {
                             <table className='table assigned-marks-sheet-table'>
                                 <thead className='assigned-marks-sheet-table-head'>
                                     <tr >
-                                        <td colSpan='2' style={{textAlign:"center",backgroundColor:"rgb(44, 120, 235)",color:"white",borderRadius:"0px 0px 15px 15px"}}>Assigned Marks Sheets</td>
+                                        <td colSpan='3' style={{textAlign:"center",backgroundColor:"rgb(44, 120, 235)",color:"white",borderRadius:"0px 0px 15px 15px"}}>Assigned Marks Sheets</td>
                                     </tr>
                                     <tr>
                                         <th>Examiner</th>
                                         <th>Mark sheet </th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
                                         assignedMarksSheetList.map((markSheet, index) => (
                                             <tr key={index}>
-                                                <td>{markSheet[1]}</td>
-                                                <td>{markSheet[4]}</td>
-                                                
+                                                <td>{markSheet[2]}</td>
+                                                <td>{markSheet[5]}</td>
+                                                <td> <button className='btn btn-danger btn-sm' onClick={()=>{removeAssignedMarksSheet(markSheet[0])}}>Remove</button></td>
                                             </tr>
                                         ))
                                     }
