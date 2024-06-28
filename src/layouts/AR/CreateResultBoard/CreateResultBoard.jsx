@@ -211,6 +211,8 @@ export default function CreateResultBoard() {
 
     }
 
+    
+
 
 
 
@@ -294,7 +296,7 @@ export default function CreateResultBoard() {
                 <hr style={{height:"3px", background:"blue"}}></hr>
 
                 <div style={{marginLeft:"auto",marginRight:"auto",alignContent:'center'}}>
-                    <table className="table table-striped">
+                    <table className="table table-striped existing-result-board-table">
                         <thead className='tableHead'>
                             <tr>
                                 <th colSpan={100} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>
@@ -332,16 +334,8 @@ export default function CreateResultBoard() {
                                     <td>{element.level}</td>
                                     <td>{element.department}</td>
                                     <td>{element.status}</td>
-                                    {
-                                        element.status=="Not started"? (
-                                            <td><button className="btn btn-danger btn-sm" disabled={false}>Delete</button></td>
-                                        )
-                                        :
-                                        (
-                                            null
-                                        )
+                                    <td><button className="btn btn-primary btn-sm" disabled={false} >View Results Board</button></td>
                                     
-                                    }
                                 </tr>
                             ))}
                         </tbody>
