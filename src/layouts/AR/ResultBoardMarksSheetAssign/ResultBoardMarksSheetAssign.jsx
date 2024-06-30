@@ -241,7 +241,8 @@ export default function ResultBoardMarksSheetAssign() {
         }catch(err){
             toast.error("Error with removing mark sheet assignment",{autoClose:3000}); //Display the error message if an error occurs
         }
-
+        setSelectedExaminer('0'); //Clear the selected coordinator
+        setSelectedCourse('0'); //Clear the selected course
         setAssignButtonClicked(true); //Set the assign button clicked status to true
     }
 
@@ -251,7 +252,7 @@ export default function ResultBoardMarksSheetAssign() {
 
     const viewResultBoard = async () => {     //Function to view the result board
         
-        if(selectedResultBoard.status === "Not started"){ //Check if the result board is not started
+        if(selectedResultBoard.status.toLowerCase() === "Not started".toLowerCase()){ //Check if the result board is not started
 
             const currentDateAndTime = new Date();  //Get the current date and time
             const formattedDateTime = String(currentDateAndTime.getFullYear() + '-' + currentDateAndTime.getMonth() + '-' + currentDateAndTime.getDate() +' ' +  currentDateAndTime.getHours()+ ':'+ currentDateAndTime.getMinutes() +':' + currentDateAndTime.getSeconds()); //Format the date and time
@@ -266,7 +267,7 @@ export default function ResultBoardMarksSheetAssign() {
                 toast.error("There is a error with starting the result board",{autoClose:3000}); //Display the error message if an error occurs
             }
 
-        }else if(selectedResultBoard.status === "Started"){ //Check if the result board is started
+        }else if(selectedResultBoard.status.toLowerCase() === "Started".toLowerCase()){ //Check if the result board is started
 
                 //Api call to just view result board
 
@@ -281,7 +282,7 @@ export default function ResultBoardMarksSheetAssign() {
 
 
     const endReultBoard = async () => {     //Function to end the result board
-        if(selectedResultBoard.status === "Started"){ //Check if the result board is started
+        if(selectedResultBoard.status.toLowerCase() === "Started".toLowerCase()){ //Check if the result board is started
             selectedResultBoard.status = "Ended"; //Set the status of the result board to ended
             await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
             toast.success('Result board ended successfully!',{autoClose:3000}); //Display the success message
@@ -318,7 +319,7 @@ export default function ResultBoardMarksSheetAssign() {
             
             }
 
-            setAssignButtonClicked(true); //Set the assign button clicked status to true
+            //setAssignButtonClicked(true); //Set the assign button clicked status to true
 
             
         }catch(err){
@@ -433,7 +434,7 @@ export default function ResultBoardMarksSheetAssign() {
                         <div className='col-4 div1' style={{height:"210px",paddingTop:"20px"}}>
 
                             {
-                                selectedResultBoard.status === "Ended"? (
+                                selectedResultBoard.status.toLowerCase() === "Ended".toLowerCase()? (
                                     <div className='row justify-content-between' >
                                         <label style={{color:"red"}}>This result board is ended. You can not view it</label>
                                     </div>
@@ -447,13 +448,13 @@ export default function ResultBoardMarksSheetAssign() {
 
                             <div className='row-4 justify-content-between' style={{paddingTop:"30px"}}>
                                 {                                       //  Turnary operator to decide display the start result board button or join result board button 
-                                    selectedResultBoard.status === "Not started"? (
+                                    selectedResultBoard.status.toLowerCase() === "Not started".toLowerCase()? (
                                         <>
                                             <button className='btn btn-success btn-sm start-result-board-button' style={{backgroundColor:startResultBoardButtonColor,borderColor:startResultBoardButtonColor}} disabled={!startResultBoardButtonAvailability} onClick={viewResultBoard}>Start Result Board</button>
                                             &nbsp;&nbsp;&nbsp;&nbsp;<button className='btn btn-danger btn-sm end-result-board-button' onClick={deleteResultBoard}>Delete Result Board</button>
                                         </>
 
-                                    ): selectedResultBoard.status === "Started"? (
+                                    ): selectedResultBoard.status.toLowerCase() === "Started".toLowerCase()? (
 
                                         <button className='btn btn-success btn-sm start-result-board-button' style={{backgroundColor:startResultBoardButtonColor,borderColor:startResultBoardButtonColor}} disabled={!startResultBoardButtonAvailability} onClick={viewResultBoard}>Join Result Board</button>
 
@@ -467,7 +468,7 @@ export default function ResultBoardMarksSheetAssign() {
                                 
 
                                 {                    //  Turnary operator to decide display the end result board button or hide it
-                                    selectedResultBoard.status === "Started"? (
+                                    selectedResultBoard.status.toLowerCase() === "Started".toLowerCase()? (
 
                                         <>
                                             &nbsp;&nbsp;&nbsp;&nbsp;<button className='btn btn-danger btn-sm end-result-board-button' onClick={endReultBoard}>End Result Board</button>
