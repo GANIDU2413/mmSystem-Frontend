@@ -367,7 +367,7 @@ const imageHandlClear = () => {
                 <div>Loading...</div> // Display a loading message or spinner here
             ) : (
                 <>
-                <div id="marks-return-sheet" style={{ marginTop: "70px",width:"95%",marginLeft:"40px",marginRight:"40px",}}>
+                <div id="marks-return-sheet" style={{ marginTop: "70px",width:"95%",marginLeft:"40px"}}>
                         <div >
                         <div>
                             <div >
@@ -378,45 +378,47 @@ const imageHandlClear = () => {
                                         value="Return Mark Sheet"
                                         className="btn shadow btn-outline-success btn-sm float-end my-4"
                                         id="submitbtn"
-                                        style={{ float: 'right', width: '130px' }}
+                                        style={{ float: 'right', width: '140px' }}
                                     />
                                 </form>
                             </div>
                             <div>
                                 <div>
+                                <div className='h2 mt-lg-5'>Mark Return Sheet</div>
                                     <table>
+                                        {/* <tr>
+                                            <td class=""><h2>Mark Return Sheet:</h2></td>
+                                            
+                                        </tr> */}
                                         <tr>
-                                            <td class="text-decoration-underline font-italic"><h2><i>Mark Return Sheet:</i></h2></td>
-                                        </tr>
-                                        <tr>
-                                            <td><p><b>Marks Obtained by the Candidate for:</b></p></td>
+                                            <td><h5><b>Marks Obtained by the Candidate for:</b></h5></td>
                                         </tr>
                                     </table>
                                         <div style={{display:"flex"}}>
-                                            <p><b>Academic Year: {academicYear}</b></p>
-                                            <p className=' mx-5'><b>Degree: Bachelor of Information and Communication Technology Honours Degree </b> </p>
-                                            <p className=' mx-2'><b>{academicDetails.current_semester === "1" ? "1st" : "2nd"} Semester Examination: December 2023 </b> </p>  
+                                            <h5>Academic Year: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;{academicYear}&nbsp;&nbsp;</span></h5>
+                                            <h5 className=' mx-5'>Degree: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;Bachelor of Information and Communication Technology Honours Degree&nbsp;&nbsp;</span></h5>
+                                            <h5 className=' mx-2'>{academicDetails.current_semester === "1" ? "1st" : "2nd"} Semester Examination:  <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;December 2023&nbsp;&nbsp;</span> </h5>  
                                         </div>
-                                       
+                                        
                                     
-                    <h4>Course code and Title : {course_name} - {course_id}</h4>
+                    <h4>Course code and Title : <span className='rounded-pill bg-primary text-white'> &nbsp;&nbsp;{course_name} - {course_id}&nbsp;&nbsp; </span> </h4>
                     </div>
 
 
                     <div className=''>
                         {/*  style={{overflow:"auto",width:"100%",height:"500px"}} */}
-                    <table className="table shadow table-bordered" style={{ marginTop: "30px", width: '80%' }}>
+                    <table className="table shadow table-bordered table-hover" style={{ marginTop: "30px", width: '80%' }}>
 
                     <thead>
                         
                             <tr>
                             
-                                <th rowSpan='2'>Student_ID</th>
-                                <th colSpan={forCA}>Continuous Assessment</th>
-                                <th colSpan={forFA}>Semester End Exam</th>
-                                <th colSpan='4'>Final Marks</th>
-                                <th rowSpan='2'>CA Eligibility</th>
-                                <th rowSpan='2'>View</th>
+                                <th rowSpan='2' className=' table-info'>Student_ID</th>
+                                <th colSpan={forCA} className=' table-warning ' style={{textAlign:"center"}}>Continuous Assessment</th>
+                                <th colSpan={forFA} className=' table-primary ' style={{textAlign:"center"}}>Semester End Exam</th>
+                                <th colSpan='4' className=' table-success ' style={{textAlign:"center"}}>Final Marks</th>
+                                <th rowSpan='2' className=' table-danger'>CA Eligibility</th>
+                                <th rowSpan='2' className='table-secondary' style={{textAlign:"center"}}>View</th>
                             </tr>
                             <tr>
                             {marksSheet.map((ele, index) =>
@@ -435,7 +437,7 @@ const imageHandlClear = () => {
                                             ca_percentage=ca_percentage+percentage;
                                         }
                                    
-                                    return <th key={`ca-${idx}`}>{caScore.key}</th>;
+                                    return <th key={`ca-${idx}`} className='table-warning'>{caScore.key}</th>;
                                     }
 
                                     return null;
@@ -445,7 +447,7 @@ const imageHandlClear = () => {
                                 }
 
                                 
-                                <th> {ca_percentage+"% From Final Continuous Assignment Marks"}</th>
+                                <th className='table-warning'> {ca_percentage+"% From Final Continuous Assignment Marks"}</th>
                                 
 
 
@@ -461,15 +463,15 @@ const imageHandlClear = () => {
                                  
                                         seenKeysFA.add(endScore.key);
 
-                                        return <th key={`end-${idx}`}>{endScore.key} </th>
+                                        return <th key={`end-${idx}`} className=' table-primary'>{endScore.key} </th>
                                         }
                                     })
                                 ))}
                              
-                                <th>Total Final Marks</th>
-                                <th>Total Rounded Marks</th>
-                                <th>Results/Grades</th>
-                                <th>GPV</th>
+                                <th className=' table-success'>Total Final Marks</th>
+                                <th className=' table-success'>Total Rounded Marks</th>
+                                <th className=' table-success'>Results/Grades</th>
+                                <th className=' table-success'>GPV</th>
                                 
                            
                                
@@ -509,7 +511,7 @@ const imageHandlClear = () => {
                             <td>{ele.gpv}</td>
                             <td>{ele.ca_eligibility}</td>
                             {
-                               
+
                             }
 
                             <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
@@ -518,57 +520,57 @@ const imageHandlClear = () => {
                             }}>View</Link></td>
                             {console.log(ele.student_id,ele.total_ca_mark,ele.total_final_mark,ele.total_rounded_mark,ele.grade,ele.gpv,ele.ca_eligibility)}
                         </tr>))}
-                      </tbody>
+                        </tbody>
 
-                 </table>
-                     </div>
-          
-          
-              <div style={{float:"left",marginTop:"50px"}}>
-                  
-                  <div>
-                      {console.log(nextApprovedlevel)}
-                      <table>
-                          <tr>
-                              <td >Coordinator/ Examinar :</td>
-                              <td></td>
-                              <td>Sign:</td>
-                              <td>
-                                  {nextApprovedlevel == "course_coordinator" &&
-                                  isCClevel.signature != null ? <img src={isCClevel.signature} style={{ width: '80px', height: '40px' }} /> : null
-                                  }
+                    </table>
+                </div>
+                <div className=' m-5'></div>
+            <div className=' shadow-lg' style={{width:'100%' ,height:'320px', padding:'10px'}}>
+                <div style={{float:"left",marginTop:"50px",marginLeft:'20px'}}>
+                            
+                    <div>
+                        {console.log(nextApprovedlevel)}
+                        <table>
+                            <tr>
+                                <td >Coordinator/ Examinar :</td>
+                                <td></td>
+                                <td>Sign:</td>
+                                <td>
+                                    {nextApprovedlevel == "course_coordinator" &&
+                                    isCClevel.signature != null ? <img src={isCClevel.signature} style={{ width: '80px', height: '40px' }} /> : null
+                                    }
 
-                              </td>
-                              <td>Date:</td>
-                              <td>{isCClevel.date_time != null ? isCClevel.date_time:null}</td>
-                          </tr>
-                          <tr>
-                              <td>Checked by :</td>
-                              <td></td>
-                              <td>Sign:</td>
-                              <td>
-                                  {nextApprovedlevel == "lecturer" &&
-                                   isLeclevel.signature != null ? <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> : null
-                                  }
-                                  
-                              </td>
-                              <td>Date:</td>
-                              <td>{isLeclevel.date_time != null ? isLeclevel.date_time:null}</td>
-                          </tr>
-                          <tr>
-                              <td>Head of the Department : </td>
-                              <td></td>
-                              <td>Sign:</td>
-                              <td>
-                                  {nextApprovedlevel == "HOD" &&
-                                  isHODlevel.signature != null ? <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> : null
-                              }
-                              </td>
-                              <td>Date:</td>
-                              <td>{isHODlevel.date_time != null ? isHODlevel.date_time:null}</td>
-                              {/* <button className=' btn btn-danger btn-sm' onClick={imageHandlClear}>Cancel</button> */}
-                          </tr>
-                      </table>
+                                </td>
+                                <td>Date:</td>
+                                <td>{isCClevel.date_time != null ? isCClevel.date_time:null}</td>
+                            </tr>
+                            <tr>
+                                <td>Checked by :</td>
+                                <td></td>
+                                <td>Sign:</td>
+                                <td>
+                                    {nextApprovedlevel == "lecturer" &&
+                                    isLeclevel.signature != null ? <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> : null
+                                    }
+                                    
+                                </td>
+                                <td>Date:</td>
+                                <td>{isLeclevel.date_time != null ? isLeclevel.date_time:null}</td>
+                            </tr>
+                            <tr>
+                                <td>Head of the Department : </td>
+                                <td></td>
+                                <td>Sign:</td>
+                                <td>
+                                    {nextApprovedlevel == "HOD" &&
+                                    isHODlevel.signature != null ? <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> : null
+                                }
+                                </td>
+                                <td>Date:</td>
+                                <td>{isHODlevel.date_time != null ? isHODlevel.date_time:null}</td>
+                                {/* <button className=' btn btn-danger btn-sm' onClick={imageHandlClear}>Cancel</button> */}
+                            </tr>
+                        </table>
                     </div>
                     
                     {
@@ -627,6 +629,8 @@ const imageHandlClear = () => {
                     approval_level === "lecturer" ? (
                         <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
                     ) : null}
+            </div>
+            
             </div>
             </div>         
             </div>

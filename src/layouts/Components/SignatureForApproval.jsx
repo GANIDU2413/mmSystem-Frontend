@@ -82,7 +82,7 @@ export default function SignatureForApproval({ saveDigitalSignature }) {
             <div className='container' style={{ display: 'flex', marginLeft: "200px", marginBottom: "80px"}}>
                 <div style={{ float: "right" }}>
                     {radioSelection === 'digitalSignature' && (
-                        <div style={{ border: "2px solid black", width: 500, height: 200 }}>
+                        <div className=' shadow' style={{border:'1px solid gray', width: 500, height: 200 }}>
                             <SignatureCanvas
                                 canvasProps={{ width: 500, height: 200, className: 'sigCanvas' }}
                                 ref={sign} // Correctly attaching the ref
@@ -106,8 +106,8 @@ export default function SignatureForApproval({ saveDigitalSignature }) {
                             ))}
                             {showSaveClearButtons && (
                                 <div>
-                                    <button className='btn btn-outline-success btn-sm' onClick={handleSave} style={{ marginRight: '10px' }}>Save</button>
-                                    <button className='btn btn-danger btn-sm mx-3' onClick={imageHandlClear}>Clear</button>
+                                    <button className='btn btn-outline-success btn-sm shadow-lg' onClick={handleSave} style={{ marginRight: '10px' }}>Save</button>
+                                    <button className='btn btn-danger btn-sm mx-3 shadow-lg' onClick={imageHandlClear}>Clear</button>
                                 </div>
                             )}
                             {selectedImage && (

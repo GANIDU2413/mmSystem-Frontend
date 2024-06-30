@@ -134,11 +134,11 @@ console.log(ele)
         <div class="container bg-transparent">
           <div class="row">
             <div class="col text-center">
-              <table className="table shadow" style={{ marginTop: "50px" }}>
+              <table className="table shadow  table-hover" style={{ marginTop: "50px" }}>
                 <tbody>
                   <tr>
-                    <th scope="col" >Assessment Type</th>
-                    <th scope="col">Assessment Score</th>
+                    <th className='table-success' scope="col" >Assessment Type</th>
+                    <th className='table-warning' scope="col">Assessment Score</th>
                   </tr>
 
 
@@ -148,7 +148,7 @@ console.log(ele)
                       {
                         console.log(e)
                       }
-                      <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
+                      <td className='table-primary' scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
                       <td scope="col" style={{ textAlign: 'left',fontWeight:  e.description=="score"? 'normal' : 'bold'  }}>{e.value}</td>
                       {
                         console.log(e.description)
@@ -163,7 +163,7 @@ console.log(ele)
 
                     ele.end.map((e)=>
                       (<tr>
-                        <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
+                        <td className='table-primary' scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
                         <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.value}</td>
                       </tr>
                         
@@ -173,11 +173,13 @@ console.log(ele)
                 </tbody>
               </table>
             </div>
+
+            
             <div class="col" style={{ marginTop: "50px" }}>
               <div className='shadow px-4 py-4'>
                 <table className=' pt-4'>
                   <tr>
-                    <th>Eligibility</th>
+                    <th><h4>Eligibility</h4></th>
                   </tr>
                   <tr><th><br /></th></tr>
                   <tr>
@@ -186,10 +188,10 @@ console.log(ele)
                   <tr>
                     <td>Total CA Marks</td>
                     <td>
-                    <input className=' mx-4' size="5"  type='text' value={ele.total_ca_mark} disabled />
+                    <input className=' mx-4' size="10"  type='text' value={ele.total_ca_mark} disabled />
                     </td>
                     <td>CA Eligibility</td>
-                    <td><input type='text' className=' mx-4' size="5" value={ele.ca_eligibility} disabled /></td>
+                    <td><input type='text' className=' mx-4' size="10" value={ele.ca_eligibility} disabled /></td>
                   </tr>
                   <tr><th><br /></th></tr>
                   <tr>
@@ -197,9 +199,9 @@ console.log(ele)
                   </tr>
                   <tr>
                     <td>Attendance</td>
-                    <td><input type='text' className=' mx-4' size="5" value={attendanceEligibility.percentage} disabled /></td>
+                    <td><input type='text' className=' mx-4' size="10" value={attendanceEligibility.percentage} disabled /></td>
                     <td>Eligibility</td>
-                    <td><input type='text' className=' mx-4' size="5" value={attendanceEligibility.eligibility} disabled /></td>
+                    <td><input type='text' className=' mx-4' size="10" value={attendanceEligibility.eligibility} disabled /></td>
                   </tr>
                   <tr><th><br /></th></tr>
                   <tr>
@@ -208,7 +210,7 @@ console.log(ele)
                   <tr>
                     <td>Eligibility</td>
                     <td>
-                      {(ele.ca_eligibility == "Eligible" && attendanceEligibility.eligibility == "Eligible") ? <input type='text' className=' mx-4' size="5" value="Eligible" disabled /> : <input type='text' className=' mx-4' size="5" value="Not Eligible" disabled />}        
+                      {(ele.ca_eligibility == "Eligible" && attendanceEligibility.eligibility == "Eligible") ? <input type='text' className=' mx-4 bg-success' size="10" value="Eligible" disabled /> : <input type='text' className=' mx-4 bg-danger text-white ' size="10" value="Not Eligible" disabled />}        
                      
                     </td>
                   </tr>
@@ -216,23 +218,23 @@ console.log(ele)
               </div>
               <div>
                 <div className="py-4 px-5" class="col shadow mt-4 p-4">
-                  <label>Final Marks </label>
-                  <input type='text' className=' mx-3' value={ele.total_rounded_marks} disabled />
-                  <label>Grade </label>
-                  <input type='text' className=' mx-3' value={ele.grade} disabled />
+                  <label> <b>Final Marks</b> </label>
+                  <input type='text' size="10" className=' mx-3' value={ele.total_rounded_marks} disabled />
+                  <label> <b>Grade</b> </label>
+                  <input type='text' size="10" className=' mx-3' value={ele.grade} disabled />
                 </div>
               </div>
               <div class="col mt-4 shadow p-4">
                 <form onSubmit={handleSubmit}>
                   <div>
-                    <label for="exampleFormControlTextarea1" class="form-label">Notification</label>
+                    <label for="exampleFormControlTextarea1" class="form-label"> <b>Notification</b> </label>
                     <textarea
                       value={text}
                       className='form-control w-100 '
                       onChange={(e) => setText(e.target.value)}
                       placeholder="Type your message here..."
                     />
-                    <input type="submit" className={`btn btn-outline-success btn-sm mt-3 ${text ? '' : 'disabled'}`} value="Send" />
+                    <input type="submit" style={{width:'100px'}} className={`btn btn-outline-success btn-sm mt-3 ${text ? '' : 'disabled'}`} value="Send" />
                   </div>
                 </form>
               </div>
