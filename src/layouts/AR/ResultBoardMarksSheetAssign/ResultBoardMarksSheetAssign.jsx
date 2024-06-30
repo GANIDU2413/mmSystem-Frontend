@@ -314,7 +314,7 @@ export default function ResultBoardMarksSheetAssign() {
                 
                 setTimeout(() => {      //wait for 3 seconds
                     history.goBack(); //Go back to the previous page
-                }, 2000);
+                }, 1000);
                 
             
             }
