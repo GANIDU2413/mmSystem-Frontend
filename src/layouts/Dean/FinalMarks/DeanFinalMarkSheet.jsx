@@ -21,6 +21,7 @@ export default function DeanFinalMarkSheet(props) {
   const userNameAuth = authState?.idToken?.claims.preferred_username;
   const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
   const [academicYear, setAcademicYear] = useState("");
+  const[Allcourses,setAllCourses]=useState([]);
 
   const [ARSign, setARSign] = useState({
     "level": "",
@@ -199,6 +200,13 @@ export default function DeanFinalMarkSheet(props) {
     fetchSignature();
   }, [level, semester, dept, approved_level, academicYear]);
 
+
+
+  useEffect(async () => {
+    const courses=await axios.get(`http://localhost:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
+    setAllCourses(courses.data);
+  }, [level, semester, dept]);
+
   console.log(ARSign.signature);
   console.log(DeanSign.signature);
   console.log(VCSign.signature);
@@ -221,6 +229,8 @@ export default function DeanFinalMarkSheet(props) {
         window.removeEventListener('beforeunload', handleBeforeUnload);
       };
     }, [newSignature]);
+
+
 
 
   return (
@@ -300,17 +310,27 @@ export default function DeanFinalMarkSheet(props) {
 
           <div>
             <table>
+            {Allcourses.map((id, index) => (
+                    <React.Fragment key={index}>
+                      <tr>
+                        <td>{id.course_id}</td>
+                        <td>{id.course_name}</td>
+                      </tr>
+                    </React.Fragment>
+                  ))}
 
             </table>
           </div>
+
+
           <div className="py-4" style={{ marginTop: "70px" }}>
             <table className="overflow-x-scroll table border shadow" style={{ marginTop: "60px" }}>
               <thead>
                 <tr>
                   <th scope="col">Student ID</th>
-                  {courses.map((id, index) => (
+                  {Allcourses.map((id, index) => (
                     <React.Fragment key={index}>
-                      <th>{id}</th>
+                      <th>{id.course_id}</th>
                       <th>Grade</th>
                     </React.Fragment>
                   ))}
@@ -322,8 +342,8 @@ export default function DeanFinalMarkSheet(props) {
                 {finalResults.map((student, index) => (
                   <tr key={index}>
                     <td>{student.student_id}</td>
-                    {courses.map((id, index) => {
-                      const courseData = student.courses.find((c) => c.course_id === id);
+                    {Allcourses.map((id, index) => {
+                      const courseData = student.courses.find((c) => c.course_id == id.course_id);
                       return (
                         <React.Fragment key={index}>
                           <td>{courseData ? courseData.overall_score : "-"}</td>
