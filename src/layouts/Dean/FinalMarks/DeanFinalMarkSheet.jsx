@@ -181,10 +181,10 @@ export default function DeanFinalMarkSheet(props) {
   const fetchSignature = async () => {
     try {
       const ARSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academicYear}`);
-      const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academicYear}`);
-      const VCSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academicYear}`);
       setARSign(ARSign.data.content);
+      const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academicYear}`);
       setDeanSign(DeanSign.data.content);
+      const VCSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academicYear}`);
       setVCSign(VCSign.data.content);
 
       console.log(ARSign.data.content);
@@ -202,52 +202,72 @@ export default function DeanFinalMarkSheet(props) {
 
 
 
-  useEffect(async () => {
-    const courses=await axios.get(`http://localhost:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
-    setAllCourses(courses.data);
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const courses = await axios.get(`http://localhost:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
+        setAllCourses(courses.data);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    };
+  
+    fetchCourses();
   }, [level, semester, dept]);
-
-  console.log(ARSign.signature);
-  console.log(DeanSign.signature);
-  console.log(VCSign.signature);
-  console.log(academicYear);
-
-
-    // Adding the beforeunload event listener
-    useEffect(() => {
-      const handleBeforeUnload = (e) => {
-        if (newSignature) {
-          e.preventDefault();
-          e.returnValue = ''; // Chrome requires returnValue to be set
-        }
-      };
   
-      window.addEventListener('beforeunload', handleBeforeUnload);
+
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (newSignature) {
+        e.preventDefault();
+        e.returnValue = ''; // Chrome requires returnValue to be set
+      }
+    };
   
-      // Cleanup the event listener on component unmount
-      return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
-    }, [newSignature]);
+    const handleUnload = () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  
+    window.addEventListener('beforeunload', handleBeforeUnload);
+  
+    // Cleanup the event listener on component unmount
+    return handleUnload;
+  }, [newSignature]);
+
+
+  // Function to format academic year from YYYY-YYYY to YYYY/YYYY
+const formatAcademicYear = (academicYear) => {
+  if (academicYear) {
+    const [startYear, endYear] = academicYear.split('-');
+    return `${startYear}/${endYear}`;
+  }
+  return academicYear; // Return as-is if format is unexpected
+};
+  
+
+  
 
 
 
 
   return (
-    <div className="container">
+    <div className="container" style={{marginTop:'70px'}}>
       {finalResults.length !== 0 ? (
         <>
           <div>
             <h2>University of Ruhuna</h2>
             <h2>Faculty of Technology</h2>
-            <h2>Bachelor of Information and Communication Technology Honours Degree</h2>
-            <h2>Level {level} Semester {semester}-Nov/Dec 2023 (Academic year 2021/2022)</h2>
-            <h4>Provisional results subject to confirmation by the Senate</h4>
+            <h5>Bachelor of Information and Communication Technology Honours Degree</h5>
+            <h5>Level {level}     Semester {semester} - Nov/Dec 2023       Academic year {formatAcademicYear(academicYear)}</h5>
+            <h5>Provisional results subject to confirmation by the Senate</h5>
           </div>
 
-          <div className="description" style={{ fontSize: '11px', padding: '1px', margin: '10px' }}>
-            <p>Key to Grading</p>
-            <table>
+          <div className=' shadow-lg' style={{display:'flex'}}>
+
+          <div className="description" style={{ padding: '1px', margin: '10px' ,float:'left',marginLeft:'50px'}}>
+            <h5>Key to Grading</h5>
+            <table style={{width:'300px'}}>
               <tbody>
                 <tr>
                   <td>A+</td>
@@ -308,7 +328,7 @@ export default function DeanFinalMarkSheet(props) {
             </table>
           </div>
 
-          <div>
+          <div style={{marginLeft:'400px',marginTop:'50px',float:'right'}}>
             <table>
             {Allcourses.map((id, index) => (
                     <React.Fragment key={index}>
@@ -322,20 +342,21 @@ export default function DeanFinalMarkSheet(props) {
             </table>
           </div>
 
+        </div>
 
-          <div className="py-4" style={{ marginTop: "70px" }}>
-            <table className="overflow-x-scroll table border shadow" style={{ marginTop: "60px" }}>
+          <div className="">
+            <table className="overflow-x-scroll table border shadow table-hover" style={{ marginTop: "60px" }}>
               <thead>
                 <tr>
-                  <th scope="col">Student ID</th>
+                  <th scope="col" className='table-info'>Student ID</th>
                   {Allcourses.map((id, index) => (
                     <React.Fragment key={index}>
-                      <th>{id.course_id}</th>
-                      <th>Grade</th>
+                      <th className=' table-secondary'>{id.course_id}</th>
+                      <th className=' table-primary'>Grade</th>
                     </React.Fragment>
                   ))}
-                  <th scope="col">SGPA</th>
-                  <th scope="col">CGPA</th>
+                  <th scope="col" className=' table-warning'>SGPA</th>
+                  <th scope="col" className=' table-success'>CGPA</th>
                 </tr>
               </thead>
               <tbody>
@@ -380,7 +401,7 @@ export default function DeanFinalMarkSheet(props) {
                 <p>Faculty of Technology</p>
                 </>
               ) : (
-                ARSign.signature && (
+                nextApprovedlevel === "AR" && ARSign.signature ?(
                   <>
                   <p>Certified Correct,</p>
                   <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} alt="AR Signature" />
@@ -388,43 +409,75 @@ export default function DeanFinalMarkSheet(props) {
                   <p>Assisstant Registrar</p>
                   <p>Faculty of Technology</p>
                   </>
-                )
+                ): null
               )}
 
              
 
               {nextApprovedlevel === "Dean" && newSignature !== "" ? (
                   <>
+                    <p>Certified Correct,</p>
+                    <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} alt="AR Signature" />
+                    <p>Ms H.H Kaumadi Dharmasiri</p>
+                    <p>Assisstant Registrar</p>
+                    <p>Faculty of Technology</p>
+
                     <img src={newSignature} style={{ width: '80px', height: '40px' }} alt="Dean Signature" />
                     <p>Prof. P.K.S.C Jayasinghe</p>
                     <p>Dean/Faculty of Technology</p>
                   </>
                 ) : (
-                  DeanSign.signature && (
+                  nextApprovedlevel === "Dean" && DeanSign.signature ? (
                     <>
+
+                      <p>Certified Correct,</p>
+                      <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} alt="AR Signature" />
+                      <p>Ms H.H Kaumadi Dharmasiri</p>
+                      <p>Assisstant Registrar</p>
+                      <p>Faculty of Technology</p>
+
                       <img src={DeanSign.signature} style={{ width: '80px', height: '40px' }} alt="Dean Signature" />
                       <p>Prof. P.K.S.C Jayasinghe</p>
                       <p>Dean/Faculty of Technology</p>
                     </>
-                  )
+                  ):null
                 )}
 
                 {nextApprovedlevel === "VC" && newSignature !== "" ? (
                     <>
+                      <p>Certified Correct,</p>
+                      <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} alt="AR Signature" />
+                      <p>Ms H.H Kaumadi Dharmasiri</p>
+                      <p>Assisstant Registrar</p>
+                      <p>Faculty of Technology</p>
+                      
+                      <img src={DeanSign.signature} style={{ width: '80px', height: '40px' }} alt="Dean Signature" />
+                      <p>Prof. P.K.S.C Jayasinghe</p>
+                      <p>Dean/Faculty of Technology</p>
+
                       <img src={newSignature} style={{ width: '80px', height: '40px' }} alt="VC Signature" />
                       <p>Snr Prof. Sujeewa Amarasena</p>
                       <p>Vice Chancellor</p>
                       <p>Faculty of Technology</p>
                     </>
                   ) : (
-                    VCSign.signature && (
+                    nextApprovedlevel === "VC" && VCSign.signature ? (
                       <>
+                        <p>Certified Correct,</p>
+                        <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} alt="AR Signature" />
+                        <p>Ms H.H Kaumadi Dharmasiri</p>
+                        <p>Assisstant Registrar</p>
+                        <p>Faculty of Technology</p>
+                        
+                        <img src={DeanSign.signature} style={{ width: '80px', height: '40px' }} alt="Dean Signature" />
+                        <p>Prof. P.K.S.C Jayasinghe</p>
+                        <p>Dean/Faculty of Technology</p>
                         <img src={VCSign.signature} style={{ width: '80px', height: '40px' }} alt="VC Signature" />
                         <p>Snr Prof. Sujeewa Amarasena</p>
                         <p>Vice Chancellor</p>
                         <p>Faculty of Technology</p>
                       </>
-                    )
+                    ):null
                   )}
 
             
