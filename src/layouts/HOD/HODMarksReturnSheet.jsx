@@ -121,9 +121,9 @@ export default function HODMarksReturnSheet(props) {
          } else if (approval_level === "course_coordinator") {
            nextApprovedlevel = "lecturer";
          } else if (approval_level === "lecturer") {
-           nextApprovedlevel = "HOD";
+           nextApprovedlevel = "RD";
          }
-         else if (approval_level === "HOD") {
+         else if (approval_level === "RD") {
             nextApprovedlevel = "AR";
           }
 
@@ -133,7 +133,7 @@ export default function HODMarksReturnSheet(props) {
           } else if (approval_level === "lecturer") {
             prevApprovedlevel = "course_coordinator";
           }
-          else if (approval_level === "HOD") {
+          else if (approval_level === "RD") {
             prevApprovedlevel = "lecturer";
            }
 
@@ -195,7 +195,7 @@ useEffect(() => {
                 const response1 = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/lecturer/${academicYear}`);
                 setISLeclevel(response1.data.content);
 
-                const response2 = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/HOD/${academicYear}`);
+                const response2 = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/RD/${academicYear}`);
                 setISHODlevel(response2.data.content);
             } catch (error) {
                 console.error('Error fetching signature data:', error);
@@ -560,7 +560,7 @@ const imageHandlClear = () => {
                               <td></td>
                               <td>Sign:</td>
                               <td>
-                                  {nextApprovedlevel == "HOD" &&
+                                  {nextApprovedlevel == "RD" &&
                                   isHODlevel.signature != null ? <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> : null
                               }
                               </td>
@@ -638,7 +638,7 @@ const imageHandlClear = () => {
           </div>
                     
 
-                    {approval_level === "HOD" ? (
+                    {approval_level === "RD" ? (
                         <button onClick={downloadPDF} className="btn btn-primary mt-3">
                             Download Marks Return Sheet
                         </button>

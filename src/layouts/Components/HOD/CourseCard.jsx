@@ -21,6 +21,8 @@ export default function CourseCard(props) {
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
     const[academicYear,setAcademicYear]=useState("")
 
+
+    console.log(level,semester,department,approved_level,academicYear)
    
   
     const result = async () => {
@@ -45,7 +47,7 @@ export default function CourseCard(props) {
         result();
        }, [level,semester,department,approved_level,academicYear]); // This effect runs whenever level or semester changes
 
-       console.log(level,semester,department,approved_level,academicYear)
+       
 
        useEffect(() => {
         const fetchData = async () => {
