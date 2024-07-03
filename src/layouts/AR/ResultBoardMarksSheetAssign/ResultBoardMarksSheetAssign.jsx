@@ -514,7 +514,7 @@ export default function ResultBoardMarksSheetAssign() {
                                                 <td>{markSheet[2]}</td>
                                                 <td>{markSheet[5]}</td>
                                                 {
-                                                    selectedResultBoard.status === "Not started"? (
+                                                    selectedResultBoard.status.toLowerCase() === "Not started".toLowerCase()? (
                                                         <td> <button className='btn btn-danger btn-sm' onClick={()=>{removeAssignedMarksSheet(markSheet[0])}}>Remove</button></td>
                                                     ):(
                                                         null

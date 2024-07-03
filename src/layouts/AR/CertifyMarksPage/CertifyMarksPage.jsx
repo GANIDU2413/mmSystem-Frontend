@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavebarAR } from '../../Components/AR/NavBarAR/NavebarAR';
 import BackButton from '../../Components/AR/BackButton/BackButton';
 import { Redirect, useHistory } from 'react-router-dom';
@@ -6,6 +6,8 @@ import './certifyMarksPage.css';
 import { useOktaAuth } from '@okta/okta-react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useState } from 'react';
 
 export default function CertifyMarksPage(props) {     
 
@@ -14,7 +16,7 @@ export default function CertifyMarksPage(props) {
     const { authState } = useOktaAuth();      // get auth state
     const approvedLevel="HOD";          // HOD approved level
 
-    const checkCertifyAvailability = async (level,semester) => {          // check whether HOD approved all courses for the given level and semester
+   /* const checkCertifyAvailability = async (level,semester) => {          // check whether HOD approved all courses for the given level and semester
        let approvedYear = new Date().getFullYear();                       // get current year
 
        try{
@@ -88,7 +90,7 @@ export default function CertifyMarksPage(props) {
                         
 
                         <div className="d-grid gap-3 level-set" style={{marginTop:"50px",marginRight:"30px"}}>
-                            <label className="semesterLabel " >Semester 1</label>                                                                        {/* semester 1 buttons for eaach levels */}
+                            <label className="semesterLabel " >Semester 1</label>                                                                       
                             <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(1,1) }}>Level 1</button>
                             <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(2,1) }}>Level 2</button>
                             <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(3,1) }}>Level 3</button>
@@ -99,7 +101,7 @@ export default function CertifyMarksPage(props) {
 
                     <div className="col-sm">
                         <div className="d-grid gap-3 level-set" style={{marginTop:"50px",marginLeft:"30px"}}>
-                            <label className="semesterLabel">Semester 2</label>                                                                     {/* semester 2 buttons for eaach levels */}
+                            <label className="semesterLabel">Semester 2</label>                                                                    
                             <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(1,2) }}>Level 1</button>
                             <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(2,2) }}>Level 2</button>
                             <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(3,2) }}>Level 3</button>
@@ -111,9 +113,67 @@ export default function CertifyMarksPage(props) {
                   <br/><BackButton/> <br/>&nbsp;
                 </div>
             </div>
-            <ToastContainer />          {/* toast container */}
+            <ToastContainer />        
             
         </div>
     </div>
-  )
-}
+  )*/
+
+
+    const [finalMarksheetList, setFinalMarksheetList] = useState([]);
+
+
+
+    const loadAvailableResultSheets = async () => {
+      try {
+        const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getFinishedResultBoardList`);
+        console.log(response.data)
+        setFinalMarksheetList(response.data);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+
+    useEffect(() => {
+      loadAvailableResultSheets();
+    }, []);
+
+    return (
+      <>
+        <div className='certify-div-1'>
+          <div className='certify-div-2'>
+            <table className='table table-striped certify-table'>
+              
+              <thead>
+                <tr>
+                  <th className='certify-table-heading' colSpan={100} style={{textAlign: 'center', backgroundColor: '#ebe8e8', textAlignLast: 'center'}}>
+                    Marks Sheets Available to Certify <br/>
+                  </th>
+                </tr>
+                <tr>
+                  <th colSpan={100}></th>
+                </tr>
+              </thead>
+              
+              <tbody>
+                {
+                  finalMarksheetList.map((item, index) =>(
+                    <tr key={index}>
+                      <td>Dep. of {item.department}</td>
+                      <td>level {item.level}</td>
+                      <td>semester {item.semester}</td>
+                      <td>academic year ({item.academic_year})</td>
+                    </tr>
+                  ))}
+              
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+      </>
+
+    )
+
+  }
