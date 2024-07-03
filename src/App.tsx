@@ -55,6 +55,7 @@ import CourseCriteriaByCC from "./layouts/CourseCoordinator/CourseCriteriaByCC";
 import ViewMarksTableValidations from "./layouts/Components/AR/DataTable/ViewMarksTableValidations";
 import CreateResultBoard from "./layouts/AR/CreateResultBoard/CreateResultBoard";
 import ResultBoardMarksSheetAssign from "./layouts/AR/ResultBoardMarksSheetAssign/ResultBoardMarksSheetAssign";
+import HomePageStudent from "./layouts/Student/HomePageStudent/HomePageStudent";
 
 
 
@@ -166,6 +167,21 @@ export const App = () => {
           </Route>
 
           {/* AR navigations ends here ---------------------------------------------*/}
+
+
+
+
+
+          {/* Student navigations starts here ---------------------------------------------*/}
+          <Route path="/studenthome">       {/*Link to Student Home page*/}
+            <HomePageStudent/>
+          </Route>
+
+
+
+
+
+          {/* Student navigations ends here ---------------------------------------------*/}
 
           <Route path="/markstable">
             <MarksTable/>
@@ -317,7 +333,7 @@ export const App = () => {
             </SecureRoute>
 
 
-            <SecureRoute path={"/ar"}>
+            <SecureRoute path={"/ar"}>        {/*Login to AR */}
               <HomePageAR />
             
             </SecureRoute>
@@ -336,6 +352,10 @@ export const App = () => {
 
             <SecureRoute path={"/course_cordinator"}>
               <CCDashBoard/>
+            </SecureRoute>
+
+            <SecureRoute path={"/student"}>       {/*Login to Student */}
+              <HomePageStudent/>
             </SecureRoute>
 
 
