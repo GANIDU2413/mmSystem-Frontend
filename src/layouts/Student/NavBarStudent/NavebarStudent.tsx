@@ -33,7 +33,7 @@ export const NavebarStudent = () => {
             gap: "10px",
           }}
         >
-          <IoMenuSharp size={35} /> Faculty Of Technology, Marking Management System  - Student
+          <IoMenuSharp size={35} /> Faculty Of Technology, Marking Management System
         </a>
         <ul className="navbar-nav ms-auto">
            {!authState.isAuthenticated?
@@ -57,10 +57,13 @@ export const NavebarStudent = () => {
           id="offcanvasNavbar"
           aria-labelledby="offcanvasNavbarLabel"
         >
+
           <div className="offcanvas-header">
+
             <h6 className="offcanvas-title" id="offcanvasNavbarLabel">
             Hello, {authState?.idToken?.claims.name /*Display user's username*/}
             </h6>
+
             <button
               type="button"
               className="btn-close"
@@ -68,96 +71,13 @@ export const NavebarStudent = () => {
               aria-label="Close"
             ></button>
           </div>
+          
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/arhome">
+                <a className="nav-link active" aria-current="page" href="/student">
                  Dashboard
                 </a>
-              </li>
-              
-              <li className="nav-item">
-                <a className="nav-link" href="/createResultsBoard">
-                  Create Results Board
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/viewMedicals">
-                  View Medical List
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/viewablist">
-                Update grades for absentees
-                </a>
-              </li>
-
-              {/* <hr></hr> */}
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  View marks return sheets
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="/arviewictmarks">
-                      Department of ICT
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/arviewetmarks">
-                      Department of ET
-                    </a>
-                  </li>
-                  <li></li>
-                  <li>
-                    <a className="dropdown-item" href="/arviewbstmarks">
-                      Department of BST
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/arviewmtdmarks">
-                      Department of Multi Disciplinary
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              {/* <hr></hr> */}
-
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Certify marks
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="/arcerfityictmarks">
-                      Department of ICT
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/arcerfityetmarks">
-                      Department of ET
-                    </a>
-                  </li>
-                  <li></li>
-                  <li>
-                    <a className="dropdown-item" href="/arcertifybstmarks">
-                      Department of BST
-                    </a>
-                  </li>
-                  
-                </ul>
               </li>
             </ul>
             

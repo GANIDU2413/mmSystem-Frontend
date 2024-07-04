@@ -1,0 +1,28 @@
+.student-home-page-main-div {
+    max-width: 100%;
+    margin-top: 75px;
+}
+
+@media (max-width: 630px) {
+    .student-home-page-main-div {
+      margin-top: 120px;
+    }
+  }
+
+.student-details-div {
+    /* box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4); */
+    min-width: 400px;
+    max-width: 100%;
+    width: max-content;
+
+}
+
+.student-details-col-1 {
+   max-width: max-content;
+   margin-left: 20px;
+   font-weight: bold;
+}
+
+.student-details-col-2 {
+    max-width: max-content;
+}
