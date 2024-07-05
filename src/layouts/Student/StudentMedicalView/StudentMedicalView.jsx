@@ -29,7 +29,11 @@ export default function StudentmedicalView() {
     }
 
 
+
+    const getAllMedicalSubmissions = async () => {
+        
     
+    }
 
 
     useEffect(() => {
@@ -43,10 +47,34 @@ export default function StudentmedicalView() {
   return (
     <div>
         <div className='student-medical-view-main-div'>
-            Medical
-            Emain is - {
-                studentEmail
-            }
+            
+            <table className="table table-striped">
+
+                <thead className='student-medical-table-head'>
+                    <tr>
+
+                        <th style={{textAlign:"center",backgroundColor:'#ebe8e8',width:"250px"}}>
+
+                            <select className="form-select w-100 mx-lg-1  medical-year-selection" aria-label="Default select example">    {/* select box to select the acedemic year */} 
+                            
+                            <option className='selectionOptions' >All Years</option>
+
+                            </select>
+
+                        </th>
+
+                        <th colSpan={4} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>
+                           <h5>View Medicals</h5> 
+                        </th>
+
+
+
+
+                    </tr>
+                </thead>
+
+            </table>
+            
         </div>
     </div>
   )
