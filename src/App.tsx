@@ -229,7 +229,7 @@ export const App = () => {
             <CAMarkTable/>
           </Route>
 
-          <Route path="/MarksCheckingForm/:student_id/:course_id/:course_name">
+          <Route path="/MarksCheckingForm/:course_id/:course_name">
             <MarksCheckingForm/>
           </Route>
  

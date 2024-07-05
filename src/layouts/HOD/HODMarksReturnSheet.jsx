@@ -109,6 +109,7 @@ export default function HODMarksReturnSheet(props) {
 
 
     let CAAvailable = false;
+    let ca_percentage=0;
 
 
     let headersData = [];
@@ -172,21 +173,7 @@ useEffect(() => {
             const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}`);
             setMarksSheet(response.data);
             console.log(marksSheet)
-            // const listPromises = [
-            //     axios.get(`http://localhost:9090/api/evaluationCriteria/getCriteria/${course_id}`),
-            //     axios.get(`http://localhost:9090/api/StudentAssessment/get/scoreByCourseId/${course_id}`),
-            //     axios.get(`http://localhost:9090/api/marksCalculations/getMarksCalculation/${course_id}`),
-            //     axios.get(`http://localhost:9090/api/studentMarks/getStudentMarksbyCourse/${course_id}`),
-            //     axios.get(`http://localhost:9090/api/studentRegCourses/getStudentsByCourse/${course_id}`)
-            // ];
 
-            // const [criteria, marks, calculations, grade, studentList] = await Promise.all(listPromises);
-
-            // setEvaluationCriteria(criteria.data || []);
-            // setMarks(marks.data || []);
-            // setCalculations(calculations.data || []);
-            // setGrade(grade.data?.content || []);
-            // setStudentList(studentList.data || []);
 
             setLoading(false); // Set loading to false after all data is fetched
         } catch (error) {
@@ -217,11 +204,6 @@ useEffect(() => {
     }
 
 
-    
-
-
-
-    console.log(marksSheet)
 
     // useEffect(() => {
     //     fetchCCSignature();
@@ -304,7 +286,7 @@ useEffect(() => {
         })
     ))
 
-    
+    forCA++
 
     marksSheet.map((ele, index) => (
         ele.end.map((endScore, idx) => {
@@ -347,13 +329,35 @@ useEffect(() => {
 
 console.log(authState?.accessToken?.claims.userType);
 
+const imageHandlClear = () => {
+    setISHODlevel(signature = null)
+};
+
+
+  // Adding the beforeunload event listener
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (newSignature) {
+        e.preventDefault();
+        e.returnValue = ''; // Chrome requires returnValue to be set
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [newSignature]);
+
     return (
         <>
            
             {/* <NavebarHOD /> */}
             {
                 authState?.accessToken?.claims.userType == "HOD" ? <NavebarHOD/> : 
-                authState?.accessToken?.claims.userType == "course_cordinator" ? <NavBarCC/> :
+                authState?.accessToken?.claims.userType == "course_coordinator" ? <NavBarCC/> :
                 authState?.accessToken?.claims.userType == "dean" ? <NavebarDean/>:
                 authState?.accessToken?.claims.userType == "ar" ? <NavebarAR/> : null
             }
@@ -402,90 +406,7 @@ console.log(authState?.accessToken?.claims.userType);
                     <div className=''>
                         {/*  style={{overflow:"auto",width:"100%",height:"500px"}} */}
                     <table className="table shadow table-bordered" style={{ marginTop: "30px", width: '80%' }}>
-                    {/* <thead>
-                    <tr>
-                      <th scope="col">Student_ID</th>
-                      {
-                          
-                          evaluationCriteria.map((evaluationCriteria, index) => {
-                              let headers = [];
-                              
-                              if (evaluationCriteria.type == "CA") {
-                                  CAAvailable = true;
-                                  if (evaluationCriteria.no_of_conducted > 1) {
-                                      marks.map((ele, index) => {
-                                          if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
-                                             
-                                                  headers.push(<th key={`${index}`} scope="col">{ele.assignment_name}</th>);
-                                                  headersData.push(ele.assignment_name)
-                                              
-                                          }
-                                      });
-                                      // calculations.map((ele, index) => {
-                                         
-                                          headers.push(<th key={`${index}`} scope="col">{evaluationCriteria.description}</th>);
-                                          headersData.push(evaluationCriteria.description)
-                                          headers.push(<th scope="col">{ evaluationCriteria.percentage}% from  {evaluationCriteria.description}</th>);
-                                          headersData.push(`${evaluationCriteria.percentage}% from  ${evaluationCriteria.description}`)
-                                          
-                                      // });
-                                  } else {
-                                      marks?.map((ele, index) => {
-                                          if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
-                                             
-                                                  headers.push(<th key={`${index}`} scope="col">{ele.assignment_name}</th>);
-                                                  headersData.push(ele.assignment_name)
-                                              
-                                          }
-                                      });
 
-                                      headers.push(<th scope="col">{ evaluationCriteria.percentage}% from  {evaluationCriteria.assessment_type}</th>);
-                                      headersData.push(`${evaluationCriteria.percentage}% from  ${evaluationCriteria.assessment_type}`)
-
-                                  }   
-                              }
-                              return headers;
-                          }).flat()
-                      }
-
-                      
-                      {CAAvailable ? <th scope="col">Total CA Marks</th> : null}
-                      
-
-                      {
-                          evaluationCriteria.map((evaluationCriteria, index) => {
-                              let headers = [];
-                              if (evaluationCriteria.type == "End") {
-                                  marks.map((ele, index) => {
-                                      if (ele.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
-                                          
-                                              headers.push(<th key={`${index}`} scope="col">{ele.assignment_name}</th>);
-                                              headersData.push(ele.assignment_name)
-
-                                         
-                                              if ( ele.assignment_name !== "1st Marking" && ele.assignment_name !== "2nd Marking") {
-                                                  headers.push(<th scope="col">{evaluationCriteria.percentage}% from {evaluationCriteria.assessment_type}</th>);
-                                                  headersData.push(`${evaluationCriteria.percentage}% from ${evaluationCriteria.assessment_type}`)
-                                              }
-                                      
-                                      }
-                                  }).flat();
-                              }
-                             
-                              return headers;
-                          }).flat()
-                      }
-                     
-                      <th scope="col">Total Final Marks</th>  
-                      <th scope="col">Total Rounded Marks</th>
-                      <th scope="col">Results/Grades</th>
-                      <th scope="col">GPV</th>
-                                  
-                      <th>Remarks,Continuous Assessment Pass/Fail</th>
-                      <th>View</th>
-                  </tr>
-                  
-                 </thead> */}
                     <thead>
                         
                             <tr>
@@ -505,16 +426,29 @@ console.log(authState?.accessToken?.claims.userType);
                                
                                     console.log(caScore.key);
 
-                                   
                                     seenKeys.add(caScore.key);
-
-                           
+                                    
+                                    if(caScore.description=="percentage")
+                                        {
+                                            let percentage=parseInt(caScore.key.slice(0, 2))
+                                            console.log(percentage)
+                                            ca_percentage=ca_percentage+percentage;
+                                        }
+                                   
                                     return <th key={`ca-${idx}`}>{caScore.key}</th>;
                                     }
 
                                     return null;
                                 })
-                                )}
+                                
+                                )
+                                }
+
+                                
+                                <th> {ca_percentage+"% From Final Continuous Assignment Marks"}</th>
+                                
+
+
 
                                 
                                 {marksSheet.map((ele, index) => (
@@ -547,120 +481,45 @@ console.log(authState?.accessToken?.claims.userType);
                       {marksSheet.map((ele, index) => (
                         <tr key={index}>
                             <td>{ele.student_id}</td>
-                            {ele.ca.map((caScore, idx) => (
-                                <td key={`ca-${idx}`}>{caScore.value}</td>
-                            ))}
-                            {ele.end.map((endScore, idx) => (
-                                <td key={`end-${idx}`}>{endScore.value}</td>
-                            ))}
+
+
+                            {
+                               Array.from(seenKeysForTHCA).map((c, idx) => {
+                                    let caValue = ele.ca.find(ca => ca.key === c);
+                                    return <td key={`ca-${idx}`}>{caValue!=null ? caValue.value : ''}</td>;
+                                }
+                                )
+                            }
+
+                            <td>{ele.total_ca_mark}</td>
+                                
+                            {
+                                Array.from(seenKeysForTHFA).map((c, idx) => {
+                                    let endValue = ele.end.find(end => end.key === c);
+                                    return <td key={`end-${idx}`}>{endValue!=null ? endValue.value : ''}</td>;
+                                }
+                                )
+                            }
+                            
+                           
                             
                             <td>{ele.total_final_marks}</td>
                             <td>{ele.total_rounded_marks}</td>
                             <td>{ele.grade}</td>
                             <td>{ele.gpv}</td>
                             <td>{ele.ca_eligibility}</td>
-                            <td><Link className=" btn btn-primary mx-3 btn-sm" to={`/MarksCheckingForm/${ele.student_id}/${course_id}/${course_name}`}>View</Link></td>
+                            {
+                               
+                            }
+
+                            <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
+                                pathname: `/MarksCheckingForm/${course_id}/${course_name}`,
+                                state: { ele }
+                            }}>View</Link></td>
                             {console.log(ele.student_id,ele.total_ca_mark,ele.total_final_mark,ele.total_rounded_mark,ele.grade,ele.gpv,ele.ca_eligibility)}
                         </tr>))}
                       </tbody>
-                    {/* <tbody>
-                  {
-                      studentList.map((ele, index) => (
-                          <tr>
-                              <td scope="col" key={index}>{ele}</td>
-                              {
-                                  evaluationCriteria.map((evaluationCriteria, index) => {
-                                      let headers = [];
-                                      if (evaluationCriteria.type == "CA") {
-                                          if (evaluationCriteria.no_of_conducted > 1) {
-                                              marks.map((mark, index) => {
-                                                  if (mark.student_id == ele) {
-                                                      if (evaluationCriteria.evaluationcriteria_id == mark.evaluation_criteria_id) {
-                                                          headers.push(<td key={`${index}`} scope="col">{mark.assignment_score ? mark.assignment_score: "-"}</td>);
-                                                      }
-                                                  }
-                                              });
-                                              calculations.map((cal, index) => {
-                                                  if (ele == cal.student_id) {
-                                                      if (cal.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
-                                                          headers.push(<td key={`${index}`} scope="col">{cal.mark? cal.mark: "-"}</td>);
-                                                      }
-                                                  }
-                                              });
-                                          } else {
-                                              marks.map((marks, index) => {
-                                                  if (ele == marks.student_id) {
-                                                      if (marks.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
-                                                          headers.push(<td key={`${index}`} scope="col">{marks.assignment_score? marks.assignment_score: "-"}</td>);
-                                                      }
-                                                  }
-                                              });
-                                          }
-                                          calculations.map((cal, index) => {
-                                              if (ele == cal.student_id) {
-                                                  if (cal.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
-                                                      headers.push(<td key={`${index}`} scope="col">{cal.percentage? cal.percentage: "-"}</td>);
-                                                  }
-                                              }
-                                          });
-                                      }
-                                      return headers;
-                                  }).flat()
-                              }
-                              {
-                                  grade?.map((grade, index) => {
-                                      let headers = [];
-                                      if (grade.student_id == ele) {
-                                         
-                                              headers.push(<td key={`${index}`} scope="col">{grade.total_ca_mark? grade.total_ca_mark: "-"}</td>);
-                                      }
-                                      return headers;
-                                  }).flat()
-                              }
-                             
-                              {
-                                  evaluationCriteria.map((evaluationCriteria, index) => {
-                                      let headers = [];
-                                      if (evaluationCriteria.type == "End") {
-                                          marks.map((mark, index) => {
-                                              if (mark.student_id == ele) {
-                                                  if (mark.evaluation_criteria_id == evaluationCriteria.evaluationcriteria_id) {
-                                                      headers.push(<td key={`${index}`} scope="col">{mark.assignment_score? mark.assignment_score: "-"}</td>);
-                                                      headerValue.push(mark.assignment_score? mark.assignment_score: "-")
-                                                      calculations.map((calculations, index2) => {
-                                                          if (calculations.student_id == ele) {
-                                                              if (evaluationCriteria.evaluationcriteria_id == calculations.evaluation_criteria_id && mark.assignment_name !== "1st Marking" && mark.assignment_name !== "2nd Marking") {
-                                                                  headers.push(<td key={`${index2}`} scope="col">{calculations.percentage? calculations.percentage: "-"}</td>);
-                                                              }
-                                                          }
-                                                      });
-                                                  }
-                                              }
-                                          }).flat()
-                                      }
-                                      return headers;
-                                  }).flat()
-                              }
-                              {
-                                  grade?.map((grade, index) => {
-                                      if (grade.student_id == ele) {
-                                          let headers = [];
-                                          headers.push(<td key={`${index}`} scope="col">{grade.total_final_mark? grade.total_final_mark: "-"}</td>);
-                                          headers.push(<td key={`${index}`} scope="col">{grade.total_rounded_mark? grade.total_rounded_mark: "-"}</td>);
-                                          headers.push(<td key={`${index}`} scope="col">{grade.grade? grade.grade: "-"}</td>);
-                                          headers.push(<td key={`${index}`} scope="col">{grade.gpv? grade.gpv :  "-"}</td>);
-                                          headers.push(<td key={`${index}`} scope="col">{grade.ca_eligibility?  grade.ca_eligibility:"-"}</td>);
-                                          return headers;
-                                      }
-                                  }).flat()
-                              }
-                              <td>
-                              <Link className=" btn btn-primary mx-3 btn-sm" to={`/MarksCheckingForm/${ele}/${course_id}/${course_name}`}>View</Link>
-                              </td>
-                          </tr>
-                      ))
-                  }
-                      </tbody> */}
+
                  </table>
                      </div>
           
@@ -675,7 +534,7 @@ console.log(authState?.accessToken?.claims.userType);
                               <td></td>
                               <td>Sign:</td>
                               <td>
-                                  {nextApprovedlevel == "course_coordinator" ? <img src={url} style={{ width: '80px', height: '40px' }} /> : 
+                                  {nextApprovedlevel == "course_coordinator" &&
                                   isCClevel.signature != null ? <img src={isCClevel.signature} style={{ width: '80px', height: '40px' }} /> : null
                                   }
 
@@ -688,7 +547,7 @@ console.log(authState?.accessToken?.claims.userType);
                               <td></td>
                               <td>Sign:</td>
                               <td>
-                                  {nextApprovedlevel == "lecturer" ? <img src={url} style={{ width: '80px', height: '40px' }} /> :
+                                  {nextApprovedlevel == "lecturer" &&
                                    isLeclevel.signature != null ? <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> : null
                                   }
                                   
@@ -701,12 +560,13 @@ console.log(authState?.accessToken?.claims.userType);
                               <td></td>
                               <td>Sign:</td>
                               <td>
-                                  {nextApprovedlevel == "HOD" ? <img src={url} style={{ width: '80px', height: '40px' }} /> : 
+                                  {nextApprovedlevel == "HOD" &&
                                   isHODlevel.signature != null ? <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> : null
                               }
                               </td>
                               <td>Date:</td>
                               <td>{isHODlevel.date_time != null ? isHODlevel.date_time:null}</td>
+                              {/* <button className=' btn btn-danger btn-sm' onClick={imageHandlClear}>Cancel</button> */}
                           </tr>
                       </table>
                     </div>
@@ -783,6 +643,7 @@ console.log(authState?.accessToken?.claims.userType);
                             Download Marks Return Sheet
                         </button>
                     ):null}
+
 
                 </>
             )}
