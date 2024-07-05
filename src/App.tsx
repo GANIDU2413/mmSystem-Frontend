@@ -56,6 +56,7 @@ import ViewMarksTableValidations from "./layouts/Components/AR/DataTable/ViewMar
 import CreateResultBoard from "./layouts/AR/CreateResultBoard/CreateResultBoard";
 import ResultBoardMarksSheetAssign from "./layouts/AR/ResultBoardMarksSheetAssign/ResultBoardMarksSheetAssign";
 import HomePageStudent from "./layouts/Student/HomePageStudent/HomePageStudent";
+import StudentmedicalView from "./layouts/Student/StudentMedicalView/StudentMedicalView";
 
 
 
@@ -175,6 +176,10 @@ export const App = () => {
           {/* Student navigations starts here ---------------------------------------------*/}
           <Route path="/studenthome">       {/*Link to Student Home page*/}
             <HomePageStudent/>
+          </Route>
+
+          <Route path="/studentMedicalView">
+            <StudentmedicalView/>
           </Route>
 
 
