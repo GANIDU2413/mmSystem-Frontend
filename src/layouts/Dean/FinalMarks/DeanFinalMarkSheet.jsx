@@ -82,7 +82,7 @@ export default function DeanFinalMarkSheet(props) {
 
   const resultSheet = async () => {
     try {
-      if (approved_level === "HOD") {
+      if (approved_level === "RB") {
         setNextApprovedlevel("AR");
       } else if (approved_level === "AR") {
         setNextApprovedlevel("Dean");
