@@ -101,8 +101,7 @@ export default function HODMarksReturnSheet(props) {
       }, []);
     
     const saveDigitalSignature = (url) => {
-        setNewSignature(url); 
-        setUrl(url);    
+        setNewSignature(url);    
     };
     
    
@@ -123,7 +122,7 @@ export default function HODMarksReturnSheet(props) {
          } else if (approval_level === "lecturer") {
            nextApprovedlevel = "HOD";
          }
-         else if (approval_level === "HOD") {
+         else if (approval_level === "RB") {
             nextApprovedlevel = "AR";
           }
 
@@ -203,6 +202,7 @@ useEffect(() => {
        
     }
 
+    console.log(isCClevel.signature)
 
 
     // useEffect(() => {
@@ -330,7 +330,9 @@ useEffect(() => {
 console.log(authState?.accessToken?.claims.userType);
 
 const imageHandlClear = () => {
-    setISHODlevel(signature = null)
+    setISHODlevel(null)
+
+
 };
 
 
@@ -522,6 +524,7 @@ const imageHandlClear = () => {
                         </tr>))}
                         </tbody>
 
+
                     </table>
                 </div>
                 <div className=' m-5'></div>
@@ -571,6 +574,7 @@ const imageHandlClear = () => {
                                 {/* <button className=' btn btn-danger btn-sm' onClick={imageHandlClear}>Cancel</button> */}
                             </tr>
                         </table>
+
                     </div>
                     
                     {

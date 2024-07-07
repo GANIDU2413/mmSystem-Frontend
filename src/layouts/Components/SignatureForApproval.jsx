@@ -27,7 +27,9 @@ export default function SignatureForApproval({ saveDigitalSignature }) {
         const file = files[0];
         if (file instanceof Blob) {
             const imageUrl = await convertBlobToDataURL(file);
+            console.log(imageUrl)
             setUrl(imageUrl);
+            saveDigitalSignature(imageUrl)
         } else {
             console.error("File is not a Blob:", file);
             // Handle this case according to your application logic
