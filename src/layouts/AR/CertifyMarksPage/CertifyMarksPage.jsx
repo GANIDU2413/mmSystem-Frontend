@@ -14,9 +14,9 @@ export default function CertifyMarksPage(props) {
     const department_id = props.department_id;      // get department id from props
     const history = useHistory();               // for routing
     const { authState } = useOktaAuth();      // get auth state
-    const approvedLevel="HOD";          // HOD approved level
+    const approvedLevel="RB";          // Approved level for result board conducted courses
 
-   /* const checkCertifyAvailability = async (level,semester) => {          // check whether HOD approved all courses for the given level and semester
+/*    const checkCertifyAvailability = async (level,semester) => {          // check whether HOD approved all courses for the given level and semester
        let approvedYear = new Date().getFullYear();                       // get current year
 
        try{
@@ -26,7 +26,7 @@ export default function CertifyMarksPage(props) {
             const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getNotApprovedCoursesByLevelSemester/${level}/${semester}/${approvedLevel}/${academicYearDetails.data[0]["current_academic_year"]}/${department_id}`);     // get not approved courses by level, semester, approved level and year
             
             if(response.data.length>0){                                       // if 'not approved courses' are available
-              toast.error("HOD have not approved all courses for this level and semester",{autoClose:3000});      // show error message
+              toast.error("Result board is not conducted for all the courses",{autoClose:3000});      // show error message
               
             }else{                                                // if 'not approved courses' are not available
 
@@ -120,13 +120,13 @@ export default function CertifyMarksPage(props) {
   )*/
 
 
-    const [finalMarksheetList, setFinalMarksheetList] = useState([]);
-
+   const [finalMarksheetList, setFinalMarksheetList] = useState([]);
+   const status = "Ended";
 
 
     const loadAvailableResultSheets = async () => {
       try {
-        const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getFinishedResultBoardList`);
+        const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCertifyPendingResultBoards/${approvedLevel}/${status}`);
         console.log(response.data)
         setFinalMarksheetList(response.data);
       } catch (e) {
@@ -145,7 +145,7 @@ export default function CertifyMarksPage(props) {
           <div className='certify-div-2'>
             <table className='table table-striped certify-table'>
               
-              <thead>
+              <thead className='certify-table-head'>
                 <tr>
                   <th className='certify-table-heading' colSpan={100} style={{textAlign: 'center', backgroundColor: '#ebe8e8', textAlignLast: 'center'}}>
                     Marks Sheets Available to Certify <br/>
@@ -159,13 +159,18 @@ export default function CertifyMarksPage(props) {
               <tbody>
                 {
                   finalMarksheetList.map((item, index) =>(
-                    <tr key={index}>
-                      <td>Dep. of {item.department}</td>
+                    <tr key={index} className='clickable-row' onClick={()=>{history.push(`/arFinalMarkSheet/${item.level}/${item.semester}/${item.department}`)}}>
                       <td>level {item.level}</td>
                       <td>semester {item.semester}</td>
+                      <td>Dep. of {item.department}</td>
                       <td>academic year ({item.academic_year})</td>
                     </tr>
                   ))}
+
+
+
+
+                  
               
               </tbody>
 
