@@ -101,8 +101,7 @@ export default function HODMarksReturnSheet(props) {
       }, []);
     
     const saveDigitalSignature = (url) => {
-        setNewSignature(url); 
-        setUrl(url);    
+        setNewSignature(url);    
     };
     
    
@@ -123,7 +122,7 @@ export default function HODMarksReturnSheet(props) {
          } else if (approval_level === "lecturer") {
            nextApprovedlevel = "HOD";
          }
-         else if (approval_level === "HOD") {
+         else if (approval_level === "RB") {
             nextApprovedlevel = "AR";
           }
 
@@ -203,6 +202,7 @@ useEffect(() => {
        
     }
 
+    console.log(isCClevel.signature)
 
 
     // useEffect(() => {
@@ -330,7 +330,9 @@ useEffect(() => {
 console.log(authState?.accessToken?.claims.userType);
 
 const imageHandlClear = () => {
-    setISHODlevel(signature = null)
+    setISHODlevel(null)
+
+
 };
 
 
@@ -527,7 +529,6 @@ const imageHandlClear = () => {
               <div style={{float:"left",marginTop:"50px"}}>
                   
                   <div>
-                      {console.log(nextApprovedlevel)}
                       <table>
                           <tr>
                               <td >Coordinator/ Examinar :</td>
@@ -560,8 +561,9 @@ const imageHandlClear = () => {
                               <td></td>
                               <td>Sign:</td>
                               <td>
-                                  {nextApprovedlevel == "HOD" &&
-                                  isHODlevel.signature != null ? <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> : null
+                                  {
+                                  nextApprovedlevel == "HOD" && isHODlevel.signature != null ? <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> : 
+                                  nextApprovedlevel == "HOD" && newSignature != null  ? <td><img src={newSignature} style={{ width: '80px', height: '40px' }} /> </td>: null
                               }
                               </td>
                               <td>Date:</td>
