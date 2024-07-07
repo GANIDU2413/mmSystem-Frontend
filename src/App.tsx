@@ -57,6 +57,7 @@ import CreateResultBoard from "./layouts/AR/CreateResultBoard/CreateResultBoard"
 import ResultBoardMarksSheetAssign from "./layouts/AR/ResultBoardMarksSheetAssign/ResultBoardMarksSheetAssign";
 import HomePageStudent from "./layouts/Student/HomePageStudent/HomePageStudent";
 import StudentmedicalView from "./layouts/Student/StudentMedicalView/StudentMedicalView";
+import StudentViewEligibility from "./layouts/Student/StudentViewEligibility/StudentViewEligibility";
 
 
 
@@ -110,8 +111,6 @@ export const App = () => {
             <UpdateABPage/>
           </Route>
 
-
-
           <Route path="/arviewictmarks">  {/* Link to view ICT marks page - Level selection */}
             <ViewMarks department_id={"ICT"}/>
           </Route>
@@ -128,12 +127,12 @@ export const App = () => {
             <ViewMarks department_id={"Multi_Disciplinary"}/>
           </Route>
 
-          <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}
+          <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page validations */}
             {/* <ViewMarksTable/> */}
             <ViewMarksTableValidations/>
           </Route>
 
-          <Route path="/ARMarksReturnSheet/:course_id/:course_name">    {/* Link to view ar Marks return sheet*/}
+          <Route path="/ARMarksReturnSheet/:course_id/:course_name">    {/* Link to view ar Marks certify sheet*/}
             <HODMarksReturnSheet approved_level={"HOD"}/>
           </Route>
 
@@ -178,8 +177,12 @@ export const App = () => {
             <HomePageStudent/>
           </Route>
 
-          <Route path="/studentMedicalView">
+          <Route path="/studentMedicalView">  {/*Link to Student Medical view page*/}
             <StudentmedicalView/>
+          </Route>
+
+          <Route path="/studentEligibilityView">
+            <StudentViewEligibility/>
           </Route>
 
 

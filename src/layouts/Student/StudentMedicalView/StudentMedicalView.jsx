@@ -11,7 +11,7 @@ export default function StudentmedicalView() {
 
     const {authState} = useOktaAuth();
 
-    const [studentId, setStudentId] = useState(null); // authState.idToken.claims.sub
+    const [studentId, setStudentId] = useState(null);  
     const [studentName, setStudentName] =useState(null);
     const [studentEmail, setStudentEmail] = useState(null);
     const [studentRegisteredYear, setStudentRegisteredYear] = useState(null);
