@@ -158,8 +158,8 @@ export default function StudentmedicalView() {
             }
             <ToastContainer/>
             <div className='right-aligned-div back-button-div'>
-            <br/><BackButton/> <br/>&nbsp;
-          </div>
+                <br/><BackButton/> <br/>&nbsp;
+            </div>
         </div>
         
             

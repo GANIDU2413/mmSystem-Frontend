@@ -58,6 +58,8 @@ import ResultBoardMarksSheetAssign from "./layouts/AR/ResultBoardMarksSheetAssig
 import HomePageStudent from "./layouts/Student/HomePageStudent/HomePageStudent";
 import StudentmedicalView from "./layouts/Student/StudentMedicalView/StudentMedicalView";
 import StudentViewEligibility from "./layouts/Student/StudentViewEligibility/StudentViewEligibility";
+import StudentViewCourseDetails from "./layouts/Student/StudentViewCourseDetails/StudentViewCourseDetails";
+import StudentViewCourseCriteria from "./layouts/Student/StudentViewCourseCriteria/StudentViewCourseCriteria";
 
 
 
@@ -181,8 +183,16 @@ export const App = () => {
             <StudentmedicalView/>
           </Route>
 
-          <Route path="/studentEligibilityView">
+          <Route path="/studentEligibilityView">    {/*Link to Student Eligibility view page*/}
             <StudentViewEligibility/>
+          </Route>
+
+          <Route path="/studentViewCourseDetails">      {/*Link to Student Course details view page*/}
+            <StudentViewCourseDetails/>
+          </Route>
+
+          <Route path="/studentViewCourseCriteria">     {/*Link to Student Course criteria view page*/}
+            <StudentViewCourseCriteria/>
           </Route>
 
 
