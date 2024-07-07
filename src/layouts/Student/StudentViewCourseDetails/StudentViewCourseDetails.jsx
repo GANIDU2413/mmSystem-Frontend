@@ -75,7 +75,7 @@ export default function StudentViewCourseDetails() {
           
         <thead className='student-course-table-head'>
           <tr>
-            <th colSpan={9} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>
+            <th colSpan={7} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>
               <h5>View Course Details</h5> 
             </th>
           </tr>
@@ -83,10 +83,8 @@ export default function StudentViewCourseDetails() {
           <tr>
             <th>Course ID</th>
             <th>Course Name</th>
-            <th>Hours</th>
             <th>Department</th>
             <th>Type</th>
-            <th>Credit</th>
             <th>Level</th>
             <th>Semester</th>
             <th></th>
@@ -96,24 +94,30 @@ export default function StudentViewCourseDetails() {
 
         <tbody>
           {
-            courseList.map((course,index) => {
-              return(
-                <tr key={index} className='clickable-row' onClick={()=>{
-                  history.push({pathname:`/studentViewCourseCriteria`,state:course})
-                }}>
-                  <td>{course.course_id}</td>
-                  <td>{course.course_name}</td>
-                  <td>{course.hours}</td>
-                  <td>{course.department_id}</td>
-                  <td>{course.type}</td>
-                  <td>{course.credit}</td>
-                  <td>{course.level}</td>
-                  <td>{course.semester}</td>
-                  <td><button className='btn btn-primary btn-sm'>Criteria</button></td>
-                </tr>
-                
-              )
-            })
+            courseList.length > 0 ? (
+
+              courseList.map((course,index) => {
+                return(
+                  <tr key={index} className='clickable-row' onClick={()=>{
+                    history.push({pathname:`/studentViewCourseCriteria`,state:course})
+                  }}>
+                    <td>{course.course_id}</td>
+                    <td>{course.course_name}</td>
+                    <td>{course.department_id}</td>
+                    <td>{course.type}</td>
+                    <td>{course.level}</td>
+                    <td>{course.semester}</td>
+                    <td><button className='btn btn-primary btn-sm'>Criteria</button></td>
+                  </tr>
+                  
+                )
+              })
+            ):(
+              <tr>
+                <td colSpan={7} style={{textAlign:"center"}}>{errorMessage}</td>
+              </tr>
+            
+            )
           }
 
         </tbody>
