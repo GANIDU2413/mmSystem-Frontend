@@ -30,7 +30,7 @@ export default function HODMarksReturnSheet(props) {
     const { course_id, course_name,department } = useParams();
     const {approved_level}=props;
     const history = useHistory();
-    const [url,setUrl] = useState()
+    // const [url,setUrl] = useState()
     const[newSignature, setNewSignature] = useState("");
     const[loading,setLoading]=useState(false);
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
@@ -46,6 +46,8 @@ export default function HODMarksReturnSheet(props) {
     const seenKeysFA = new Set();
     const seenKeysForTHFA = new Set();
     const seenKeysForTHCA = new Set();
+
+    console.log(newSignature);
 
     console.log(course_id,course_name)
     
@@ -102,6 +104,7 @@ export default function HODMarksReturnSheet(props) {
     
     const saveDigitalSignature = (url) => {
         setNewSignature(url);    
+        console.log(url);
     };
     
    
@@ -201,6 +204,23 @@ useEffect(() => {
             }
        
     }
+
+      // Adding the beforeunload event listener
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (newSignature) {
+        e.preventDefault();
+        e.returnValue = ''; // Chrome requires returnValue to be set
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [newSignature]);
 
     console.log(isCClevel.signature)
 
@@ -336,22 +356,9 @@ const imageHandlClear = () => {
 };
 
 
-  // Adding the beforeunload event listener
-  useEffect(() => {
-    const handleBeforeUnload = (e) => {
-      if (newSignature) {
-        e.preventDefault();
-        e.returnValue = ''; // Chrome requires returnValue to be set
-      }
-    };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
 
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [newSignature]);
+  newSignature ? console.log("Signature is present") : console.log("Signature is not present");
 
     return (
         <>
@@ -566,7 +573,8 @@ const imageHandlClear = () => {
                                 <td>Sign:</td>
                                 <td>
                                     {nextApprovedlevel == "HOD" &&
-                                    isHODlevel.signature != null ? <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> : null
+                                    isHODlevel.signature != null ? <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> : 
+                                    <img src={newSignature} style={{ width: '80px', height: '40px' }} />
                                 }
                                 </td>
                                 <td>Date:</td>

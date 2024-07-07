@@ -18,6 +18,7 @@ export default function MarksCheckingForm() {
   const history = useHistory();
   const [text, setText] = useState('');
   const[noData,setNoData]=useState('')
+  const [calculations, setCalculations] = useState([]);
   const { oktaAuth, authState } = useOktaAuth();
 
 
