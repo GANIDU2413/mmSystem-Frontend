@@ -284,10 +284,32 @@ export default function ResultBoardMarksSheetAssign() {
     const endReultBoard = async () => {     //Function to end the result board
         if(selectedResultBoard.status.toLowerCase() === "Started".toLowerCase()){ //Check if the result board is started
             selectedResultBoard.status = "Ended"; //Set the status of the result board to ended
-            await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
-            toast.success('Result board ended successfully!',{autoClose:3000}); //Display the success message
-            setStartResultBoardDivMessageColor('green')
-            setStartResultBoardDivMessage('Result board ended successfully!');
+
+            try{
+                await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
+                toast.success('Result board ended successfully!',{autoClose:3000}); //Display the success message
+                setStartResultBoardDivMessageColor('green')
+                setStartResultBoardDivMessage('Result board ended successfully!');
+
+                try{
+                    const approvedLevelUpdate = await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateApprovedLevelAfterResultBoard`,selectedResultBoard); //Update the approved level in the database
+                    
+                }catch(err){
+                    toast.error("Error with updating approved level",{autoClose:3000}); //Display the error message if an error occurs
+                }
+
+            }catch(err){
+                toast.error("There is a error with ending the result board",{autoClose:3000}); //Display the error message if an error occurs
+                setStartResultBoardDivMessageColor('red')
+                setStartResultBoardDivMessage('Error with ending the result board!');
+            }
+
+            
+
+            //Call Api to update approved level
+
+
+
         }else{
             toast.error('Result board is not started!',{autoClose:3000}); //Display the error message
 
