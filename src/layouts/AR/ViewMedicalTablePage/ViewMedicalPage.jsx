@@ -52,8 +52,8 @@ export default function ViewMedicalPage() {
             setMedicalSubmissions(response.data);       // set medical submissions
 
             const allResponse = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissions`);       // get all medical submissions go get unique years
-          const uniqueArr = [...new Set(allResponse.data.map((item)=>item.academic_year))];                                     // get unique academic years
-          setUniqueYears(uniqueArr);                                                                                // set unique academic years
+            const uniqueArr = [...new Set(allResponse.data.map((item)=>item.academic_year))];                                     // get unique academic years
+            setUniqueYears(uniqueArr);                                                                                // set unique academic years
             
           }else{            // if medical submissions are not available
             
