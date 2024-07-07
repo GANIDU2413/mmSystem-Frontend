@@ -101,8 +101,7 @@ export default function HODMarksReturnSheet(props) {
       }, []);
     
     const saveDigitalSignature = (url) => {
-        setNewSignature(url); 
-        setUrl(url);    
+        setNewSignature(url);    
     };
     
    
@@ -121,9 +120,9 @@ export default function HODMarksReturnSheet(props) {
          } else if (approval_level === "course_coordinator") {
            nextApprovedlevel = "lecturer";
          } else if (approval_level === "lecturer") {
-           nextApprovedlevel = "RD";
+           nextApprovedlevel = "HOD";
          }
-         else if (approval_level === "RD") {
+         else if (approval_level === "RB") {
             nextApprovedlevel = "AR";
           }
 
@@ -133,7 +132,7 @@ export default function HODMarksReturnSheet(props) {
           } else if (approval_level === "lecturer") {
             prevApprovedlevel = "course_coordinator";
           }
-          else if (approval_level === "RD") {
+          else if (approval_level === "HOD") {
             prevApprovedlevel = "lecturer";
            }
 
@@ -195,7 +194,7 @@ useEffect(() => {
                 const response1 = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/lecturer/${academicYear}`);
                 setISLeclevel(response1.data.content);
 
-                const response2 = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/RD/${academicYear}`);
+                const response2 = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/HOD/${academicYear}`);
                 setISHODlevel(response2.data.content);
             } catch (error) {
                 console.error('Error fetching signature data:', error);
@@ -203,6 +202,7 @@ useEffect(() => {
        
     }
 
+    console.log(isCClevel.signature)
 
 
     // useEffect(() => {
@@ -330,7 +330,9 @@ useEffect(() => {
 console.log(authState?.accessToken?.claims.userType);
 
 const imageHandlClear = () => {
-    setISHODlevel(signature = null)
+    setISHODlevel(null)
+
+
 };
 
 
@@ -527,7 +529,6 @@ const imageHandlClear = () => {
               <div style={{float:"left",marginTop:"50px"}}>
                   
                   <div>
-                      {console.log(nextApprovedlevel)}
                       <table>
                           <tr>
                               <td >Coordinator/ Examinar :</td>
@@ -560,8 +561,9 @@ const imageHandlClear = () => {
                               <td></td>
                               <td>Sign:</td>
                               <td>
-                                  {nextApprovedlevel == "RD" &&
-                                  isHODlevel.signature != null ? <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> : null
+                                  {
+                                  nextApprovedlevel == "HOD" && isHODlevel.signature != null ? <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> : 
+                                  nextApprovedlevel == "HOD" && newSignature != null  ? <td><img src={newSignature} style={{ width: '80px', height: '40px' }} /> </td>: null
                               }
                               </td>
                               <td>Date:</td>
@@ -638,7 +640,7 @@ const imageHandlClear = () => {
           </div>
                     
 
-                    {approval_level === "RD" ? (
+                    {approval_level === "HOD" ? (
                         <button onClick={downloadPDF} className="btn btn-primary mt-3">
                             Download Marks Return Sheet
                         </button>
