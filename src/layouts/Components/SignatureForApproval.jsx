@@ -127,7 +127,7 @@ export default function SignatureForApproval({ saveDigitalSignature }) {
                         <label className="btn btn-outline-primary" htmlFor="vbtn-radio2">Upload a Signature</label>
                     </div>
                 </div>
-                <img src={url} style={{ width: '80px', height: '40px' }}/>
+                {/* <img src={url} style={{ width: '80px', height: '40px' }}/> */}
             </div>
         </div>
     );

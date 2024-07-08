@@ -222,7 +222,7 @@ export const NavebarDean = () => {
               </div>
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3" style={{listStyleType:"none"}}>
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/HODDashBoard">
+                <a className="nav-link active" aria-current="page" href="/dean">
                   Dashboard
                 </a>
               </li>
