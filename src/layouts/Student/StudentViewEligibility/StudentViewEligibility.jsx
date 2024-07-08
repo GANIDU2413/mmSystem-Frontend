@@ -5,6 +5,8 @@ import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
 import './studentViewEligibility.css';
+import { Redirect } from 'react-router-dom';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
 
 
 export default function StudentViewEligibility() {
@@ -69,6 +71,15 @@ export default function StudentViewEligibility() {
         loadStudentCourses();
 
     }, [studentEmail,studentId])
+
+
+
+    if(!authState){
+        return <SpinerLoading/>;
+      }
+      if(authState.accessToken?.claims.userType !== "student"){
+        return <Redirect to="/home" />;
+      }
 
 
   return (

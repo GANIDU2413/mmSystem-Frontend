@@ -4,9 +4,15 @@ import { useState } from 'react';
 import './studentViewCourseCriteria.css';
 import axios from 'axios';
 import BackButton from '../../Components/AR/BackButton/BackButton';
+import { useOktaAuth } from '@okta/okta-react';
+import { Redirect } from 'react-router-dom';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
+
 
 
 export default function StudentViewCourseCriteria() {
+
+    const {authState} = useOktaAuth(); //Get the auth state from the okta
 
     const location = useLocation(); //Get the location details from the URL
     
@@ -29,6 +35,14 @@ export default function StudentViewCourseCriteria() {
     useEffect(() => {
       loadCourseCriteriaList();
     },[])
+
+
+    if(!authState){
+      return <SpinerLoading/>;
+    }
+    if(authState.accessToken?.claims.userType !== "student"){
+      return <Redirect to="/home" />;
+    }
 
 
   return (

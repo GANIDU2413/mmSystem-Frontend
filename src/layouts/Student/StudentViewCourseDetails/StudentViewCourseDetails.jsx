@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import './studentViewCourseDetails.css';
 import { useHistory } from 'react-router-dom';
 import BackButton from '../../Components/AR/BackButton/BackButton';
+import { Redirect } from 'react-router-dom';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
 
 export default function StudentViewCourseDetails() {
 
@@ -66,6 +68,14 @@ export default function StudentViewCourseDetails() {
     loadStudentDetails();
     loadCourseList();
   }, [studentEmail]);
+
+
+  if(!authState){
+    return <SpinerLoading/>;
+  }
+  if(authState.accessToken?.claims.userType !== "student"){
+    return <Redirect to="/home" />;
+  }
 
   return (
     <div>

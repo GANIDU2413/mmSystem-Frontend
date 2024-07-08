@@ -5,6 +5,8 @@ import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
 import './studentWithHeldSubjects.css';
+import { Redirect } from 'react-router-dom';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
 
 export default function StudentWithHeldSubjects() {
 
@@ -64,6 +66,14 @@ export default function StudentWithHeldSubjects() {
         setStudentEmail(authState?.idToken?.claims.email);          //Set student email
         loadStudentDetails();
     }, [studentEmail,authState])
+
+
+    if(!authState){
+        return <SpinerLoading/>;
+      }
+      if(authState.accessToken?.claims.userType !== "student"){
+        return <Redirect to="/home" />;
+      }
 
   return (
     <div >

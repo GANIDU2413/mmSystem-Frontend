@@ -5,6 +5,9 @@ import { useState } from 'react';
 import BackButton from '../../Components/AR/BackButton/BackButton';
 import { toast, ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
+
 
 
 export default function StudentmedicalView() {
@@ -85,9 +88,16 @@ export default function StudentmedicalView() {
         loadStudentDetails();
         getAllMedicalSubmissions(selectedOption);       //get medicals for all years
 
-    }, [studentEmail,studentId])
+    }, [studentEmail,studentId,authState])
 
 
+
+    if(!authState){
+        return <SpinerLoading/>;
+      }
+      if(authState.accessToken?.claims.userType !== "student"){
+        return <Redirect to="/home" />;
+      }
 
   return (
     <div>

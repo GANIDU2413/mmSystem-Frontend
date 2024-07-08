@@ -4,6 +4,9 @@ import { useOktaAuth } from '@okta/okta-react'
 import axios from 'axios';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
+
 
 
 
@@ -15,7 +18,7 @@ export default function HomePageStudent() {
 
   const [studentId, setStudentId] = useState(null); // authState.idToken.claims.sub
   const [studentName, setStudentName] =useState(null);    //Use state to store student name
-  const [studentEmail, setStudentEmail] = useState(authState.isAuthenticated && authState.idToken.claims.email);    //Use state to store student email
+  const [studentEmail, setStudentEmail] = useState(null);    //Use state to store student email
   const [studentRegisteredYear, setStudentRegisteredYear] = useState(null);   //Use state to store student registered year
   const [studentDepartmentId, setStudentDepartmentId] = useState(null);   //Use state to store student department id
   const [studentLevel, setStudentLevel] = useState(null);     //Use state to store student level
@@ -78,7 +81,6 @@ export default function HomePageStudent() {
         const latestGPAResponse = await axios.get(`http://localhost:9090/api/Student/getLatestGPA/${StuID}`)
         setStudentSGPA(parseFloat(latestGPAResponse.data.sgpa).toFixed(2));
         setStudentCGPA(parseFloat(latestGPAResponse.data.cgpa).toFixed(2));
-        console.log(latestGPAResponse.data)
 
     }catch(error){
       console.error(`Error - ${error}`);
@@ -90,11 +92,11 @@ export default function HomePageStudent() {
 
   const getPublishedMarkSheets = async () => {         // load the published mark sheets
 
-    if(approvedLevel!=null && resultBoardState!=null && studentDepartmentId!=null && studentLevel!=null && studentSemester!=null){
+    if(studentDepartmentId!=null && studentLevel!=null && studentSemester!=null){
 
       
       try{
-        const publishedMarkSheets = await axios.get(`http://localhost:9090/api/Student/getPublishedMarkSheets/${approvedLevel}/${resultBoardState}/${studentDepartmentId}/${studentLevel}/${studentSemester}`)
+        const publishedMarkSheets = await axios.get(`http://localhost:9090/api/Student/getPublishedMarkSheets/${approvedLevel}/${resultBoardState}/${studentDepartmentId}/${studentLevel}/${studentSemester}`)      //Call Api to get published mark sheets
         
         setPublishedMarkSheetsList(publishedMarkSheets.data);
 
@@ -126,6 +128,15 @@ export default function HomePageStudent() {
     setStudentEmail(authState?.idToken?.claims.email);        // set the student email
     getStudentDetails();
   }, [studentEmail,studentDepartmentId,studentLevel,studentSemester])
+
+
+  
+  if(!authState){
+    return <SpinerLoading/>;
+  }
+  if(authState.accessToken?.claims.userType !== "student"){
+    return <Redirect to="/home" />;
+  }
 
 
   return (
@@ -187,7 +198,7 @@ export default function HomePageStudent() {
                 {
                   publishedMarkSheetsList == null ? (
                     <tr>
-                      <td colSpan={100} style={{textAlign: 'center'}}>No Published Mark Sheets</td>
+                      <td colSpan={100} style={{textAlign: 'center'}}>No Published Marks Available</td>
                     </tr>
                   ): studentGradeList == null? (
                     <tr>
