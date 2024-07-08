@@ -564,7 +564,7 @@ const imageHandlClear = () => {
                                   {
                                   nextApprovedlevel == "HOD" && isHODlevel.signature != null ? <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> : 
                                   nextApprovedlevel == "HOD" && newSignature != null  ? <td><img src={newSignature} style={{ width: '80px', height: '40px' }} /> </td>: null
-                              }
+                                 }
                               </td>
                               <td>Date:</td>
                               <td>{isHODlevel.date_time != null ? isHODlevel.date_time:null}</td>
@@ -638,13 +638,6 @@ const imageHandlClear = () => {
               
 
           </div>
-                    
-
-                    {approval_level === "HOD" ? (
-                        <button onClick={downloadPDF} className="btn btn-primary mt-3">
-                            Download Marks Return Sheet
-                        </button>
-                    ):null}
 
 
                 </>
