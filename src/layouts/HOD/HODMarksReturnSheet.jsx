@@ -126,8 +126,8 @@ export default function HODMarksReturnSheet(props) {
          } else if (approval_level === "lecturer") {
            nextApprovedlevel = "HOD";
          }
-         else if (approval_level === "RB") {
-            nextApprovedlevel = "AR";
+         else if (approval_level === "HOD") {
+            nextApprovedlevel = "RB";
           }
 
           let prevApprovedlevel = "";
