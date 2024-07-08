@@ -211,7 +211,7 @@ console.log(ele)
                   <tr>
                     <td>Eligibility</td>
                     <td>
-                      {(ele.ca_eligibility == "Eligible" && attendanceEligibility.eligibility == "Eligible") ? <input type='text' className=' mx-4 bg-success' size="10" value="Eligible" disabled /> : <input type='text' className=' mx-4 bg-danger text-white ' size="10" value="Not Eligible" disabled />}        
+                      {(ele.ca_eligibility == "Eligible" && attendanceEligibility.eligibility == "Eligible") ? <input type='text' className=' mx-4 bg-success' size="10" style={{color:"white"}} value="Eligible" disabled /> : <input type='text' className=' mx-4 bg-danger ' style={{color:"white"}} size="10" value="Not Eligible" disabled />}        
                      
                     </td>
                   </tr>

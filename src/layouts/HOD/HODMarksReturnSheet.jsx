@@ -31,7 +31,7 @@ export default function HODMarksReturnSheet(props) {
     const {approved_level}=props;
     const history = useHistory();
     // const [url,setUrl] = useState()
-    const[newSignature, setNewSignature] = useState("");
+    const[newSignature, setNewSignature] = useState();
     const[loading,setLoading]=useState(false);
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
     const[academicYear,setAcademicYear]=useState("")
@@ -105,6 +105,7 @@ export default function HODMarksReturnSheet(props) {
     const saveDigitalSignature = (url) => {
         setNewSignature(url);    
         console.log(url);
+        console.log(setNewSignature)
     };
     
    
@@ -125,8 +126,8 @@ export default function HODMarksReturnSheet(props) {
          } else if (approval_level === "lecturer") {
            nextApprovedlevel = "HOD";
          }
-         else if (approval_level === "RB") {
-            nextApprovedlevel = "AR";
+         else if (approval_level === "HOD") {
+            nextApprovedlevel = "RB";
           }
 
           let prevApprovedlevel = "";
@@ -404,9 +405,9 @@ const imageHandlClear = () => {
                                         </tr>
                                     </table>
                                         <div style={{display:"flex"}}>
-                                            <h5>Academic Year: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;{academicYear}&nbsp;&nbsp;</span></h5>
-                                            <h5 className=' mx-5'>Degree: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;Bachelor of Information and Communication Technology Honours Degree&nbsp;&nbsp;</span></h5>
-                                            <h5 className=' mx-2'>{academicDetails.current_semester === "1" ? "1st" : "2nd"} Semester Examination:  <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;December 2023&nbsp;&nbsp;</span> </h5>  
+                                            <h6>Academic Year: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;{academicYear}&nbsp;&nbsp;</span></h6>
+                                            <h6 className=' mx-5'>Degree: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;Bachelor of Information and Communication Technology Honours Degree&nbsp;&nbsp;</span></h6>
+                                            <h6 className=' mx-2'>{academicDetails.current_semester === "1" ? "1st" : "2nd"} Semester Examination:  <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;December 2023&nbsp;&nbsp;</span> </h6>  
                                         </div>
                                         
                                     
@@ -531,7 +532,6 @@ const imageHandlClear = () => {
                         </tr>))}
                         </tbody>
 
-
                     </table>
                 </div>
                 <div className=' m-5'></div>
@@ -542,45 +542,111 @@ const imageHandlClear = () => {
                         {console.log(nextApprovedlevel)}
                         <table>
                             <tr>
-                                <td >Coordinator/ Examinar :</td>
-                                <td></td>
-                                <td>Sign:</td>
-                                <td>
-                                    {nextApprovedlevel == "course_coordinator" &&
-                                    isCClevel.signature != null ? <img src={isCClevel.signature} style={{ width: '80px', height: '40px' }} /> : null
+                                
+                                
+                                    {
+                                         nextApprovedlevel == "course_coordinator" && newSignature != null ?
+                                         <>
+                                            <td >Coordinator/ Examinar :</td>
+                                            <td></td>
+                                            <td>Sign:</td>
+                                            <td> <img src={newSignature} style={{ width: '80px', height: '40px' }} /> </td>
+                                            <td>Date:</td>
+                                            <td>{isCClevel.date_time != null ? isCClevel.date_time:null}</td>
+                                         </>
+                                         :
+                                         null
+                                          
                                     }
 
-                                </td>
-                                <td>Date:</td>
-                                <td>{isCClevel.date_time != null ? isCClevel.date_time:null}</td>
+                               
+                                
                             </tr>
-                            <tr>
-                                <td>Checked by :</td>
-                                <td></td>
-                                <td>Sign:</td>
-                                <td>
+                            
+                                
                                     {nextApprovedlevel == "lecturer" &&
-                                    isLeclevel.signature != null ? <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> : null
+                                    isCClevel.signature != null ?
+                                    <>
+                                            <tr>
+                                                <td >Coordinator/ Examinar :</td>
+                                                <td></td>
+                                                <td>Sign:</td>
+                                                <td> <img src={isCClevel.signature} style={{ width: '80px', height: '40px' }} /> </td>
+                                                <td>Date:</td>
+                                                <td>{isCClevel.date_time != null ? isCClevel.date_time:null}</td>
+                                            </tr>
+                                            
+                                            {newSignature != null ?
+                                            <tr>
+                                            <td>Checked by :</td>
+
+                                            <td></td>
+                                            <td>Sign:</td>
+                                            <img src={newSignature} style={{ width: '80px', height: '40px' }} /> 
+                                            <td>Date:</td>
+                                            <td>{isLeclevel.date_time != null ? isLeclevel.date_time:null}</td></tr>:null
+                                            }
+                                            
+                                    </>
+                                    :null
                                     }
                                     
-                                </td>
-                                <td>Date:</td>
-                                <td>{isLeclevel.date_time != null ? isLeclevel.date_time:null}</td>
-                            </tr>
-                            <tr>
-                                <td>Head of the Department : </td>
-                                <td></td>
-                                <td>Sign:</td>
-                                <td>
-                                    {nextApprovedlevel == "HOD" &&
-                                    isHODlevel.signature != null ? <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> : 
-                                    <img src={newSignature} style={{ width: '80px', height: '40px' }} />
+                                
+                                
+                            
+                            
+                                
+                                
+                                    {
+                                    nextApprovedlevel == "HOD" &&
+                                    isHODlevel.signature != null ? 
+                                    <>
+                                    <tr>
+                                            <td>Coordinator/ Examinar :</td>
+                                            <td></td>
+                                            <td>Sign:</td>
+                                            <td> <img src={isCClevel.signature} style={{ width: '80px', height: '40px' }} /> </td>
+                                            <td>Date:</td>
+                                            <td>{isCClevel.date_time != null ? isCClevel.date_time:null}</td>
+                                    </tr>
+                                    <tr>
+                                        {isLeclevel!=null?
+                                        <>
+                                        <td>Checked by :</td>
+
+                                        <td></td>
+                                        <td>Sign:</td>
+                                        <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> 
+                                        <td>Date:</td>
+                                        <td>{isLeclevel.date_time != null ? isLeclevel.date_time:null}</td>
+                                        </>
+                                        :null
+                                        }
+                                            
+                                    </tr>
+                                    <tr>{newSignature != null ?
+                                        <>
+                                                                <td>Head of the Department : </td>
+                                                                <td></td>
+                                                                <td>Sign:</td>
+                                                                <img src={newSignature} style={{ width: '80px', height: '40px' }} /> 
+                                                                <td>Date:</td>
+                                                                <td>{isHODlevel.date_time != null ? isHODlevel.date_time:null}</td>: 
+                                                                
+                                        </>
+                                        :null
                                 }
-                                </td>
-                                <td>Date:</td>
-                                <td>{isHODlevel.date_time != null ? isHODlevel.date_time:null}</td>
-                                {/* <button className=' btn btn-danger btn-sm' onClick={imageHandlClear}>Cancel</button> */}
-                            </tr>
+                                        
+                                    </tr> 
+                                    </>:null
+                                    }                                 
+                                
+            
+                            
+                                
+                               
+                               
+
                         </table>
 
                     </div>
@@ -652,13 +718,6 @@ const imageHandlClear = () => {
               
 
           </div>
-                    
-
-                    {approval_level === "HOD" ? (
-                        <button onClick={downloadPDF} className="btn btn-primary mt-3">
-                            Download Marks Return Sheet
-                        </button>
-                    ):null}
 
 
                 </>
