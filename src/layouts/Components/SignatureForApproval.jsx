@@ -1,62 +1,70 @@
 import SignatureCanvas from 'react-signature-canvas';
 import { useDropzone } from 'react-dropzone';
-import React, { useState, useRef } from 'react'; // Import useRef
+import React, { useState, useRef, useEffect } from 'react';
 
 export default function SignatureForApproval({ saveDigitalSignature }) {
     const [radioSelection, setRadioSelection] = useState('digitalSignature');
     const [selectedImage, setSelectedImage] = useState(null);
     const [showSaveClearButtons, setShowSaveClearButtons] = useState(false);
     const [files, setFiles] = useState([]);
-    const sign = useRef(); // Use useRef for sign
+    const sign = useRef();
     const [url, setUrl] = useState('');
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         accept: 'image/*',
         onDrop: acceptedFiles => {
             setFiles(acceptedFiles.map(file => ({
-               ...file,
+                ...file,
                 preview: URL.createObjectURL(file),
             })));
-            setSelectedImage(acceptedFiles[0].preview);
+            setSelectedImage(URL.createObjectURL(acceptedFiles[0]));
             setShowSaveClearButtons(true);
         },
     });
 
+    console.log(url);   
+
+    useEffect(() => {
+        return () => {
+            // Revoke the data uris to avoid memory leaks
+            files.forEach(file => URL.revokeObjectURL(file.preview));
+        };
+    }, [files]);
+
     const handleSave = async () => {
-    if (files.length > 0) {
-        const file = files[0];
-        if (file instanceof Blob) {
-            const imageUrl = await convertBlobToDataURL(file);
-            console.log(imageUrl)
-            setUrl(imageUrl);
-            saveDigitalSignature(imageUrl)
-        } else {
-            console.error("File is not a Blob:", file);
-            // Handle this case according to your application logic
+        if (files.length > 0) {
+            const file = files[0];
+            if (file instanceof Blob) {
+                const imageUrl = await convertBlobToDataURL(file);
+                setUrl(imageUrl);
+                saveDigitalSignature(imageUrl);
+            } else {
+                console.error("File is not a Blob:", file);
+            }
         }
-    }
-    setSelectedImage(null);
-    setShowSaveClearButtons(false);
-    setFiles([]);
-};
+        setSelectedImage(null);
+        setShowSaveClearButtons(false);
+        setFiles([]);
+    };
 
-
-    const imageHandlClear = async () => {
-        setUrl(null);
+    const handleClearImage = () => {
+        setSelectedImage(null);
+        setFiles([]);
+        setShowSaveClearButtons(false);
         saveDigitalSignature(null);
     };
 
-    const handleClear = () => {
-        if (sign.current) { // Check if sign.current exists before calling clear
+    const handleClearCanvas = () => {
+        if (sign.current) {
             sign.current.clear();
         }
-       // setUrl(null);
         saveDigitalSignature(null);
     };
 
-    const handleGenerate = async () => {
-        if (sign.current) { // Check if sign.current exists before accessing it
+    const handleGenerate = () => {
+        if (sign.current) {
             const imageUrl = sign.current.getTrimmedCanvas().toDataURL('image/png');
+            console.log(imageUrl)
             setUrl(imageUrl);
             saveDigitalSignature(imageUrl);
         }
@@ -65,41 +73,32 @@ export default function SignatureForApproval({ saveDigitalSignature }) {
     const convertBlobToDataURL = (blob) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
-            reader.onload = () => {
-                resolve(reader.result);
-            };
+            reader.onload = () => resolve(reader.result);
             reader.onerror = reject;
             reader.readAsDataURL(blob);
         });
     };
 
-    const images = files.map(file => (
-        <div key={file.name}>
-            <img src={file.preview} alt={file.name} style={{ width: '100%', height: 'auto' }} />
-        </div>
-    ));
-
     return (
         <div>
-            <div className='container' style={{ display: 'flex', marginLeft: "200px", marginBottom: "80px"}}>
+            <div className='container' style={{ display: 'flex', marginLeft: "200px", marginBottom: "80px" }}>
                 <div style={{ float: "right" }}>
                     {radioSelection === 'digitalSignature' && (
-                        <div style={{ border: "2px solid black", width: 500, height: 200 }}>
+                        <div className='shadow' style={{ border: '1px solid gray', width: 500, height: 200 }}>
                             <SignatureCanvas
                                 canvasProps={{ width: 500, height: 200, className: 'sigCanvas' }}
-                                ref={sign} // Correctly attaching the ref
+                                ref={sign}
                             />
                             <br />
                             <button className='btn btn-outline-success btn-sm' style={{ width: "100px" }} onClick={handleGenerate}>Save</button>
-                            <button className='btn btn-danger btn-sm mx-3' style={{ width: "100px" }} onClick={handleClear}>Clear</button>
-                            <br />
+                            <button className='btn btn-danger btn-sm mx-3' style={{ width: "100px" }} onClick={handleClearCanvas}>Clear</button>
                         </div>
                     )}
                     {radioSelection === 'uploadSignature' && (
                         <div style={{ border: '2px solid black', width: '500px', height: '200px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                             <div {...getRootProps()} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                                 <input {...getInputProps()} />
-                                {isDragActive? <p>Drop the files here...</p> : <p>Drag 'n' drop some files here, or click to select files</p>}
+                                {isDragActive ? <p>Drop the files here...</p> : <p>Drag 'n' drop some files here, or click to select files</p>}
                             </div>
                             {files.map(file => (
                                 <div key={file.name}>
@@ -108,8 +107,8 @@ export default function SignatureForApproval({ saveDigitalSignature }) {
                             ))}
                             {showSaveClearButtons && (
                                 <div>
-                                    <button className='btn btn-outline-success btn-sm' onClick={handleSave} style={{ marginRight: '10px' }}>Save</button>
-                                    <button className='btn btn-danger btn-sm mx-3' onClick={imageHandlClear}>Clear</button>
+                                    <button className='btn btn-outline-success btn-sm shadow-lg' onClick={handleSave} style={{ marginRight: '10px' }}>Save</button>
+                                    <button className='btn btn-danger btn-sm mx-3 shadow-lg' onClick={handleClearImage}>Clear</button>
                                 </div>
                             )}
                             {selectedImage && (
@@ -128,6 +127,7 @@ export default function SignatureForApproval({ saveDigitalSignature }) {
                         <label className="btn btn-outline-primary" htmlFor="vbtn-radio2">Upload a Signature</label>
                     </div>
                 </div>
+                <img src={url} style={{ width: '80px', height: '40px' }}/>
             </div>
         </div>
     );
