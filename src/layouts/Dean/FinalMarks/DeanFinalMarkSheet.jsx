@@ -156,7 +156,7 @@ export default function DeanFinalMarkSheet(props) {
       // Use the nextApprovedlevel variable directly in the network request
       response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevelByDean`, approval);
 
-      toast.success("Approval level updated successfully");
+      toast.success("Result sheet approved successfully");
 
       setTimeout(() => {
         history.goBack();
