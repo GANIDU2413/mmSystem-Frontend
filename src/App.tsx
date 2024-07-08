@@ -60,6 +60,7 @@ import StudentmedicalView from "./layouts/Student/StudentMedicalView/StudentMedi
 import StudentViewEligibility from "./layouts/Student/StudentViewEligibility/StudentViewEligibility";
 import StudentViewCourseDetails from "./layouts/Student/StudentViewCourseDetails/StudentViewCourseDetails";
 import StudentViewCourseCriteria from "./layouts/Student/StudentViewCourseCriteria/StudentViewCourseCriteria";
+import StudentWithHeldSubjects from "./layouts/Student/StudentWithHeldSubjects/StudentWithHeldSubjects";
 
 
 
@@ -193,6 +194,11 @@ export const App = () => {
 
           <Route path="/studentViewCourseCriteria">     {/*Link to Student Course criteria view page*/}
             <StudentViewCourseCriteria/>
+          </Route>
+
+
+          <Route path ="/studentViewWithHeldSubjects">      {/*Link to Student Withheld subjects view page*/}
+            <StudentWithHeldSubjects/>
           </Route>
 
 

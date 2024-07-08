@@ -76,25 +76,31 @@ export const NavebarStudent = () => {
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
 
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/student">
+                <a className="nav-link active" aria-current="page" href="/student">             {/*Link to the student dashboard*/}
                  Dashboard
                 </a>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/studentMedicalView">
+                <a className="nav-link active" aria-current="page" href="/studentMedicalView">        {/*Link to the student medical view*/}    
                  Medicals
                 </a>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/studentEligibilityView">
+                <a className="nav-link active" aria-current="page" href="/studentEligibilityView">      {/*Link to the student eligibility view*/}
                  Eligibility
                 </a>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/studentViewCourseDetails">
+                <a className="nav-link active" aria-current="page" href="/studentViewWithHeldSubjects">       {/*Link to the student with held subjects*/}
+                 With held Subjects
+                </a>
+              </li>
+
+              <li className="nav-item">
+                <a className="nav-link active" aria-current="page" href="/studentViewCourseDetails">      {/*Link to the student course details*/}
                  Course Details
                 </a>
               </li>

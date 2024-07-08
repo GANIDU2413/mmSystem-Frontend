@@ -17,12 +17,45 @@
 
 }
 
-.student-details-col-1 {
-   max-width: max-content;
-   margin-left: 20px;
-   font-weight: bold;
+
+.student-home-page-main-body {
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  padding-right: 2%;
+  padding-left: 2%;
+  padding-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+  min-width: 500px;
+  min-height: 200px;
+  width: auto;
+  height: auto;
+  max-width: 100%;
 }
 
-.student-details-col-2 {
-    max-width: max-content;
+.course-col-1 {
+  width: fit-content;
+  max-width: max-content;
+  margin-left: 10px;
+  margin-top: 15px;
+  background-color: rgb(235, 235, 235);
+  border: 1px solid rgb(171, 171, 171);
+  border-radius: 5px;
+}
+
+.home-page-table-head {
+  background-color: #ffffff;
+  position: sticky;
+  top: 1px;
+  z-index: 1;
+}
+
+.course-row-2 {
+  margin-top: 20px;
+}
+
+.student-home-page-table {
+  margin-left: auto;
+  margin-right: auto;
 }
