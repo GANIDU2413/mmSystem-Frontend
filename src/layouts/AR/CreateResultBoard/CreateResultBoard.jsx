@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BackButton from '../../Components/AR/BackButton/BackButton';
 import { useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
 
 
 
@@ -232,6 +234,12 @@ export default function CreateResultBoard() {
     },[authState,academicYear,department,level,semester,buttonClicked])
 
 
+    if(!authState){
+        return <SpinerLoading/>;
+      }
+      if(authState.accessToken?.claims.userType !== "ar"){
+        return <Redirect to="/home" />;
+      }
     
   return (
     <div className='div-body container'>

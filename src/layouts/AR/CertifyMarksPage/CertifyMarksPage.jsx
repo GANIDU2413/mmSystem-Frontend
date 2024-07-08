@@ -8,12 +8,14 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
 
 export default function CertifyMarksPage(props) {     
 
+  const { authState } = useOktaAuth();
+
     const department_id = props.department_id;      // get department id from props
     const history = useHistory();               // for routing
-    const { authState } = useOktaAuth();      // get auth state
     const approvedLevel="RB";          // Approved level for result board conducted courses
 
 /*    const checkCertifyAvailability = async (level,semester) => {          // check whether HOD approved all courses for the given level and semester
@@ -139,6 +141,14 @@ export default function CertifyMarksPage(props) {
       loadAvailableResultSheets();
     }, []);
 
+
+    if(!authState){
+      return <SpinerLoading/>;
+    }
+    if(authState.accessToken?.claims.userType !== "ar"){
+      return <Redirect to="/home" />;
+    }
+
     return (
       <>
         <div className='certify-div-1'>
@@ -158,14 +168,21 @@ export default function CertifyMarksPage(props) {
               
               <tbody>
                 {
-                  finalMarksheetList.map((item, index) =>(
-                    <tr key={index} className='clickable-row' onClick={()=>{history.push(`/arFinalMarkSheet/${item.level}/${item.semester}/${item.department}`)}}>
-                      <td>level {item.level}</td>
-                      <td>semester {item.semester}</td>
-                      <td>Dep. of {item.department}</td>
-                      <td>academic year ({item.academic_year})</td>
+                  !finalMarksheetList.length >0 ? (
+                    <tr>
+                      <td colSpan={100} style={{textAlign: 'center',color:"red"}}>No Marks Sheets Available to Certify</td>
                     </tr>
-                  ))}
+                  ):(
+                    finalMarksheetList.map((item, index) =>(
+                      <tr key={index} className='clickable-row' onClick={()=>{history.push(`/arFinalMarkSheet/${item.level}/${item.semester}/${item.department}`)}}>
+                        <td>level {item.level}</td>
+                        <td>semester {item.semester}</td>
+                        <td>Dep. of {item.department}</td>
+                        <td>academic year ({item.academic_year})</td>
+                      </tr>
+                    ))
+                  )
+                }
 
 
 

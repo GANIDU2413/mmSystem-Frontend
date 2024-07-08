@@ -10,6 +10,7 @@ export const NavebarAR = () => {
   if(!authState){
     return <SpinerLoading/>
   }
+  
 
   const handleLogout = async () =>{
     oktaAuth.signOut();
@@ -68,24 +69,22 @@ export const NavebarAR = () => {
               aria-label="Close"
             ></button>
           </div>
+
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
+
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/arhome">
                  Dashboard
                 </a>
               </li>
-              
-              <li className="nav-item">
-                <a className="nav-link" href="/createResultsBoard">
-                  Create Results Board
-                </a>
-              </li>
+
               <li className="nav-item">
                 <a className="nav-link" href="/viewMedicals">
                   View Medical List
                 </a>
               </li>
+
               <li className="nav-item">
                 <a className="nav-link" href="/viewablist">
                 Update grades for absentees
@@ -128,7 +127,14 @@ export const NavebarAR = () => {
                 </ul>
               </li>
               {/* <hr></hr> */}
-
+              
+              <li className="nav-item">
+                <a className="nav-link" href="/createResultsBoard">
+                  Create Results Board
+                </a>
+              </li>
+              
+      
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"

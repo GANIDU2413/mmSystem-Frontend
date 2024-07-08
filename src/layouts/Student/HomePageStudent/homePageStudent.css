@@ -59,3 +59,12 @@
   margin-left: auto;
   margin-right: auto;
 }
+.grade-col-1 {
+  margin-bottom: 20px;
+}
+
+.grade-col-2 {
+  border-radius: 7px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  
+}

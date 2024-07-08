@@ -2,15 +2,24 @@ import { useOktaAuth } from "@okta/okta-react";
 import { NavebarAR } from "../../Components/AR/NavBarAR/NavebarAR";
 import { Redirect } from "react-router-dom";
 import './homePageAR.css';
+import { SpinerLoading } from "../../Utils/SpinerLoading";
 
 
 export default function HomePageAR() {
   const { authState } = useOktaAuth();
 
-  // if (authState?.accessToken?.claims.userType !== 'ar') {
-  //   return <Redirect to="/ar" />;
+
+  // if (authState?.accessToken?.claims.userType !== "ar") {
+  //   return <Redirect to="/home" />;
   // }
   
+  if(!authState){
+      return <SpinerLoading/>
+  }
+  if(authState.accessToken?.claims.userType !== "ar"){
+    return <Redirect to="/home" />;
+  }
+
   
   return (
     <div>

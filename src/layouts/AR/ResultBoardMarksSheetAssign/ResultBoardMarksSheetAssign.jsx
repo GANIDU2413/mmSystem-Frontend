@@ -8,9 +8,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 import BackButton from '../../Components/AR/BackButton/BackButton';
 import { useHistory } from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
+import { Redirect } from 'react-router-dom';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
 
 
 export default function ResultBoardMarksSheetAssign() {
+
+    const { authState } = useOktaAuth();
 
 
 
@@ -380,7 +385,12 @@ export default function ResultBoardMarksSheetAssign() {
 
 
 
-
+    if(!authState){
+        return <SpinerLoading/>;
+      }
+      if(authState.accessToken?.claims.userType !== "ar"){
+        return <Redirect to="/home" />;
+      }
 
 
 

@@ -3,10 +3,17 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import "./courseSelection.css";
 import BackButton from '../BackButton/BackButton';
+import { Redirect } from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
+import { SpinerLoading } from '../../../Utils/SpinerLoading';
+
+
 
 
 
 export default function CourseSelection(props) {
+
+    const { authState } = useOktaAuth();        // get the authentication state
 
     const { level, semester, department_id } = props;       // Destructuring props
     const [courseData, setCourseData] = useState([]);   // State to store course data
@@ -38,6 +45,15 @@ export default function CourseSelection(props) {
     useEffect(() => {       // UseEffect to fetch course data
         loadCourseData();
     }, []);
+
+
+    
+    if(!authState){
+      return <SpinerLoading/>;
+    }
+    if(authState.accessToken?.claims.userType !== "ar"){
+      return <Redirect to="/home" />;
+    }
 
 
   return (

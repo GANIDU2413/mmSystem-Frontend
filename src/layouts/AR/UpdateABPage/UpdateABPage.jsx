@@ -8,6 +8,8 @@ import { useOktaAuth } from '@okta/okta-react';
 import { ToastContainer, toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
+
 
 export default function UpdateABPage() {
 
@@ -104,10 +106,7 @@ export default function UpdateABPage() {
         }
     };
 
-    useEffect(()=>{
-        
-        loadAllMedicalSubmissions();        //Load the medical submission details when the page is loaded
-    },[]);
+    
 
 
     const updateGrade = async()=>{              //Function to update the student grade
@@ -302,6 +301,22 @@ export default function UpdateABPage() {
         }, 3000);
 
     };
+
+
+    useEffect(()=>{
+        
+        loadAllMedicalSubmissions();        //Load the medical submission details when the page is loaded
+    },[]);
+
+
+
+    
+    if(!authState){
+        return <SpinerLoading/>;
+      }
+      if(authState.accessToken?.claims.userType !== "ar"){
+        return <Redirect to="/home" />;
+      }
     
 
 
