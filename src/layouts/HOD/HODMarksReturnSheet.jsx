@@ -640,7 +640,48 @@ const imageHandlClear = () => {
                                     </tr> 
                                     </>:null
                                     }                                 
-                                
+                                    {
+                                        nextApprovedlevel == "RB" || nextApprovedlevel == "AR"  ? 
+                                        <>
+                                        <tr>
+                                                <td>Coordinator/ Examinar :</td>
+                                                <td></td>
+                                                <td>Sign:</td>
+                                                <td> <img src={isCClevel.signature} style={{ width: '80px', height: '40px' }} /> </td>
+                                                <td>Date:</td>
+                                                <td>{isCClevel.date_time != null ? isCClevel.date_time:null}</td>
+                                        </tr>
+                                        <tr>
+                                            {isLeclevel!=null?
+                                            <>
+                                            <td>Checked by :</td>
+    
+                                            <td></td>
+                                            <td>Sign:</td>
+                                            <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> 
+                                            <td>Date:</td>
+                                            <td>{isLeclevel.date_time != null ? isLeclevel.date_time:null}</td>
+                                            </>
+                                            :null
+                                            }
+                                                
+                                        </tr>
+                                        <tr>{isHODlevel.signature != null ?
+                                            <>
+                                                                    <td>Head of the Department : </td>
+                                                                    <td></td>
+                                                                    <td>Sign:</td>
+                                                                    <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> 
+                                                                    <td>Date:</td>
+                                                                    <td>{isHODlevel.date_time != null ? isHODlevel.date_time:null}</td>: 
+                                                                    
+                                            </>
+                                            :null
+                                    }
+                                            
+                                        </tr> 
+                                        </>:null
+                                    }
             
                             
                                 
