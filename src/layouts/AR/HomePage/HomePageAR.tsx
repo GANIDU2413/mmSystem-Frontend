@@ -60,26 +60,8 @@ export default function HomePageAR() {
           <div className="col mb-4"> 
             <div className="card text-center functionCard">
               <div className="card-body">
-                <br/><h5 className="card-title">Certify Marks - ICT</h5><br/>
-                <a href="/arcerfityictmarks" className="btn btn-primary home-page-class-button">Certify</a>
-              </div>
-            </div>
-          </div>
-
-          <div className="col mb-4"> 
-            <div className="card text-center functionCard">
-              <div className="card-body">
-                <br/><h5 className="card-title">Certify Marks - ET</h5><br/>
-                <a href="/arcerfityetmarks" className="btn btn-primary home-page-class-button">Certify</a>
-              </div>
-            </div>
-          </div>
-
-          <div className="col mb-4"> 
-            <div className="card text-center functionCard">
-              <div className="card-body">
-                <br/><h5 className="card-title">Certify Marks - BST</h5><br/>
-                <a href="/arcertifybstmarks" className="btn btn-primary home-page-class-button">Certify</a>
+                <br/><h5 className="card-title">Certify Marks</h5><br/>
+                <a href="/arCertifyMarks" className="btn btn-primary home-page-class-button">Certify</a>
               </div>
             </div>
           </div>

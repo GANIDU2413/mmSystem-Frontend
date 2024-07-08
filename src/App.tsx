@@ -142,16 +142,8 @@ export const App = () => {
 
 
 
-          <Route path="/arcerfityictmarks">  {/* Link to certify ICT marks page */}
-            <CertifyMarksPage department_id={"ICT"}/>
-          </Route>
-
-          <Route path="/arcerfityetmarks">  {/* Link to certify ET marks page */}
-            <CertifyMarksPage department_id={"ET"}/>
-          </Route>
-
-          <Route path="/arcertifybstmarks">  {/* Link to certify BST marks page */}
-            <CertifyMarksPage department_id={"BST"}/>
+          <Route path="/arCertifyMarks">  {/* Link to certify ICT marks page */}
+            <CertifyMarksPage/>
           </Route>
         
           <Route path="/arFinalMarkSheet/:level/:semester/:dept">   {/* Link to view marks remaining to certify page */}
