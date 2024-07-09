@@ -1,16 +1,15 @@
 import { Link, NavLink } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
-import { SpinerLoading } from "../../../Utils/SpinerLoading";
 import { IoMenuSharp } from "react-icons/io5";
+import { SpinerLoading } from "../../Utils/SpinerLoading";
 
-export const NavebarAR = () => {
+export const NavebarStudent = () => {
 
   const {oktaAuth , authState} = useOktaAuth();
 
   if(!authState){
     return <SpinerLoading/>
   }
-  
 
   const handleLogout = async () =>{
     oktaAuth.signOut();
@@ -34,7 +33,7 @@ export const NavebarAR = () => {
             gap: "10px",
           }}
         >
-          <IoMenuSharp size={35} /> Faculty Of Technology, Marking Management System 
+          <IoMenuSharp size={35} /> Faculty Of Technology, Marking Management System
         </a>
         <ul className="navbar-nav ms-auto">
            {!authState.isAuthenticated?
@@ -58,10 +57,13 @@ export const NavebarAR = () => {
           id="offcanvasNavbar"
           aria-labelledby="offcanvasNavbarLabel"
         >
+
           <div className="offcanvas-header">
+
             <h6 className="offcanvas-title" id="offcanvasNavbarLabel">
             Hello, {authState?.idToken?.claims.name /*Display user's username*/}
             </h6>
+
             <button
               type="button"
               className="btn-close"
@@ -69,79 +71,40 @@ export const NavebarAR = () => {
               aria-label="Close"
             ></button>
           </div>
-
+          
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
 
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/arhome">
+                <a className="nav-link active" aria-current="page" href="/student">             {/*Link to the student dashboard*/}
                  Dashboard
                 </a>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link" href="/viewMedicals">
-                  View Medical List
+                <a className="nav-link active" aria-current="page" href="/studentMedicalView">        {/*Link to the student medical view*/}    
+                 Medicals
                 </a>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link" href="/viewablist">
-                Exam Absentees
-                </a>
-              </li>
-
-              {/* <hr></hr> */}
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  View marks return sheets
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="/arviewictmarks">
-                      Department of ICT
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/arviewetmarks">
-                      Department of ET
-                    </a>
-                  </li>
-                  <li></li>
-                  <li>
-                    <a className="dropdown-item" href="/arviewbstmarks">
-                      Department of BST
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/arviewmtdmarks">
-                      Department of Multi Disciplinary
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              {/* <hr></hr> */}
-              
-              <li className="nav-item">
-                <a className="nav-link" href="/createResultsBoard">
-                  Manage Results Boards
+                <a className="nav-link active" aria-current="page" href="/studentEligibilityView">      {/*Link to the student eligibility view*/}
+                 Eligibility
                 </a>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link" href="/arCertifyMarks">
-                  Certify Marks
+                <a className="nav-link active" aria-current="page" href="/studentViewWithHeldSubjects">       {/*Link to the student with held subjects*/}
+                 With held Subjects
                 </a>
               </li>
-              
-      
-              
+
+              <li className="nav-item">
+                <a className="nav-link active" aria-current="page" href="/studentViewCourseDetails">      {/*Link to the student course details*/}
+                 Course Details
+                </a>
+              </li>
+
             </ul>
             
             

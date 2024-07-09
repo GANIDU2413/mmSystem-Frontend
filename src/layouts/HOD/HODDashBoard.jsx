@@ -17,7 +17,7 @@ export default function HODDashBoard() {
     <>  
     <NavebarHOD/>
         <div className=' container' style={{marginTop:"70px"}}>
-            <h1>Head of Department Dashboard</h1>
+          
             <h3 className=' bg-transparent'>Approvel of Marks</h3>
 
             <div className='row g-5 mt-2'>

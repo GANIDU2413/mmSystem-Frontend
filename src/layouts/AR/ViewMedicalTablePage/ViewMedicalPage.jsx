@@ -5,8 +5,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useState } from 'react';
 import './viewMedicalPage.css';
 import BackButton from '../../Components/AR/BackButton/BackButton';
+import { Redirect } from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ViewMedicalPage() {
+
+  const { authState } = useOktaAuth();        // get the authentication state
 
   const [medicalAvailability,setMedicalAvailability] = useState(true);        // state to check the availability of medical submissions
   const [medicalSubmissions,setMedicalSubmissions] = useState([]);            // state to store the medical submissions
@@ -52,8 +58,8 @@ export default function ViewMedicalPage() {
             setMedicalSubmissions(response.data);       // set medical submissions
 
             const allResponse = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissions`);       // get all medical submissions go get unique years
-          const uniqueArr = [...new Set(allResponse.data.map((item)=>item.academic_year))];                                     // get unique academic years
-          setUniqueYears(uniqueArr);                                                                                // set unique academic years
+            const uniqueArr = [...new Set(allResponse.data.map((item)=>item.academic_year))];                                     // get unique academic years
+            setUniqueYears(uniqueArr);                                                                                // set unique academic years
             
           }else{            // if medical submissions are not available
             
@@ -73,6 +79,15 @@ export default function ViewMedicalPage() {
         setUniqueYears([]);         // set unique years to empty array
         fetchData(selectedOption);    // fetch data according to the selected option
       },[]);
+
+
+  
+      if(!authState){
+        return <SpinerLoading/>;
+      }
+      if(authState.accessToken?.claims.userType !== "ar"){
+        return <Redirect to="/home" />;
+      }
 
   return (
     <div>

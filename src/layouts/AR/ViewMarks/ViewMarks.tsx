@@ -3,14 +3,22 @@ import LevelSelection from "../../Components/AR/LevelSelection/LevelSelection";
 import { useOktaAuth } from "@okta/okta-react";
 import { NavebarAR } from "../../Components/AR/NavBarAR/NavebarAR";
 import BackButton from "../../Components/AR/BackButton/BackButton";
+import { SpinerLoading } from "../../Utils/SpinerLoading";
+
 
 export default function ViewMarks(props:any) {
   const { authState } = useOktaAuth();
   var department_id = props.department_id;
 
-//  if (authState?.accessToken?.claims.userType !== 'ar') {
-//    return <Redirect to="/ar" />;
-//    }
+
+  
+  if(!authState){
+    return <SpinerLoading/>;
+  }
+  if(authState.accessToken?.claims.userType !== "ar"){
+    return <Redirect to="/home" />;
+  }
+
   return (
     <div>
        
