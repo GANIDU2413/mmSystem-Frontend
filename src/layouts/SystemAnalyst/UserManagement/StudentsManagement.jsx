@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import * as XLSX from "xlsx";
 import { NavebarSA } from '../NavebarSA';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 export default function StudentsManagement() {
     const [data, setData] = useState([]);
     const [studentsData, setStudentsData] = useState([]);
+    const history = useHistory();
 
     useEffect(() => {
         fetchData();
@@ -73,7 +75,7 @@ export default function StudentsManagement() {
         <form onSubmit={onSubmit}>
             <input type="file" className='btn btn-secondary mx-2 btn-sm my-1' accept='.xlsx, .xls' onChange={handleFileUpload} />
             {data.length > 0 && (
-            <table className='table'>
+            <table className='table '>
                 <thead>
                 <tr>
                     {Object.keys(data[0]).map((key, index) => (
@@ -83,7 +85,7 @@ export default function StudentsManagement() {
                 </thead>
                 <tbody>
                 {data.map((row, index) => (
-                    <tr key={index}>
+                    <tr key={index} >
                     {Object.values(row).map((value, index) => (
                         <td key={index}>{value}</td>
                     ))}
@@ -99,7 +101,7 @@ export default function StudentsManagement() {
     <div>
     <div className="h2 mt-lg-5">Students Details</div>
         {studentsData.length > 0 && (
-            <table className='table'>
+            <table className='table table-hover'>
             <thead>
                 <tr>
                 {Object.keys(studentsData[0]).map((key, index) => (
@@ -109,7 +111,7 @@ export default function StudentsManagement() {
             </thead>
             <tbody>
                 {studentsData.map((row, index) => (
-                <tr key={index}>
+                <tr key={index} onClick={()=>{history.push()}}>
                     {Object.values(row).map((value, index) => (
                     <td key={index}>{value}</td>
                     ))}
