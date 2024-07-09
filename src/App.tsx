@@ -64,6 +64,7 @@ import StudentViewEligibility from "./layouts/Student/StudentViewEligibility/Stu
 import StudentViewCourseDetails from "./layouts/Student/StudentViewCourseDetails/StudentViewCourseDetails";
 import StudentViewCourseCriteria from "./layouts/Student/StudentViewCourseCriteria/StudentViewCourseCriteria";
 import StudentWithHeldSubjects from "./layouts/Student/StudentWithHeldSubjects/StudentWithHeldSubjects";
+import ARJoinResultBoard from "./layouts/AR/ARJoinResultBoard/ARJoinResultBoard";
 
 
 
@@ -162,6 +163,10 @@ export const App = () => {
 
           <Route path="/arViewResultsBoard">  {/* Link to view results board page */}
             <ResultBoardMarksSheetAssign/>
+          </Route>
+
+          <Route path ="/arJoinResultsBoard">         {/* Link to join results board page */}
+            <ARJoinResultBoard/>
           </Route>
 
           {/* AR navigations ends here ---------------------------------------------*/}
