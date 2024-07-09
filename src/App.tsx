@@ -65,6 +65,7 @@ import StudentViewCourseDetails from "./layouts/Student/StudentViewCourseDetails
 import StudentViewCourseCriteria from "./layouts/Student/StudentViewCourseCriteria/StudentViewCourseCriteria";
 import StudentWithHeldSubjects from "./layouts/Student/StudentWithHeldSubjects/StudentWithHeldSubjects";
 import ARJoinResultBoard from "./layouts/AR/ARJoinResultBoard/ARJoinResultBoard";
+import ErrorPageFourZeroFour from "./layouts/Components/ErrorPageFourZeroFour/ErrorPageFourZeroFour";
 
 
 
@@ -168,6 +169,10 @@ export const App = () => {
           <Route path ="/arJoinResultsBoard">         {/* Link to join results board page */}
             <ARJoinResultBoard/>
           </Route>
+
+          
+
+          
 
           {/* AR navigations ends here ---------------------------------------------*/}
 
