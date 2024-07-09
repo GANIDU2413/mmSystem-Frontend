@@ -19,6 +19,7 @@ import { ToastContainer } from 'react-toastify';
 import { wait } from '@testing-library/user-event/dist/utils';
 import DateObject from 'react-date-object';
 import { Navebar } from '../../Lecture/layouts/NavbarAndFooter/Navebar';
+import toastr from 'toastr';
 
 
 
@@ -47,8 +48,28 @@ export default function HODMarksReturnSheet(props) {
     var date = new DateObject({
         date: new Date(),
       });
+
+      useEffect(() => {
+        const fetchAndSaveYear = async () => {
+            const details = await fetchAcademicYear();
+            if (details) {
+                saveAcademicYearToLocal(details);
+                setAcademicDetails(details);
+            }
+        };
+
+        fetchAndSaveYear();
+    }, []);
+
+    useEffect(() => {
+        if (academicDetails) { // Check if academicDetails is not null or undefined
+            setAcademicYear(academicDetails.current_academic_year);
+            setCurrent_semester(academicDetails.current_semester);
+        }
+    }, [academicDetails]); // Depend on academicDetails to trigger this effect
+    
       
-      console.log(date.format());
+     console.log(date.format());
 
     const seenKeys = new Set();
     const seenKeysFA = new Set();
@@ -97,19 +118,7 @@ export default function HODMarksReturnSheet(props) {
     const { oktaAuth, authState } = useOktaAuth();
     const userNameAuth = authState?.idToken?.claims.preferred_username;
 
-    useEffect(() => {
-        const fetchAndSaveYear = async () => {
-          const details = await fetchAcademicYear();
-          if (details) {
-            saveAcademicYearToLocal(details);
-            setAcademicDetails(details);
-            setAcademicYear(details.current_academic_year);
-            setCurrent_semester(academicDetails.current_semester)
-          }
-        };
-    
-        fetchAndSaveYear();
-      }, []);
+
     
     const saveDigitalSignature = (url) => {
         setNewSignature(url);    
@@ -254,6 +263,11 @@ useEffect(() => {
     const handleSubmit = async (e) => {
         
         if(newSignature==null|| newSignature==""){
+            e.preventDefault();
+            console.log("Empty signature")
+            toastr.error("Empty Signature");
+        }
+        if(searchTerm==null || searchTerm=="" && nextApprovedlevel==="course_coordinator" ){
             e.preventDefault();
             console.log("Empty signature")
             toastr.error("Empty Signature");
@@ -446,7 +460,7 @@ const imageHandlClear = () => {
                                         <div style={{display:"flex"}}>
                                             <h6>Academic Year: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;{academicYear}&nbsp;&nbsp;</span></h6>
                                             <h6 className=' mx-5'>Degree: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;Bachelor of Information and Communication Technology Honours Degree&nbsp;&nbsp;</span></h6>
-                                            <h6 className=' mx-2'>{current_semester === "1" ? "1st" : "2nd"} Semester Examination:  <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;December 2023&nbsp;&nbsp;</span> </h6>  
+                                            <h6 className=' rounded-pill bg-success text-white'>{current_semester === "1" ? "1st" : "2nd"} Semester Examination</h6>  
                                         </div>
                                         
                                     
@@ -740,7 +754,7 @@ const imageHandlClear = () => {
                                 <input
                                     className='form-control'
                                     type="text"
-                                    placeholder="Search by Lecturer ID..."
+                                    placeholder="Search by Lecturer Name..."
                                     value={searchTerm}
                                     onChange={handleSearchChange}
                                 />
@@ -775,7 +789,8 @@ const imageHandlClear = () => {
                        
                              <input to={``} type="submit" value="Send" className="btn btn-outline-success btn-sm"  id="submitbtn" style={{ width: '100px'}} disabled={!newSignature}/> <br /><br />
                         </form>
-                    ) : null}
+                    ) : null
+                    }
                         
                        
 

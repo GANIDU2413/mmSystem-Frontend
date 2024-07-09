@@ -22,7 +22,7 @@ export const NavebarHOD = () => {
   const department= authState?.accessToken?.claims.department;
        console.log(department)
   
-
+  
   
 
   //const levels=["I","II","III","IV"];
