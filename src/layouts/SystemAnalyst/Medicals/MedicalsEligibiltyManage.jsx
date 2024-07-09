@@ -10,6 +10,8 @@ export default function MedicalsEligibiltyManage() {
  const [data, setData] = useState([]);
  const [medicalData, setMedicalData] = useState([]);
 
+  const expectedKeys = ["student_id", "course_id", "academic_year", "exam_type", "medical_state"];
+
  useEffect(() => {
   fetchData();
 }, [])
@@ -33,11 +35,25 @@ const fetchData = async () => {
       const sheet = workbook.Sheets[sheetName];
       const parsedData = XLSX.utils.sheet_to_json(sheet);
 
-      // Check if the parsed data is empty
+      
+      const headers = XLSX.utils.sheet_to_json(sheet, { header: 1 })[0];
+
+      // Header Validation
+      if (!headers || !Array.isArray(headers) || headers.length === 0) {
+        toast.warn("Failed to read headers from the uploaded file. Please ensure the file is properly formatted.");
+        return;
+      }
+
+      if (!headers.every((key, index) => key === expectedKeys[index])) {
+        toast.warn("The uploaded sheet is not related or formatted correctly. Please ensure the correct structure.");
+        return;
+      }
+
+      // Data Validation
       if (parsedData.length === 0) {
-        toast.warn("The uploaded file contains only headers without any data.");
-        return; // Exit the function early
-    }
+        toast.warn("The uploaded file contains only headers. Please ensure there is data below the headers.");
+        return;
+      }
 
       setData(parsedData);
     };
