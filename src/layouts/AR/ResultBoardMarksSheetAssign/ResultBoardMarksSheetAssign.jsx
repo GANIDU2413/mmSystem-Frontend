@@ -268,6 +268,7 @@ export default function ResultBoardMarksSheetAssign() {
             try{
                 await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
                 //API call to just view result board
+                history.push({pathname:'/arJoinResultsBoard',state:selectedResultBoard})
             }catch(err){
                 toast.error("There is a error with starting the result board",{autoClose:3000}); //Display the error message if an error occurs
             }
@@ -275,6 +276,8 @@ export default function ResultBoardMarksSheetAssign() {
         }else if(selectedResultBoard.status.toLowerCase() === "Started".toLowerCase()){ //Check if the result board is started
 
                 //Api call to just view result board
+                history.push({pathname:'/arJoinResultsBoard',state:selectedResultBoard})
+
 
         }else{
             toast.error('Result board is Ended!',{autoClose:3000}); //Display the error message
