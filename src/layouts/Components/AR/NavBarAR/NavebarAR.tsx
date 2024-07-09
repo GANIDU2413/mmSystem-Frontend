@@ -81,7 +81,7 @@ export const NavebarAR = () => {
 
               <li className="nav-item">
                 <a className="nav-link" href="/viewMedicals">
-                  View Medical List
+                   Medicals List
                 </a>
               </li>
 
@@ -100,7 +100,7 @@ export const NavebarAR = () => {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  View marks return sheets
+                  Marks return sheets
                 </a>
                 <ul className="dropdown-menu">
                   <li>
