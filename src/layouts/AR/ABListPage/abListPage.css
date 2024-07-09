@@ -4,13 +4,16 @@
     color: rgb(0, 0, 0);
   }
 
-  .right-aligned-div {
+  .back-button-div {
     text-align: right;
     margin-bottom: 10px;
     position: sticky;
   }
 
-  thead{
+  .tableHead {
     position: sticky;
+    background-color: #ffffff;
+    top: 65px;
+    z-index: 1;
     
 }

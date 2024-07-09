@@ -10,6 +10,7 @@ export const NavebarAR = () => {
   if(!authState){
     return <SpinerLoading/>
   }
+  
 
   const handleLogout = async () =>{
     oktaAuth.signOut();
@@ -58,9 +59,9 @@ export const NavebarAR = () => {
           aria-labelledby="offcanvasNavbarLabel"
         >
           <div className="offcanvas-header">
-            <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-            Mr. {authState?.idToken?.claims.name /*Display user's username*/}
-            </h5>
+            <h6 className="offcanvas-title" id="offcanvasNavbarLabel">
+            Hello, {authState?.idToken?.claims.name /*Display user's username*/}
+            </h6>
             <button
               type="button"
               className="btn-close"
@@ -68,27 +69,25 @@ export const NavebarAR = () => {
               aria-label="Close"
             ></button>
           </div>
+
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
+
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/arhome">
                  Dashboard
                 </a>
               </li>
-              
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Create Results Board
-                </a>
-              </li>
+
               <li className="nav-item">
                 <a className="nav-link" href="/viewMedicals">
                   View Medical List
                 </a>
               </li>
+
               <li className="nav-item">
-                <a className="nav-link" href="/viewEStarList">
-                  Update E* Grades With Medicals
+                <a className="nav-link" href="/viewablist">
+                Exam Absentees
                 </a>
               </li>
 
@@ -101,7 +100,7 @@ export const NavebarAR = () => {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  View marks
+                  View marks return sheets
                 </a>
                 <ul className="dropdown-menu">
                   <li>
@@ -128,37 +127,21 @@ export const NavebarAR = () => {
                 </ul>
               </li>
               {/* <hr></hr> */}
-
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Certify marks
+              
+              <li className="nav-item">
+                <a className="nav-link" href="/createResultsBoard">
+                  Manage Results Boards
                 </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="/arcerfityictmarks">
-                      Department of ICT
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/arcerfityetmarks">
-                      Department of ET
-                    </a>
-                  </li>
-                  <li></li>
-                  <li>
-                    <a className="dropdown-item" href="/arcertifybstmarks">
-                      Department of BST
-                    </a>
-                  </li>
-                  
-                </ul>
               </li>
+
+              <li className="nav-item">
+                <a className="nav-link" href="/arCertifyMarks">
+                  Certify Marks
+                </a>
+              </li>
+              
+      
+              
             </ul>
             
             

@@ -1,39 +1,28 @@
 import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useHistory } from 'react-router-dom';
+import { green } from '@mui/material/colors';
+import { NavebarHOD } from './NavebarHOD';
+import NavBarCC from '../CourseCoordinator/NavBarCC';
+import { NavebarDean } from '../Dean/NavebarDean';
+import { NavebarAR } from '../Components/AR/NavBarAR/NavebarAR';
+import { useOktaAuth } from "@okta/okta-react";
+
 
 
 export default function MarksCheckingForm() {
   const history = useHistory();
   const [text, setText] = useState('');
+  const[noData,setNoData]=useState('')
+  const [calculations, setCalculations] = useState([]);
+  const { oktaAuth, authState } = useOktaAuth();
 
-  const [marks, setMarks] = useState([
-    {
-      id: " ",
-      stu_id: " ",
-      c_id: " ",
-      academic_year: " ",
-      level: " ",
-      semester: " ",
-      assignment_score: " ",
-      assignment_name: " ",
-      assessment_type: " "
-    }
-  ]);
 
-  const [finalmarks, setfinalMarks] = useState({
-    id: " ",
-    student_id: " ",
-    course_id: " ",
-    level: " ",
-    semester: " ",
-    overall_score: " ",
-    grade: " "
-  });
+
 
   const [attendanceEligibility, setAttendenceEligibility] = useState({
     id: "",
@@ -43,57 +32,33 @@ export default function MarksCheckingForm() {
     eligibility: ""
   });
 
-  const [calculations, setCalculations] = useState([
-    {
-      id: "",
-      student_id: "",
-      course_id: "",
-      type: "",
-      mark: "",
-      percentage: "",
-      description: ""
-    }
-  ]);
 
-  console.log(calculations);
+const location=useLocation()
 
-  const [evaluationCriteria, setEvaluationCriteria] = useState([]);
+const {course_id, course_name } = useParams();
+const{ele}=location.state;
 
-  const { student_id } = useParams();
-  const { course_id } = useParams();
+const student_id=ele.student_id
 
-  console.log(course_id);
-  console.log(student_id);
+console.log(ele)
+
+
+
+
+
+
+
+  
 
   useEffect(() => {
-    result();
-    resultScoreGrade();
     Eligi();
   }, [course_id, student_id]);
 
-  useEffect(() => {
-    result1();
-  }, [course_id]);
 
-  const result = async () => {
-    try {
-      const List = await axios.get(`http://localhost:9090/api/StudentAssessment/get/scorebyStuIDCourseID/${course_id},${student_id}`);
-      setMarks(List.data);
-      console.log(List.data);
-    } catch (error) {
-      console.error('Axios request failed:', error);
-    }
-  };
 
-  const resultScoreGrade = async () => {
-    try {
-      const finalMarkList = await axios.get(`http://localhost:9090/api/studentMarks/getStudentMarksbySC/${course_id},${student_id}`);
-      setfinalMarks(finalMarkList.data.content);
-      console.log(finalMarkList.data);
-    } catch (error) {
-      console.error('Axios request failed:', error);
-    }
-  };
+
+
+
 
   const Eligi = async () => {
     try {
@@ -112,15 +77,7 @@ export default function MarksCheckingForm() {
     }
   };
 
-  const result1 = async () => {
-    try {
-      const list = await axios.get(`http://localhost:9090/api/evaluationCriteria/getCriteria/${course_id}`);
-      setEvaluationCriteria(list.data);
-      console.log(list.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -165,113 +122,65 @@ export default function MarksCheckingForm() {
   return (
     <>
       <ToastContainer />
-      <div className=' bg-white'>
-      <h2>Student ID   :{student_id} </h2>
+      {
+                authState?.accessToken?.claims.userType == "HOD" ? <NavebarHOD/> : 
+                authState?.accessToken?.claims.userType == "course_coordinator" ? <NavBarCC/> :
+                authState?.accessToken?.claims.userType == "dean" ? <NavebarDean/>:
+                authState?.accessToken?.claims.userType == "ar" ? <NavebarAR/> : null
+      }
+      <div className=' bg-white' style={{marginTop:"70px"}}>
+      <h2 style={{marginLeft:"30px"}}>{student_id} {ele.student_name}</h2>
+      <h3 style={{marginLeft:"30px"}}>{course_id} {course_name}</h3>
       
         <div class="container bg-transparent">
           <div class="row">
             <div class="col text-center">
-              <table className="table shadow" style={{ marginTop: "50px" }}>
+              <table className="table shadow  table-hover" style={{ marginTop: "50px" }}>
                 <tbody>
                   <tr>
-                    <th scope="col">Assessment Type</th>
-                    <th scope="col">Assessment Score</th>
+                    <th className='table-success' scope="col" >Assessment Type</th>
+                    <th className='table-warning' scope="col">Assessment Score</th>
                   </tr>
-                  {evaluationCriteria.map((evaluationCriteria, index) => {
-                    let headers = [];
-                    if (evaluationCriteria.type == "CA") {
-                      if (evaluationCriteria.no_of_conducted > 1) {
-                        marks.map((ele, index) => {
-                          if (ele.assignment_name == evaluationCriteria.assessment_type) {
-                            headers.push(
-                              <tr key={`${index}`}>
-                                <td scope="col">{ele.assignment_type}</td>
-                                <td scope="col">{ele.assignment_score}</td>
-                              </tr>
-                            );
-                          }
-                        }).flat();
-                        calculations.map((ele, index) => {
-                          if (ele.type == evaluationCriteria.assessment_type) {
-                            headers.push(
-                              <tr key={`${index}`}>
-                                <th scope="col">{evaluationCriteria.description}</th>
-                                <th scope="col">{ele.mark}</th>
-                              </tr>
-                            );
-                          }
-                        });
-                      } else {
-                        marks.map((ele, index) => {
-                          if (ele.assignment_name == evaluationCriteria.assessment_type) {
-                            headers.push(
-                              <tr key={`${index}`}>
-                                <td scope="col">{ele.assignment_type}</td>
-                                <td scope="col">{ele.assignment_score}</td>
-                              </tr>
-                            );
-                          }
-                        }).flat();
+
+
+                  {
+                    ele.ca.map((e)=>
+                    (<tr>
+                      {
+                        console.log(e)
                       }
-                      calculations.map((calculations, index) => {
-                        if (evaluationCriteria.assessment_type == calculations.type) {
-                          headers.push(
-                            <tr key={`${index}`}>
-                              <th scope="col">{calculations.description}</th>
-                              <th scope="col">{calculations.percentage}</th>
-                            </tr>
-                          );
-                        }
-                      }).flat();
-                    }
-                    return headers;
-                  }).flat()}
-                  {evaluationCriteria.map((evaluationCriteria, index) => {
-                    let headers = [];
-                    if (evaluationCriteria.type == "End") {
-                      marks.map((ele, index) => {
-                        if (ele.assignment_name == evaluationCriteria.assessment_type) {
-                          headers.push(
-                            <tr key={`${index}`}>
-                              <td scope="col">{ele.assignment_type}</td>
-                              <td scope="col">{ele.assignment_score}</td>
-                            </tr>
-                          );
-                          calculations.map((calculations, index2) => {
-                            if (evaluationCriteria.assessment_type == calculations.type && ele.assignment_type !== "1st Marking" && ele.assignment_type !== "2nd Marking") {
-                              headers.push(
-                                <tr key={`${index2}`}>
-                                  <th scope="col">{calculations.description}</th>
-                                  <th scope="col">{calculations.percentage}</th>
-                                </tr>
-                              );
-                            }
-                          });
-                        }
-                      }).flat();
-                    }
-                    return headers;
-                  }).flat()}
-                  {calculations.map((ele, index) => {
-                    let headers = [];
-                    if (ele.type == "Final Marks") {
-                      headers.push(
-                        <tr key={`${index}`}>
-                          <td scope="col">{ele.description}</td>
-                          <td scope="col">{ele.mark}</td>
-                        </tr>
-                      );
-                    }
-                    return headers;
-                  }).flat()}
+                      <td className='table-primary' scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
+                      <td scope="col" style={{ textAlign: 'left',fontWeight:  e.description=="score"? 'normal' : 'bold'  }}>{e.value}</td>
+                      {
+                        console.log(e.description)
+                      }
+                    </tr>
+                      
+                    ))
+                  }
+
+                  {
+                    
+
+                    ele.end.map((e)=>
+                      (<tr>
+                        <td className='table-primary' scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
+                        <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.value}</td>
+                      </tr>
+                        
+                      ))
+                  }
+
                 </tbody>
               </table>
             </div>
+
+            
             <div class="col" style={{ marginTop: "50px" }}>
               <div className='shadow px-4 py-4'>
                 <table className=' pt-4'>
                   <tr>
-                    <th>Eligibility</th>
+                    <th><h4>Eligibility</h4></th>
                   </tr>
                   <tr><th><br /></th></tr>
                   <tr>
@@ -280,18 +189,10 @@ export default function MarksCheckingForm() {
                   <tr>
                     <td>Total CA Marks</td>
                     <td>
-                      {calculations.map((ele, index) => {
-                        let headers = [];
-                        if (ele.type == "Total CA Mark") {
-                          headers.push(
-                            <input className=' mx-4' size="5" key={`${index}`} type='text' value={ele.percentage} disabled />
-                          );
-                        }
-                        return headers;
-                      }).flat()}
+                    <input className=' mx-4' size="10"  type='text' value={ele.total_ca_mark} disabled />
                     </td>
                     <td>CA Eligibility</td>
-                    <td><input type='text' className=' mx-4' size="5" value="Eligible" disabled /></td>
+                    <td><input type='text' className=' mx-4' size="10" value={ele.ca_eligibility} disabled /></td>
                   </tr>
                   <tr><th><br /></th></tr>
                   <tr>
@@ -299,9 +200,9 @@ export default function MarksCheckingForm() {
                   </tr>
                   <tr>
                     <td>Attendance</td>
-                    <td><input type='text' className=' mx-4' size="5" value={attendanceEligibility.percentage} disabled /></td>
+                    <td><input type='text' className=' mx-4' size="10" value={attendanceEligibility.percentage} disabled /></td>
                     <td>Eligibility</td>
-                    <td><input type='text' className=' mx-4' size="5" value={attendanceEligibility.eligibility} disabled /></td>
+                    <td><input type='text' className=' mx-4' size="10" value={attendanceEligibility.eligibility} disabled /></td>
                   </tr>
                   <tr><th><br /></th></tr>
                   <tr>
@@ -310,30 +211,31 @@ export default function MarksCheckingForm() {
                   <tr>
                     <td>Eligibility</td>
                     <td>
-                      <input type='text' className=' mx-4' size="5" value={attendanceEligibility.eligibility} disabled />
+                      {(ele.ca_eligibility == "Eligible" && attendanceEligibility.eligibility == "Eligible") ? <input type='text' className=' mx-4 bg-success' size="10" style={{color:"white"}} value="Eligible" disabled /> : <input type='text' className=' mx-4 bg-danger ' style={{color:"white"}} size="10" value="Not Eligible" disabled />}        
+                     
                     </td>
                   </tr>
                 </table>
               </div>
               <div>
                 <div className="py-4 px-5" class="col shadow mt-4 p-4">
-                  <label>Final Marks </label>
-                  <input type='text' className=' mx-3' value={finalmarks.overall_score} disabled />
-                  <label>Grade </label>
-                  <input type='text' className=' mx-3' value={finalmarks.grade} disabled />
+                  <label> <b>Final Marks</b> </label>
+                  <input type='text' size="10" className=' mx-3' value={ele.total_rounded_marks} disabled />
+                  <label> <b>Grade</b> </label>
+                  <input type='text' size="10" className=' mx-3' value={ele.grade} disabled />
                 </div>
               </div>
               <div class="col mt-4 shadow p-4">
                 <form onSubmit={handleSubmit}>
                   <div>
-                    <label for="exampleFormControlTextarea1" class="form-label">Notification</label>
+                    <label for="exampleFormControlTextarea1" class="form-label"> <b>Notification</b> </label>
                     <textarea
                       value={text}
                       className='form-control w-100 '
                       onChange={(e) => setText(e.target.value)}
                       placeholder="Type your message here..."
                     />
-                    <input type="submit" className={`btn btn-outline-success btn-sm mt-3 ${text ? '' : 'disabled'}`} value="Send" />
+                    <input type="submit" style={{width:'100px'}} className={`btn btn-outline-success btn-sm mt-3 ${text ? '' : 'disabled'}`} value="Send" />
                   </div>
                 </form>
               </div>

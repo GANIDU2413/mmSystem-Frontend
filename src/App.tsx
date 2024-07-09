@@ -1,4 +1,3 @@
-// import viteLogo from '/vite.svg'
 import "./App.css";
 import { Footer } from "./Lecture/layouts/NavbarAndFooter/Footer";
 import { Navebar } from "./Lecture/layouts/NavbarAndFooter/Navebar";
@@ -26,22 +25,16 @@ import CAMarkTable from "./layouts/HOD/CAMarkTable";
 import MarksCheckingForm from "./layouts/HOD/MarksCheckingForm";
 import SystemAnalystDashBoard from "./layouts/SystemAnalyst/SystemAnalystDashBoard";
 import SAUserReg from "./layouts/SystemAnalyst/SAUserReg";
-import ViewAllLecturers from "./layouts/SystemAnalyst/ViewAllLecturers";
 import AddLecturers from "./layouts/SystemAnalyst/AddLecturers";
 import EditLecturers from "./layouts/SystemAnalyst/EditLecturers";
 import EditUser from "./layouts/SystemAnalyst/EditUser";
 import ViewAllUsers from "./layouts/SystemAnalyst/ViewAllUsers";
 import HODMarksReturnSheet from "./layouts/HOD/HODMarksReturnSheet";
-
 import { VcManagment } from "./VC/layouts/VcManagment";
-
 import LecturersManagement from "./layouts/SystemAnalyst/UserManagement/LecturersManagement";
 import AssignLecturerCourse from "./layouts/SystemAnalyst/AssignLecturer/AssignLecturerCourse";
 import DeanFinalMarkSheet from "./layouts/Dean/FinalMarks/DeanFinalMarkSheet";
 import DeanDashBoard from "./layouts/Dean/DeanDashBoard";
-import EStarListPage from "./layouts/AR/EStarListPage/EStarListPage";
-import UpdateEStarPage from "./layouts/AR/UpdateEStarPage/UpdateEStarPage";
-import ViewMarksTable from "./layouts/Components/AR/DataTable/ViewMarksTable";
 import MainNavbar from "./layouts/NavbarAndFooter/MainNavebar";
 import DashBoardSA from "./layouts/SystemAnalyst/DashBoardSA/DashBoardSA";
 import MedicalsEligibiltyManage from "./layouts/SystemAnalyst/Medicals/MedicalsEligibiltyManage";
@@ -50,8 +43,30 @@ import StudentsManagement from "./layouts/SystemAnalyst/UserManagement/StudentsM
 import ManageCourseModule from "./layouts/SystemAnalyst/CourseModule/ManageCourseModule";
 import CertifyMarksPage from "./layouts/AR/CertifyMarksPage/CertifyMarksPage";
 import ViewMedicalPage from "./layouts/AR/ViewMedicalTablePage/ViewMedicalPage";
-import CertifyError from "./layouts/Components/AR/CertifyError/CertifyError";
 import CourseCard from "./layouts/Components/HOD/CourseCard";
+import StudentRegCourses from "./layouts/SystemAnalyst/StudentCourseReg/StudentRegCourses";
+import ABListPage from "./layouts/AR/ABListPage/ABListPage";
+import UpdateABPage from "./layouts/AR/UpdateABPage/UpdateABPage";
+import CCDashBoard from "./layouts/CourseCoordinator/CCDashBoard";
+import CCMarksApproval from "./layouts/CourseCoordinator/CCMarksApproval";
+import ViewCAEligibile from "./layouts/CourseCoordinator/ViewCAEligibile";
+import CAEligibility from "./layouts/CourseCoordinator/CAEligibility";
+import CourseCriteriaByCC from "./layouts/CourseCoordinator/CourseCriteriaByCC";
+import ViewMarksTableValidations from "./layouts/Components/AR/DataTable/ViewMarksTableValidations";
+import CreateResultBoard from "./layouts/AR/CreateResultBoard/CreateResultBoard";
+
+import LecturerCertifiedCourses from "./Lecture/layouts/certifyMarks/LecturerCertifiedCourses";
+
+import ResultBoardMarksSheetAssign from "./layouts/AR/ResultBoardMarksSheetAssign/ResultBoardMarksSheetAssign";
+import HomePageStudent from "./layouts/Student/HomePageStudent/HomePageStudent";
+import StudentmedicalView from "./layouts/Student/StudentMedicalView/StudentMedicalView";
+import StudentViewEligibility from "./layouts/Student/StudentViewEligibility/StudentViewEligibility";
+import StudentViewCourseDetails from "./layouts/Student/StudentViewCourseDetails/StudentViewCourseDetails";
+import StudentViewCourseCriteria from "./layouts/Student/StudentViewCourseCriteria/StudentViewCourseCriteria";
+import StudentWithHeldSubjects from "./layouts/Student/StudentWithHeldSubjects/StudentWithHeldSubjects";
+import ARJoinResultBoard from "./layouts/AR/ARJoinResultBoard/ARJoinResultBoard";
+
+
 
 
 // to configure okta authentication
@@ -95,54 +110,104 @@ export const App = () => {
             <HomePageAR/>
           </Route>
 
-          <Route path="/viewEStarList">  {/* Link to view E* student list page */}
-            <EStarListPage/>
+          <Route path="/viewablist">  {/* Link to view AB student list page */}
+            <ABListPage/>
           </Route>
 
-          <Route path="/viewEStarUpdate/updateEStar/:course_id/:course_name/:student_id/:grade/:exam_type/:academic_year">  {/* Link to E* grade update form */}
-            <UpdateEStarPage/>
+          <Route path="/viewABUpdate/updateAB/:course_id/:course_name/:student_id/:grade/:exam_type/:academic_year">  {/* Link to AB status update form */}
+            <UpdateABPage/>
           </Route>
 
-          <Route path="/arviewictmarks">  {/* Link to view ICT marks page */}
+          <Route path="/arviewictmarks">  {/* Link to view ICT marks page - Level selection */}
             <ViewMarks department_id={"ICT"}/>
           </Route>
 
-          <Route path="/arviewetmarks">  {/* Link to view ET marks page */}
+          <Route path="/arviewetmarks">  {/* Link to view ET marks page - Level selection */}
             <ViewMarks department_id={"ET"}/>
           </Route>
 
-          <Route path="/arviewbstmarks">  {/* Link to view BST marks page */}
+          <Route path="/arviewbstmarks">  {/* Link to view BST marks page - Level selection */}
             <ViewMarks department_id={"BST"}/>
           </Route>
 
-          <Route path="/arviewmtdmarks">    {/* Link to view Multi Disciplinary marks page */}
+          <Route path="/arviewmtdmarks">    {/* Link to view Multi Disciplinary marks page - Level selection */}
             <ViewMarks department_id={"Multi_Disciplinary"}/>
           </Route>
 
-          <Route path="/arcerfityictmarks">  {/* Link to certify ICT marks page */}
-            <CertifyMarksPage department_id={"ICT"}/>
+          <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page validations */}
+            {/* <ViewMarksTable/> */}
+            <ViewMarksTableValidations/>
           </Route>
 
-          <Route path="/arcerfityetmarks">  {/* Link to certify ET marks page */}
-            <CertifyMarksPage department_id={"ET"}/>
+          <Route path="/ARMarksReturnSheet/:course_id/:course_name">    {/* Link to view ar Marks certify sheet*/}
+            <HODMarksReturnSheet approved_level={"HOD"}/>
           </Route>
 
-          <Route path="/arcertifybstmarks">  {/* Link to certify BST marks page */}
-            <CertifyMarksPage department_id={"BST"}/>
-          </Route>
-          
-          <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page */}
-            <ViewMarksTable/>
-          </Route>
 
-          <Route path="/arFinalMarkSheet/:level/:semester">   {/* Link to view marks remaining to certify page */}
-            <DeanFinalMarkSheet approved_level={"HOD"}/>
+
+          <Route path="/arCertifyMarks">  {/* Link to certify ICT marks page */}
+            <CertifyMarksPage/>
+          </Route>
+        
+          <Route path="/arFinalMarkSheet/:level/:semester/:dept">   {/* Link to view marks remaining to certify page */}
+            <DeanFinalMarkSheet approved_level={"RB"}/>
           </Route>
 
           <Route path="/viewMedicals">   {/* Link to view medical page */}
             <ViewMedicalPage/>
           </Route>
+
+          <Route path="/createResultsBoard">   {/* Link to create results board page */}
+            <CreateResultBoard/>
+          </Route>
+
+          <Route path="/arViewResultsBoard">  {/* Link to view results board page */}
+            <ResultBoardMarksSheetAssign/>
+          </Route>
+
+          <Route path ="/arJoinResultsBoard">         {/* Link to join results board page */}
+            <ARJoinResultBoard/>
+          </Route>
+
           {/* AR navigations ends here ---------------------------------------------*/}
+
+
+
+
+
+          {/* Student navigations starts here ---------------------------------------------*/}
+          <Route path="/studenthome">       {/*Link to Student Home page*/}
+            <HomePageStudent/>
+          </Route>
+
+          <Route path="/studentMedicalView">  {/*Link to Student Medical view page*/}
+            <StudentmedicalView/>
+          </Route>
+
+          <Route path="/studentEligibilityView">    {/*Link to Student Eligibility view page*/}
+            <StudentViewEligibility/>
+          </Route>
+
+          <Route path="/studentViewCourseDetails">      {/*Link to Student Course details view page*/}
+            <StudentViewCourseDetails/>
+          </Route>
+
+          <Route path="/studentViewCourseCriteria">     {/*Link to Student Course criteria view page*/}
+            <StudentViewCourseCriteria/>
+          </Route>
+
+
+          <Route path ="/studentViewWithHeldSubjects">      {/*Link to Student Withheld subjects view page*/}
+            <StudentWithHeldSubjects/>
+          </Route>
+
+          
+
+
+
+
+
+          {/* Student navigations ends here ---------------------------------------------*/}
 
           <Route path="/markstable">
             <MarksTable/>
@@ -162,7 +227,7 @@ export const App = () => {
             <StudentCourseEditLayout/>
           </Route>
 
-          <Route path="/deanFinalMarkSheet/:level/:semester">
+          <Route path="/deanFinalMarkSheet/:level/:semester/:dept">
             <DeanFinalMarkSheet approved_level={"AR"}/>
           </Route>
 
@@ -178,8 +243,8 @@ export const App = () => {
             <HODDashBoard/>
           </Route>
 
-          <Route path="/CourseCard/:level/:semester">
-            <CourseCard approved_level={"course_coordinator"}/>
+          <Route path="/CourseCard/:level/:semester/:department">
+            <CourseCard approved_level={"lecturer"}/>
           </Route>
 
           <Route path="/HODmarkstable">
@@ -190,7 +255,7 @@ export const App = () => {
             <CAMarkTable/>
           </Route>
 
-          <Route path="/MarksCheckingForm/:student_id/:course_id">
+          <Route path="/MarksCheckingForm/:course_id/:course_name">
             <MarksCheckingForm/>
           </Route>
  
@@ -198,9 +263,19 @@ export const App = () => {
             <HODMarksEditForm/>
           </Route>
 
-          <Route path="/HODMarksReturnSheet/:course_id/:course_name">
-            <HODMarksReturnSheet/>
-          </Route>
+          <Route path="/HODMarksReturnSheet/:course_id/:course_name/:department">
+          <HODMarksReturnSheet approved_level={"lecturer"}/>
+        </Route>
+
+        <Route path="/ccMarksReturnSheet/:course_id/:course_name/:department">
+          <HODMarksReturnSheet approved_level={"finalized"}/>
+        </Route>
+
+        <Route path="/lMarksReturnSheet/:course_id/:course_name/:department">
+          <HODMarksReturnSheet approved_level={"course_coordinator"}/>
+        </Route>
+
+        
 
           <Route path="/sysandashboard">
             <SystemAnalystDashBoard/>
@@ -249,8 +324,32 @@ export const App = () => {
           <Route path="/sysanicoursemodule">
             <ManageCourseModule/>
           </Route>
+
+          <Route path="/screg">
+            <StudentRegCourses/>
+          </Route>
+
+          <Route path="/ccmarksapproval">
+            <CCMarksApproval/>
+          </Route>
+
+          <Route path="/viewcaeli">
+            <ViewCAEligibile/>
+          </Route>
           
-           
+            <Route path="/caeli/:course_id/:course_name">
+              <CAEligibility/>
+            </Route>
+
+          <Route path="/cccbycc">
+            <CourseCriteriaByCC />
+          </Route>
+
+          <Route path="/lecturecertifiedc">
+            <LecturerCertifiedCourses/>
+          </Route>
+          
+          
             <Route path="/addscore">
               <AddScore option={true} />
             </Route>
@@ -268,7 +367,7 @@ export const App = () => {
             </SecureRoute>
 
 
-            <SecureRoute path={"/ar"}>
+            <SecureRoute path={"/ar"}>        {/*Login to AR */}
               <HomePageAR />
             
             </SecureRoute>
@@ -283,6 +382,14 @@ export const App = () => {
 
             <SecureRoute path={"/system_analysis"}>
               <DashBoardSA/>
+            </SecureRoute>
+
+            <SecureRoute path={"/course_cordinator"}>
+              <CCDashBoard/>
+            </SecureRoute>
+
+            <SecureRoute path={"/student"}>       {/*Login to Student */}
+              <HomePageStudent/>
             </SecureRoute>
 
 

@@ -3,14 +3,24 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import "./courseSelection.css";
 import BackButton from '../BackButton/BackButton';
+import { Redirect, useHistory } from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
+import { SpinerLoading } from '../../../Utils/SpinerLoading';
+
+
+
 
 
 
 export default function CourseSelection(props) {
 
+    const { authState } = useOktaAuth();        // get the authentication state
+
+    const history = useHistory();        // Initialize useHistory hook to navigate to different pages
+
     const { level, semester, department_id } = props;       // Destructuring props
     const [courseData, setCourseData] = useState([]);   // State to store course data
-    const [coursesAvailability, setCoursesAvailability] = useState([]);   // State to store courses availability
+    const [coursesAvailability, setCoursesAvailability] = useState(true);   // State to store courses availability
     const previousRole = "HOD";     // Role of the previous user
 
     const loadCourseData = async()=>{       // Function to fetch course data
@@ -40,6 +50,15 @@ export default function CourseSelection(props) {
     }, []);
 
 
+    
+    if(!authState){
+      return <SpinerLoading/>;
+    }
+    if(authState.accessToken?.claims.userType !== "ar"){
+      return <Redirect to="/home" />;
+    }
+
+
   return (
     <div>
 
@@ -58,12 +77,12 @@ export default function CourseSelection(props) {
             <tbody>
               {
                 courseData.map((course, index) => (
-                  <tr className="clickable-row" key={index}>
+                  <tr className="clickable-row" key={index} onClick={()=>{history.push(`/viewMarks/${course.course_id}/${course.course_name}`)}}>
                     <th scope="row" key={index}>{index+1}</th>
                     <td>{course.course_id}</td>
                     <td>{course.course_name}</td>
                     <td>{course.type}</td>
-                    <td><a href={`/viewMarks/${course.course_id}/${course.course_name}`} className="btn btn-primary btn-sm"  role="button" aria-disabled="true">View Marks</a></td>  
+                    <td><a href={`#`} className="btn btn-primary btn-sm"  role="button" aria-disabled="true">View Marks</a></td>  
                 </tr>
                 ))
               }
@@ -76,12 +95,21 @@ export default function CourseSelection(props) {
           </div>
         )
       }
-        
+        <div className='row'>
+          <div className='col'>
+
             {<br/>}
             &nbsp; Level {level}{<br/>}
             &nbsp; Semester {semester}{<br/>}
             &nbsp; department - {department_id}  
 
+          </div>
+          <div className='col'>
+            <div className='right-aligned-div back-button-div'>
+              <BackButton/> <br/>&nbsp;
+            </div>
+        </div>
+      </div>
             
     </div>
   )

@@ -222,7 +222,7 @@ export const NavebarDean = () => {
               </div>
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3" style={{listStyleType:"none"}}>
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/HODDashBoard">
+                <a className="nav-link active" aria-current="page" href="/dean">
                   Dashboard
                 </a>
               </li>
@@ -250,7 +250,7 @@ export const NavebarDean = () => {
                     return semesters.map((semester, index) => (    
                       <>
                         <li className="nav-item">
-                          <a href={`/deanFinalMarkSheet/${level}/${semester}`} className="dropdown-item">
+                          <a href={`/deanFinalMarkSheet/${level}/${semester}/${dept}`} className="dropdown-item">
                             Level {level} Sem {semester}
                           </a>
                         </li>

@@ -1,8 +1,8 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import HODMarksReturnSheet from '../../HOD/HODMarksReturnSheet';
 import { NavebarHOD } from '../../HOD/NavebarHOD';
+import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../AcademicYearManagerSingleton';
 
 export default function CourseCard(props) {
 
@@ -12,54 +12,82 @@ export default function CourseCard(props) {
             course_name: ''
         }
     ])
+    
     const history = useHistory();
 
-    const[errorMsg,seterrorMsg]=useState('');
-    const{level,semester}=useParams();
+    const[errorMsg,seterrorMsg]=useState("");
+    const{level,semester,department}=useParams();
     const{approved_level}=props;
+    const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
+    const[academicYear,setAcademicYear]=useState("")
+
+
+    console.log(level,semester,department,approved_level,academicYear)
    
-    console.log(level,semester)
-    
-
+  
     const result = async () => {
-        try {
-            const list = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level}/${semester}/${approved_level}`);
-            console.log(list.data);
-            setCidN(list.data);
-            console.log(cidN);
-            seterrorMsg("");
-        } catch (error) {
-            if (error.response && error.response.status === 404) {
-                console.error('No data found for the given level and semester');
-                console.log(error.response.data.message);
-                seterrorMsg(error.response.data.message);
-              
-                setCidN([]); // Set an empty array or any default state
-
-            } else {
-                // Handle other types of errors
-                console.error('An error occurred:', error);
-                seterrorMsg('An error occurred:', error);
-            }
-        }
-    };
+      try {
+          const response = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level}/${semester}/${department}/${approved_level}/${academicYear}`);
+          const list = response.data; 
+          setCidN(list.content);
+          seterrorMsg(list.message);
+      } catch (error) {
+          if (error.response && error.response.status === 404) {
+              seterrorMsg(error.response.data.message);
+              setCidN([]); // Set an empty array or any default state
+  
+          } else {
+             seterrorMsg('An error occurred:', error);
+          }
+      }
+  };
+  
     
     useEffect(() => {
         result();
-
-        
-       }, [level, semester]); // This effect runs whenever level or semester changes
-       
+       }, [level,semester,department,approved_level,academicYear]); // This effect runs whenever level or semester changes
 
        
+
+       useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level}/${semester}/${department}/${approved_level}/${academicYear}`);
+                const data = response.data;
+                if (data && data.content) {
+                    setCidN(data.content);
+                    seterrorMsg(data.message);
+                } else {
+                    seterrorMsg('No Marks Return Sheets For Approval');
+                    setCidN([]);
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    seterrorMsg(error.response.data.message);
+                    setCidN([]);
+                } else {
+                    seterrorMsg('An error occurred:', error);
+                }
+            }
+        };
+
+        fetchData();
+    }, [level, semester, department, approved_level, academicYear]);
       
        
-       
-
-
-  
-
+       useEffect(() => {
+        const fetchAndSaveYear = async () => {
+          const details = await fetchAcademicYear();
+          if (details) {
+            saveAcademicYearToLocal(details);
+            setAcademicDetails(details);
+            setAcademicYear(details.current_academic_year)
+          }
+        };
     
+        fetchAndSaveYear();
+      }, []);
+
        return (
         <>
            <div className="row" style={{marginTop:"70px", padding:"2%"}}>
@@ -71,7 +99,7 @@ export default function CourseCard(props) {
                      className="card border-primary mb-3 mx-lg-3 shadow"
                      style={{ maxWidth: '18rem', cursor: 'pointer' }}
                      key={index}
-                     onClick={() => history.push(`/HODMarksReturnSheet/${courseInfo.course_id}/${courseInfo.course_name}`)}
+                     onClick={() => history.push(`/HODMarksReturnSheet/${courseInfo.course_id}/${courseInfo.course_name}/${department}`)}
                    >
                      <div className="card-header">Course code : {courseInfo.course_id}</div>
                      <div className="card-body">

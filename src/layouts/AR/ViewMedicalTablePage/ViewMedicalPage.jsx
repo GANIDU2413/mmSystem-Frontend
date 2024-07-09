@@ -5,8 +5,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useState } from 'react';
 import './viewMedicalPage.css';
 import BackButton from '../../Components/AR/BackButton/BackButton';
+import { Redirect } from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ViewMedicalPage() {
+
+  const { authState } = useOktaAuth();        // get the authentication state
 
   const [medicalAvailability,setMedicalAvailability] = useState(true);        // state to check the availability of medical submissions
   const [medicalSubmissions,setMedicalSubmissions] = useState([]);            // state to store the medical submissions
@@ -43,7 +49,7 @@ export default function ViewMedicalPage() {
       }else{                        // if the selected value is not 'All Years'
 
         try{                    // get medical submissions by the selected year
-          
+          const encodedValue = encodeURIComponent(value);       // encode the selected value
           const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissionsByYear/${value}`);       // get medical submissions by the selected year
 
           if(response.data.length>0){       // if medical submissions are available
@@ -52,8 +58,8 @@ export default function ViewMedicalPage() {
             setMedicalSubmissions(response.data);       // set medical submissions
 
             const allResponse = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissions`);       // get all medical submissions go get unique years
-          const uniqueArr = [...new Set(allResponse.data.map((item)=>item.academic_year))];                                     // get unique academic years
-          setUniqueYears(uniqueArr);                                                                                // set unique academic years
+            const uniqueArr = [...new Set(allResponse.data.map((item)=>item.academic_year))];                                     // get unique academic years
+            setUniqueYears(uniqueArr);                                                                                // set unique academic years
             
           }else{            // if medical submissions are not available
             
@@ -74,6 +80,15 @@ export default function ViewMedicalPage() {
         fetchData(selectedOption);    // fetch data according to the selected option
       },[]);
 
+
+  
+      if(!authState){
+        return <SpinerLoading/>;
+      }
+      if(authState.accessToken?.claims.userType !== "ar"){
+        return <Redirect to="/home" />;
+      }
+
   return (
     <div>
       
@@ -83,24 +98,24 @@ export default function ViewMedicalPage() {
             medicalAvailability ? (
 
 
-              <table className="table table-striped">
+              <table className="table table-striped dataTable">
 
 
-                <thead>
+                <thead className='table-body'>
 
 
                   <tr>
 
                     <th style={{textAlign:"center",backgroundColor:'#ebe8e8',width:"250px"}}>
                       
-                      <select className="form-select w-100 mx-lg-1" aria-label="Default select example" onChange={(e)=>{handleSelectedValue(e.target.value)}}>    {/* select box to select the acedemic year */} 
+                      <select className="form-select w-100 mx-lg-1  yearSelection" aria-label="Default select example" onChange={(e)=>{handleSelectedValue(e.target.value)}}>    {/* select box to select the acedemic year */} 
                           
-                          <option >All Years</option>
+                          <option className='selectionOptions' >All Years</option>
 
                           {
 
                             uniqueYears.map((year,index)=>(
-                              <option key={index}>
+                              <option className='selectionOptions' key={index}>
                                 {year}
                               </option>
                             ))
@@ -153,7 +168,7 @@ export default function ViewMedicalPage() {
               toast.error("No medical submissions available",{autoClose:3000})
             )
           }
-          <div className='right-aligned-div'>
+          <div className='right-aligned-div back-button-div'>
             <br/><BackButton/> <br/>&nbsp;
           </div>
             
