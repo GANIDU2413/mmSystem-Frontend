@@ -54,7 +54,7 @@ export const NavebarSA = () => {
         >
           <div className="offcanvas-header">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              User Name
+            System Analyst
             </h5>
             <button
               type="button"
@@ -66,8 +66,8 @@ export const NavebarSA = () => {
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <div>
-                <h6>System Analyst</h6>
-                <p className=" mx-5">{authState?.idToken?.claims.name}</p>
+                
+                <p className=" mx-2">{authState?.idToken?.claims.name}</p>
               </div>
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/system_analysis">
