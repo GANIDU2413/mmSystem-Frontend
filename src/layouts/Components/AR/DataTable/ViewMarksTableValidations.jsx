@@ -5,8 +5,15 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import "./viewMarksTableValidations.css";
+import { useOktaAuth } from '@okta/okta-react';
+import { Redirect } from 'react-router-dom';
+import { SpinerLoading } from '../../../Utils/SpinerLoading';
+
 
 export default function ViewMarksTableValidations() {
+
+    const { authState } = useOktaAuth();        // get the authentication state
+
     const course_variables = useParams();   // get the course variables from the url
     const [interrupt, setInterrupt] = useState(false);      // state to store the interrupt status
     const history = useHistory();    // get the history object
@@ -98,7 +105,13 @@ export default function ViewMarksTableValidations() {
         fetchData();
     },[])
 
-
+    
+    if(!authState){
+      return <SpinerLoading/>;
+    }
+    if(authState.accessToken?.claims.userType !== "ar"){
+      return <Redirect to="/home" />;
+    }
 
 
   return (

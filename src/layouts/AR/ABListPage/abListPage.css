@@ -12,5 +12,8 @@
 
   .tableHead {
     position: sticky;
+    background-color: #ffffff;
+    top: 65px;
+    z-index: 1;
     
 }

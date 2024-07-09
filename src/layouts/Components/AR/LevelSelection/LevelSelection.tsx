@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import SemesterSelection from '../SemesterSelection/SemesterSelection'
+import { useOktaAuth } from '@okta/okta-react';
+import { Redirect } from 'react-router-dom';
 
 import "./levelSelection.css";
 import BackButton from '../BackButton/BackButton';
+import { SpinerLoading } from '../../../Utils/SpinerLoading';
 
 export default function LevelSelection(props:any) {
+
+  const { authState } = useOktaAuth();        // get the authentication state
 
   var department_id = props.department_id;
   var level_selection_tpe = props.level_selection_tpe;
@@ -13,6 +18,15 @@ export default function LevelSelection(props:any) {
 
   function callSemester(level:number) {
     setSelectedLevel(level);
+  }
+
+
+  
+  if(!authState){
+    return <SpinerLoading />;
+  }
+  if(authState.accessToken?.claims.userType !== "ar"){
+    return <Redirect to="/home" />;
   }
 
 

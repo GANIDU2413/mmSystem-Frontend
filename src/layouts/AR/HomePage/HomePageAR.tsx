@@ -2,19 +2,27 @@ import { useOktaAuth } from "@okta/okta-react";
 import { NavebarAR } from "../../Components/AR/NavBarAR/NavebarAR";
 import { Redirect } from "react-router-dom";
 import './homePageAR.css';
+import { SpinerLoading } from "../../Utils/SpinerLoading";
 
 
 export default function HomePageAR() {
   const { authState } = useOktaAuth();
 
-  // if (authState?.accessToken?.claims.userType !== 'ar') {
-  //   return <Redirect to="/ar" />;
+
+  // if (authState?.accessToken?.claims.userType !== "ar") {
+  //   return <Redirect to="/home" />;
   // }
   
+  if(!authState){
+      return <SpinerLoading/>
+  }
+  if(authState.accessToken?.claims.userType !== "ar"){
+    return <Redirect to="/home" />;
+  }
+
   
   return (
     <div>
-      <NavebarAR />
       {/* horizontall cards*/ }
       <div className="container functionCardContainer" >
 
@@ -24,7 +32,7 @@ export default function HomePageAR() {
           <div className="col mb-4"> 
             <div className="card text-center functionCard">
               <div className="card-body">
-                  <br/><h5 className="card-title">Create Result Board</h5><br/>
+                  <br/><h5 className="card-title">Manage Results Boards</h5><br/>
                 <a href="/createResultsBoard" className="btn btn-primary home-page-class-button">Create</a>
               </div>
             </div>
@@ -42,7 +50,7 @@ export default function HomePageAR() {
           <div className="col mb-4"> 
             <div className="card text-center functionCard">
               <div className="card-body">
-                <br/><h5 className="card-title">Update grades for absentees </h5><br/>
+                <br/><h5 className="card-title">Exam Absentees </h5><br/>
                 <a href="/viewablist" className="btn btn-primary home-page-class-button">Update</a>
               </div>
             </div>
@@ -51,26 +59,8 @@ export default function HomePageAR() {
           <div className="col mb-4"> 
             <div className="card text-center functionCard">
               <div className="card-body">
-                <br/><h5 className="card-title">Certify Marks - ICT</h5><br/>
-                <a href="/arcerfityictmarks" className="btn btn-primary home-page-class-button">Certify</a>
-              </div>
-            </div>
-          </div>
-
-          <div className="col mb-4"> 
-            <div className="card text-center functionCard">
-              <div className="card-body">
-                <br/><h5 className="card-title">Certify Marks - ET</h5><br/>
-                <a href="/arcerfityetmarks" className="btn btn-primary home-page-class-button">Certify</a>
-              </div>
-            </div>
-          </div>
-
-          <div className="col mb-4"> 
-            <div className="card text-center functionCard">
-              <div className="card-body">
-                <br/><h5 className="card-title">Certify Marks - BST</h5><br/>
-                <a href="/arcertifybstmarks" className="btn btn-primary home-page-class-button">Certify</a>
+                <br/><h5 className="card-title">Certify Marks</h5><br/>
+                <a href="/arCertifyMarks" className="btn btn-primary home-page-class-button">Certify</a>
               </div>
             </div>
           </div>

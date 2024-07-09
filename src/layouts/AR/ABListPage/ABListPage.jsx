@@ -3,18 +3,23 @@ import axios from 'axios';
 import './abListPage.css';
 import BackButton from '../../Components/AR/BackButton/BackButton';
 import { Redirect, useHistory } from 'react-router-dom';
-import { NavebarAR } from '../../Components/AR/NavBarAR/NavebarAR';
+import { useOktaAuth } from '@okta/okta-react';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
+
+
 
 export default function ABListPage() {
+
+    const { authState } = useOktaAuth();
+
+
+
 
     const previousApprovalLevel='HOD';    //Approval level required to view the students having AB grades
     const [courseList,setCourseList]=useState([]);    //Use state to store the courses and student details under AR approval
     const history = useHistory(); // Initialize useHistory hook to navigate to different pages
 
     
-
-    
-
 
     const loadData = async() => {   //Function to load the student details havind E* from the backend
       
@@ -27,17 +32,29 @@ export default function ABListPage() {
         })
 
     };
+
+
     
 
     
     useEffect(()=>{   //Use effect to load the data when the page is loaded
 
-    
+
         setCourseList([]);    //Set the courseList state to empty array when there is an action on the page
         loadData();
 
         
     },[]);
+
+
+
+
+    if(!authState){
+      return <SpinerLoading/>;
+    }
+    if(authState.accessToken?.claims.userType !== "ar"){
+      return <Redirect to="/home" />;
+    }
 
 
   return (
@@ -98,8 +115,8 @@ export default function ABListPage() {
 
         )}
         <div className='right-aligned-div back-button-div'>
-            <BackButton/> <br/>&nbsp;
-          </div>
+          <BackButton/> <br/>&nbsp;
+        </div>
 
     </div>
   )

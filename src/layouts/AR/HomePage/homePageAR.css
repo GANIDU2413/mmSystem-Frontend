@@ -11,7 +11,7 @@
 .functionCard:hover {
     transform: scale(1.05); /* Increase size on hover */
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
-    background-color: rgb(167, 167, 167);
+    background-color: rgb(162, 158, 173);
     color: white;
   }
 
