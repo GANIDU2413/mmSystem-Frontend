@@ -33,7 +33,7 @@ export default function HomePageAR() {
             <div className="card text-center functionCard">
               <div className="card-body">
                   <br/><h5 className="card-title">Manage Results Boards</h5><br/>
-                <a href="/createResultsBoard" className="btn btn-primary home-page-class-button">Create</a>
+                <a href="/createResultsBoard" className="btn btn-primary home-page-class-button">Manage</a>
               </div>
             </div>
           </div>
@@ -51,7 +51,7 @@ export default function HomePageAR() {
             <div className="card text-center functionCard">
               <div className="card-body">
                 <br/><h5 className="card-title">Exam Absentees </h5><br/>
-                <a href="/viewablist" className="btn btn-primary home-page-class-button">Update</a>
+                <a href="/viewablist" className="btn btn-primary home-page-class-button">View</a>
               </div>
             </div>
           </div>
