@@ -7,6 +7,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import './studentViewEligibility.css';
 import { Redirect } from 'react-router-dom';
 import { SpinerLoading } from '../../Utils/SpinerLoading';
+import BackButton from '../../Components/AR/BackButton/BackButton';
 
 
 export default function StudentViewEligibility() {
@@ -70,7 +71,7 @@ export default function StudentViewEligibility() {
         loadAcademicYearDetails();
         loadStudentCourses();
 
-    }, [studentEmail,studentId])
+    }, [studentEmail,studentId,authState])
 
 
 
@@ -133,6 +134,9 @@ export default function StudentViewEligibility() {
                 </tbody>
 
             </table>
+            <div className='right-aligned-div back-button-div'>
+          <BackButton/> <br/>&nbsp;
+        </div>
 
 
 
