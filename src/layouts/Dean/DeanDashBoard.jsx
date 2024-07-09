@@ -43,7 +43,7 @@ export default function DeanDashBoard() {
                 <div className="card-body ">
                   <h5 className="card-title py-2">Level 1</h5>
                   <p className="card-text">Semester 1</p>
-                  <a href={`/deanFinalMarkSheet/1/1/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">Go somewhere</a>
+                  <a href={`/deanFinalMarkSheet/1/1/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">View</a>
                 </div>
               </div>
 
@@ -51,7 +51,7 @@ export default function DeanDashBoard() {
                 <div className="card-body ">
                   <h5 className="card-title py-2">Level 1</h5>
                   <p className="card-text">Semester 2</p>
-                  <a href={`/deanFinalMarkSheet/1/2/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">Go somewhere</a>
+                  <a href={`/deanFinalMarkSheet/1/2/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">View</a>
                 </div>
               </div>
 
@@ -59,7 +59,7 @@ export default function DeanDashBoard() {
                 <div className="card-body ">
                   <h5 className="card-title py-2">Level 2</h5>
                   <p className="card-text">Semester 1</p>
-                  <a href={`/deanFinalMarkSheet/2/1/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">Go somewhere</a>
+                  <a href={`/deanFinalMarkSheet/2/1/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">View</a>
                 </div>
               </div>
 
@@ -67,7 +67,7 @@ export default function DeanDashBoard() {
                 <div className="card-body ">
                   <h5 className="card-title py-2">Level 2</h5>
                   <p className="card-text">Semester 2</p>
-                  <a href={`/deanFinalMarkSheet/2/2/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">Go somewhere</a>
+                  <a href={`/deanFinalMarkSheet/2/2/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">View</a>
                 </div>
               </div>
 
@@ -78,7 +78,7 @@ export default function DeanDashBoard() {
                 <div className="card-body ">
                   <h5 className="card-title py-2">Level 3</h5>
                   <p className="card-text">Semester 1</p>
-                  <a href={`/deanFinalMarkSheet/3/1/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">Go somewhere</a>
+                  <a href={`/deanFinalMarkSheet/3/1/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">View</a>
                 </div>
               </div>
 
@@ -86,7 +86,7 @@ export default function DeanDashBoard() {
                 <div className="card-body ">
                   <h5 className="card-title py-2">Level 3</h5>
                   <p className="card-text">Semester 2</p>
-                  <a href={`/deanFinalMarkSheet/3/2/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">Go somewhere</a>
+                  <a href={`/deanFinalMarkSheet/3/2/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">View</a>
                 </div>
               </div>
 
@@ -94,7 +94,7 @@ export default function DeanDashBoard() {
                 <div className="card-body ">
                   <h5 className="card-title py-2">Level 4</h5>
                   <p className="card-text">Semester 1</p>
-                  <a href={`/deanFinalMarkSheet/4/1/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">Go somewhere</a>
+                  <a href={`/deanFinalMarkSheet/4/1/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">View</a>
                 </div>
               </div>
 
@@ -102,7 +102,7 @@ export default function DeanDashBoard() {
                 <div className="card-body ">
                   <h5 className="card-title py-2">Level 4</h5>
                   <p className="card-text">Semester 2</p>
-                  <a href={`/deanFinalMarkSheet/4/2/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">Go somewhere</a>
+                  <a href={`/deanFinalMarkSheet/4/2/${selectedDepartment}`}  className="btn btn-primary btn-sm mt-2">View</a>
                 </div>
               </div>
 
