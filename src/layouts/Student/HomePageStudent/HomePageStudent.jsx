@@ -66,7 +66,7 @@ export default function HomePageStudent() {
 
    const getStudentLevelSemester = async (StuID) => {         // load the student level and semester
     try{
-      const studentLevelSemester = await axios.get(`http://localhost:9090/api/Student/getStudentLevelAndSemester/${StuID}`)
+      const studentLevelSemester = await axios.get(`http://localhost:9090/api/Student/getStudentLevelAndSemester/${StuID}`)     //Call Api to get student level and semester
       setStudentLevel(studentLevelSemester.data.level);
       setStudentSemester(studentLevelSemester.data.semester);
     }catch(error){
@@ -78,7 +78,7 @@ export default function HomePageStudent() {
   const getLatestGPA = async (StuID) => {         // load the latest GPA
     
     try{
-        const latestGPAResponse = await axios.get(`http://localhost:9090/api/Student/getLatestGPA/${StuID}`)
+        const latestGPAResponse = await axios.get(`http://localhost:9090/api/Student/getLatestGPA/${StuID}`)        //Call Api to get latest GPA
         setStudentSGPA(parseFloat(latestGPAResponse.data.sgpa).toFixed(2));
         setStudentCGPA(parseFloat(latestGPAResponse.data.cgpa).toFixed(2));
 
@@ -92,7 +92,7 @@ export default function HomePageStudent() {
 
   const getPublishedMarkSheets = async () => {         // load the published mark sheets
 
-    if(studentDepartmentId!=null && studentLevel!=null && studentSemester!=null){
+    if(studentDepartmentId!=null && studentLevel!=null && studentSemester!=null){         //Check if student department, level and semester are not null
 
       
       try{
@@ -103,9 +103,9 @@ export default function HomePageStudent() {
         if( publishedMarkSheets.data){
         
           try{
-            const getGradeResponse = await axios.get(`http://localhost:9090/api/Student/getSelectedStudentGrade/${studentId}`)
+            const getGradeResponse = await axios.get(`http://localhost:9090/api/Student/getSelectedStudentGrade/${studentId}`)            //Call Api to get student grade list
             
-            setStudentGradeList(getGradeResponse.data);
+            setStudentGradeList(getGradeResponse.data);       //Set student grade list to the state
         
           }catch(error){
             console.error(`Error - ${error}`);
@@ -131,7 +131,7 @@ export default function HomePageStudent() {
 
 
   
-  if(!authState){
+  if(!authState){          //Check if the user is authenticated
     return <SpinerLoading/>;
   }
   if(authState.accessToken?.claims.userType !== "student"){
