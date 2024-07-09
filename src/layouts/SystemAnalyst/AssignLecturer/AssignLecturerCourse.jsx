@@ -11,12 +11,15 @@ export default function AssignLecturerCourse() {
     const [newCourseCoordinator, setNewCourseCoordinator] = useState({
         user_id:'',
         course_id:'',
-        academic_year:''
+        academic_year:'',
+        selectedLecturerIds:[]
     });
+    
     const [newLecturer, setNewLecturer] = useState([]);
 
     console.log(cCoordinatorids);
     console.log(selectedLecturerIds);
+    console.log(newCourseCoordinator)
 
     useEffect(() => {
         loadCids();
@@ -82,10 +85,15 @@ export default function AssignLecturerCourse() {
         setNewCourseCoordinator({
             user_id: selectedCoordinatorId,
             course_id: selectedCourseId,
-            academic_year: academicYear
+            academic_year: academicYear,
+            selectedLecturerIds: selectedLecturerIds,
         });
 
         console.log(newCourseCoordinator);
+        console.log(selectedCoordinatorId);
+        console.log(selectedCourseId);
+        console.log(academicYear);
+        console.log(selectedLecturerIds);
 
         try {
             await axios.post('http://localhost:9090/api/ccmanage/insertacc', newCourseCoordinator);
@@ -103,6 +111,24 @@ export default function AssignLecturerCourse() {
         setSelectedLecturerIds(prevIds => prevIds.filter(id => id!== idToRemove));
     };
 
+    const handleCourseCodeChange = (event) => {
+        const selectedCourseCode = event.target.value;
+        // Assuming you want to store this in a specific part of your state, e.g., newCourseCoordinator.course_id
+        setNewCourseCoordinator(prevState => ({
+            ...prevState,
+            course_id: selectedCourseCode
+        }));
+    };
+    
+    const handleCourseCoordinatorChange = (event) => {
+        const selectedCoordinatorId = event.target.value;
+        // Update the state similarly as above
+        setNewCourseCoordinator(prevState => ({
+            ...prevState,
+            user_id: selectedCoordinatorId
+        }));
+    };
+
     return (
         <div className='container' style={{ marginTop: "70px" }}>
             <div className='mt-4 mb-5'>
@@ -112,7 +138,7 @@ export default function AssignLecturerCourse() {
                 <div className="row g-3 my-1">
                     <div className="col-md">
                         <div className="form-floating">
-                            <select className="form-select">
+                            <select className="form-select" onChange={handleCourseCodeChange}>
                                 <option selected>Select Course Code</option>
                                 {cids.map((cid, index) => (
                                     <option key={`cid-${index}`} value={cid}>{cid}</option>
@@ -124,7 +150,7 @@ export default function AssignLecturerCourse() {
 
                     <div className="col-md">
                         <div className="form-floating">
-                            <select className="form-select">
+                            <select className="form-select" onChange={handleCourseCoordinatorChange}>
                                 <option selected>Select Course Coordinator</option>
                                 {cCoordinatorids.map((coordinatorId, index) => (
                                     <option key={`coordinator-${index}`} value={coordinatorId}>{coordinatorId}</option>
