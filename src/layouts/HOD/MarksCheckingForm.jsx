@@ -138,8 +138,8 @@ console.log(ele)
               <table className="table shadow  table-hover" style={{ marginTop: "50px" }}>
                 <tbody>
                   <tr>
-                    <th className='table-success' scope="col" >Assessment Type</th>
-                    <th className='table-warning' scope="col">Assessment Score</th>
+                    <th className='table-success' scope="col" ></th>
+                    <th className='table-warning' scope="col"> Score</th>
                   </tr>
 
 
