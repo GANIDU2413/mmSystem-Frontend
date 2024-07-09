@@ -122,15 +122,15 @@ export default function CertifyMarksPage(props) {
   )*/
 
 
-   const [finalMarksheetList, setFinalMarksheetList] = useState([]);
-   const status = "Ended";
+   const [finalMarksheetList, setFinalMarksheetList] = useState([]);          // to store available final mark sheets
+   const status = "Ended";                                  // status of the result board
 
 
-    const loadAvailableResultSheets = async () => {
+    const loadAvailableResultSheets = async () => {                   // load available final mark sheets
       try {
-        const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCertifyPendingResultBoards/${approvedLevel}/${status}`);
-        console.log(response.data)
-        setFinalMarksheetList(response.data);
+        const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCertifyPendingResultBoards/${approvedLevel}/${status}`);        // get available final mark sheets (Latest one matching with the student level)
+        
+        setFinalMarksheetList(response.data);           // set available final mark sheets to the state
       } catch (e) {
         console.log(e);
       }
@@ -138,7 +138,7 @@ export default function CertifyMarksPage(props) {
 
 
     useEffect(() => {
-      loadAvailableResultSheets();
+      loadAvailableResultSheets();          // load available final mark sheets
     }, []);
 
 
