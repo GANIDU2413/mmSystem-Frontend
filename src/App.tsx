@@ -61,7 +61,6 @@ import StudentViewEligibility from "./layouts/Student/StudentViewEligibility/Stu
 import StudentViewCourseDetails from "./layouts/Student/StudentViewCourseDetails/StudentViewCourseDetails";
 import StudentViewCourseCriteria from "./layouts/Student/StudentViewCourseCriteria/StudentViewCourseCriteria";
 import StudentWithHeldSubjects from "./layouts/Student/StudentWithHeldSubjects/StudentWithHeldSubjects";
-import StudentViewGPA from "./layouts/Student/StudentViewGPA/StudentViewGPA";
 
 
 
@@ -194,9 +193,7 @@ export const App = () => {
             <StudentWithHeldSubjects/>
           </Route>
 
-          <Route path="/studentViewGPA">
-            <StudentViewGPA/>
-          </Route>
+          
 
 
 
