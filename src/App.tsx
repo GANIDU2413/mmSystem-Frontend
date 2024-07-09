@@ -55,6 +55,7 @@ import CAEligibility from "./layouts/CourseCoordinator/CAEligibility";
 import CourseCriteriaByCC from "./layouts/CourseCoordinator/CourseCriteriaByCC";
 import ViewMarksTableValidations from "./layouts/Components/AR/DataTable/ViewMarksTableValidations";
 import CreateResultBoard from "./layouts/AR/CreateResultBoard/CreateResultBoard";
+import LecturerCertifiedCourses from "./Lecture/layouts/certifyMarks/LecturerCertifiedCourses";
 
 
 
@@ -227,6 +228,10 @@ export const App = () => {
           <HODMarksReturnSheet approved_level={"finalized"}/>
         </Route>
 
+        <Route path="/lMarksReturnSheet/:course_id/:course_name/:department">
+          <HODMarksReturnSheet approved_level={"course_coordinator"}/>
+        </Route>
+
         
 
           <Route path="/sysandashboard">
@@ -295,6 +300,10 @@ export const App = () => {
 
           <Route path="/cccbycc">
             <CourseCriteriaByCC />
+          </Route>
+
+          <Route path="/lecturecertifiedc">
+            <LecturerCertifiedCourses/>
           </Route>
           
           

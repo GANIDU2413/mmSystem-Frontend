@@ -17,6 +17,8 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ToastContainer } from 'react-toastify';
 import { wait } from '@testing-library/user-event/dist/utils';
+import DateObject from 'react-date-object';
+import { Navebar } from '../../Lecture/layouts/NavbarAndFooter/Navebar';
 
 
 
@@ -35,12 +37,18 @@ export default function HODMarksReturnSheet(props) {
     const[loading,setLoading]=useState(false);
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
     const[academicYear,setAcademicYear]=useState("")
+    const[current_semester,setCurrent_semester]=useState("")
     const[approval_level,setApprovalLevel]=useState(approved_level);
     const[marksSheet,setMarksSheet]=useState([])
     console.log(marksSheet)
     const [data, setData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredData, setFilteredData] = useState([]);
+    var date = new DateObject({
+        date: new Date(),
+      });
+      
+      console.log(date.format());
 
     const seenKeys = new Set();
     const seenKeysFA = new Set();
@@ -95,7 +103,8 @@ export default function HODMarksReturnSheet(props) {
           if (details) {
             saveAcademicYearToLocal(details);
             setAcademicDetails(details);
-            setAcademicYear(details.current_academic_year)
+            setAcademicYear(details.current_academic_year);
+            setCurrent_semester(academicDetails.current_semester)
           }
         };
     
@@ -109,7 +118,7 @@ export default function HODMarksReturnSheet(props) {
     };
     
    
-
+  console.log(date)
 
     let CAAvailable = false;
     let ca_percentage=0;
@@ -145,9 +154,14 @@ export default function HODMarksReturnSheet(props) {
         "approved_user_id":userNameAuth,
         "approval_level":nextApprovedlevel,
         "academic_year":academicYear,
-        "date_time":new Date().getDate,
+        "date_time":date.format(),
         "department_id":department,
         "signature":newSignature
+    }
+    
+    const lecturerCertifyAssign={
+        "lecturer_id":searchTerm,
+        "course_id": course_id
     }
 
     const Returnapproval={
@@ -155,7 +169,7 @@ export default function HODMarksReturnSheet(props) {
         "approved_user_id":userNameAuth,
         "approval_level":prevApprovedlevel,
         "academic_year":academicYear,
-        "date_time":new Date().getDate(),
+        "date_time": date.format(),
         "department_id":department,
         "signature":newSignature
     }
@@ -197,6 +211,7 @@ useEffect(() => {
 
                 const response1 = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/lecturer/${academicYear}`);
                 setISLeclevel(response1.data.content);
+            
 
                 const response2 = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/HOD/${academicYear}`);
                 setISHODlevel(response2.data.content);
@@ -206,6 +221,8 @@ useEffect(() => {
        
     }
 
+    
+        
       // Adding the beforeunload event listener
   useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -235,10 +252,21 @@ useEffect(() => {
 
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        
+        if(newSignature==null|| newSignature==""){
+            e.preventDefault();
+            console.log("Empty signature")
+            toastr.error("Empty Signature");
+        }
+        else{
+           
         try {
-            
+            e.preventDefault();
+            console.log(approval.date_time)
             const response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevel`,approval);
+            if(approval_level==="finalized"){
+                const lecturerAssign = await axios.post(`http://localhost:9090/api/approvalLevel/assignCertifyLecturer`,lecturerCertifyAssign);
+            }
             if (response.status === 200) {
                 console.log("Approval level updated successfully");
                 setApprovalLevel(nextApprovedlevel)
@@ -252,6 +280,8 @@ useEffect(() => {
         } catch (error) {
             console.error("Error updating approval level: ", error);
         }
+        }
+        
     };
 
 
@@ -336,12 +366,14 @@ useEffect(() => {
       }, []);
 
       const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
+        const searchTerm = event.target.value.toLowerCase();
+        setSearchTerm(searchTerm);
+    
         const filtered = data.filter(item =>
-            item.user_id.toString().toLowerCase().includes(event.target.value.toLowerCase())
-          );
+            item.name_with_initials && item.name_with_initials.toLowerCase().includes(searchTerm)
+        );
         setFilteredData(filtered);
-      };
+    };
 
       const handleClick = (userId) => {
         setSearchTerm(userId);
@@ -363,13 +395,15 @@ const imageHandlClear = () => {
 
     return (
         <>
+            <ToastContainer/>
            
             {/* <NavebarHOD /> */}
             {
                 authState?.accessToken?.claims.userType == "HOD" ? <NavebarHOD/> : 
                 authState?.accessToken?.claims.userType == "course_coordinator" ? <NavBarCC/> :
                 authState?.accessToken?.claims.userType == "dean" ? <NavebarDean/>:
-                authState?.accessToken?.claims.userType == "ar" ? <NavebarAR/> : null
+                authState?.accessToken?.claims.userType == "ar" ? <NavebarAR/> : 
+                authState?.accessToken?.claims.userType == "lecture" ? <Navebar/> : null
             }
             
             
@@ -381,8 +415,11 @@ const imageHandlClear = () => {
                         <div >
                         <div>
                             <div >
-                            <ToastContainer/>
-                                <form onSubmit={handleReturn}>
+                            {
+                                approval_level === "finalized" ||
+                                approval_level === "course_coordinator" ||
+                                approval_level === "lecturer" ? (
+                                    <form onSubmit={handleReturn}>
                                     <input
                                         type='submit'
                                         value="Return Mark Sheet"
@@ -391,6 +428,8 @@ const imageHandlClear = () => {
                                         style={{ float: 'right', width: '140px' }}
                                     />
                                 </form>
+                                ) : null}
+                               
                             </div>
                             <div>
                                 <div>
@@ -407,7 +446,7 @@ const imageHandlClear = () => {
                                         <div style={{display:"flex"}}>
                                             <h6>Academic Year: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;{academicYear}&nbsp;&nbsp;</span></h6>
                                             <h6 className=' mx-5'>Degree: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;Bachelor of Information and Communication Technology Honours Degree&nbsp;&nbsp;</span></h6>
-                                            <h6 className=' mx-2'>{academicDetails.current_semester === "1" ? "1st" : "2nd"} Semester Examination:  <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;December 2023&nbsp;&nbsp;</span> </h6>  
+                                            <h6 className=' mx-2'>{current_semester === "1" ? "1st" : "2nd"} Semester Examination:  <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;December 2023&nbsp;&nbsp;</span> </h6>  
                                         </div>
                                         
                                     
@@ -541,18 +580,18 @@ const imageHandlClear = () => {
                     <div>
                         {console.log(nextApprovedlevel)}
                         <table>
-                            <tr>
+                            
                                 
                                 
                                     {
                                          nextApprovedlevel == "course_coordinator" && newSignature != null ?
                                          <>
-                                            <td >Coordinator/ Examinar :</td>
-                                            <td></td>
+                                            <tr><td >Coordinator/ Examinar :</td></tr>
+                                            <tr>
                                             <td>Sign:</td>
                                             <td> <img src={newSignature} style={{ width: '80px', height: '40px' }} /> </td>
-                                            <td>Date:</td>
-                                            <td>{isCClevel.date_time != null ? isCClevel.date_time:null}</td>
+                                            </tr>
+                                            
                                          </>
                                          :
                                          null
@@ -561,7 +600,7 @@ const imageHandlClear = () => {
 
                                
                                 
-                            </tr>
+                          
                             
                                 
                                     {nextApprovedlevel == "lecturer" &&
@@ -583,8 +622,7 @@ const imageHandlClear = () => {
                                             <td></td>
                                             <td>Sign:</td>
                                             <img src={newSignature} style={{ width: '80px', height: '40px' }} /> 
-                                            <td>Date:</td>
-                                            <td>{isLeclevel.date_time != null ? isLeclevel.date_time:null}</td></tr>:null
+                                            </tr>:null
                                             }
                                             
                                     </>
@@ -599,16 +637,18 @@ const imageHandlClear = () => {
                                 
                                     {
                                     nextApprovedlevel == "HOD" &&
-                                    isHODlevel.signature != null ? 
+                                    isCClevel.signature != null && isLeclevel.signature!=null ? 
                                     <>
+                                    {isCClevel.signature != null || isCClevel.signature != ""?
                                     <tr>
-                                            <td>Coordinator/ Examinar :</td>
-                                            <td></td>
-                                            <td>Sign:</td>
-                                            <td> <img src={isCClevel.signature} style={{ width: '80px', height: '40px' }} /> </td>
-                                            <td>Date:</td>
-                                            <td>{isCClevel.date_time != null ? isCClevel.date_time:null}</td>
-                                    </tr>
+                                    <td>Coordinator/ Examinar :</td>
+                                    <td></td>
+                                    <td>Sign:</td>
+                                    <td> <img src={isCClevel.signature} style={{ width: '80px', height: '40px' }} /> </td>
+                                    <td>Date:</td>
+                                    <td>{isCClevel.date_time != null ? isCClevel.date_time:null}</td>
+                            </tr>:null}
+                                    
                                     <tr>
                                         {isLeclevel!=null?
                                         <>
@@ -616,6 +656,7 @@ const imageHandlClear = () => {
 
                                         <td></td>
                                         <td>Sign:</td>
+                                        
                                         <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> 
                                         <td>Date:</td>
                                         <td>{isLeclevel.date_time != null ? isLeclevel.date_time:null}</td>
@@ -630,8 +671,7 @@ const imageHandlClear = () => {
                                                                 <td></td>
                                                                 <td>Sign:</td>
                                                                 <img src={newSignature} style={{ width: '80px', height: '40px' }} /> 
-                                                                <td>Date:</td>
-                                                                <td>{isHODlevel.date_time != null ? isHODlevel.date_time:null}</td>: 
+                                                                
                                                                 
                                         </>
                                         :null
@@ -711,7 +751,7 @@ const imageHandlClear = () => {
                                     filteredData.map((item, index) => (
                                         searchTerm == ''?
                                         null
-                                        : <button  key={index} type="button" className="list-group-item list-group-item-action"  onClick={() => handleClick(item.user_id)}>{item.user_id} - {item.name_with_initials}</button >
+                                        : <button  key={index} type="button" className="list-group-item list-group-item-action"  onClick={() => handleClick(item.name_with_initials)}> {item.name_with_initials}</button >
                                     ))
                                     ) : (
                                         <button  type="button" className="list-group-item list-group-item-action">No results found.</button >
@@ -725,13 +765,15 @@ const imageHandlClear = () => {
                     }
                   <hr />
                     <div style={{marginTop:"10px",float:"right"}}>
+                    
 
                     {
                     approval_level === "finalized" ||
                     approval_level === "course_coordinator" ||
                     approval_level === "lecturer" ? (
                         <form onSubmit={handleSubmit}>
-                             <input to={``} type="submit" value="Send" className="btn btn-outline-success btn-sm"  id="submitbtn" style={{ width: '100px'}}/> <br /><br />
+                       
+                             <input to={``} type="submit" value="Send" className="btn btn-outline-success btn-sm"  id="submitbtn" style={{ width: '100px'}} disabled={!newSignature}/> <br /><br />
                         </form>
                     ) : null}
                         
