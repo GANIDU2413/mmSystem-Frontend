@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavebarAR } from '../../Components/AR/NavBarAR/NavebarAR';
 import BackButton from '../../Components/AR/BackButton/BackButton';
 import { Redirect, useHistory } from 'react-router-dom';
@@ -6,28 +6,49 @@ import './certifyMarksPage.css';
 import { useOktaAuth } from '@okta/okta-react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useState } from 'react';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
 
 export default function CertifyMarksPage(props) {     
 
+  const { authState } = useOktaAuth();
+
     const department_id = props.department_id;      // get department id from props
     const history = useHistory();               // for routing
-    const { authState } = useOktaAuth();      // get auth state
-    const approvedLevel="HOD";          // HOD approved level
+    const approvedLevel="RB";          // Approved level for result board conducted courses
 
-    const checkCertifyAvailability = async (level,semester) => {          // check whether HOD approved all courses for the given level and semester
+/*    const checkCertifyAvailability = async (level,semester) => {          // check whether HOD approved all courses for the given level and semester
        let approvedYear = new Date().getFullYear();                       // get current year
 
        try{
           const academicYearDetails= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`);    // get academic year details
           
           try{                                                                // get 'not approved courses' by level, semester, approved level and year     
-            const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getNotApprovedCoursesByLevelSemester/${level}/${semester}/HOD/${academicYearDetails.data[0]["current_academic_year"]}`);
+            const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getNotApprovedCoursesByLevelSemester/${level}/${semester}/${approvedLevel}/${academicYearDetails.data[0]["current_academic_year"]}/${department_id}`);     // get not approved courses by level, semester, approved level and year
             
             if(response.data.length>0){                                       // if 'not approved courses' are available
-              toast.error("HOD have not approved all courses for this level and semester",{autoClose:3000});      // show error message
+              toast.error("Result board is not conducted for all the courses",{autoClose:3000});      // show error message
               
             }else{                                                // if 'not approved courses' are not available
-              history.push(`/arFinalMarkSheet/${level}/${semester}/${department_id}`);       // redirect to final mark sheet page
+
+              try{                                                // check whether there are students who were absent for the exams
+                const abList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/isABStudentAvailable/${academicYearDetails.data[0]["current_academic_year"]}/${semester}/${level}/${department_id}`);    //Call api to check the AB student availability
+
+                if(abList.data){
+
+                  toast.error("There are students who were absent for the exams, please check the medicals and update their states",{autoClose:6000});    //Display error message if there are students who were absent for the exams
+                
+                }else{
+
+                  history.push(`/arFinalMarkSheet/${level}/${semester}/${department_id}`);       // redirect to final mark sheet page
+
+                }
+
+              }catch(e){
+                toast.error("Error with getting absent student details",{autoClose:3000});      // show error message
+              }
+
             }
           }
           catch(e){
@@ -71,7 +92,7 @@ export default function CertifyMarksPage(props) {
                         
 
                         <div className="d-grid gap-3 level-set" style={{marginTop:"50px",marginRight:"30px"}}>
-                            <label className="semesterLabel " >Semester 1</label>                                                                        {/* semester 1 buttons for eaach levels */}
+                            <label className="semesterLabel " >Semester 1</label>                                                                       
                             <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(1,1) }}>Level 1</button>
                             <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(2,1) }}>Level 2</button>
                             <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(3,1) }}>Level 3</button>
@@ -82,7 +103,7 @@ export default function CertifyMarksPage(props) {
 
                     <div className="col-sm">
                         <div className="d-grid gap-3 level-set" style={{marginTop:"50px",marginLeft:"30px"}}>
-                            <label className="semesterLabel">Semester 2</label>                                                                     {/* semester 2 buttons for eaach levels */}
+                            <label className="semesterLabel">Semester 2</label>                                                                    
                             <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(1,2) }}>Level 1</button>
                             <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(2,2) }}>Level 2</button>
                             <button className="btn btn-primary level-button" type="button" onClick={()=>{ checkCertifyAvailability(3,2) }}>Level 3</button>
@@ -94,9 +115,90 @@ export default function CertifyMarksPage(props) {
                   <br/><BackButton/> <br/>&nbsp;
                 </div>
             </div>
-            <ToastContainer />          {/* toast container */}
+            <ToastContainer />        
             
         </div>
     </div>
-  )
-}
+  )*/
+
+
+   const [finalMarksheetList, setFinalMarksheetList] = useState([]);          // to store available final mark sheets
+   const status = "Ended";                                  // status of the result board
+
+
+    const loadAvailableResultSheets = async () => {                   // load available final mark sheets
+      try {
+        const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCertifyPendingResultBoards/${approvedLevel}/${status}`);        // get available final mark sheets (Latest one matching with the student level)
+        
+        setFinalMarksheetList(response.data);           // set available final mark sheets to the state
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+
+    useEffect(() => {
+      loadAvailableResultSheets();          // load available final mark sheets
+    }, []);
+
+
+    if(!authState){
+      return <SpinerLoading/>;
+    }
+    if(authState.accessToken?.claims.userType !== "ar"){
+      return <Redirect to="/home" />;
+    }
+
+    return (
+      <>
+        <div className='certify-div-1'>
+          <div className='certify-div-2'>
+            <table className='table table-striped certify-table'>
+              
+              <thead className='certify-table-head'>
+                <tr>
+                  <th className='certify-table-heading' colSpan={100} style={{textAlign: 'center', backgroundColor: '#ebe8e8', textAlignLast: 'center'}}>
+                    Marks Sheets Available to Certify <br/>
+                  </th>
+                </tr>
+                <tr>
+                  <th colSpan={100}></th>
+                </tr>
+              </thead>
+              
+              <tbody>
+                {
+                  !finalMarksheetList.length >0 ? (
+                    <tr>
+                      <td colSpan={100} style={{textAlign: 'center',color:"red"}}>No Marks Sheets Available to Certify</td>
+                    </tr>
+                  ):(
+                    finalMarksheetList.map((item, index) =>(
+                      <tr key={index} className='clickable-row' onClick={()=>{history.push(`/arFinalMarkSheet/${item.level}/${item.semester}/${item.department}`)}}>
+                        <td>level {item.level}</td>
+                        <td>semester {item.semester}</td>
+                        <td>Dep. of {item.department}</td>
+                        <td>academic year ({item.academic_year})</td>
+                      </tr>
+                    ))
+                  )
+                }
+
+
+
+
+                  
+              
+              </tbody>
+
+            </table>
+            <div className='right-aligned-div back-button-div'>
+          <BackButton/>&nbsp;
+        </div>
+          </div>
+        </div>
+      </>
+
+    )
+
+  }

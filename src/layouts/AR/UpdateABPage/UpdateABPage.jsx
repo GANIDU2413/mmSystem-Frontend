@@ -7,6 +7,9 @@ import BackButton from '../../Components/AR/BackButton/BackButton';
 import { useOktaAuth } from '@okta/okta-react';
 import { ToastContainer, toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+import { SpinerLoading } from '../../Utils/SpinerLoading';
+
 
 export default function UpdateABPage() {
 
@@ -78,7 +81,7 @@ export default function UpdateABPage() {
 
                 await selectedStudentMedicalDetails.data.map((element)=>{       //Map the selected student medical details
                     
-                    if (element['medical_state']==='Approved'){   //condition to check whether the medical submission is approved or not
+                    if (element['medical_state'].toLowerCase()==='Approved'.toLowerCase()){   //condition to check whether the medical submission is approved or not
                         setNewScore("MC");          //Set the new score to MC if the medical submission is approved
                         setStateOfTheMedicalSubmissionColor("green");     //Set the color of the medical submission state to green
                         setStateOfTheMedicalSubmission("Medical submission has approved.");    //Set the state of the medical submission
@@ -103,10 +106,7 @@ export default function UpdateABPage() {
         }
     };
 
-    useEffect(()=>{
-        
-        loadAllMedicalSubmissions();        //Load the medical submission details when the page is loaded
-    },[]);
+    
 
 
     const updateGrade = async()=>{              //Function to update the student grade
@@ -179,18 +179,18 @@ export default function UpdateABPage() {
             
                 /*---------------------------------------------------------------------Scenario for a propper student---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
                     
-                if (studentDetails.exam_type=="Mid theory exam" || studentDetails.exam_type=="Mid practical exam"){                   //Condition to check whether the exam is a mid exam
+                if (studentDetails.exam_type.toLowerCase()=="Mid theory exam".toLowerCase() || studentDetails.exam_type.toLowerCase()=="Mid practical exam".toLowerCase()){                   //Condition to check whether the exam is a mid exam
                         
-                    if(newScore==="F"){             //condition to check whether the new grade is F
+                    if(newScore.toLowerCase()==="F".toLowerCase()){             //condition to check whether the new grade is F
                             existingGrade.ca_eligibility="Not eligible";     //Set the ca eligibility to not eligible
                             existingGrade.grade="F";     //Set the grade to F
                     }
 
-                    else if(newScore==="MC"){           //condition to check whether the new grade is MC
+                    else if(newScore.toLowerCase()==="MC".toLowerCase()){           //condition to check whether the new grade is MC
 
                         existingGrade.grade="WH";        //Set the grade to MC
 
-                        if(existingGrade.ca_eligibility==="Pending"){            //condition to check whether the ca eligibility is pending
+                        if(existingGrade.ca_eligibility.toLowerCase()==="Pending".toLowerCase()){            //condition to check whether the ca eligibility is pending
                             existingGrade.ca_eligibility="Eligible";                 //Set the ca eligibility to eligible
                         }
                     }
@@ -204,21 +204,27 @@ export default function UpdateABPage() {
                     }
 
                     
-                } else if(studentDetails.exam_type=="End theory exam" || studentDetails.exam_type=="End practical exam"){           //Condition to check whether the exam is a end exam
+                } else if(studentDetails.exam_type.toLowerCase()=="End theory exam".toLowerCase() || studentDetails.exam_type.toLowerCase()=="End practical exam".toLowerCase()){           //Condition to check whether the exam is a end exam
                     
-                    if(studentDetails.exam_type=="End theory exam"){            //Condition to check whether the exam is a theory exam
+                    if(studentDetails.exam_type.toLowerCase()=="End theory exam".toLowerCase()){            //Condition to check whether the exam is a theory exam
                         
-                        const previousMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.current_academic_year}/Mid theory exam`);   //Get the mid therory exam results of the student in the current academic year
+                        const midExamMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.current_academic_year}/Mid theory exam`);   //Get the mid therory exam results of the student in the current academic year
                         
-                        if (previousMarksList.data[0].assignment_score !="F" && updateDataOject.new_score==="MC"){      //Condition to check whether the student has passed the mid exam and have MC for end exam
+                        if (((!midExamMarksList.data.length>0) ||midExamMarksList.data[0].assignment_score.toLowerCase() !="F".toLowerCase()) && updateDataOject.new_score.toLowerCase()==="MC".toLowerCase()){      //Condition to check whether the student has passed the mid exam and have MC for end exam
                             
                             existingGrade.grade="WH";                   //Set the grade to WH
+                        }else{
+                            //Grade will be existing grade (possinle grade)
                         }
                         
-                    } else if(studentDetails.exam_type=="End practical exam"){      //Condition to check whether the exam is a practical exam
-                        const previousMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.current_academic_year}/Mid practical exam`);   //Get the mid practical exam results of the student in the current academic year
-                        if (previousMarksList.data[0].assignment_score !="F" && updateDataOject.new_score==="MC"){              //Condition to check whether the student has passed the mid exam and have MC for end exam
+                    } else if(studentDetails.exam_type.toLowerCase()=="End practical exam".toLowerCase()){      //Condition to check whether the exam is a practical exam
+
+                        const midExamMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.current_academic_year}/Mid practical exam`);   //Get the mid practical exam results of the student in the current academic year
+                        
+                        if (((!midExamMarksList.data.length>0) ||midExamMarksList.data[0].assignment_score.toLowerCase() !="F".toLowerCase()) && updateDataOject.new_score.toLowerCase()==="MC".toLowerCase()){              //Condition to check whether the student has passed the mid exam and have MC for end exam
                             existingGrade.grade="WH"                   //Set the grade to WH   
+                        }else{
+                            //Grade will be existing grade (possinle grade)
                         }
                         
                     }
@@ -236,10 +242,15 @@ export default function UpdateABPage() {
 
             /*---------------------------------------------------------------------Scenario for a repeated or WH student---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
                 
-            if((studentDetails.exam_type=="Mid theory exam" || studentDetails.exam_type=="End theory exam")){           //Condtition to ensure the exam is a theory exam
+
+
+
+            if((studentDetails.exam_type.toLowerCase()=="Mid theory exam".toLowerCase() || studentDetails.exam_type.toLowerCase()=="End theory exam".toLowerCase())){           //Condtition to ensure the exam is a theory exam
                 
+
                 const previousMidExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.previous_academic_year}/Mid theory exam`);   //Get the selected student previous mid exam marks in theory exam 
-                if(previousMidExamResult.data[0].assignment_score=="MC" && existingGrade.grade=="WH" && newScore=="F"){       //Condition to check whether the student has a WH grade and the new grade is F
+                
+                if(((!previousMidExamResult.data.length>0) || previousMidExamResult.data[0].assignment_score=="MC") && existingGrade.grade=="WH" && newScore=="F"){       //Condition to check whether the student has a WH grade and the new grade is F
                     existingGrade.grade="F";        //Set the grade to F
                     existingGrade.ca_eligibility="Not eligible";    //Set the ca eligibility to not eligible
 
@@ -256,7 +267,8 @@ export default function UpdateABPage() {
             } else if((studentDetails.exam_type=="Mid practical exam" || studentDetails.exam_type=="End practical exam")){           //Condtition to ensure the exam is a practical exam
                 
                 const previousMidExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.previous_academic_year}/Mid practical exam`);   //Get the selected student previous mid exam marks in practical exam
-                if(previousMidExamResult.data[0].assignment_score=="MC" && existingGrade.grade=="WH" && newScore=="F"){       //Condition to check whether the student has a WH grade and the new grade is F
+                
+                if(((!previousMidExamResult.data.length>0) || previousMidExamResult.data[0].assignment_score=="MC") && existingGrade.grade=="WH" && newScore=="F"){       //Condition to check whether the student has a WH grade and the new grade is F
                     existingGrade.grade="F";        //Set the grade to F
                     existingGrade.ca_eligibility="Not eligible";    //Set the ca eligibility to not eligible
 
@@ -289,6 +301,22 @@ export default function UpdateABPage() {
         }, 3000);
 
     };
+
+
+    useEffect(()=>{
+        
+        loadAllMedicalSubmissions();        //Load the medical submission details when the page is loaded
+    },[]);
+
+
+
+    
+    if(!authState){
+        return <SpinerLoading/>;
+      }
+      if(authState.accessToken?.claims.userType !== "ar"){
+        return <Redirect to="/home" />;
+      }
     
 
 
