@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import SignatureForApproval from '../../Components/SignatureForApproval';
 import { useOktaAuth } from '@okta/okta-react';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../AcademicYearManagerSingleton';
+import DateObject from 'react-date-object';
 
 export default function DeanFinalMarkSheet(props) {
   const [finalResults, setFinalResults] = useState([]);
@@ -15,13 +16,17 @@ export default function DeanFinalMarkSheet(props) {
   const history = useHistory();
   const [error, setError] = useState("");
   const { approved_level } = props;
-  const [newSignature, setNewSignature] = useState("");
+  const [newSignature, setNewSignature] = useState();
   const [nextApprovedlevel, setNextApprovedlevel] = useState("");
   const { oktaAuth, authState } = useOktaAuth();
   const userNameAuth = authState?.idToken?.claims.preferred_username;
   const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
   const [academicYear, setAcademicYear] = useState("");
   const[Allcourses,setAllCourses]=useState([]);
+
+  var date = new DateObject({
+    date: new Date(),
+  });
 
   const [ARSign, setARSign] = useState({
     "level": "",
@@ -62,7 +67,7 @@ export default function DeanFinalMarkSheet(props) {
     "approved_user_id": userNameAuth,
     "approval_level": nextApprovedlevel,
     "academic_year": academicYear,
-    "date_time": new Date().getDate,
+    "date_time": date.format(),
     "department_id": dept,
     "signature": newSignature
   };
@@ -245,6 +250,19 @@ const formatAcademicYear = (academicYear) => {
   return academicYear; // Return as-is if format is unexpected
 };
   
+const cellStyle = {
+  padding: '8px',
+  textAlign: 'left',
+  border: '1px solid #ccc',
+};
+
+const rowStyle = {
+  backgroundColor: '#fff',
+};
+
+const alternateRowStyle = {
+  backgroundColor: '#f2f2f2',
+};
 
   
 
@@ -253,94 +271,127 @@ const formatAcademicYear = (academicYear) => {
 
   return (
     <div className="container" style={{marginTop:'70px'}}>
+      <ToastContainer/>
       {finalResults.length !== 0 ? (
         <>
-          <div>
-            <h2>University of Ruhuna</h2>
-            <h2>Faculty of Technology</h2>
-            <h5>Bachelor of Information and Communication Technology Honours Degree</h5>
-            <h5>Level {level}     Semester {semester} - Nov/Dec 2023       Academic year {formatAcademicYear(academicYear)}</h5>
-            <h5>Provisional results subject to confirmation by the Senate</h5>
-          </div>
+         <div style={{ textAlign: 'center', marginTop: '20px' }}>
+  <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>University of Ruhuna</h2>
+  <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>Faculty of Technology</h2>
+  <h5 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#555' }}>Bachelor of Information and Communication Technology Honours Degree</h5>
+  <h5 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#555' }}>Level {level}     Semester {semester}     <br/>    Academic year {formatAcademicYear(academicYear)}</h5>
+  <h5 style={{ marginBottom: '20px', fontFamily: 'Arial, sans-serif', color: '#777' }}>Provisional results subject to confirmation by the Senate</h5>
+</div>
+
 
           <div className=' shadow-lg' style={{display:'flex'}}>
 
-          <div className="description" style={{ padding: '1px', margin: '10px' ,float:'left',marginLeft:'50px'}}>
-            <h5>Key to Grading</h5>
-            <table style={{width:'300px'}}>
-              <tbody>
-                <tr>
-                  <td>A+</td>
-                  <td>4.00</td>
+          <div
+  className="description"
+  style={{
+    padding: '10px',
+    margin: '20px',
+    float: 'left',
+    marginLeft: '50px',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#f9f9f9',
+  }}
+>
+  <h5 style={{ textAlign: 'center', marginBottom: '10px', fontWeight: 'bold', color: '#333' }}>
+    Key to Grading
+  </h5>
+  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+    <tbody>
+      <tr>
+        <td style={cellStyle}>A+</td>
+        <td style={cellStyle}>4.00</td>
+        <td style={cellStyle}>A</td>
+        <td style={cellStyle}>4.00</td>
+      </tr>
+      <tr style={{ backgroundColor: '#f2f2f2' }}>
+        <td style={cellStyle}>A-</td>
+        <td style={cellStyle}>3.70</td>
+        <td style={cellStyle}>B+</td>
+        <td style={cellStyle}>3.30</td>
+      </tr>
+      <tr>
+        <td style={cellStyle}>B</td>
+        <td style={cellStyle}>3.00</td>
+        <td style={cellStyle}>B-</td>
+        <td style={cellStyle}>2.70</td>
+      </tr>
+      <tr style={{ backgroundColor: '#f2f2f2' }}>
+        <td style={cellStyle}>C+</td>
+        <td style={cellStyle}>2.30</td>
+        <td style={cellStyle}>C</td>
+        <td style={cellStyle}>2.00</td>
+      </tr>
+      <tr>
+        <td style={cellStyle}>C-</td>
+        <td style={cellStyle}>1.70</td>
+      </tr>
+      <tr style={{ backgroundColor: '#f2f2f2' }}>
+        <td style={cellStyle}>D+</td>
+        <td style={cellStyle}>1.30</td>
+        <td style={cellStyle}>D</td>
+        <td style={cellStyle}>1.00</td>
+      </tr>
+      <tr>
+        <td style={cellStyle}>E</td>
+        <td style={cellStyle}>0.00</td>
+      </tr>
+      <tr style={{ backgroundColor: '#f2f2f2' }}>
+        <td style={cellStyle}>F</td>
+        <td style={cellStyle}>CA Fail</td>
+      </tr>
+      <tr>
+        <td style={cellStyle}>MC</td>
+        <td style={cellStyle}>Accepted Medical Certificate</td>
+      </tr>
+      <tr style={{ backgroundColor: '#f2f2f2' }}>
+        <td style={cellStyle}>AC</td>
+        <td style={cellStyle}>Accepted Academic Concession (Acceptable reason by the Senate other than the Medical)</td>
+      </tr>
+      <tr>
+        <td style={cellStyle}>WH</td>
+        <td style={cellStyle}>Results Withheld</td>
+      </tr>
+      <tr style={{ backgroundColor: '#f2f2f2' }}>
+        <td style={cellStyle}>E*</td>
+        <td style={cellStyle}>Not Eligible/Not Applied/Absent without Medical</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-                  <td>A</td>
-                  <td>4.00</td>
-                </tr>
-                <tr>
-                  <td>A-</td>
-                  <td>3.70</td>
 
-                  <td>B+</td>
-                  <td>3.30</td>
-                </tr>
-                <tr>
-                  <td>B</td>
-                  <td>3.00</td>
+<div
+  style={{
+    marginLeft: '400px',
+    marginTop: '50px',
+    float: 'right',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#f9f9f9',
+    padding: '10px'
+  }}
+>
+  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+    <tbody>
+      {Allcourses.map((id, index) => (
+        <React.Fragment key={index}>
+          <tr style={index % 2 === 0 ? rowStyle : alternateRowStyle}>
+            <td style={cellStyle}>{id.course_id}</td>
+            <td style={cellStyle}>{id.course_name}</td>
+          </tr>
+        </React.Fragment>
+      ))}
+    </tbody>
+  </table>
+</div>
 
-                  <td>B-</td>
-                  <td>2.70</td>
-                </tr>
-
-                <tr>
-                  <td>C+</td>
-                  <td>2.30</td>
-
-                  <td>C</td>
-                  <td>2.00</td>
-                </tr>
-                <tr>
-                  <td>C-</td>
-                  <td>1.70</td>
-                </tr>
-                <tr>
-                  <td>D+</td>
-                  <td>1.30</td>
-
-                  <td>D</td>
-                  <td>1.00</td>
-
-                </tr>
-                <tr>
-                  <td>E</td>
-                  <td>0.00</td>
-                </tr>
-
-                <tr>
-                  <td>F</td>
-                  <td>CA Fail</td>
-                </tr>
-
-                <tr><td>MC</td><td>Accepted Medical Certificate</td></tr>
-                <tr><td>AC</td><td>Accepted Academice Concession(Acceptable reason by the Senate other than the Medical)</td></tr>
-                <tr><td>WH</td><td>Results Withheld</td></tr>
-                <tr><td>E*</td><td>Not Eligible/Not Applied/Absent without Medical</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div style={{marginLeft:'400px',marginTop:'50px',float:'right'}}>
-            <table>
-            {Allcourses.map((id, index) => (
-                    <React.Fragment key={index}>
-                      <tr>
-                        <td>{id.course_id}</td>
-                        <td>{id.course_name}</td>
-                      </tr>
-                    </React.Fragment>
-                  ))}
-
-            </table>
-          </div>
 
         </div>
 
@@ -392,119 +443,103 @@ const formatAcademicYear = (academicYear) => {
             {console.log(nextApprovedlevel)}
             
               <br />
-              {nextApprovedlevel === "AR" && newSignature !== "" ? (
-                <>
-                <p>Certified Correct,</p>
-                <img src={newSignature} style={{ width: '80px', height: '40px' }} alt="AR Signature" />
+              {nextApprovedlevel === "AR" && newSignature !== null ? 
+                <div>
+                <h5>Certified Correct,</h5>
+                <img src={newSignature} style={{ width: '80px', height: '40px' }}  />
                 <p>Ms H.H Kaumadi Dharmasiri</p>
-                <p>Assisstant Registrar</p>
+                <p>Assistant Registrar</p>
                 <p>Faculty of Technology</p>
-                </>
-              ) : (
-                nextApprovedlevel === "AR" && ARSign.signature ?(
-                  <>
-                  <p>Certified Correct,</p>
-                  <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} alt="AR Signature" />
-                  <p>Ms H.H Kaumadi Dharmasiri</p>
-                  <p>Assisstant Registrar</p>
-                  <p>Faculty of Technology</p>
-                  </>
-                ): null
-              )}
+                </div>
+              : null}
 
              
 
-              {nextApprovedlevel === "Dean" && newSignature !== "" ? (
-                  <>
-                    <p>Certified Correct,</p>
-                    <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} alt="AR Signature" />
-                    <p>Ms H.H Kaumadi Dharmasiri</p>
-                    <p>Assisstant Registrar</p>
-                    <p>Faculty of Technology</p>
+              {nextApprovedlevel === "Dean"  ? 
+                <>
+                   {ARSign.signature !== null || ARSign.signature !== "" ?
+                   <>
+                 
+                   <h5>Certified Correct,</h5>
+                   <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} />
+                   <p>Ms H.H Kaumadi Dharmasiri</p>
+                   <p>Assistant Registrar</p>
+                   <p>Faculty of Technology</p>
+                   <br/><br/>
+                 </>:null}
+                  
 
-                    <img src={newSignature} style={{ width: '80px', height: '40px' }} alt="Dean Signature" />
+                  {newSignature !== null?
+                  <>
+                    <img src={newSignature} style={{ width: '80px', height: '40px' }}  />
                     <p>Prof. P.K.S.C Jayasinghe</p>
                     <p>Dean/Faculty of Technology</p>
+                  </>:null}
+
                   </>
-                ) : (
-                  nextApprovedlevel === "Dean" && DeanSign.signature ? (
+                 : null}
+
+                {nextApprovedlevel === "VC"  ? 
                     <>
-
-                      <p>Certified Correct,</p>
-                      <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} alt="AR Signature" />
-                      <p>Ms H.H Kaumadi Dharmasiri</p>
-                      <p>Assisstant Registrar</p>
-                      <p>Faculty of Technology</p>
-
-                      <img src={DeanSign.signature} style={{ width: '80px', height: '40px' }} alt="Dean Signature" />
+                    {ARSign.signature !== null || ARSign.signature !== "" ?
+                   <>
+                 
+                   <h5>Certified Correct,</h5>
+                   <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} />
+                   <p>Ms H.H Kaumadi Dharmasiri</p>
+                   <p>Assistant Registrar</p>
+                   <p>Faculty of Technology</p>
+                   <br/><br/>
+                 </>:null}
+                    {DeanSign.signature !== null || DeanSign.signature !== "" ?
+                      <div>
+                      <img src={DeanSign.signature} style={{ width: '80px', height: '40px' }}/>
                       <p>Prof. P.K.S.C Jayasinghe</p>
                       <p>Dean/Faculty of Technology</p>
-                    </>
-                  ):null
-                )}
+                      <br/><br/>
+                      </div>:null}
 
-                {nextApprovedlevel === "VC" && newSignature !== "" ? (
-                    <>
-                      <p>Certified Correct,</p>
-                      <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} alt="AR Signature" />
-                      <p>Ms H.H Kaumadi Dharmasiri</p>
-                      <p>Assisstant Registrar</p>
-                      <p>Faculty of Technology</p>
-                      
-                      <img src={DeanSign.signature} style={{ width: '80px', height: '40px' }} alt="Dean Signature" />
-                      <p>Prof. P.K.S.C Jayasinghe</p>
-                      <p>Dean/Faculty of Technology</p>
+                      {newSignature !== null?
 
-                      <img src={newSignature} style={{ width: '80px', height: '40px' }} alt="VC Signature" />
+                      <div>
+                      <img src={newSignature} style={{ width: '80px', height: '40px' }} />
                       <p>Snr Prof. Sujeewa Amarasena</p>
                       <p>Vice Chancellor</p>
                       <p>Faculty of Technology</p>
+                      <br/>
+                      </div>:null}
                     </>
-                  ) : (
-                    nextApprovedlevel === "VC" && VCSign.signature ? (
-                      <>
-                        <p>Certified Correct,</p>
-                        <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} alt="AR Signature" />
-                        <p>Ms H.H Kaumadi Dharmasiri</p>
-                        <p>Assisstant Registrar</p>
-                        <p>Faculty of Technology</p>
-                        
-                        <img src={DeanSign.signature} style={{ width: '80px', height: '40px' }} alt="Dean Signature" />
-                        <p>Prof. P.K.S.C Jayasinghe</p>
-                        <p>Dean/Faculty of Technology</p>
-                        <img src={VCSign.signature} style={{ width: '80px', height: '40px' }} alt="VC Signature" />
-                        <p>Snr Prof. Sujeewa Amarasena</p>
-                        <p>Vice Chancellor</p>
-                        <p>Faculty of Technology</p>
-                      </>
-                    ):null
-                  )}
+                  : null}
 
             
           </div>
 
+          
+          <div style={{float:"right",marginTop:"50px"}}>
           <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
+          </div>
+          
 
           <form onSubmit={handleSubmit}>
             <input
               to={``}
               type="submit"
-              value="Request Certify"
+              value="Send"
               className="btn btn-outline-success btn-sm"
               id="submitbtn"
-              // disabled={}
+              disabled={!newSignature}
               style={{
                 width: "10%",
               }} />
             <br />
             <br />
           </form>
-          <ToastContainer />
+          
         </>
       ) : (
         <div className=" container" style={{ marginTop: "150px" }}>
-          <div className="alert alert-primary" role="alert"></div>
-            {`No Result sheets found for  level ${level} and semester ${semester} to Approve`}
+          <div className="alert alert-primary" role="alert"> {`No Result sheets found for  level ${level} and semester ${semester} to Approve`}</div>
+           
             <br />
 
           </div>

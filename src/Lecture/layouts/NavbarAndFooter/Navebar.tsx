@@ -83,6 +83,14 @@ export const Navebar = () => {
                 Score Feeding
               </Link>
             </li>
+            <li className="nav-item">
+              <Link
+                className="nav-link px-2 mb-2 btn footer-color text-white"
+                to={"/lecturecertifiedc"}
+              >
+                Certify Marks
+              </Link>
+            </li>
           </ul>
           <hr></hr>
         </div>

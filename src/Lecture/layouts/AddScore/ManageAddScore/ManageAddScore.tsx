@@ -10,8 +10,10 @@ export const ManageAddScore = () => {
   // const [messagesClick, setMessagesClick] = useState(false);
 
   return (
-    <div className="container mt-4" >
-      <Navebar />
+
+    <div className="container">
+      <Navebar/>
+
       <div className="mt-5">
         <h3>Manage Score</h3>
         <nav>

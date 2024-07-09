@@ -5,25 +5,29 @@ import { NavebarSA } from '../NavebarSA';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 export default function AttendanceEligibilityManage() {
- const [data, setData] = useState([]);
- const [attendanceData, setAttendanceData] = useState([]);
+  const [data, setData] = useState([]);
+  const [attendanceData, setAttendanceData] = useState([]);
+  
+  const expectedKeys = ["student_id", "course_id", "percentage", "eligibility"];
 
- useEffect(() => {
-  fetchData();
-}, [])
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-const fetchData = async () => {
-  try {
-    const response = await axios.get("http://localhost:9090/api/attendanceEligibility/getallattendance");
-    setAttendanceData(response.data.content);
-  } catch (error) {
-    console.error("Error fetching data from API:", error);
-  }
-};
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:9090/api/attendanceEligibility/getallattendance");
+      setAttendanceData(response.data.content);
+    } catch (error) {
+      console.error("Error fetching data from API:", error);
+    }
+  };
 
- const handleFileUpload = (e) => {
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
     const reader = new FileReader();
     reader.onload = (e) => {
       const data = e.target.result;
@@ -31,16 +35,39 @@ const fetchData = async () => {
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       const parsedData = XLSX.utils.sheet_to_json(sheet);
+
+      const headers = XLSX.utils.sheet_to_json(sheet, { header: 1 })[0];
+
+      // Header Validation
+      if (!headers || !Array.isArray(headers) || headers.length === 0) {
+        toast.warn("Failed to read headers from the uploaded file. Please ensure the file is properly formatted.");
+        return;
+      }
+
+      if (!headers.every((key, index) => key === expectedKeys[index])) {
+        toast.warn("The uploaded sheet is not related or formatted correctly. Please ensure the correct structure.");
+        return;
+      }
+
+      // Data Validation
+      if (parsedData.length === 0) {
+        toast.warn("The uploaded file contains only headers. Please ensure there is data below the headers.");
+        return;
+      }
+
       setData(parsedData);
     };
+
     reader.onerror = (error) => {
-      toast.error("Mistake reading file. Please try again.");
+      toast.error("Error reading file. Please try again.");
       console.error("Error reading file:", error);
     };
-    reader.readAsArrayBuffer(e.target.files[0]);
- };
 
- const onSubmit = async (e) => {
+    // Changed from readAsArrayBuffer to readAsBinaryString
+    reader.readAsBinaryString(file);
+  };
+
+  const onSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post("http://localhost:9090/api/attendanceEligibility/insertbulkattendance", data);
@@ -50,27 +77,21 @@ const fetchData = async () => {
       console.error("Error submitting data:", error);
       toast.error("Error submitting data. Please try again.");
     }
- };
+  };
 
- const downloadTemplate = () => {
-  // Create a new workbook
-  const wb = XLSX.utils.book_new();
-  // Create a new worksheet with the specified column headers
-  const ws = XLSX.utils.json_to_sheet([
-    { student_id: "", course_id: "", percentage: "", eligibility: "" }
-  ], { header: ["student_id", "course_id", "percentage", "eligibility"], skipHeader: false });
-  // Add the worksheet to the workbook
-  XLSX.utils.book_append_sheet(wb, ws, "Attendance Eligibility Template");
-  // Write the workbook to a file and download it
-  XLSX.writeFile(wb, "Attendance_Eligibility_Template.xlsx");
-};
+  const downloadTemplate = () => {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet([{ student_id: "", course_id: "", percentage: "", eligibility: "" }], { header: expectedKeys, skipHeader: false });
+    XLSX.utils.book_append_sheet(wb, ws, "Attendance Eligibility Template");
+    XLSX.writeFile(wb, "Attendance_Eligibility_Template.xlsx");
+  };
 
- return (
+  return (
     <div className='container'>
       <NavebarSA />
       <div className='py-4'>
-        <div className="h2 mt-lg-5">Attendence</div>
-        <div className=' my-2' style={{float:"right"}}>
+        <div className="h2 mt-lg-5">Attendance</div>
+        <div className='my-2' style={{ float: "right" }}>
           <button onClick={downloadTemplate} className='btn btn-success mt-3'>Download Template</button>
         </div>
         <div>
@@ -102,28 +123,28 @@ const fetchData = async () => {
       </div>
       <ToastContainer />
       <div>
-      <div className="h2 mt-lg-5">Attendance Data</div>
-          {attendanceData.length > 0 && (
-            <table className='table'>
-              <thead>
-                <tr>
-                  {Object.keys(attendanceData[0]).map((key, index) => (
-                    <th key={index}>{key}</th>
+        <div className="h2 mt-lg-5">Attendance Data</div>
+        {attendanceData.length > 0 && (
+          <table className='table'>
+            <thead>
+              <tr>
+                {Object.keys(attendanceData[0]).map((key, index) => (
+                  <th key={index}>{key}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {attendanceData.map((row, index) => (
+                <tr key={index}>
+                  {Object.values(row).map((value, index) => (
+                    <td key={index}>{value}</td>
                   ))}
                 </tr>
-              </thead>
-              <tbody>
-                {attendanceData.map((row, index) => (
-                  <tr key={index}>
-                    {Object.values(row).map((value, index) => (
-                      <td key={index}>{value}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
- );
+  );
 }

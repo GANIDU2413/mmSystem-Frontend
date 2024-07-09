@@ -9,6 +9,7 @@ export default function StudentRegCourses() {
 
   const [data, setData] = useState([]);
   const [medicalData, setMedicalData] = useState([]);
+  const expectedKeys = ["student_id", "course_id", "academic_year"];
 
   useEffect(() => {
     fetchData();
@@ -16,7 +17,7 @@ export default function StudentRegCourses() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:9090/api/medicalmng/getallmedicals");
+      const response = await axios.get("http://localhost:9090/api/studentRegCourses/getallRegisteredStudents");
       setMedicalData(response.data.content);
     } catch (error) {
       console.error("Error fetching data from API:", error);
@@ -31,6 +32,26 @@ export default function StudentRegCourses() {
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       const parsedData = XLSX.utils.sheet_to_json(sheet);
+
+      const headers = XLSX.utils.sheet_to_json(sheet, { header: 1 })[0];
+
+      // Header Validation
+      if (!headers || !Array.isArray(headers) || headers.length === 0) {
+        toast.warn("Failed to read headers from the uploaded file. Please ensure the file is properly formatted.");
+        return;
+      }
+
+      if (!headers.every((key, index) => key === expectedKeys[index])) {
+          toast.warn("The uploaded sheet is not related or formatted correctly. Please ensure the correct structure.");
+          return;
+      }
+
+      // Data Validation
+      if (parsedData.length === 0) {
+          toast.warn("The uploaded file contains only headers. Please ensure there is data below the headers.");
+          return;
+      }
+
       setData(parsedData);
     };
     reader.onerror = (error) => {
@@ -43,7 +64,7 @@ export default function StudentRegCourses() {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:9090/api/medicalmng/insertbulkmedical", data);
+      await axios.post("http://localhost:9090/api/studentRegCourses/insert_allRegisteredStudents", data);
       toast.success("Data submitted successfully!");
       fetchData();
     } catch (error) {
@@ -60,9 +81,9 @@ export default function StudentRegCourses() {
       { student_id: "", course_id: "", academic_year: "" }
     ], { header: ["student_id", "course_id", "academic_year"], skipHeader: false });
     // Add the worksheet to the workbook
-    XLSX.utils.book_append_sheet(wb, ws, "Medical Template");
+    XLSX.utils.book_append_sheet(wb, ws, "Students_Courses_Registration");
     // Write the workbook to a file and download it
-    XLSX.writeFile(wb, "Medical_Template.xlsx");
+    XLSX.writeFile(wb, "Students_Courses_Registration.xlsx");
   };
 
   return (
