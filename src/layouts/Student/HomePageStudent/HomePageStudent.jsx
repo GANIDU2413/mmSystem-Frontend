@@ -103,7 +103,7 @@ export default function HomePageStudent() {
         if( publishedMarkSheets.data){
         
           try{
-            const getGradeResponse = await axios.get(`http://localhost:9090/api/Student/getSelectedStudentGrade/${studentId}`)            //Call Api to get student grade list
+            const getGradeResponse = await axios.get(`http://localhost:9090/api/Student/getSelectedStudentGrade/${publishedMarkSheets.data.level}/${publishedMarkSheets.data.semester}/${publishedMarkSheets.data.department}/${studentId}`)            //Call Api to get student grade list
             
             setStudentGradeList(getGradeResponse.data);       //Set student grade list to the state
         

@@ -30,7 +30,7 @@ export default function StudentWithHeldSubjects() {
         if(studentEmail != null){
 
             try{
-                const studentDetailsResult = await axios.get(`http://localhost:9090/api/Student/getStudentDetailsByEmail/${studentEmail}`)
+                const studentDetailsResult = await axios.get(`http://localhost:9090/api/Student/getStudentDetailsByEmail/${studentEmail}`)      //API to get student details by email
                 setStudentId(studentDetailsResult.data.student_id);
                 setStudentName(studentDetailsResult.data.name_with_initials);
                 setStudentRegisteredYear(studentDetailsResult.data.registered_year);
