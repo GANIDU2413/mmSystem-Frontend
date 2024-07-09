@@ -23,7 +23,6 @@ export default function HomePageAR() {
   
   return (
     <div>
-      <NavebarAR />
       {/* horizontall cards*/ }
       <div className="container functionCardContainer" >
 
@@ -33,7 +32,7 @@ export default function HomePageAR() {
           <div className="col mb-4"> 
             <div className="card text-center functionCard">
               <div className="card-body">
-                  <br/><h5 className="card-title">Create Result Board</h5><br/>
+                  <br/><h5 className="card-title">Manage Results Boards</h5><br/>
                 <a href="/createResultsBoard" className="btn btn-primary home-page-class-button">Create</a>
               </div>
             </div>
@@ -51,7 +50,7 @@ export default function HomePageAR() {
           <div className="col mb-4"> 
             <div className="card text-center functionCard">
               <div className="card-body">
-                <br/><h5 className="card-title">Update grades for absentees </h5><br/>
+                <br/><h5 className="card-title">Exam Absentees </h5><br/>
                 <a href="/viewablist" className="btn btn-primary home-page-class-button">Update</a>
               </div>
             </div>

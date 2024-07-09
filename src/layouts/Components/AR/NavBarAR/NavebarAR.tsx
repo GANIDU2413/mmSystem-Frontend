@@ -87,7 +87,7 @@ export const NavebarAR = () => {
 
               <li className="nav-item">
                 <a className="nav-link" href="/viewablist">
-                Update grades for absentees
+                Exam Absentees
                 </a>
               </li>
 
@@ -130,7 +130,7 @@ export const NavebarAR = () => {
               
               <li className="nav-item">
                 <a className="nav-link" href="/createResultsBoard">
-                  Create Results Board
+                  Manage Results Boards
                 </a>
               </li>
 

@@ -115,8 +115,8 @@ export default function ABListPage() {
 
         )}
         <div className='right-aligned-div back-button-div'>
-            <BackButton/> <br/>&nbsp;
-          </div>
+          <BackButton/> <br/>&nbsp;
+        </div>
 
     </div>
   )
