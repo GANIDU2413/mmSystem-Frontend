@@ -58,6 +58,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
+       
         const userName = authState?.idToken?.claims.preferred_username; // get userName from okta
         const courseURL = `http://localhost:9090/api/lectureCourseAssigneds/search/findLectureCourseAssignedByUsername?userName=${userName}`; // API for handlling course Ids.
 
@@ -652,7 +653,7 @@ export const AddScore: React.FC<AddScoreProps> = ({ option }) => {
                                     )
                                   )}
                               </tr>
-                            </thead>
+                            </thead> 
                             <tbody>
                               {csvData.map((row, rowIndex) => (
                                 <tr key={rowIndex}>
