@@ -192,6 +192,9 @@ export default function CertifyMarksPage(props) {
               </tbody>
 
             </table>
+            <div className='right-aligned-div back-button-div'>
+          <BackButton/>&nbsp;
+        </div>
           </div>
         </div>
       </>
