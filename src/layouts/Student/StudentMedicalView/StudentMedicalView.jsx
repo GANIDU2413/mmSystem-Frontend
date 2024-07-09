@@ -45,27 +45,27 @@ export default function StudentmedicalView() {
       };
 
 
-    const getAllMedicalSubmissions = async (year) => {
+    const getAllMedicalSubmissions = async (year) => {          //get all medical submissions for the student
 
 
         
 
             try{
 
-                const allYearResponse = await axios.get(`http://localhost:9090/api/Student/getStudentMedicalList/${studentId}`)
-                if(!allYearResponse.data.length>0){
-                    setErrorMessage("No medical submissions available")
-                }else {
-                    const uniqueArr = [...new Set(allYearResponse.data.map((item)=>item.academic_year))];
-                    setUniqueYears(uniqueArr);
+                const allYearResponse = await axios.get(`http://localhost:9090/api/Student/getStudentMedicalList/${studentId}`)             //Call api to get all medical submissions
+                if(!allYearResponse.data.length>0){                     //Check if the response is empty
+                    setErrorMessage("No medical submissions available")         //Set error message
+                }else {                                            //If response is not empty
+                    const uniqueArr = [...new Set(allYearResponse.data.map((item)=>item.academic_year))];               //Get unique years from the response
+                    setUniqueYears(uniqueArr);            //Set unique years to the state
 
-                    if(year=="All Years"){
-                        setStudentMedicalList(allYearResponse.data);
-                    }else{
+                    if(year=="All Years"){              //Check if the selected year is all years
+                        setStudentMedicalList(allYearResponse.data);                    //Set all medical submissions to the state
+                    }else{                              //If another year is selected
 
                         //Call api to get selected year medical submissions
-                        const selectedYearResponse = await axios.get(`http://localhost:9090/api/Student/getStudentMedicalListBySelectedYear/${studentId}/${year}`)
-                        setStudentMedicalList(selectedYearResponse.data);
+                        const selectedYearResponse = await axios.get(`http://localhost:9090/api/Student/getStudentMedicalListBySelectedYear/${studentId}/${year}`)              //Api call to get medicals of selected year
+                        setStudentMedicalList(selectedYearResponse.data);               //Set selected year medical submissions to the state
                     }
                 }
 
@@ -92,7 +92,7 @@ export default function StudentmedicalView() {
 
 
 
-    if(!authState){
+    if(!authState){                 //Check if the user is authenticated
         return <SpinerLoading/>;
       }
       if(authState.accessToken?.claims.userType !== "student"){
