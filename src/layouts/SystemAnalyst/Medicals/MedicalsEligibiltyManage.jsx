@@ -24,6 +24,7 @@ const fetchData = async () => {
 };
 
  const handleFileUpload = (e) => {
+
     const reader = new FileReader();
     reader.onload = (e) => {
       const data = e.target.result;
@@ -31,6 +32,13 @@ const fetchData = async () => {
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       const parsedData = XLSX.utils.sheet_to_json(sheet);
+
+      // Check if the parsed data is empty
+      if (parsedData.length === 0) {
+        toast.warn("The uploaded file contains only headers without any data.");
+        return; // Exit the function early
+    }
+
       setData(parsedData);
     };
     reader.onerror = (error) => {
