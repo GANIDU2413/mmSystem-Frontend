@@ -578,7 +578,7 @@ const imageHandlClear = () => {
                             }
 
                             <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
-                                pathname: `/MarksCheckingForm/${course_id}/${course_name}`,
+                                pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}`,
                                 state: { ele }
                             }}>View</Link></td>
                             {console.log(ele.student_id,ele.total_ca_mark,ele.total_final_mark,ele.total_rounded_mark,ele.grade,ele.gpv,ele.ca_eligibility)}

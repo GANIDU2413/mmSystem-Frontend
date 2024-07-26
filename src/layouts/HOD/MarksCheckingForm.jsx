@@ -20,7 +20,7 @@ export default function MarksCheckingForm() {
   const[noData,setNoData]=useState('')
   const [calculations, setCalculations] = useState([]);
   const { oktaAuth, authState } = useOktaAuth();
-
+  const[updatebtn,setEnableupdatebtn]=useState("disabled");
 
 
 
@@ -35,7 +35,7 @@ export default function MarksCheckingForm() {
 
 const location=useLocation()
 
-const {course_id, course_name } = useParams();
+const {course_id, course_name,approval_level } = useParams();
 const{ele}=location.state;
 
 const student_id=ele.student_id
@@ -43,7 +43,7 @@ const student_id=ele.student_id
 console.log(ele)
 
 
-
+console.log(approval_level)
 
 
 
@@ -119,6 +119,13 @@ console.log(ele)
     history.goBack(); // Navigate back
   };
 
+  const updateMarks=(event)=>
+  {
+    if (updatebtn !== "Enable") {
+      setEnableupdatebtn("Enable");
+    }
+  }
+
   return (
     <>
       <ToastContainer />
@@ -162,10 +169,11 @@ console.log(ele)
                   {
                     
 
-                    ele.end.map((e)=>
+                   ele.end.map((e)=>
                       (<tr>
                         <td className='table-primary' scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
-                        <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.value}</td>
+                        <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.description=="score"&& approval_level=="finalized" ? <input type="text" defaultValue={e.value} onchange={updateMarks()}
+                        ></input> :e.value}</td>
                       </tr>
                         
                       ))
@@ -173,6 +181,7 @@ console.log(ele)
 
                 </tbody>
               </table>
+              <input type="button" style={{width:'100px'}} className={`btn btn-outline-success btn-sm mt-3 `} value="Update" />
             </div>
 
             
