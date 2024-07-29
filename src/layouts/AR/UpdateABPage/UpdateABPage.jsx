@@ -346,12 +346,16 @@ export default function UpdateABPage() {
                                     <td> <label className='labelValue'>{studentDetails.exam_type}</label> </td>
                                 </tr>
                                 <tr>
+                                    <td><label className="labelkey">Academic year: </label></td>
+                                    <td> <label className='labelValue'>{studentDetails.academic_year}</label> </td>
+                                </tr>
+                                <tr>
                                     <td><label className="labelkey">Current score: </label></td>
                                     <td> <label className='labelValue'>{studentDetails.grade}</label> </td>
                                 </tr>
                                 <tr>
-                                    <td><label className="labelkey">New score: </label></td>
-                                    <td> <label className='labelValue'>{newScore}</label> </td>
+                                    <td><label className="labelkey" >New score: </label></td>
+                                    <td> <label className='labelValue' style={{color:stateOfTheMedicalSubmissionColor,fontWeight:'bold'}}>{newScore}</label> </td>
                                 </tr>
                                 <tr>
                                     {stateOfTheMedicalSubmissionColor==="green" ? (

@@ -82,7 +82,7 @@ export default function ABListPage() {
                 <tr>              
                   <th scope="col">Level</th>
                   <th scope="col">Semester</th>
-                  <th scope='col'>Acadamic year</th>
+                  <th scope='col'>Academic year</th>
                   <th scope="col">Course ID</th>
                   <th scope="col">Course Name</th>
                   <th scope="col">Student ID</th>
@@ -100,6 +100,7 @@ export default function ABListPage() {
                       }}>
                     <td>{element[0]}</td>
                     <td>{element[1]}</td>
+                    <td>{element[8]}</td>
                     <td>{element[2]}</td>
                     <td>{element[3]}</td>
                     <td>{element[4]}</td>
