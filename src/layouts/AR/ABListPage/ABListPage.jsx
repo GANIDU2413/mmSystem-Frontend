@@ -82,6 +82,7 @@ export default function ABListPage() {
                 <tr>              
                   <th scope="col">Level</th>
                   <th scope="col">Semester</th>
+                  <th scope='col'>Acadamic year</th>
                   <th scope="col">Course ID</th>
                   <th scope="col">Course Name</th>
                   <th scope="col">Student ID</th>
