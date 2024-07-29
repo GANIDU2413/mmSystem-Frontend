@@ -3,15 +3,19 @@ import { NavebarAR } from "../../Components/AR/NavBarAR/NavebarAR";
 import { Redirect } from "react-router-dom";
 import './homePageAR.css';
 import { SpinerLoading } from "../../Utils/SpinerLoading";
+import { useHistory } from "react-router-dom";
+import { link } from "fs";
 
 
 export default function HomePageAR() {
   const { authState } = useOktaAuth();
 
+  const history = useHistory();
 
-  // if (authState?.accessToken?.claims.userType !== "ar") {
-  //   return <Redirect to="/home" />;
-  // }
+
+const handleChange = (link:string) => {
+  history.push(link);
+}
   
   if(!authState){
       return <SpinerLoading/>
@@ -26,7 +30,7 @@ export default function HomePageAR() {
       {/* horizontall cards*/ }
       <div className="container functionCardContainer" >
 
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+        <div className="row">
 
 
 
@@ -51,44 +55,31 @@ export default function HomePageAR() {
           <div className="col mb-4"> 
             <div className="card text-center functionCard">
               <div className="card-body">
-                <br/><h5 className="card-title">Mark Return Sheets - ICT </h5><br/>
-                <a href="/arviewictmarks" className="btn btn-primary home-page-class-button">View</a>
-              </div>
-            </div>
-          </div>
+                <br/><h5 className="card-title">Marks Return Sheets </h5><br/>
+                
+                <select className="form-select home-page-class-button marksheet-select-box-button" onChange={(e)=>{handleChange(e.target.value)}}>
 
-          <div className="col mb-4"> 
-            <div className="card text-center functionCard">
-              <div className="card-body">
-                <br/><h5 className="card-title"> Mark Return Sheets - ET </h5><br/>
-                <a href="/arviewetmarks" className="btn btn-primary home-page-class-button">View</a>
-              </div>
-            </div>
-          </div>
+                  <option selected disabled style={{color:"rgb(100, 100, 100)"}}>
+                    Select department
+                  </option>
 
-          <div className="col mb-4"> 
-            <div className="card text-center functionCard">
-              <div className="card-body">
-                <br/><h5 className="card-title">Mark Return Sheets - BST </h5><br/>
-                <a href="/arviewbstmarks" className="btn btn-primary home-page-class-button">View</a>
-              </div>
-            </div>
-          </div>
+                  <option value='/arviewictmarks'>
+                    <a href="/arviewictmarks" className="btn btn-primary home-page-class-button">ICT</a>
+                  </option>
 
-          <div className="col mb-4"> 
-            <div className="card text-center functionCard">
-              <div className="card-body">
-                <br/><h5 className="card-title">Mark Return Sheets - Multi Disciplinary </h5><br/>
-                <a href="/arviewmtdmarks" className="btn btn-primary home-page-class-button">View</a>
-              </div>
-            </div>
-          </div>
+                  <option value='/arviewetmarks'>
+                    <a href="/arviewetmarks" className="btn btn-primary home-page-class-button">ET</a>
+                  </option>
 
-          <div className="col mb-4"> 
-            <div className="card text-center functionCard">
-              <div className="card-body">
-                <br/><h5 className="card-title">Certify Marks</h5><br/>
-                <a href="/arCertifyMarks" className="btn btn-primary home-page-class-button">Certify</a>
+                  <option value='/arviewbstmarks'>
+                    <a href="/arviewbstmarks" className="btn btn-primary home-page-class-button">BST</a>
+                  </option>
+
+                  <option value='/arviewmtdmarks'>
+                    <a href="/arviewmtdmarks" className="btn btn-primary home-page-class-button">Multi Disciplinary</a>
+                  </option>
+                
+                </select>
               </div>
             </div>
           </div>
@@ -101,6 +92,17 @@ export default function HomePageAR() {
               </div>
             </div>
           </div>
+
+          <div className="col mb-4"> 
+            <div className="card text-center functionCard">
+              <div className="card-body">
+                <br/><h5 className="card-title">Certify Marks Sheets</h5><br/>
+                <a href="/arCertifyMarks" className="btn btn-primary home-page-class-button">Certify</a>
+              </div>
+            </div>
+          </div>
+
+          
           
         </div>
 

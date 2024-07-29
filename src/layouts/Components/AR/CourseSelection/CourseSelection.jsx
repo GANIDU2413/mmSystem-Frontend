@@ -104,11 +104,7 @@ export default function CourseSelection(props) {
             &nbsp; department - {department_id}  
 
           </div>
-          <div className='col'>
-            <div className='right-aligned-div back-button-div'>
-              <BackButton/> <br/>&nbsp;
-            </div>
-        </div>
+          
       </div>
             
     </div>

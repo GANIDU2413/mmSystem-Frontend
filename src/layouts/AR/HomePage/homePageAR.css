@@ -26,5 +26,20 @@
     align-items: center;
     align-content: center;
     text-align: center;
+    width: 100%;
+}
+
+.marksheet-select-box-button {
+  background-color:#0d6efd; 
+  color:white;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  width:auto;
+}
+
+select option {
+  background-color: rgb(255, 255, 255);
+  color: black;
 }
 
