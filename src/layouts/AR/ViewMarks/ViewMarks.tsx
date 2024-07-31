@@ -26,7 +26,11 @@ export default function ViewMarks(props:any) {
         <NavebarAR/>
         <LevelSelection department_id={department_id} level_selection_tpe={"View student marks"}/>
 
-        
+        <div className='col'>
+            <div className='right-aligned-div back-button-div' style={{marginRight:'20px',marginTop:"10px"}}>
+              <BackButton/> <br/>&nbsp;
+            </div>
+        </div>
     </div>
   )
 }
