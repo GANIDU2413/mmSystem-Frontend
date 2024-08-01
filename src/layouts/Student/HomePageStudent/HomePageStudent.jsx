@@ -29,7 +29,7 @@ export default function HomePageStudent() {
   const [studentGradeList, setStudentGradeList] = useState([]);         //Use state to store student grade list
 
 
-  const [publishedMarkSheetsList, setPublishedMarkSheetsList] = useState(null);         //Use state to store published mark sheets list
+  const [publishedMarkSheetsList, setPublishedMarkSheetsList] = useState([]);         //Use state to store published mark sheets list
 
 
   const approvedLevel="VC";          // Approved level for result board conducted courses
@@ -90,7 +90,7 @@ export default function HomePageStudent() {
 
 
 
-  const getPublishedMarkSheets = async () => {         // load the published mark sheets
+  /*const getPublishedMarkSheets = async () => {         // load the published mark sheets
 
     if(studentDepartmentId!=null && studentLevel!=null && studentSemester!=null){         //Check if student department, level and semester are not null
 
@@ -117,7 +117,17 @@ export default function HomePageStudent() {
       }
     }
   
-  }
+  }*/
+
+    const getPublishedMarkSheets = async () => {         // load the published mark sheets
+      try{
+        const result = await axios.get(`http://localhost:9090/api/Student/getPublishedMarksSheetList/${approvedLevel}/${resultBoardState}`);
+        setPublishedMarkSheetsList(result.data);
+        console.log(result.data)
+      }catch(error){
+        console.error(`Error - ${error}`);
+      }
+    }
 
 
   
@@ -178,42 +188,39 @@ export default function HomePageStudent() {
 
             <table className="table table-striped student-home-page-table" >
 
-              
+                          
               <thead className='home-page-table-head'>
                 <tr>
                   <th className='home-page-table-heading' colSpan={100} style={{textAlign: 'center', backgroundColor: '#ebe8e8', textAlignLast: 'center'}}>
-                    Published Results <br/>
+                    Published Marks Sheets <br/>
                   </th>
                 </tr>
                 <tr>
                   <th colSpan={100}></th>
                 </tr>
                 <tr>
-                  <th>Course ID</th>
-                  <th>Grade</th>
+                  <th>Level</th>
+                  <th>Semester</th>
+                  <th>Department</th>
+                  <th>Academic Year</th>
                 </tr>
               </thead>
 
               <tbody>
                 {
-                  publishedMarkSheetsList == null ? (
+                  publishedMarkSheetsList.length <1 ? (
                     <tr>
-                      <td colSpan={100} style={{textAlign: 'center'}}>No Published Marks Available</td>
-                    </tr>
-                  ): studentGradeList == null? (
-                    <tr>
-                      <td colSpan={100} style={{textAlign: 'center'}}>You do not have marks under this mark sheet</td>
+                      <td colSpan={100} style={{textAlign: 'center'}}>No Published Marks Sheets Available</td>
                     </tr>
                   ):
                   (
-                    studentGradeList.map((grade,index)=>{
-                      return(
-                        <tr key={index}>
-                          <td>{grade.course_id}</td>
-                          <td>{grade.grade}</td>
-                        </tr>
-                      )
-                    })
+                    publishedMarkSheetsList.map((item, index) =>(
+                      <tr key={index} className='clickable-row' onClick={()=>{history.push({pathname:`/viewPublishedMarksSheet`,state:item})}}>
+                        <td>level {item.level}</td>
+                        <td>semester {item.semester}</td>
+                        <td>Dep. of {item.department}</td>
+                        <td>academic year ({item.academic_year})</td>
+                      </tr>))
                   )
                 }
 

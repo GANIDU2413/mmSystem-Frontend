@@ -25,18 +25,18 @@ export default function ARJoinResultBoard() {
     const getStudentGrade = async ()=>{
         try{
             const gradeResponse =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getGradesForResultBoard/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
-            console.log(gradeResponse.data);
+            //console.log(gradeResponse.data);
             setStudentGrades(gradeResponse.data);
 
-            const uniqueStudentArr = [...new Set(gradeResponse.data.map((item)=>item.student_id))];                                     // get unique academic years
+            const uniqueStudentArr = [...new Set(gradeResponse.data.map((item)=>item.student_id))].sort();                                     // get unique academic years
             setUniqueStudents(uniqueStudentArr); 
 
-            const uniqueCourseArr = [...new Set(gradeResponse.data.map((item)=>item.course_id))];                                     // get unique academic years
+            const uniqueCourseArr = [...new Set(gradeResponse.data.map((item)=>item.course_id))].sort();                                     // get unique academic years
             setUniqueCourses(uniqueCourseArr);
 
             //call api to get studentGPA
             const gpaResponse = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getGpaListForResultBoard/${selectedResultBoard.department}/${selectedResultBoard.academic_year}/${selectedResultBoard.level}/${selectedResultBoard.semester}`);
-            console.log(gpaResponse.data)
+            //console.log(gpaResponse.data)
             setStudentGpa(gpaResponse.data);
 
         }catch(error){
@@ -65,15 +65,13 @@ export default function ARJoinResultBoard() {
         </h5>
         <hr/>
 
-        {
+        {/* {
         console.log(uniqueStudents)
         
         }
         {
             console.log(uniqueCourses)
-        }
-
-
+        } */}
 
 
         {
@@ -108,16 +106,58 @@ export default function ARJoinResultBoard() {
                                             </td>
                                             {
                                                 uniqueCourses.map((course)=>(
-                                                    studentGrades.map((Grade)=>(
-                                                        Grade.student_id===student && Grade.course_id===course?<> <td style={{backgroundColor:"rgba(32, 225, 138, 0.2)"}}>{Grade.total_rounded_mark}</td><td style={{backgroundColor:"rgba(137, 43, 226, 0.2)"}}>{Grade.grade}</td></>:null
-                                                    ))
+                                                    <>
+                                                        <td style={{backgroundColor:"rgba(32, 225, 138, 0.2)"}}>
+
+                                                        {studentGrades.map((Grade)=>(
+                                                            Grade.student_id===student && Grade.course_id===course?<> {Grade.total_rounded_mark}</>:null
+                                                        ))}
+                                                        </td>
+
+                                                        <td style={{backgroundColor:"rgba(137, 43, 226, 0.2)"}}>
+
+                                                        {studentGrades.map((Grade)=>(
+                                                            Grade.student_id===student && Grade.course_id===course?<> {Grade.grade}</>:null
+                                                        ))}
+                                                        </td>
+                                                    </>
+
                                                 ))
                                             }
-                                            {
+                                            {/* {
                                                 studentGpa.map((gpa)=>(
                                                     gpa.student_id===student?<> <td>{gpa.sgpa}</td><td style={{backgroundColor:"rgba(225, 32, 51, 0.15)"}}>{gpa.cgpa}</td></>:null
                                                 ))
+                                            } */}
+
+
+                                            {
+                                                <>
+
+                                                <td>
+                                                    {
+                                                        studentGpa.map((gpa)=>(
+                                                            gpa.student_id===student?<>{gpa.sgpa}</>:null
+                                                        ))
+                                                    }
+                                                </td>
+
+                                                <td style={{backgroundColor:"rgba(225, 32, 51, 0.15)"}}>
+                                                    {
+                                                        studentGpa.map((gpa)=>(
+                                                            gpa.student_id===student?<>{gpa.cgpa}</>:null
+                                                        ))
+                                                    }
+                                                </td>
+
+                                                </>
+                                                
+                                                   
                                             }
+
+
+                                            
+
                                         </tr>
                                     ))
                                 }

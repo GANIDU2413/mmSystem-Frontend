@@ -66,6 +66,7 @@ import StudentViewCourseCriteria from "./layouts/Student/StudentViewCourseCriter
 import StudentWithHeldSubjects from "./layouts/Student/StudentWithHeldSubjects/StudentWithHeldSubjects";
 import ARJoinResultBoard from "./layouts/AR/ARJoinResultBoard/ARJoinResultBoard";
 import ErrorPageFourZeroFour from "./layouts/Components/ErrorPageFourZeroFour/ErrorPageFourZeroFour";
+import StudentMarkSheetView from "./layouts/Student/StudentMarksheetView/StudentMarkSheetView";
 
 
 
@@ -204,6 +205,10 @@ export const App = () => {
 
           <Route path ="/studentViewWithHeldSubjects">      {/*Link to Student Withheld subjects view page*/}
             <StudentWithHeldSubjects/>
+          </Route>
+
+          <Route path="/viewPublishedMarksSheet">           {/*Link to view published marks sheet page*/}
+            <StudentMarkSheetView/>
           </Route>
 
           
