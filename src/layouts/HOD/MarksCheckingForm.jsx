@@ -139,21 +139,37 @@ console.log(ele.end)
   console.log(endMarks); // Log the updated state
  
   };
+
   
   const updateMarks=async()=>
     {
       try {
         ele.end=endMarks.end;
         console.log(ele.end);
-        const response = await axios.put(`http://localhost:9090/api/marks/updateMarks`, endMarks);
-        console.log(response.data);
-        toast.success(response.data.message);
+        const response = await axios.put(`http://localhost:9090/api/marksReturnSheet/updateMarks`, ele);
+        
+        setTimeout(() => {
+          toast.success("Successfully Updated");
+        }, 1000)
+        history.goBack();
+        console.log(response.data)
       } catch (error) {
         console.error('Error updating marks:', error);
         toast.error('Error updating marks');
     }
   }
 
+  const isValidMark = (value) => {
+    if (value === null || value === undefined || value.trim() === '') {
+      return false; // Invalid if value is null, undefined, or an empty string
+    }
+    if (value === 'AB') {
+      return true; // 'AB' is valid
+    }
+    const numValue = Number(value);
+    return !isNaN(numValue) && numValue >= 0 && numValue <= 100;
+  };
+  
 
   
 
@@ -211,7 +227,7 @@ console.log(ele.end)
 
                 </tbody>
               </table>
-              <button style={{width:'100px'}} className={`btn btn-outline-success btn-sm mt-3 `} value="Update" disabled={!updatebtn} onClick={updateMarks()}/>
+              <button style={{width:'100px'}} className={`btn btn-outline-success btn-sm mt-3 `} value="Update" disabled={!updatebtn} onClick={updateMarks}/>
             </div>
 
             
@@ -264,20 +280,25 @@ console.log(ele.end)
                   <input type='text' size="10" className=' mx-3' value={ele.grade} disabled />
                 </div>
               </div>
-              <div class="col mt-4 shadow p-4">
-                <form onSubmit={handleSubmit}>
-                  <div>
-                    <label for="exampleFormControlTextarea1" class="form-label"> <b>Notification</b> </label>
-                    <textarea
-                      value={text}
-                      className='form-control w-100 '
-                      onChange={(e) => setText(e.target.value)}
-                      placeholder="Type your message here..."
-                    />
-                    <input type="submit" style={{width:'100px'}} className={`btn btn-outline-success btn-sm mt-3 ${text ? '' : 'disabled'}`} value="Send" />
-                  </div>
-                </form>
-              </div>
+              {
+                                approval_level === "course_coordinator" ||
+                                approval_level === "lecturer" ? (
+                                  <div class="col mt-4 shadow p-4">
+                                  <form onSubmit={handleSubmit}>
+                                    <div>
+                                      <label for="exampleFormControlTextarea1" class="form-label"> <b>Notification</b> </label>
+                                      <textarea
+                                        value={text}
+                                        className='form-control w-100 '
+                                        onChange={(e) => setText(e.target.value)}
+                                        placeholder="Type your message here..."
+                                      />
+                                      <input type="submit" style={{width:'100px'}} className={`btn btn-outline-success btn-sm mt-3 ${text ? '' : 'disabled'}`} value="Send" />
+                                    </div>
+                                  </form>
+                                </div>
+                                ) : null}
+              
               <div>
                 <input onClick={handleReturn} type="button" className="btn shadow btn-outline-success btn-sm w-25 float-end my-4" id="backbtn" value="Back" />
               </div>

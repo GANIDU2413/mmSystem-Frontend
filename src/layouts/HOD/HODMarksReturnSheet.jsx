@@ -324,20 +324,7 @@ useEffect(() => {
     };
     
 
-    const downloadPDF = () => {
-        const input = document.getElementById('marks-return-sheet');
-        html2canvas(input)
-            .then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF();
-                pdf.addImage(imgData, 'PNG', 10, 10);
-                pdf.save(`${course_name}-${course_id}-Marks-Return-Sheet.pdf`);
-            })
-            .catch(error => {
-                console.error('Error generating PDF: ', error);
-            });
-    };
-    
+ 
     
 
     marksSheet.map((ele, index) => (
@@ -396,11 +383,7 @@ useEffect(() => {
 
 console.log(authState?.accessToken?.claims.userType);
 
-const imageHandlClear = () => {
-    setISHODlevel(null)
 
-
-};
 
 
 
@@ -430,7 +413,6 @@ const imageHandlClear = () => {
                         <div>
                             <div >
                             {
-                                approval_level === "finalized" ||
                                 approval_level === "course_coordinator" ||
                                 approval_level === "lecturer" ? (
                                     <form onSubmit={handleReturn}>
