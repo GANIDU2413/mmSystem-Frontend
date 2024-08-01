@@ -20,7 +20,7 @@ export default function MarksCheckingForm() {
   const[noData,setNoData]=useState('')
   const [calculations, setCalculations] = useState([]);
   const { oktaAuth, authState } = useOktaAuth();
-  const[updatebtn,setEnableupdatebtn]=useState("disabled");
+  const[updatebtn,setEnableupdatebtn]=useState(false);
 
 
 
@@ -40,12 +40,16 @@ const{ele}=location.state;
 
 const student_id=ele.student_id
 
-console.log(ele)
 
 
-console.log(approval_level)
+const[endMarks,setEndMarks]=useState({
+  student_id:student_id,
+  course_id:course_id,
+  end:ele.end});
 
 
+
+console.log(ele.end)
 
 
   
@@ -119,12 +123,39 @@ console.log(approval_level)
     history.goBack(); // Navigate back
   };
 
-  const updateMarks=(event)=>
-  {
-    if (updatebtn !== "Enable") {
-      setEnableupdatebtn("Enable");
+
+  const textOnChange = (key, value) => {
+    setEnableupdatebtn(true);
+   
+    
+    // Directly update the 'end' property of the 'endMarks' object
+  setEndMarks(prevState => ({
+    ...prevState,
+    end: prevState.end.map(item =>
+      item.key === key ? { ...item, value } : item
+    )
+  }));
+
+  console.log(endMarks); // Log the updated state
+ 
+  };
+  
+  const updateMarks=async()=>
+    {
+      try {
+        ele.end=endMarks.end;
+        console.log(ele.end);
+        const response = await axios.put(`http://localhost:9090/api/marks/updateMarks`, endMarks);
+        console.log(response.data);
+        toast.success(response.data.message);
+      } catch (error) {
+        console.error('Error updating marks:', error);
+        toast.error('Error updating marks');
     }
   }
+
+
+  
 
   return (
     <>
@@ -158,9 +189,7 @@ console.log(approval_level)
                       }
                       <td className='table-primary' scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
                       <td scope="col" style={{ textAlign: 'left',fontWeight:  e.description=="score"? 'normal' : 'bold'  }}>{e.value}</td>
-                      {
-                        console.log(e.description)
-                      }
+                    
                     </tr>
                       
                     ))
@@ -172,8 +201,9 @@ console.log(approval_level)
                    ele.end.map((e)=>
                       (<tr>
                         <td className='table-primary' scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
-                        <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.description=="score"&& approval_level=="finalized" ? <input type="text" defaultValue={e.value} onchange={updateMarks()}
+                        <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.description=="score"&& approval_level=="finalized" ? <input type="text" defaultValue={e.value} onChange={(event) => textOnChange(e.key,event.target.value)}
                         ></input> :e.value}</td>
+                        
                       </tr>
                         
                       ))
@@ -181,7 +211,7 @@ console.log(approval_level)
 
                 </tbody>
               </table>
-              <input type="button" style={{width:'100px'}} className={`btn btn-outline-success btn-sm mt-3 `} value="Update" />
+              <button style={{width:'100px'}} className={`btn btn-outline-success btn-sm mt-3 `} value="Update" disabled={!updatebtn} onClick={updateMarks()}/>
             </div>
 
             
