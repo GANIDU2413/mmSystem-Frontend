@@ -20,6 +20,7 @@ export default function ARJoinResultBoard() {
     const [uniqueStudents, setUniqueStudents] = React.useState(null);         // state to store the unique students
     const [uniqueCourses, setUniqueCourses] = React.useState(null);         // state to store the unique courses
     const [studentGpa, setStudentGpa] = React.useState([]);         // state to store the student gpa
+    const [courseDetails, setCourseDetails] = React.useState([]);         // state to store the course details
 
 
     const getStudentGrade = async ()=>{
@@ -39,6 +40,9 @@ export default function ARJoinResultBoard() {
             
             setStudentGpa(gpaResponse.data);
 
+            const courseDetailsResponse = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCourseDetailsForMarkSheet/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
+            setCourseDetails(courseDetailsResponse.data);
+            
         }catch(error){
             console.log(error);
         }
@@ -61,8 +65,62 @@ export default function ARJoinResultBoard() {
   return (
     <div className='join-rb-main-div'>
         <h5 style={{color:"blue",textAlign:"center"}}>
-            {selectedResultBoard.department } Result Board - Level {selectedResultBoard.level} - Semester {selectedResultBoard.semester}
+            University of Ruhuna - Faculty of Technology
         </h5>
+        <h5 style={{color:"blue",textAlign:"center"}}>
+            {selectedResultBoard.department.toLowerCase() == "ICT".toLowerCase()? "Bachelor of Information and Communication Technology Honours Degree": selectedResultBoard.department.toLowerCase() =="ET".toLowerCase() ? "Bachelor of Engineering Technology Honours Degree": selectedResultBoard.department.toLowerCase() =="BST".toLowerCase()? "Bachelor of Bio-Systems Technology Honours Defree":null}
+        </h5>
+        <h6 style={{color:"blue",textAlign:"center"}}>Level {selectedResultBoard.level} Semester {selectedResultBoard.semester} (Academic year {selectedResultBoard.academic_year})</h6>
+        
+        {
+            uniqueCourses != null ? (
+                <>
+                    <hr/>
+
+                    <div className='row'>
+                        
+
+                        <div className='col-md-6'>
+                            <table >
+                                <tbody>
+                                    <tr><td>Key to Gradings</td></tr>
+                                    <tr><td>A+</td><td>4.00</td><td>A</td><td>4.00</td></tr>
+                                    <tr><td>A-</td><td>3.70</td><td>B+</td><td>3.30</td></tr>
+                                    <tr><td>AB</td><td>3.00</td><td>B-</td><td>2.70</td></tr>
+                                    <tr><td>C+</td><td>2.30</td><td>C</td><td>2.00</td></tr>
+                                    <tr><td>C-</td><td>1.70</td><td>D+</td><td>1.30</td></tr>
+                                    <tr><td>D</td><td>1.00</td><td>E</td><td>0.00</td></tr>
+                                    <tr><td>F</td><td colSpan={100}>CA Fail</td></tr>
+                                    <tr><td>MC</td><td colSpan={100}>Accepted Medical Certificate</td></tr>
+                                    <tr><td>AC</td><td colSpan={100}>Accepted Academic Concession</td></tr>
+                                    <tr><td>WH</td><td colSpan={100}>Results Withheld</td></tr>
+                                    <tr><td>E*</td><td colSpan={100}>Not Eligible/ Not Applied/ Absent Without Medical</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div className='col-md-6'>
+                            <table style={{marginTop:'20px'}}>
+                                <tbody>
+                                    {
+                                        courseDetails.map((course,index)=>(
+                                            <tr key={index}>
+                                                <td>{course.course_id} - </td>
+                                                <td>{course.course_name}</td>
+                                            </tr>
+                                        ))
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                    </div>
+
+
+                </>
+            ):null
+        }
+        
         <hr/>
 
 
