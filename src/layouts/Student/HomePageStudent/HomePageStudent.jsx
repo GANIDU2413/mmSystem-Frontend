@@ -123,7 +123,6 @@ export default function HomePageStudent() {
       try{
         const result = await axios.get(`http://localhost:9090/api/Student/getPublishedMarksSheetList/${approvedLevel}/${resultBoardState}`);
         setPublishedMarkSheetsList(result.data);
-        console.log(result.data)
       }catch(error){
         console.error(`Error - ${error}`);
       }

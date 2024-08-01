@@ -25,7 +25,7 @@ export default function ARJoinResultBoard() {
     const getStudentGrade = async ()=>{
         try{
             const gradeResponse =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getGradesForResultBoard/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
-            //console.log(gradeResponse.data);
+            
             setStudentGrades(gradeResponse.data);
 
             const uniqueStudentArr = [...new Set(gradeResponse.data.map((item)=>item.student_id))].sort();                                     // get unique academic years
@@ -36,7 +36,7 @@ export default function ARJoinResultBoard() {
 
             //call api to get studentGPA
             const gpaResponse = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getGpaListForResultBoard/${selectedResultBoard.department}/${selectedResultBoard.academic_year}/${selectedResultBoard.level}/${selectedResultBoard.semester}`);
-            //console.log(gpaResponse.data)
+            
             setStudentGpa(gpaResponse.data);
 
         }catch(error){
@@ -65,13 +65,7 @@ export default function ARJoinResultBoard() {
         </h5>
         <hr/>
 
-        {/* {
-        console.log(uniqueStudents)
-        
-        }
-        {
-            console.log(uniqueCourses)
-        } */}
+
 
 
         {
@@ -99,8 +93,8 @@ export default function ARJoinResultBoard() {
                             <tbody>
 
                                 {
-                                    uniqueStudents.map((student)=>(
-                                        <tr>
+                                    uniqueStudents.map((student,index)=>(
+                                        <tr key={index}>
                                             <td>
                                                 {student}
                                             </td>
@@ -124,13 +118,7 @@ export default function ARJoinResultBoard() {
 
                                                 ))
                                             }
-                                            {/* {
-                                                studentGpa.map((gpa)=>(
-                                                    gpa.student_id===student?<> <td>{gpa.sgpa}</td><td style={{backgroundColor:"rgba(225, 32, 51, 0.15)"}}>{gpa.cgpa}</td></>:null
-                                                ))
-                                            } */}
-
-
+                                            
                                             {
                                                 <>
 
