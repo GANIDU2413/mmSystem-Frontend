@@ -89,36 +89,6 @@ export default function HomePageStudent() {
   }
 
 
-
-  /*const getPublishedMarkSheets = async () => {         // load the published mark sheets
-
-    if(studentDepartmentId!=null && studentLevel!=null && studentSemester!=null){         //Check if student department, level and semester are not null
-
-      
-      try{
-        const publishedMarkSheets = await axios.get(`http://localhost:9090/api/Student/getPublishedMarkSheets/${approvedLevel}/${resultBoardState}/${studentDepartmentId}/${studentLevel}/${studentSemester}`)      //Call Api to get published mark sheets
-        
-        setPublishedMarkSheetsList(publishedMarkSheets.data);
-
-        if( publishedMarkSheets.data){
-        
-          try{
-            const getGradeResponse = await axios.get(`http://localhost:9090/api/Student/getSelectedStudentGrade/${publishedMarkSheets.data.level}/${publishedMarkSheets.data.semester}/${publishedMarkSheets.data.department}/${studentId}`)            //Call Api to get student grade list
-            
-            setStudentGradeList(getGradeResponse.data);       //Set student grade list to the state
-        
-          }catch(error){
-            console.error(`Error - ${error}`);
-          }
-        
-        }
-      }catch(error){
-        console.error(`Error - ${error}`);
-      }
-    }
-  
-  }*/
-
     const getPublishedMarkSheets = async () => {         // load the published mark sheets
       try{
         const result = await axios.get(`http://localhost:9090/api/Student/getPublishedMarksSheetList/${approvedLevel}/${resultBoardState}`);
@@ -183,56 +153,60 @@ export default function HomePageStudent() {
         <div className='row course-row-2'>
 
           <div className='col grade-col-1'>
+
+          <div className='row'>
+
             
+            <div className="col mb-4"> 
+              <div className="card text-center functionCard">
+                <div className="card-body">
+                    <br/><h5 className="card-title"> Medicals</h5><br/>
+                  <a href="/studentMedicalView" className="btn btn-primary home-page-class-button">View</a>
+                </div>
+              </div>
+            </div>
 
-            <table className="table table-striped student-home-page-table" >
+            <div className="col mb-4"> 
+              <div className="card text-center functionCard">
+                <div className="card-body">
+                    <br/><h5 className="card-title"> CA Eligibility</h5><br/>
+                  <a href="/studentEligibilityView" className="btn btn-primary home-page-class-button">View</a>
+                </div>
+              </div>
+            </div>
 
-                          
-              <thead className='home-page-table-head'>
-                <tr>
-                  <th className='home-page-table-heading' colSpan={100} style={{textAlign: 'center', backgroundColor: '#ebe8e8', textAlignLast: 'center'}}>
-                    Published Marks Sheets <br/>
-                  </th>
-                </tr>
-                <tr>
-                  <th colSpan={100}></th>
-                </tr>
-                <tr>
-                  <th>Level</th>
-                  <th>Semester</th>
-                  <th>Department</th>
-                  <th>Academic Year</th>
-                </tr>
-              </thead>
+            <div className="col mb-4"> 
+              <div className="card text-center functionCard">
+                <div className="card-body">
+                    <br/><h5 className="card-title"> With-held Subjects</h5><br/>
+                  <a href="/studentViewWithHeldSubjects" className="btn btn-primary home-page-class-button">View</a>
+                </div>
+              </div>
+            </div>
 
-              <tbody>
-                {
-                  publishedMarkSheetsList.length <1 ? (
-                    <tr>
-                      <td colSpan={100} style={{textAlign: 'center'}}>No Published Marks Sheets Available</td>
-                    </tr>
-                  ):
-                  (
-                    publishedMarkSheetsList.map((item, index) =>(
-                      <tr key={index} className='clickable-row' onClick={()=>{history.push({pathname:`/viewPublishedMarksSheet`,state:item})}}>
-                        <td>level {item.level}</td>
-                        <td>semester {item.semester}</td>
-                        <td>Dep. of {item.department}</td>
-                        <td>academic year ({item.academic_year})</td>
-                      </tr>))
-                  )
-                }
+            <div className="col mb-4"> 
+              <div className="card text-center functionCard">
+                <div className="card-body">
+                    <br/><h5 className="card-title"> Published Marks Sheets</h5><br/>
+                  <a href="/StudentViewMarkSheetList" className="btn btn-primary home-page-class-button">View</a>
+                </div>
+              </div>
+            </div>
 
-              </tbody>
+            <div className="col mb-4"> 
+              <div className="card text-center functionCard">
+                <div className="card-body">
+                    <br/><h5 className="card-title"> Course Details</h5><br/>
+                  <a href="/studentViewCourseDetails" className="btn btn-primary home-page-class-button">View</a>
+                </div>
+              </div>
+            </div>
 
-            </table>
+          </div>
+            
         
           </div>
 
-          {/* <div className='col grade-col-2'>
-
-          </div> */}
-        
         </div>
 
       </div>

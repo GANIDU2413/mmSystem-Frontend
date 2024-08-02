@@ -100,6 +100,12 @@ export const NavebarStudent = () => {
               </li>
 
               <li className="nav-item">
+                <a className="nav-link active" aria-current="page" href="/StudentViewMarkSheetList">        {/*Link to the student mark sheet list*/}
+                 Published Marks Sheets
+                </a>
+              </li>
+
+              <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/studentViewCourseDetails">      {/*Link to the student course details*/}
                  Course Details
                 </a>

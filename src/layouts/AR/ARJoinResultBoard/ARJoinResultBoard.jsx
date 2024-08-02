@@ -13,10 +13,9 @@ export default function ARJoinResultBoard() {
     const { authState } = useOktaAuth();
     const location = useLocation(); //Get the location details from the URL
 
-    const selectedResultBoard=location.state;
+    const selectedResultBoard=location.state;      //Access the object that passed with the URL
 
     const [studentGrades, setStudentGrades] = React.useState([]);       // state to store the student grades
-
     const [uniqueStudents, setUniqueStudents] = React.useState(null);         // state to store the unique students
     const [uniqueCourses, setUniqueCourses] = React.useState(null);         // state to store the unique courses
     const [studentGpa, setStudentGpa] = React.useState([]);         // state to store the student gpa
@@ -83,7 +82,7 @@ export default function ARJoinResultBoard() {
                         <div className='col-md-6'>
                             <table >
                                 <tbody>
-                                    <tr><td>Key to Gradings</td></tr>
+                                    <tr><td style={{fontWeight:"bold"}}>Key to Gradings</td></tr>
                                     <tr><td>A+</td><td>4.00</td><td>A</td><td>4.00</td></tr>
                                     <tr><td>A-</td><td>3.70</td><td>B+</td><td>3.30</td></tr>
                                     <tr><td>AB</td><td>3.00</td><td>B-</td><td>2.70</td></tr>
@@ -102,6 +101,7 @@ export default function ARJoinResultBoard() {
                         <div className='col-md-6'>
                             <table style={{marginTop:'20px'}}>
                                 <tbody>
+                                    <tr><td style={{fontWeight:"bold"}}>Course Details</td></tr>
                                     {
                                         courseDetails.map((course,index)=>(
                                             <tr key={index}>
