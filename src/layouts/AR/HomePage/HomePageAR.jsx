@@ -4,7 +4,6 @@ import { Redirect } from "react-router-dom";
 import './homePageAR.css';
 import { SpinerLoading } from "../../Utils/SpinerLoading";
 import { useHistory } from "react-router-dom";
-import { link } from "fs";
 
 
 export default function HomePageAR() {
@@ -13,7 +12,7 @@ export default function HomePageAR() {
   const history = useHistory();
 
 
-const handleChange = (link:string) => {
+const handleChange = (link) => {
   history.push(link);
 }
   
