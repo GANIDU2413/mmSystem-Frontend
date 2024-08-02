@@ -7,7 +7,7 @@ import "./levelSelection.css";
 import BackButton from '../BackButton/BackButton';
 import { SpinerLoading } from '../../../Utils/SpinerLoading';
 
-export default function LevelSelection(props:any) {
+export default function LevelSelection(props) {
 
   const { authState } = useOktaAuth();        // get the authentication state
 
@@ -16,7 +16,7 @@ export default function LevelSelection(props:any) {
 
   const [selectedLevel, setSelectedLevel] = useState(1);
 
-  function callSemester(level:number) {
+  function callSemester(level) {
     setSelectedLevel(level);
   }
 
