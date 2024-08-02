@@ -7,6 +7,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import './studentWithHeldSubjects.css';
 import { Redirect } from 'react-router-dom';
 import { SpinerLoading } from '../../Utils/SpinerLoading';
+import BackButton from '../../Components/AR/BackButton/BackButton';
 
 export default function StudentWithHeldSubjects() {
 
@@ -120,6 +121,10 @@ export default function StudentWithHeldSubjects() {
                 </tbody>
 
             </table>
+
+            <div className='right-aligned-div back-button-div'>
+                <br/><BackButton/> <br/>&nbsp;
+            </div>
 
         </div>
     </div>

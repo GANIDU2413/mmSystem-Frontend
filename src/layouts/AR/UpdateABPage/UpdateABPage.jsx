@@ -264,7 +264,7 @@ export default function UpdateABPage() {
                     }
                 }
 
-            } else if((studentDetails.exam_type=="Mid practical exam" || studentDetails.exam_type=="End practical exam")){           //Condtition to ensure the exam is a practical exam
+            } else if((studentDetails.exam_type.toLowerCase()=="Mid practical exam".toLowerCase() || studentDetails.exam_type.toLowerCase()=="End practical exam".toLowerCase())){           //Condtition to ensure the exam is a practical exam
                 
                 const previousMidExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.previous_academic_year}/Mid practical exam`);   //Get the selected student previous mid exam marks in practical exam
                 

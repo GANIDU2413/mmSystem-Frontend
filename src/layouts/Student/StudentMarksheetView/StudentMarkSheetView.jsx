@@ -1,30 +1,31 @@
-import React, { useEffect } from 'react'
+import React from 'react'
+import { useLocation } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { Redirect } from 'react-router-dom';
 import { SpinerLoading } from '../../Utils/SpinerLoading';
-import { useLocation } from 'react-router-dom';
-import BackButton from '../../Components/AR/BackButton/BackButton';
-import './arJoinResultBoard.css';
+import './studentMarkSheetView.css';
+import { useEffect } from 'react';
 import axios from 'axios';
+import { useState } from 'react';
+import BackButton from '../../Components/AR/BackButton/BackButton';
 
 
-export default function ARJoinResultBoard() {
+export default function StudentMarkSheetView() {
 
     const { authState } = useOktaAuth();
     const location = useLocation(); //Get the location details from the URL
 
-    const selectedResultBoard=location.state;      //Access the object that passed with the URL
+    const selectedMarkSheet = location.state;
 
-    const [studentGrades, setStudentGrades] = React.useState([]);       // state to store the student grades
-    const [uniqueStudents, setUniqueStudents] = React.useState(null);         // state to store the unique students
+    const [studentGrades, setStudentGrades] = React.useState([]);   // store student grades
+    const [uniqueStudents, setUniqueStudents] = React.useState(null);   // store unique students
     const [uniqueCourses, setUniqueCourses] = React.useState(null);         // state to store the unique courses
     const [studentGpa, setStudentGpa] = React.useState([]);         // state to store the student gpa
-    const [courseDetails, setCourseDetails] = React.useState([]);         // state to store the course details
-
+    const [courseDetails, setCourseDetails] = React.useState([]);      // state to store the course details
 
     const getStudentGrade = async ()=>{
         try{
-            const gradeResponse =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getGradesForResultBoard/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
+            const gradeResponse =await axios.get(`http://localhost:9090/api/Student/getGradesForPublishedMarksSheet/${selectedMarkSheet.level}/${selectedMarkSheet.semester}/${selectedMarkSheet.department}/${selectedMarkSheet.academic_year}`);
             
             setStudentGrades(gradeResponse.data);
 
@@ -35,11 +36,11 @@ export default function ARJoinResultBoard() {
             setUniqueCourses(uniqueCourseArr);
 
             //call api to get studentGPA
-            const gpaResponse = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getGpaListForResultBoard/${selectedResultBoard.department}/${selectedResultBoard.academic_year}/${selectedResultBoard.level}/${selectedResultBoard.semester}`);
+            const gpaResponse = await axios.get(`http://localhost:9090/api/Student/getGpaListForPublishedMarksSheet/${selectedMarkSheet.department}/${selectedMarkSheet.academic_year}/${selectedMarkSheet.level}/${selectedMarkSheet.semester}`);
             
             setStudentGpa(gpaResponse.data);
 
-            const courseDetailsResponse = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCourseDetailsForMarkSheet/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
+            const courseDetailsResponse = await axios.get(`http://localhost:9090/api/Student/getCourseDetailsForPublishedMarkSheet/${selectedMarkSheet.level}/${selectedMarkSheet.semester}/${selectedMarkSheet.department}/${selectedMarkSheet.academic_year}`);
             setCourseDetails(courseDetailsResponse.data);
             
         }catch(error){
@@ -53,24 +54,24 @@ export default function ARJoinResultBoard() {
     }, [])
 
 
-
-
     if(!authState){
         return <SpinerLoading/>;
       }
-      if(authState.accessToken?.claims.userType !== "ar"){
+      if(authState.accessToken?.claims.userType !== "student"){
         return <Redirect to="/home" />;
       }
+
   return (
-    <div className='join-rb-main-div'>
+    <div className='marksheet-view-main-div'>
         <h5 style={{color:"blue",textAlign:"center"}}>
             University of Ruhuna - Faculty of Technology
         </h5>
         <h5 style={{color:"blue",textAlign:"center"}}>
-            {selectedResultBoard.department.toLowerCase() == "ICT".toLowerCase()? "Bachelor of Information and Communication Technology Honours Degree": selectedResultBoard.department.toLowerCase() =="ET".toLowerCase() ? "Bachelor of Engineering Technology Honours Degree": selectedResultBoard.department.toLowerCase() =="BST".toLowerCase()? "Bachelor of Bio-Systems Technology Honours Defree":null}
+            {selectedMarkSheet.department.toLowerCase() == "ICT".toLowerCase()? "Bachelor of Information and Communication Technology Honours Degree": selectedMarkSheet.department.toLowerCase() =="ET".toLowerCase() ? "Bachelor of Engineering Technology Honours Degree": selectedMarkSheet.department.toLowerCase() =="BST".toLowerCase()? "Bachelor of Bio-Systems Technology Honours Defree":null}
         </h5>
-        <h6 style={{color:"blue",textAlign:"center"}}>Level {selectedResultBoard.level} Semester {selectedResultBoard.semester} (Academic year {selectedResultBoard.academic_year})</h6>
+        <h6 style={{color:"blue",textAlign:"center"}}>Level {selectedMarkSheet.level} Semester {selectedMarkSheet.semester} (Academic year {selectedMarkSheet.academic_year})</h6>
         
+
         {
             uniqueCourses != null ? (
                 <>
@@ -122,30 +123,25 @@ export default function ARJoinResultBoard() {
         }
         
         <hr/>
-
-
-
-
         {
             uniqueCourses != null ? (
                 <>
                     <div>
 
                         <table className='table table-striped join-rb-table'>
-                            <thead>
+                            <thead className='student-mark-sheet-table-head'>
                                 <tr>
                                     <th>Student ID</th>
                                     {
                                         uniqueCourses.map((course)=>(
                                             <>
                                             <th className='course-id-th' style={{backgroundColor:"rgba(32, 225, 138, 0.2)"}}>{course}</th>
-                                            <th className='course-grade-th' style={{backgroundColor:"rgba(137, 43, 226, 0.2)"}}>Grade</th>
                                             
                                             </>
                                         ))
                                     }
-                                    <th>SGPA</th>
-                                    <th style={{backgroundColor:"rgba(225, 32, 51, 0.15)"}}>CGPA</th>
+                                    <th style={{backgroundColor:"rgba(225, 32, 51, 0.15)"}}>SGPA</th>
+                                    <th style={{backgroundColor:"rgba(34, 45, 201, 0.24)"}}>CGPA</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -159,14 +155,9 @@ export default function ARJoinResultBoard() {
                                             {
                                                 uniqueCourses.map((course)=>(
                                                     <>
-                                                        <td style={{backgroundColor:"rgba(32, 225, 138, 0.2)"}}>
+                                                        
 
-                                                        {studentGrades.map((Grade)=>(
-                                                            Grade.student_id===student && Grade.course_id===course?<> {Grade.total_rounded_mark}</>:null
-                                                        ))}
-                                                        </td>
-
-                                                        <td style={{backgroundColor:"rgba(137, 43, 226, 0.2)"}}>
+                                                        <td >
 
                                                         {studentGrades.map((Grade)=>(
                                                             Grade.student_id===student && Grade.course_id===course?<> {Grade.grade}</>:null
@@ -180,7 +171,7 @@ export default function ARJoinResultBoard() {
                                             {
                                                 <>
 
-                                                <td>
+                                                <td style={{backgroundColor:"rgba(225, 32, 51, 0.15)"}}>
                                                     {
                                                         studentGpa.map((gpa)=>(
                                                             gpa.student_id===student?<>{gpa.sgpa}</>:null
@@ -188,7 +179,7 @@ export default function ARJoinResultBoard() {
                                                     }
                                                 </td>
 
-                                                <td style={{backgroundColor:"rgba(225, 32, 51, 0.15)"}}>
+                                                <td style={{backgroundColor:"rgba(34, 45, 201, 0.24)"}}>
                                                     {
                                                         studentGpa.map((gpa)=>(
                                                             gpa.student_id===student?<>{gpa.cgpa}</>:null
@@ -207,6 +198,7 @@ export default function ARJoinResultBoard() {
                                         </tr>
                                     ))
                                 }
+
                                 
                             </tbody>
                         </table>
@@ -220,13 +212,11 @@ export default function ARJoinResultBoard() {
             )
         }
 
-        
-
-
         <div className='right-aligned-div back-button-div'>
             <br/><BackButton/> <br/>&nbsp;
         </div>
+
+
     </div>
-   
   )
 }

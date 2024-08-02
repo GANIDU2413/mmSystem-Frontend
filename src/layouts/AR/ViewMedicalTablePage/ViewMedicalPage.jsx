@@ -101,7 +101,7 @@ export default function ViewMedicalPage() {
               <table className="table table-striped dataTable">
 
 
-                <thead className='table-body'>
+                <thead className='ar-medical-table-head'>
 
 
                   <tr>
