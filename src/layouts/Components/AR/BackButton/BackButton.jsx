@@ -1,6 +1,6 @@
 import { useHistory } from 'react-router-dom';
 
-const BackButton: React.FC = () => {
+const BackButton = () => {
   const history = useHistory();
 
   const handleGoBack = () => {

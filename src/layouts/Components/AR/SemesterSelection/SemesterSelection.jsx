@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import CourseSelection from '../CourseSelection/CourseSelection';
 
-export default function SemesterSelection(props :any) {
+export default function SemesterSelection(props) {
   var level=props.level;
   var department_id=props.department_id;
   
   const [selectedSemester, setSelectedSemester] = useState(1);
 
-  function callCourse(semester:number){
+  function callCourse(semester){
     setSelectedSemester(semester);
 
   }
