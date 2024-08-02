@@ -6,7 +6,7 @@ import BackButton from "../../Components/AR/BackButton/BackButton";
 import { SpinerLoading } from "../../Utils/SpinerLoading";
 
 
-export default function ViewMarks(props:any) {
+export default function ViewMarks(props) {
   const { authState } = useOktaAuth();
   var department_id = props.department_id;
 
