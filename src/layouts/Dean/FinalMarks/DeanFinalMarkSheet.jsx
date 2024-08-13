@@ -402,7 +402,7 @@ const alternateRowStyle = {
                   <th scope="col" className='table-info'>Student ID</th>
                   {Allcourses.map((id, index) => (
                     <React.Fragment key={index}>
-                      <th className=' table-secondary'>{id.course_id}</th>
+                      {nextApprovedlevel=="RB" || nextApprovedlevel=="AR" || nextApprovedlevel=="Dean" ?<th className=' table-secondary'>{id.course_id}</th>:null}
                       <th className=' table-primary'>Grade</th>
                     </React.Fragment>
                   ))}
@@ -418,7 +418,7 @@ const alternateRowStyle = {
                       const courseData = student.courses.find((c) => c.course_id == id.course_id);
                       return (
                         <React.Fragment key={index}>
-                          <td>{courseData ? courseData.overall_score : "-"}</td>
+                          {nextApprovedlevel=="RB" || nextApprovedlevel=="AR" || nextApprovedlevel=="Dean" ?<td>{courseData ? courseData.overall_score : "-"}</td>:null}
                           <td>{courseData ? courseData.grade : "-"}</td>
                         </React.Fragment>
                       );

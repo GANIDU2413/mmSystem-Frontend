@@ -65,6 +65,8 @@ import StudentViewCourseDetails from "./layouts/Student/StudentViewCourseDetails
 import StudentViewCourseCriteria from "./layouts/Student/StudentViewCourseCriteria/StudentViewCourseCriteria";
 import StudentWithHeldSubjects from "./layouts/Student/StudentWithHeldSubjects/StudentWithHeldSubjects";
 import ARJoinResultBoard from "./layouts/AR/ARJoinResultBoard/ARJoinResultBoard";
+import CertifyMarksheet from "./layouts/Dean/CertifyMarksheet";
+
 
 
 
@@ -227,8 +229,20 @@ export const App = () => {
             <StudentCourseEditLayout/>
           </Route>
 
+          <Route path="/pendingDeanCertifyMarksheet">
+           <CertifyMarksheet approvedLevel={"AR"}/>
+          </Route>
+
+           <Route path="/pendingVCCertifyMarksheet">
+             <CertifyMarksheet approvedLevel={"Dean"}/>
+          </Route>
+
           <Route path="/deanFinalMarkSheet/:level/:semester/:dept">
             <DeanFinalMarkSheet approved_level={"AR"}/>
+          </Route>
+
+          <Route path="/vcFinalMarkSheet/:level/:semester/:dept">
+            <DeanFinalMarkSheet approved_level={"Dean"}/>
           </Route>
 
           <Route path="/thirdyeareligibility">
